@@ -172,7 +172,7 @@ def menu():
             [InlineKeyboardButton(text="👩‍🏫 Сравнить преподавателей", callback_data="teacher_compare_menu")],
             [InlineKeyboardButton(text="💬 Отзыв о школе", callback_data="review_school_menu"),
              InlineKeyboardButton(text="👩‍🏫 Отзыв о преподавателе", callback_data="review_teacher_menu")],
-            [InlineKeyboardButton(text="📚 Курсы по предметам", callback_data="courses"),
+            [InlineKeyboardButton(text="📚 Найти курс по предмету", callback_data="courses"),
              InlineKeyboardButton(text="🏫 Школы", callback_data="schools")],
             [InlineKeyboardButton(text="🏆 Рейтинг", callback_data="rating")],
             [InlineKeyboardButton(text="📰 Канал", callback_data="channel")],
@@ -235,8 +235,31 @@ def _course_tariffs_text(course):
     )
 
 
+def course_subject_profile(teachers):
+    count = len(teachers)
+    names = ", ".join(teacher.name for teacher in teachers)
+    if count >= 4:
+        return (
+            f"У ЕГЭшки есть карточки {count} преподавателей: {names}. "
+            "По предмету есть выбор — сначала сравни преподавателей и проверь, кто ведёт твой набор."
+        )
+    if count >= 2:
+        return (
+            f"У ЕГЭшки есть карточки {count} преподавателей: {names}. "
+            "Можно открыть карточки и сравнить опыт, результаты и отзывы."
+        )
+    if count == 1:
+        return (
+            f"Сейчас подтверждён один публичный профиль: {names}. "
+            "Перед оплатой проверь на странице набора, кто ведёт курс сейчас."
+        )
+    return (
+        "Публичные профили преподавателей по предмету ещё добавляются. "
+        "Перед оплатой проверь ведущего на странице выбранного набора."
+    )
+
+
 def course_card(course, school, teachers):
-    teacher_names = ", ".join(teacher.name for teacher in teachers) or "публичные карточки преподавателей ещё не добавлены"
     checked = course.verified_at.strftime("%d.%m.%Y") if course.verified_at else "дата не указана"
     return (
         f"📚 <b>{escape(course.name)}</b>\n"
@@ -245,7 +268,10 @@ def course_card(course, school, teachers):
         f"🎓 <b>Формат</b>\n{escape(course.format_text)}\n\n"
         f"🧑‍🏫 <b>Поддержка</b>\n{escape(course.support_text)}\n\n"
         f"📝 <b>Практика</b>\n{escape(course.practice_text)}\n\n"
-        f"👩‍🏫 <b>Преподаватели по предмету</b>\n{escape(teacher_names)}\n\n"
+        f"👩‍🏫 <b>Что по предмету</b>\n{escape(course_subject_profile(teachers))}\n\n"
+        f"🎯 <b>Кому может подойти</b>\n{escape(school.fit_text)}\n\n"
+        f"🔎 <b>Что проверить перед оплатой</b>\n"
+        "Кто ведёт выбранный набор, полную стоимость всех месяцев или блоков и состав поддержки в твоём тарифе.\n\n"
         f"🔎 <b>Данные проверены</b>: {checked}\n"
         f"Источник: {escape(course.source_url)}"
     )
@@ -269,6 +295,15 @@ def course_compare_keyboard(left_id, right_id):
         [InlineKeyboardButton(text="🧑‍🏫 Поддержка и практика", callback_data=f"course_compare_section:{left_id}:{right_id}:learning")],
         [InlineKeyboardButton(text="👩‍🏫 Преподаватели", callback_data=f"course_compare_section:{left_id}:{right_id}:teachers")],
         [InlineKeyboardButton(text="← К карточке курса", callback_data=f"course:{left_id}")],
+        [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
+    ])
+
+
+def course_compare_teachers_keyboard(left, right, left_school, right_school):
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=f"👩‍🏫 Преподаватели: {left_school.name}", callback_data=f"course_teachers:{left.id}")],
+        [InlineKeyboardButton(text=f"👩‍🏫 Преподаватели: {right_school.name}", callback_data=f"course_teachers:{right.id}")],
+        [InlineKeyboardButton(text="← К сравнению курсов", callback_data=f"course_compare_result:{left.id}:{right.id}")],
         [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
     ])
 
@@ -1506,8 +1541,11 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                 select(Course.subject).where(Course.is_active == True).distinct().order_by(Course.subject)
             )).scalars().all()
         await call.message.edit_text(
-            "📚 Курсы по предметам\n\nВыбери предмет. Затем покажем конкретные варианты подготовки, цены и преподавателей.",
+            "📚 <b>Найти курс по предмету</b>\n\n"
+            "Выбери предмет — покажем, как он устроен в разных школах: формат, цена, поддержка и преподаватели. "
+            "Так проще сравнить именно нужную подготовку, а не школу целиком.",
             reply_markup=course_subject_buttons(subjects),
+            parse_mode=ParseMode.HTML,
         )
         await call.answer()
 
@@ -1644,6 +1682,21 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         )
         await call.answer()
 
+    @dp.callback_query(F.data.startswith("course_compare_result:"))
+    async def course_compare_result(call: CallbackQuery):
+        _, left_id, right_id = call.data.split(":", 2)
+        async with session_factory() as session:
+            left = await session.get(Course, int(left_id))
+            right = await session.get(Course, int(right_id))
+            left_school = await session.get(School, left.school_id)
+            right_school = await session.get(School, right.school_id)
+        await call.message.edit_text(
+            course_compare_text(left, right, left_school, right_school),
+            reply_markup=course_compare_keyboard(left.id, right.id),
+            parse_mode=ParseMode.HTML,
+        )
+        await call.answer()
+
     @dp.callback_query(F.data.startswith("course_compare_section:"))
     async def course_compare_section(call: CallbackQuery):
         _, left_id, right_id, section = call.data.split(":", 3)
@@ -1664,7 +1717,11 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             ).order_by(Teacher.rating.desc(), Teacher.name))).scalars().all()
         await call.message.edit_text(
             course_compare_section_text(left, right, left_school, right_school, section, left_teachers, right_teachers),
-            reply_markup=course_compare_keyboard(left.id, right.id),
+            reply_markup=(
+                course_compare_teachers_keyboard(left, right, left_school, right_school)
+                if section == "teachers"
+                else course_compare_keyboard(left.id, right.id)
+            ),
             parse_mode=ParseMode.HTML,
         )
         await call.answer()
