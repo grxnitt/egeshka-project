@@ -157,10 +157,10 @@ def school_criteria_simple_text(school, user_stats=None):
             final_score = value / 2 + float(average)
             score_text = f"{number(final_score)}/10"
         else:
-            score_text = f"{number(value)}/10 · пока без отзывов"
+            score_text = f"{number(value)}/10 · предварительно"
         lines.append(f"{score_bar(value)}  {label} · {score_text}")
     if not any(count for _, count in user_stats.values()):
-        lines.append("\nПосле одобренных отзывов итог будет учитывать и оценки учеников.")
+        lines.append("\nОценка станет комбинированной, когда появятся одобренные отзывы учеников.")
     return "\n".join(lines)
 
 
@@ -250,11 +250,11 @@ def course_subject_profile(teachers):
         )
     if count == 1:
         return (
-            f"Сейчас подтверждён один публичный профиль: {names}. "
+            f"В открытых источниках подтверждён один профиль: {names}. "
             "Перед оплатой проверь на странице набора, кто ведёт курс сейчас."
         )
     return (
-        "Публичные профили преподавателей по предмету ещё добавляются. "
+        "В открытом каталоге школы не найден подтверждённый профиль преподавателя по этому предмету. "
         "Перед оплатой проверь ведущего на странице выбранного набора."
     )
 
@@ -343,15 +343,15 @@ def course_compare_section_text(left, right, left_school, right_school, section,
             f"<b>{escape(right_school.name)}</b>\nПоддержка: {escape(right.support_text)}\n\nПрактика: {escape(right.practice_text)}"
         )
     if section == "teachers":
-        left_names = ", ".join(t.name for t in left_teachers) or "публичные профили пока не добавлены"
-        right_names = ", ".join(t.name for t in right_teachers) or "публичные профили пока не добавлены"
+        left_names = ", ".join(t.name for t in left_teachers) or "подтверждённые профили не найдены в открытом каталоге"
+        right_names = ", ".join(t.name for t in right_teachers) or "подтверждённые профили не найдены в открытом каталоге"
         return (
             "👩‍🏫 <b>Преподаватели по предмету</b>\n\n"
             f"<b>{escape(left_school.name)}</b>\n{escape(left_names)}\n\n────────────\n\n"
             f"<b>{escape(right_school.name)}</b>\n{escape(right_names)}\n\n"
             "Перед оплатой проверь, кто ведёт именно выбранный набор: состав может меняться."
         )
-    return "Раздел пока не найден."
+    return "Раздел недоступен. Вернись к карточке курса."
 
 
 def priority_keyboard(first_priority=None):
@@ -414,7 +414,7 @@ def school_section_text(school, section, criteria_stats=None):
     }
     if section == "criteria":
         return school_criteria_simple_text(school, criteria_stats)
-    title, body = sections.get(section, ("Раздел", "Информация пока не добавлена"))
+    title, body = sections.get(section, ("Раздел", "Информация для этого раздела не найдена"))
     return f"{title}\n\n{e(body)}"
 
 
@@ -468,7 +468,7 @@ def comparison_text(left, right, left_user_average=None, left_user_count=0, righ
         f"{escape(left.name)} — <b>{score(left_total, left_preliminary)}</b>\n"
         f"{escape(right.name)} — <b>{score(right_total, right_preliminary)}</b>\n\n"
         "Открой нужный раздел: там только данные по одной теме, без длинной сводки.\n"
-        "* Предварительный балл: пока без одобренных отзывов учеников."
+        "* Предварительный балл: нет одобренных отзывов учеников."
     )
 
 
@@ -495,7 +495,7 @@ def comparison_section_text(left, right, section, left_stats=None, right_stats=N
                 f"{comma(right_value)}/10{'*' if right_preliminary else ''}"
             )
         if has_preliminary:
-            lines.append("\n* Предварительный балл: пока без одобренных отзывов учеников.")
+            lines.append("\n* Предварительный балл: нет одобренных отзывов учеников.")
         return "\n\n".join(lines)
 
     sections = {
@@ -535,7 +535,7 @@ def rating_methodology_text():
         "ℹ️ Как считается рейтинг\n\n"
         "<b>Школы:</b> по каждому критерию есть оценка ЕГЭшки до 5 и средняя оценка учеников до 5. Вместе — до 10.\n\n"
         "<b>Преподаватели:</b> общий рейтинг тоже складывается из оценки ЕГЭшки и отзывов учеников. В отзывах отдельно собираем оценки объяснения, практики, обратной связи, темпа и общения.\n\n"
-        "Звёздочка означает предварительный балл: одобренных отзывов учеников пока нет. Подробные источники и расчёты не перегружают карточку, но учитываются при модерации и обновлении оценок."
+        "Звёздочка означает предварительный балл: по критерию ещё нет одобренных отзывов учеников. Источники и методика доступны в этом разделе; они используются при модерации и обновлении оценок."
     )
 
 
@@ -624,8 +624,8 @@ def teacher_compare_text(
     right_score, right_preliminary, _ = _teacher_display_score(right, right_user_average, right_user_count)
     left_marker = "*" if left_preliminary else ""
     right_marker = "*" if right_preliminary else ""
-    left_reviews = f"💬 Одобренных отзывов: {left_user_count}" if left_user_count else "💬 Пока нет одобренных отзывов"
-    right_reviews = f"💬 Одобренных отзывов: {right_user_count}" if right_user_count else "💬 Пока нет одобренных отзывов"
+    left_reviews = f"💬 Одобренных отзывов: {left_user_count}" if left_user_count else "💬 Нет одобренных отзывов"
+    right_reviews = f"💬 Одобренных отзывов: {right_user_count}" if right_user_count else "💬 Нет одобренных отзывов"
     preliminary_note = "\n* Предварительный балл — без одобренных отзывов учеников." if left_preliminary or right_preliminary else ""
     return (
         f"⚖️ Сравнение преподавателей\n\n"
@@ -657,7 +657,7 @@ def hybrid_rating(professional_out_of_10, user_average=None, user_count=0):
     if user_average is None or user_count == 0:
         return (
             f"Профессиональная оценка: {professional:.1f}/5\n"
-            "Пользовательская оценка: пока нет данных\n"
+            "Пользовательская оценка: нет данных\n"
             "Итог: не рассчитан — нужны одобренные отзывы"
         )
     total = professional + max(0.0, min(5.0, float(user_average)))
@@ -1317,7 +1317,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         lines = ["Воронка за последние 30 дней", ""]
         for event_name, events_count, users_count in rows:
             lines.append(f"{labels.get(event_name, event_name)}: {users_count} пользователей · {events_count} действий")
-        await message.answer("\n".join(lines) if rows else "За последние 30 дней событий пока нет.")
+        await message.answer("\n".join(lines) if rows else "За последние 30 дней событий нет.")
 
     @dp.message(Command("reject_review"))
     async def reject_review(message: Message):
@@ -1598,7 +1598,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         if section == "tariffs":
             text = f"💸 <b>Тарифы</b>\n\n{_course_tariffs_text(item)}\n\n🔎 Данные проверены: {item.verified_at.strftime('%d.%m.%Y') if item.verified_at else 'дата не указана'}"
         else:
-            text = "Раздел пока не найден."
+            text = "Раздел недоступен. Вернись к карточке курса."
         await call.message.edit_text(
             text,
             reply_markup=InlineKeyboardMarkup(inline_keyboard=[
@@ -1623,7 +1623,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             )).scalars().all()
         if not rows:
             await call.message.edit_text(
-                "Публичные карточки преподавателей по этому предмету ещё добавляются. Вернись позже или открой официальный источник курса.",
+                "В открытом каталоге школы нет подтверждённых профилей преподавателей по этому предмету. Открой официальный источник курса и проверь ведущего выбранного набора.",
                 reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                     [InlineKeyboardButton(text="← Карточка курса", callback_data=f"course:{course_id}")],
                     [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
@@ -2012,7 +2012,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             rows.sort(key=school_professional_score, reverse=True)
         await call.message.edit_text(
             "🏆 <b>Рейтинг школ</b>\n"
-            "Первые три места отмечены медалями. Пока пользовательских отзывов мало, порядок основан на профессиональной оценке.\n\n"
+            "Первые три места отмечены медалями. Если по школе ещё нет одобренных отзывов, её балл отмечен звёздочкой как предварительный.\n\n"
             + "\n────────────\n".join(
                 rating_entry(index, item, stats[item.id][0], stats[item.id][1])
                 for index, item in enumerate(rows, 1)
