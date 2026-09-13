@@ -1,7 +1,10 @@
+from datetime import datetime
+import json
+
 from sqlalchemy import inspect, select, text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
-from .models import Base, School, Teacher, User
+from .models import Base, Course, Review, School, Teacher, User
 
 
 CORE_SUBJECTS = (
@@ -353,6 +356,80 @@ TEACHER_SOCIALS = {
 }
 
 
+COURSE_CONFIG = {
+    "Умскул": {
+        "name": "Годовой курс ЕГЭ-2027",
+        "price_from": 5490,
+        "price_text": "От 5 490 руб./мес, 46 845 руб. за курс. Для комплекта 2–4 предметов школа заявляет скидку до 60%; условия акции меняются.",
+        "format_text": "Эфиры и записи, платформа, тренажёр и контроль прогресса. Число занятий зависит от предмета и преподавателя.",
+        "support_text": "Чат во время эфира и куратор на платформе после уроков; состав сопровождения нужно сверять в карточке предмета.",
+        "practice_text": "Домашние задания, практика и контроль прогресса; школа также заявляет умный тренажёр.",
+        "tariffs": [],
+    },
+    "100балльный репетитор": {
+        "name": "Годовой курс ЕГЭ-2027",
+        "price_from": 990,
+        "price_text": "Курсы продаются блоками: от 990 до 6 790 руб. за блок. Полную стоимость нужно считать по выбранному преподавателю и формату сопровождения.",
+        "format_text": "Годовая программа по блокам с вебинарами и практикой на платформе.",
+        "support_text": "Встречаются форматы без куратора, с куратором и с репетитором; доступность зависит от курса.",
+        "practice_text": "Домашки, зачёты, пробники и работа над ошибками после вебинаров.",
+        "tariffs": [],
+    },
+    "Сотка": {
+        "name": "Подготовка к ЕГЭ",
+        "price_from": 3990,
+        "price_text": "От 3 990 руб./мес за подготовку по 4 предметам. Условия единого пакета нужно подтвердить до оплаты.",
+        "format_text": "Онлайн-трансляции и записи, личный кабинет с недельным планом, материалы и геймификация.",
+        "support_text": "Школа заявляет персонального помощника; детали сопровождения зависят от курса.",
+        "practice_text": "Тесты, тренажёры, домашки и пробники. Заявленная проверка домашки — до 15 минут, пробника — до суток.",
+        "tariffs": [],
+    },
+    "Фоксфорд": {
+        "name": "Курс ЕГЭ-2027",
+        "price_from": 4029,
+        "price_text": "На карточке русского ЕГЭ-2027: «Самостоятельный» — 4 029 руб./мес, «С поддержкой» — 6 433 руб./мес. По другим предметам цена может отличаться.",
+        "format_text": "Онлайн-занятия в прямом эфире с чатом и записями; по предметам доступны курсы, мини-группы и репетиторы.",
+        "support_text": "На тарифе «С поддержкой» — личный чат с куратором и ручная проверка второй части; на самостоятельном — общий чат и автоматическая проверка.",
+        "practice_text": "Домашки, тренажёры и пробники; в годовом курсе школа заявляет проверку второй части экспертами.",
+        "tariffs": [
+            {"name": "Самостоятельный", "price": 4029, "details": "записи, общий чат, автоматическая проверка"},
+            {"name": "С поддержкой", "price": 6433, "details": "куратор, ручная проверка второй части, помощь с апелляцией"},
+        ],
+    },
+    "Вебиум": {
+        "name": "Годовой курс ЕГЭ-2027",
+        "price_from": None,
+        "price_text": "Цена зависит от предмета и выбранного пакета; перед оплатой нужно открыть актуальную карточку курса.",
+        "format_text": "Онлайн-уроки, записи, платформа, практика и материалы по предмету.",
+        "support_text": "Наставники и формат сопровождения зависят от выбранного курса.",
+        "practice_text": "Домашние задания, практика и пробники по программе курса.",
+        "tariffs": [],
+    },
+    "99 Баллов": {
+        "name": "Мастер-группа ЕГЭ",
+        "price_from": None,
+        "price_text": "Единую актуальную цену для всех ЕГЭ-курсов официальный каталог не показывает: стоимость нужно сверить в карточке выбранного предмета.",
+        "format_text": "Вебинары на платформе, материалы и домашние задания по программе предмета.",
+        "support_text": "Школа заявляет сопровождение личного куратора; наполнение зависит от курса.",
+        "practice_text": "Практика и домашние задания на платформе; частоту пробников уточняй в карточке предмета.",
+        "tariffs": [],
+    },
+    "Турбо ЕГЭ": {
+        "name": "Годовой курс ЕГЭ-2027",
+        "price_from": 4333,
+        "price_text": "Стандарт — от 4 333 руб./мес; Про — от 5 833 руб./мес; Премиум — от 8 333 руб./мес. Цена «от» зависит от предмета и времени покупки.",
+        "format_text": "12 занятий и 16 домашних работ в месяц, записи с таймкодами, тренажёр, прогноз баллов и приложение.",
+        "support_text": "Прямая связь с преподавателем на любом тарифе. Про и Премиум добавляют персональную обратную связь и более быструю проверку.",
+        "practice_text": "Тестовые ДЗ проверяются автоматически, письменные — кураторами. Пробники: Стандарт — раз в два месяца, Про — ежемесячно, Премиум — до двух в месяц.",
+        "tariffs": [
+            {"name": "Стандарт", "price": 4333, "details": "база, регулярные пробники, проверка в среднем до 4 часов"},
+            {"name": "Про", "price": 5833, "details": "дополнительные задания, обратная связь, проверка в среднем до 25 минут"},
+            {"name": "Премиум", "price": 8333, "details": "еженедельная обратная связь, зачёты и проверка пробника преподавателем"},
+        ],
+    },
+}
+
+
 NEW_SCHOOL_COLUMNS = {
     "fit_text": "TEXT DEFAULT ''",
     "results_text": "TEXT DEFAULT ''",
@@ -375,6 +452,8 @@ NEW_REVIEW_COLUMNS = {
     "criteria_json": "TEXT",
     "proof_file_id": "VARCHAR(500)",
     "proof_file_type": "VARCHAR(30)",
+    "proof_delete_after": "DATETIME",
+    "proof_consent": "BOOLEAN DEFAULT 0",
 }
 
 
@@ -428,6 +507,73 @@ async def _upsert_teachers(session: AsyncSession):
     await session.commit()
 
 
+async def _upsert_courses(session: AsyncSession):
+    """Create subject-level course cards from current school-level research.
+
+    Price and tariff text is intentionally repeated only when the school publishes
+    one offer for the subject range. Precise subject/tariff research can replace
+    these rows later without changing the user flow.
+    """
+    schools = (await session.execute(select(School))).scalars().all()
+    checked_at = datetime(2026, 9, 13)
+    for school in schools:
+        config = COURSE_CONFIG.get(school.name)
+        if not config:
+            continue
+        for subject in (item.strip() for item in school.subjects.split(",") if item.strip()):
+            name = f"{config['name']} · {subject.title()}"
+            course = (await session.execute(
+                select(Course).where(
+                    Course.school_id == school.id,
+                    Course.subject == subject.title(),
+                    Course.name == name,
+                )
+            )).scalar_one_or_none()
+            values = {
+                "school_id": school.id,
+                "subject": subject.title(),
+                "name": name,
+                "price_from": config["price_from"],
+                "price_text": config["price_text"],
+                "format_text": config["format_text"],
+                "support_text": config["support_text"],
+                "practice_text": config["practice_text"],
+                "tariffs_json": json.dumps(config["tariffs"], ensure_ascii=False),
+                "source_url": school.official_url,
+                "verified_at": checked_at,
+                "is_active": True,
+            }
+            if course is None:
+                session.add(Course(**values))
+            else:
+                for key, value in values.items():
+                    setattr(course, key, value)
+    await session.commit()
+
+
+async def _remove_expired_proofs(session: AsyncSession):
+    """Proof files are only needed for moderation and should not live indefinitely."""
+    expired = (await session.execute(
+        select(Review).where(
+            Review.proof_file_id.is_not(None),
+            Review.proof_delete_after.is_not(None),
+            Review.proof_delete_after <= datetime.utcnow(),
+        )
+    )).scalars().all()
+    for review in expired:
+        review.proof_file_id = None
+        review.proof_file_type = None
+        review.proof_delete_after = None
+    if expired:
+        await session.commit()
+
+
+async def cleanup_expired_proofs(session_factory):
+    """Forget expired Telegram file references without touching review text."""
+    async with session_factory() as session:
+        await _remove_expired_proofs(session)
+
+
 async def _remove_obsolete_teacher_rows(session: AsyncSession):
     """Remove records left by corrected research, so a wrong legacy card is not shown."""
     school_id = (await session.execute(select(School.id).where(School.name == "99 Баллов"))).scalar_one_or_none()
@@ -449,7 +595,9 @@ async def init_db(url: str):
     async with session_factory() as session:
         await _upsert_schools(session)
         await _upsert_teachers(session)
+        await _upsert_courses(session)
         await _remove_obsolete_teacher_rows(session)
+        await _remove_expired_proofs(session)
     return engine, session_factory
 
 

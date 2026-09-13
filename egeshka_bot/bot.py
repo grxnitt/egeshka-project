@@ -5,6 +5,7 @@ from aiogram.exceptions import TelegramBadRequest
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message
+import asyncio
 import json
 from datetime import datetime, timedelta
 from html import escape
@@ -12,7 +13,7 @@ from sqlalchemy import func, select
 
 from .config import Settings
 from .db import get_or_create_user
-from .models import Event, Review, School, Teacher
+from .models import Course, Event, Review, School, Teacher
 from .scoring import QuizProfile, school_score
 
 
@@ -56,6 +57,20 @@ CRITERIA = (
 )
 CRITERIA_BY_KEY = {field: label for field, label, _ in CRITERIA}
 
+# These are deliberately kept separate from the school criteria.  We collect
+# the parts that a student can fairly assess after studying with a teacher,
+# without inventing an "expert" sub-score where the public source does not
+# support one yet.
+TEACHER_CRITERIA = (
+    ("explanation", "Объяснение материала"),
+    ("practice", "Практика и разбор ошибок"),
+    ("feedback", "Обратная связь"),
+    ("tempo", "Темп и нагрузка"),
+    ("communication", "Общение и атмосфера"),
+)
+TEACHER_CRITERIA_BY_KEY = {field: label for field, label in TEACHER_CRITERIA}
+REVIEW_CRITERIA_BY_KEY = {**CRITERIA_BY_KEY, **TEACHER_CRITERIA_BY_KEY}
+
 
 class Quiz(StatesGroup):
     subject = State()
@@ -80,6 +95,11 @@ class TeacherCompare(StatesGroup):
     second = State()
 
 
+class CourseCompare(StatesGroup):
+    first = State()
+    second = State()
+
+
 class ReviewForm(StatesGroup):
     score = State()
     criterion_score = State()
@@ -90,6 +110,15 @@ class ReviewForm(StatesGroup):
 
 def money(value: int) -> str:
     return f"{value:,}".replace(",", " ")
+
+
+def teacher_subject_variants(subject: str) -> tuple[str, ...]:
+    """Course catalogue uses exam names; teacher catalogues sometimes spell them out."""
+    aliases = {
+        "Английский": "Английский язык",
+        "Математика": "Математика профильная",
+    }
+    return tuple(dict.fromkeys((subject, aliases.get(subject, subject))))
 
 
 def score_bar(value, width=5):
@@ -143,8 +172,9 @@ def menu():
             [InlineKeyboardButton(text="👩‍🏫 Сравнить преподавателей", callback_data="teacher_compare_menu")],
             [InlineKeyboardButton(text="💬 Отзыв о школе", callback_data="review_school_menu"),
              InlineKeyboardButton(text="👩‍🏫 Отзыв о преподавателе", callback_data="review_teacher_menu")],
-            [InlineKeyboardButton(text="📚 Школы", callback_data="schools"),
-             InlineKeyboardButton(text="🏆 Рейтинг", callback_data="rating")],
+            [InlineKeyboardButton(text="📚 Курсы по предметам", callback_data="courses"),
+             InlineKeyboardButton(text="🏫 Школы", callback_data="schools")],
+            [InlineKeyboardButton(text="🏆 Рейтинг", callback_data="rating")],
             [InlineKeyboardButton(text="📰 Канал", callback_data="channel")],
         ]
     )
@@ -172,6 +202,121 @@ def school_buttons(rows, prefix):
         ]
         + [[InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")]]
     )
+
+
+def course_subject_buttons(subjects):
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text=subject, callback_data=f"course_subject:{subject}")]
+            for subject in subjects
+        ] + [[InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")]]
+    )
+
+
+def course_buttons(rows, prefix="course", exclude_id=None):
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text=f"{row.school_name} · {row.subject}", callback_data=f"{prefix}:{row.id}")]
+            for row in rows if row.id != exclude_id
+        ] + [[InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")]]
+    )
+
+
+def _course_tariffs_text(course):
+    try:
+        tariffs = json.loads(course.tariffs_json or "[]")
+    except json.JSONDecodeError:
+        tariffs = []
+    if not tariffs:
+        return "Тарифы и детали зависят от предмета. Открой официальный источник перед оплатой."
+    return "\n".join(
+        f"• <b>{escape(item['name'])}</b> — от {money(int(item['price']))} руб./мес\n  {escape(item['details'])}"
+        for item in tariffs
+    )
+
+
+def course_card(course, school, teachers):
+    teacher_names = ", ".join(teacher.name for teacher in teachers) or "публичные карточки преподавателей ещё не добавлены"
+    checked = course.verified_at.strftime("%d.%m.%Y") if course.verified_at else "дата не указана"
+    return (
+        f"📚 <b>{escape(course.name)}</b>\n"
+        f"🏫 {escape(school.name)}\n\n"
+        f"💸 <b>Цена</b>\n{escape(course.price_text)}\n\n"
+        f"🎓 <b>Формат</b>\n{escape(course.format_text)}\n\n"
+        f"🧑‍🏫 <b>Поддержка</b>\n{escape(course.support_text)}\n\n"
+        f"📝 <b>Практика</b>\n{escape(course.practice_text)}\n\n"
+        f"👩‍🏫 <b>Преподаватели по предмету</b>\n{escape(teacher_names)}\n\n"
+        f"🔎 <b>Данные проверены</b>: {checked}\n"
+        f"Источник: {escape(course.source_url)}"
+    )
+
+
+def course_card_keyboard(course_id):
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="💸 Тарифы", callback_data=f"course_section:{course_id}:tariffs")],
+        [InlineKeyboardButton(text="👩‍🏫 Преподаватели предмета", callback_data=f"course_teachers:{course_id}")],
+        [InlineKeyboardButton(text="⚖️ Сравнить с курсом другой школы", callback_data=f"course_compare:{course_id}")],
+        [InlineKeyboardButton(text="💬 Оставить отзыв о школе", callback_data=f"review_course_school:{course_id}")],
+        [InlineKeyboardButton(text="← К курсам по предметам", callback_data="courses")],
+        [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
+    ])
+
+
+def course_compare_keyboard(left_id, right_id):
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="💸 Цена и тарифы", callback_data=f"course_compare_section:{left_id}:{right_id}:price")],
+        [InlineKeyboardButton(text="🎓 Формат и нагрузка", callback_data=f"course_compare_section:{left_id}:{right_id}:format")],
+        [InlineKeyboardButton(text="🧑‍🏫 Поддержка и практика", callback_data=f"course_compare_section:{left_id}:{right_id}:learning")],
+        [InlineKeyboardButton(text="👩‍🏫 Преподаватели", callback_data=f"course_compare_section:{left_id}:{right_id}:teachers")],
+        [InlineKeyboardButton(text="← К карточке курса", callback_data=f"course:{left_id}")],
+        [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
+    ])
+
+
+def course_compare_text(left, right, left_school, right_school):
+    left_price = f"от {money(left.price_from)} руб." if left.price_from else "цену уточняй в карточке"
+    right_price = f"от {money(right.price_from)} руб." if right.price_from else "цену уточняй в карточке"
+    return (
+        "⚖️ <b>Сравнение курсов</b>\n\n"
+        f"📚 {escape(left.subject)}\n\n"
+        f"<b>{escape(left_school.name)}</b>\n{escape(left.name)} · {left_price}\n\n"
+        f"<b>{escape(right_school.name)}</b>\n{escape(right.name)} · {right_price}\n\n"
+        "Открой нужный раздел, чтобы сравнить только цену, формат, поддержку или преподавателей."
+    )
+
+
+def course_compare_section_text(left, right, left_school, right_school, section, left_teachers=(), right_teachers=()):
+    if section == "price":
+        return (
+            "💸 <b>Цена и тарифы</b>\n\n"
+            f"<b>{escape(left_school.name)}</b>\n{escape(left.price_text)}\n\n"
+            f"{_course_tariffs_text(left)}\n\n────────────\n\n"
+            f"<b>{escape(right_school.name)}</b>\n{escape(right.price_text)}\n\n"
+            f"{_course_tariffs_text(right)}"
+        )
+    if section == "format":
+        return (
+            "🎓 <b>Формат и нагрузка</b>\n\n"
+            f"<b>{escape(left_school.name)}</b>\n{escape(left.format_text)}\n\n────────────\n\n"
+            f"<b>{escape(right_school.name)}</b>\n{escape(right.format_text)}"
+        )
+    if section == "learning":
+        return (
+            "🧑‍🏫 <b>Поддержка и практика</b>\n\n"
+            f"<b>{escape(left_school.name)}</b>\nПоддержка: {escape(left.support_text)}\n\nПрактика: {escape(left.practice_text)}"
+            f"\n\n────────────\n\n"
+            f"<b>{escape(right_school.name)}</b>\nПоддержка: {escape(right.support_text)}\n\nПрактика: {escape(right.practice_text)}"
+        )
+    if section == "teachers":
+        left_names = ", ".join(t.name for t in left_teachers) or "публичные профили пока не добавлены"
+        right_names = ", ".join(t.name for t in right_teachers) or "публичные профили пока не добавлены"
+        return (
+            "👩‍🏫 <b>Преподаватели по предмету</b>\n\n"
+            f"<b>{escape(left_school.name)}</b>\n{escape(left_names)}\n\n────────────\n\n"
+            f"<b>{escape(right_school.name)}</b>\n{escape(right_names)}\n\n"
+            "Перед оплатой проверь, кто ведёт именно выбранный набор: состав может меняться."
+        )
+    return "Раздел пока не найден."
 
 
 def priority_keyboard(first_priority=None):
@@ -258,64 +403,104 @@ def card_keyboard(school_id):
     )
 
 
+def school_total_score(school, user_average=None, user_count=0):
+    """A display score on the shared 0–10 scale and a preliminary flag."""
+    professional = school_professional_score(school)
+    if user_average is not None and user_count:
+        return professional + max(0.0, min(5.0, float(user_average))), False
+    return professional * 2, True
+
+
+def criterion_total(value, stats, field):
+    average, count = (stats or {}).get(field, (None, 0))
+    if count:
+        return float(value) / 2 + float(average), False
+    return float(value), True
+
+
 def comparison_text(left, right, left_user_average=None, left_user_count=0, right_user_average=None, right_user_count=0, left_criteria_stats=None, right_criteria_stats=None):
-    left_criteria_stats = left_criteria_stats or {}
-    right_criteria_stats = right_criteria_stats or {}
+    """Short first screen. Details live behind focused buttons."""
+    left_total, left_preliminary = school_total_score(left, left_user_average, left_user_count)
+    right_total, right_preliminary = school_total_score(right, right_user_average, right_user_count)
+
+    def score(value, preliminary):
+        return f"{value:.1f}".replace(".", ",") + "/10" + ("*" if preliminary else "")
+
+    return (
+        "⚖️ <b>Сравнение школ</b>\n\n"
+        f"{escape(left.name)}  │  {escape(right.name)}\n\n"
+        "⭐ <b>Итоговый рейтинг</b>\n"
+        f"{escape(left.name)} — <b>{score(left_total, left_preliminary)}</b>\n"
+        f"{escape(right.name)} — <b>{score(right_total, right_preliminary)}</b>\n\n"
+        "Открой нужный раздел: там только данные по одной теме, без длинной сводки.\n"
+        "* Предварительный балл: пока без одобренных отзывов учеников."
+    )
+
+
+def comparison_section_text(left, right, section, left_stats=None, right_stats=None):
+    left_stats = left_stats or {}
+    right_stats = right_stats or {}
+
     def comma(value):
         return f"{value:.1f}".replace(".", ",")
 
-    def criterion(field, label, left_value, right_value):
-        left_average, left_count = left_criteria_stats.get(field, (None, 0))
-        right_average, right_count = right_criteria_stats.get(field, (None, 0))
-        left_result = comma(left_value / 2 + left_average) if left_count else f"{comma(left_value)}*"
-        right_result = comma(right_value / 2 + right_average) if right_count else f"{comma(right_value)}*"
-        return f"{label}:  {left_result}  │  {right_result}"
+    if section == "criteria":
+        lines = [
+            "📊 <b>Критерии</b>",
+            f"{escape(left.name)}  │  {escape(right.name)}",
+            "Шкала 0–10\n",
+        ]
+        has_preliminary = False
+        for field, label, _ in CRITERIA:
+            left_value, left_preliminary = criterion_total(getattr(left, field), left_stats, field)
+            right_value, right_preliminary = criterion_total(getattr(right, field), right_stats, field)
+            has_preliminary = has_preliminary or left_preliminary or right_preliminary
+            lines.append(
+                f"{escape(label)}\n{comma(left_value)}/10{'*' if left_preliminary else ''}  │  "
+                f"{comma(right_value)}/10{'*' if right_preliminary else ''}"
+            )
+        if has_preliminary:
+            lines.append("\n* Предварительный балл: пока без одобренных отзывов учеников.")
+        return "\n\n".join(lines)
 
+    sections = {
+        "price": ("💸 <b>Цена и тарифы</b>", "price_text"),
+        "format": ("🎓 <b>Формат</b>", "format_text"),
+        "support": ("🧑‍🏫 <b>Поддержка</b>", "support_text"),
+        "practice": ("📝 <b>Практика</b>", "homework_text"),
+        "strengths": ("✅ <b>Сильные стороны</b>", "strengths"),
+        "risks": ("⚠️ <b>Риски и жалобы</b>", "weaknesses"),
+    }
+    title, attribute = sections.get(section, ("Раздел", "description"))
     return (
-        f"⚖️ Сравнение школ\n\n"
-        f"{left.name}  │  {right.name}\n"
-        f"Итоговые оценки по критериям · шкала 0–10\n\n"
-        f"📊 Критерии\n"
-        f"{criterion('teachers_score', 'Преподаватели', left.teachers_score, right.teachers_score)}\n"
-        f"{criterion('practice_score', 'Практика и ДЗ', left.practice_score, right.practice_score)}\n"
-        f"{criterion('feedback_score', 'Проверка', left.feedback_score, right.feedback_score)}\n"
-        f"{criterion('curator_score', 'Кураторы', left.curator_score, right.curator_score)}\n"
-        f"{criterion('platform_score', 'Платформа', left.platform_score, right.platform_score)}\n"
-        f"{criterion('workload_score', 'Нагрузка', left.workload_score, right.workload_score)}\n"
-        f"{criterion('price_quality_score', 'Цена/качество', left.price_quality_score, right.price_quality_score)}\n"
-        f"⭐ Общий итог:  "
-        f"{comma(school_professional_score(left) + left_user_average) if left_user_count else comma(school_professional_score(left) * 2) + '*'}  │  "
-        f"{comma(school_professional_score(right) + right_user_average) if right_user_count else comma(school_professional_score(right) * 2) + '*'}\n"
-        f"* Предварительный балл: пока без оценок учеников.\n\n"
-        f"────────────\n💸 Цена\n"
-        f"{left.name}:\n{left.price_text}\n\n"
-        f"{right.name}:\n{right.price_text}\n\n"
-        f"────────────\n🎓 Формат\n"
-        f"{left.name}: {left.format_text}\n\n"
-        f"{right.name}: {right.format_text}\n\n"
-        f"────────────\n🧑‍🏫 Поддержка\n"
-        f"{left.name}: {left.support_text}\n\n"
-        f"{right.name}: {right.support_text}\n\n"
-        f"────────────\n📝 Практика\n"
-        f"{left.name}: {left.homework_text}\n\n"
-        f"{right.name}: {right.homework_text}\n\n"
-        f"────────────\n✅ Сильные стороны\n"
-        f"{left.name}: {left.strengths}\n\n"
-        f"{right.name}: {right.strengths}\n\n"
-        f"────────────\n⚠️ Риски\n"
-        f"{left.name}: {left.weaknesses}\n\n"
-        f"{right.name}: {right.weaknesses}"
+        f"{title}\n\n"
+        f"<b>{escape(left.name)}</b>\n{escape(getattr(left, attribute))}\n\n"
+        f"────────────\n\n"
+        f"<b>{escape(right.name)}</b>\n{escape(getattr(right, attribute))}"
     )
+
+
+def comparison_keyboard(left_id, right_id):
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="📊 Все критерии", callback_data=f"compare_section:{left_id}:{right_id}:criteria")],
+        [InlineKeyboardButton(text="💸 Цена", callback_data=f"compare_section:{left_id}:{right_id}:price"),
+         InlineKeyboardButton(text="🎓 Формат", callback_data=f"compare_section:{left_id}:{right_id}:format")],
+        [InlineKeyboardButton(text="🧑‍🏫 Поддержка", callback_data=f"compare_section:{left_id}:{right_id}:support"),
+         InlineKeyboardButton(text="📝 Практика", callback_data=f"compare_section:{left_id}:{right_id}:practice")],
+        [InlineKeyboardButton(text="✅ Сильные стороны", callback_data=f"compare_section:{left_id}:{right_id}:strengths"),
+         InlineKeyboardButton(text="⚠️ Риски", callback_data=f"compare_section:{left_id}:{right_id}:risks")],
+        [InlineKeyboardButton(text="ℹ️ Как считается рейтинг", callback_data="rating_methodology:compare")],
+        [InlineKeyboardButton(text="📰 Новости и разборы ЕГЭ", callback_data="channel")],
+        [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
+    ])
 
 
 def rating_methodology_text():
     return (
         "ℹ️ Как считается рейтинг\n\n"
-        "Для школ и преподавателей каждый критерий получает две оценки:\n"
-        "• профессиональная оценка ЕГЭшки — до 5 баллов;\n"
-        "• средняя оценка учеников — до 5 баллов.\n\n"
-        "Итог по критерию и общий рейтинг — сумма двух частей, максимум 10/10.\n"
-        "Звёздочка означает предварительный балл: по критерию пока нет одобренных отзывов учеников."
+        "<b>Школы:</b> по каждому критерию есть оценка ЕГЭшки до 5 и средняя оценка учеников до 5. Вместе — до 10.\n\n"
+        "<b>Преподаватели:</b> общий рейтинг тоже складывается из оценки ЕГЭшки и отзывов учеников. В отзывах отдельно собираем оценки объяснения, практики, обратной связи, темпа и общения.\n\n"
+        "Звёздочка означает предварительный балл: одобренных отзывов учеников пока нет. Подробные источники и расчёты не перегружают карточку, но учитываются при модерации и обновлении оценок."
     )
 
 
@@ -412,12 +597,24 @@ def teacher_compare_text(
         f"{school_line}\n"
         f"📚 {left.subject}\n\n"
         f"👩‍🏫 {left.name} ({left_school_name}) · ⭐ {left_score}/10{left_marker}\n"
-        f"{left.description}\n"
         f"{left_reviews}\n\n"
         f"👩‍🏫 {right.name} ({right_school_name}) · ⭐ {right_score}/10{right_marker}\n"
-        f"{right.description}\n"
-        f"{right_reviews}{preliminary_note}"
+        f"{right_reviews}{preliminary_note}\n\n"
+        "Открой карточку преподавателя, если хочешь посмотреть биографию, результаты и ссылки."
     )
+
+
+def teacher_compare_keyboard(left, right, school_id=None):
+    rows = [
+        [InlineKeyboardButton(text=f"👩‍🏫 {left.name}", callback_data=f"teacher:{left.id}"),
+         InlineKeyboardButton(text=f"👩‍🏫 {right.name}", callback_data=f"teacher:{right.id}")],
+        [InlineKeyboardButton(text="ℹ️ Как считается рейтинг", callback_data="rating_methodology:teacher_compare")],
+    ]
+    if school_id:
+        rows.append([InlineKeyboardButton(text="← Преподаватели школы", callback_data=f"teachers:{school_id}")])
+        rows.append([InlineKeyboardButton(text="← Карточка школы", callback_data=f"school:{school_id}")])
+    rows.append([InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")])
+    return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
 def hybrid_rating(professional_out_of_10, user_average=None, user_count=0):
@@ -463,13 +660,25 @@ def rating_entry(position, school, user_average, user_count):
     )
 
 
-def teacher_card(teacher, school, user_average=None, user_count=0):
+def teacher_criteria_text(stats):
+    if not any(count for _, count in stats.values()):
+        return "📊 <b>По отзывам учеников</b>\nОценки отдельных аспектов появятся после одобренных отзывов."
+    lines = ["📊 <b>По отзывам учеников</b>", "Шкала 1–5"]
+    for field, label in TEACHER_CRITERIA:
+        average, count = stats.get(field, (None, 0))
+        if count:
+            lines.append(f"{escape(label)} — <b>{float(average):.1f}/5</b> · {count} оценок")
+    return "\n".join(lines)
+
+
+def teacher_card(teacher, school, user_average=None, user_count=0, criteria_stats=None):
     social = teacher.social_url or "Публичная ссылка на соцсеть не подтверждена"
     return (
         f"👩‍🏫 {teacher.name}\n\n"
         f"🏫 Школа: {school.name}\n"
         f"📚 Предмет: {teacher.subject}\n\n"
         f"⭐ Оценка ЕГЭшки\n{hybrid_rating(teacher.rating, user_average, user_count)}\n\n"
+        f"{teacher_criteria_text(criteria_stats or {})}\n\n"
         f"👤 О преподавателе\n{teacher.description}\n\n"
         f"💬 Отзывы и сигналы\n{teacher.review_summary}\n\n"
         f"📱 Соцсеть\n{social}\n\n"
@@ -590,6 +799,25 @@ async def approved_school_criteria_stats(session, school_id):
     return {field: (sum(items) / len(items) if items else None, len(items)) for field, items in values.items()}
 
 
+async def approved_teacher_criteria_stats(session, school_id, teacher_id):
+    values = {field: [] for field, _ in TEACHER_CRITERIA}
+    reviews = (await session.execute(select(Review).where(
+        Review.school_id == school_id,
+        Review.teacher_id == teacher_id,
+        Review.criterion.is_(None),
+        Review.moderation_status == "approved",
+    ))).scalars().all()
+    for review in reviews:
+        try:
+            scores = json.loads(review.criteria_json or "{}")
+        except json.JSONDecodeError:
+            scores = {}
+        for field, score in scores.items():
+            if field in values:
+                values[field].append(float(score))
+    return {field: (sum(items) / len(items) if items else None, len(items)) for field, items in values.items()}
+
+
 async def setup(dp: Dispatcher, session_factory, settings: Settings):
     async def track(telegram_id: int, event_name: str, metadata=None):
         async with session_factory() as session:
@@ -629,7 +857,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             teacher = await session.get(Teacher, review.teacher_id) if review.teacher_id else None
         target = f"преподавателе {teacher.name}" if teacher else f"школе {school.name}"
         if review.criterion:
-            target += f" · критерий «{CRITERIA_BY_KEY.get(review.criterion, review.criterion)}»"
+            target += f" · критерий «{REVIEW_CRITERIA_BY_KEY.get(review.criterion, review.criterion)}»"
         positive = review.text_positive or "—"
         negative = review.text_negative or "—"
         proof = "приложено" if review.proof_file_id else "не приложено"
@@ -640,14 +868,17 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         criteria_text = ""
         if criteria:
             criteria_text = "\n\nОценки критериев:\n" + "\n".join(
-                f"{CRITERIA_BY_KEY.get(key, key)}: {float(value):g}/5" for key, value in criteria.items()
+                f"{REVIEW_CRITERIA_BY_KEY.get(key, key)}: {float(value):g}/5" for key, value in criteria.items()
             ) + "\n\n"
+        delete_note = ""
+        if review.proof_delete_after:
+            delete_note = f"\nСсылка на файл в базе удалится: {review.proof_delete_after.strftime('%d.%m.%Y')}"
         text = (
             f"Новый отзыв №{review.id} о {target}. Оценка: {review.score:.1f}/5\n\n"
             f"{criteria_text}"
             f"Понравилось:\n{positive}\n\n"
             f"Не понравилось:\n{negative}\n\n"
-            f"Подтверждение обучения: {proof}\n"
+            f"Подтверждение обучения: {proof}{delete_note}\n"
             f"Одобрить отзыв: /approve_review {review.id}\n"
             f"Отклонить: /reject_review {review.id}"
         )
@@ -778,7 +1009,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             await call.message.edit_text(blocked, reply_markup=menu())
             await call.answer()
             return
-        await state.update_data(review_school_id=school_id, review_teacher_id=None, review_criterion=criterion)
+        await state.update_data(review_school_id=school_id, review_teacher_id=None, review_criterion=criterion, review_kind="school")
         if criterion is None:
             await state.update_data(review_criteria_scores={}, review_criteria_index=0)
             await state.set_state(ReviewForm.criterion_score)
@@ -803,9 +1034,20 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             await call.message.edit_text(blocked, reply_markup=menu())
             await call.answer()
             return
-        await state.update_data(review_school_id=teacher.school_id, review_teacher_id=teacher_id, review_criterion=None)
-        await state.set_state(ReviewForm.score)
-        await call.message.edit_text(f"Оцени преподавателя {teacher.name} от 1 до 5 с шагом 0,5. Отзыв будет опубликован только после модерации.", reply_markup=review_score_keyboard())
+        await state.update_data(
+            review_school_id=teacher.school_id,
+            review_teacher_id=teacher_id,
+            review_criterion=None,
+            review_kind="teacher",
+            review_criteria_scores={},
+            review_criteria_index=0,
+        )
+        await state.set_state(ReviewForm.criterion_score)
+        await call.message.edit_text(
+            f"Сначала оцени преподавателя {teacher.name} по пяти понятным аспектам.\n\n"
+            "1/5 · Объяснение материала\nВыбери оценку от 1 до 5:",
+            reply_markup=criterion_score_keyboard(),
+        )
         await call.answer()
 
     @dp.callback_query(ReviewForm.score, F.data.startswith("review_score:"))
@@ -820,20 +1062,22 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         data = await state.get_data()
         index = int(data.get("review_criteria_index", 0))
         scores = dict(data.get("review_criteria_scores", {}))
-        field, label, _ = CRITERIA[index]
+        criteria = TEACHER_CRITERIA if data.get("review_kind") == "teacher" else CRITERIA
+        field, label, *_ = criteria[index]
         scores[field] = float(call.data.split(":")[1])
-        if index + 1 < len(CRITERIA):
-            next_field, next_label, _ = CRITERIA[index + 1]
+        if index + 1 < len(criteria):
+            next_field, next_label, *_ = criteria[index + 1]
             await state.update_data(review_criteria_scores=scores, review_criteria_index=index + 1)
             await call.message.edit_text(
-                f"{index + 2}/7 · {next_label}\nВыбери оценку от 1 до 5:",
+                f"{index + 2}/{len(criteria)} · {next_label}\nВыбери оценку от 1 до 5:",
                 reply_markup=criterion_score_keyboard(),
             )
         else:
             await state.update_data(review_criteria_scores=scores)
             await state.set_state(ReviewForm.score)
+            object_name = "преподавателю" if data.get("review_kind") == "teacher" else "школе"
             await call.message.edit_text(
-                "Все критерии оценены.\n\nТеперь поставь общую оценку школе от 1 до 5:",
+                f"Все критерии оценены.\n\nТеперь поставь общую оценку {object_name} от 1 до 5:",
                 reply_markup=review_score_keyboard(),
             )
         await call.answer()
@@ -879,8 +1123,9 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         await state.set_state(ReviewForm.verification)
         await track(message.from_user.id, "review_submitted", {"review_id": review_id})
         await message.answer(
-            "Отзыв сохранён и отправлен на модерацию.\n\n"
-            "Хочешь подтвердить, что действительно учился в этой школе? Можно отправить скриншот личного кабинета, чека или договора. Это необязательно.",
+            "Отзыв сохранён.\n\n"
+            "Хочешь подтвердить, что действительно учился в этой школе? Это необязательно, но помогает модерации. "
+            "После выбора «прикрепить» или «пропустить» отзыв попадёт в очередь.",
             reply_markup=review_verification_keyboard(),
         )
 
@@ -896,7 +1141,9 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
     async def review_proof_start(call: CallbackQuery, state: FSMContext):
         await call.message.edit_text(
             "Пришли одним сообщением фото или файл подтверждения.\n\n"
-            "Подойдут скриншот личного кабинета, чек, договор или другое подтверждение обучения. Лишние персональные данные можно закрыть.",
+            "Подойдут скриншот личного кабинета, чек, договор или другое подтверждение обучения. "
+            "Перед отправкой закрой ФИО, телефон, адрес, номер заказа и другие лишние личные данные.\n\n"
+            "Файл не публикуется: его увидят только модераторы. Ссылку на файл ЕГЭшка удалит из базы через 30 дней.",
             reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                 [InlineKeyboardButton(text="Пропустить", callback_data="review_proof:no")],
                 [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
@@ -919,6 +1166,8 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                 return
             review.proof_file_id = file_id
             review.proof_file_type = file_type
+            review.proof_consent = True
+            review.proof_delete_after = datetime.utcnow() + timedelta(days=30)
             await session.commit()
             school = await session.get(School, review.school_id)
             teacher = await session.get(Teacher, review.teacher_id) if review.teacher_id else None
@@ -1211,14 +1460,29 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         ]
         ranked.sort(key=lambda item: item[0], reverse=True)
         top = ranked[:3]
+        subject_name = next((item for item in SUBJECTS if item.lower() == data["subject"]), data["subject"].title())
+        async with session_factory() as session:
+            subject_courses = (await session.execute(
+                select(Course).where(Course.subject == subject_name, Course.is_active == True)
+            )).scalars().all()
+        course_by_school = {course.school_id: course for course in subject_courses}
         lines = []
         for index, (score, reasons, school) in enumerate(top, 1):
             reason_text = ", ".join(reasons) if reasons else "хорошее совпадение по анкете"
-            lines.append(f"{index}. {school.name} — {score:.0f}%\nПочему: {reason_text}\n💸 {school.price_text}")
-        text = "Результат подбора\n\n" + "\n\n".join(lines)
+            course = course_by_school.get(school.id)
+            price = course.price_text if course else school.price_text
+            lines.append(f"{index}. {school.name} — {score:.0f}%\nПочему: {reason_text}\n💸 {price}")
+        text = (
+            f"🎯 <b>Подбор по предмету: {escape(subject_name)}</b>\n\n"
+            "Мы отобрали школы по твоим ответам. Открой карточку курса: там формат, тарифы и преподаватели именно по предмету.\n\n"
+            + "\n\n".join(escape(line) for line in lines)
+        )
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
-                [InlineKeyboardButton(text=f"Карточка: {school.name}", callback_data=f"school:{school.id}")]
+                [InlineKeyboardButton(
+                    text=f"Курс: {school.name}",
+                    callback_data=f"course:{course_by_school[school.id].id}" if school.id in course_by_school else f"school:{school.id}",
+                )]
                 for _, _, school in top
             ]
             + [[InlineKeyboardButton(text="📰 Новости и разборы ЕГЭ", callback_data="channel")]]
@@ -1226,7 +1490,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         )
         await state.clear()
         await track(call.from_user.id, "quiz_completed", {"subject": data.get("subject")})
-        await call.message.edit_text(text, reply_markup=keyboard)
+        await call.message.edit_text(text, reply_markup=keyboard, parse_mode=ParseMode.HTML)
         await call.answer()
 
     @dp.callback_query(F.data == "schools")
@@ -1234,6 +1498,183 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         rows = await active_schools(session_factory)
         await call.message.edit_text("📚 Каталог школ\n\nВыбери школу, чтобы открыть её карточку:", reply_markup=school_buttons(rows, "school"))
         await call.answer()
+
+    @dp.callback_query(F.data == "courses")
+    async def courses(call: CallbackQuery):
+        async with session_factory() as session:
+            subjects = (await session.execute(
+                select(Course.subject).where(Course.is_active == True).distinct().order_by(Course.subject)
+            )).scalars().all()
+        await call.message.edit_text(
+            "📚 Курсы по предметам\n\nВыбери предмет. Затем покажем конкретные варианты подготовки, цены и преподавателей.",
+            reply_markup=course_subject_buttons(subjects),
+        )
+        await call.answer()
+
+    @dp.callback_query(F.data.startswith("course_subject:"))
+    async def course_subject(call: CallbackQuery):
+        subject = call.data.split(":", 1)[1]
+        async with session_factory() as session:
+            rows = (await session.execute(
+                select(Course, School.name.label("school_name"))
+                .join(School, School.id == Course.school_id)
+                .where(Course.subject == subject, Course.is_active == True)
+                .order_by(School.name)
+            )).all()
+        courses_with_school = []
+        for course, school_name in rows:
+            course.school_name = school_name
+            courses_with_school.append(course)
+        await call.message.edit_text(
+            f"📚 Курсы ЕГЭ · {subject}\n\nВыбери вариант, чтобы увидеть формат, тарифы и преподавателей именно по предмету:",
+            reply_markup=course_buttons(courses_with_school),
+        )
+        await call.answer()
+
+    @dp.callback_query(F.data.startswith("course:"))
+    async def course(call: CallbackQuery):
+        course_id = int(call.data.split(":")[1])
+        async with session_factory() as session:
+            item = await session.get(Course, course_id)
+            school = await session.get(School, item.school_id)
+            teachers = (await session.execute(
+                select(Teacher).where(
+                    Teacher.school_id == item.school_id,
+                    Teacher.subject.in_(teacher_subject_variants(item.subject)),
+                    Teacher.is_active == True,
+                ).order_by(Teacher.rating.desc(), Teacher.name)
+            )).scalars().all()
+        await track(call.from_user.id, "course_opened", {"course_id": course_id, "subject": item.subject})
+        await call.message.edit_text(
+            course_card(item, school, teachers),
+            reply_markup=course_card_keyboard(item.id),
+            parse_mode=ParseMode.HTML,
+        )
+        await call.answer()
+
+    @dp.callback_query(F.data.startswith("course_section:"))
+    async def course_section(call: CallbackQuery):
+        _, course_id, section = call.data.split(":", 2)
+        async with session_factory() as session:
+            item = await session.get(Course, int(course_id))
+        if section == "tariffs":
+            text = f"💸 <b>Тарифы</b>\n\n{_course_tariffs_text(item)}\n\n🔎 Данные проверены: {item.verified_at.strftime('%d.%m.%Y') if item.verified_at else 'дата не указана'}"
+        else:
+            text = "Раздел пока не найден."
+        await call.message.edit_text(
+            text,
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text="← Карточка курса", callback_data=f"course:{item.id}")],
+                [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
+            ]),
+            parse_mode=ParseMode.HTML,
+        )
+        await call.answer()
+
+    @dp.callback_query(F.data.startswith("course_teachers:"))
+    async def course_teachers(call: CallbackQuery):
+        course_id = int(call.data.split(":")[1])
+        async with session_factory() as session:
+            item = await session.get(Course, course_id)
+            rows = (await session.execute(
+                select(Teacher).where(
+                    Teacher.school_id == item.school_id,
+                    Teacher.subject.in_(teacher_subject_variants(item.subject)),
+                    Teacher.is_active == True,
+                ).order_by(Teacher.rating.desc(), Teacher.name)
+            )).scalars().all()
+        if not rows:
+            await call.message.edit_text(
+                "Публичные карточки преподавателей по этому предмету ещё добавляются. Вернись позже или открой официальный источник курса.",
+                reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text="← Карточка курса", callback_data=f"course:{course_id}")],
+                    [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
+                ]),
+            )
+        else:
+            await call.message.edit_text(
+                f"👩‍🏫 Преподаватели · {item.subject}\n\nЭто найденные публичные профили школы. Перед покупкой проверь, ведёт ли преподаватель выбранный набор.",
+                reply_markup=teacher_buttons(rows, item.school_id, include_compare=True),
+            )
+        await call.answer()
+
+    @dp.callback_query(F.data.startswith("course_compare:"))
+    async def course_compare_start(call: CallbackQuery, state: FSMContext):
+        first_id = int(call.data.split(":")[1])
+        async with session_factory() as session:
+            first = await session.get(Course, first_id)
+            rows = (await session.execute(
+                select(Course, School.name.label("school_name"))
+                .join(School, School.id == Course.school_id)
+                .where(
+                    Course.subject == first.subject,
+                    Course.id != first.id,
+                    Course.is_active == True,
+                )
+                .order_by(School.name)
+            )).all()
+        options_for_compare = []
+        for item, school_name in rows:
+            item.school_name = school_name
+            options_for_compare.append(item)
+        await state.update_data(course_first_id=first_id)
+        await state.set_state(CourseCompare.second)
+        await call.message.edit_text(
+            f"⚖️ Сравнение курсов · {first.subject}\n\nВыбери курс другой школы:",
+            reply_markup=course_buttons(options_for_compare, prefix="course_compare_second", exclude_id=first_id),
+        )
+        await call.answer()
+
+    @dp.callback_query(CourseCompare.second, F.data.startswith("course_compare_second:"))
+    async def course_compare_second(call: CallbackQuery, state: FSMContext):
+        data = await state.get_data()
+        left_id = int(data["course_first_id"])
+        right_id = int(call.data.split(":")[1])
+        async with session_factory() as session:
+            left = await session.get(Course, left_id)
+            right = await session.get(Course, right_id)
+            left_school = await session.get(School, left.school_id)
+            right_school = await session.get(School, right.school_id)
+        await state.clear()
+        await track(call.from_user.id, "course_comparison_completed", {"left_id": left_id, "right_id": right_id})
+        await call.message.edit_text(
+            course_compare_text(left, right, left_school, right_school),
+            reply_markup=course_compare_keyboard(left.id, right.id),
+            parse_mode=ParseMode.HTML,
+        )
+        await call.answer()
+
+    @dp.callback_query(F.data.startswith("course_compare_section:"))
+    async def course_compare_section(call: CallbackQuery):
+        _, left_id, right_id, section = call.data.split(":", 3)
+        async with session_factory() as session:
+            left = await session.get(Course, int(left_id))
+            right = await session.get(Course, int(right_id))
+            left_school = await session.get(School, left.school_id)
+            right_school = await session.get(School, right.school_id)
+            left_teachers = (await session.execute(select(Teacher).where(
+                Teacher.school_id == left.school_id,
+                Teacher.subject.in_(teacher_subject_variants(left.subject)),
+                Teacher.is_active == True,
+            ).order_by(Teacher.rating.desc(), Teacher.name))).scalars().all()
+            right_teachers = (await session.execute(select(Teacher).where(
+                Teacher.school_id == right.school_id,
+                Teacher.subject.in_(teacher_subject_variants(right.subject)),
+                Teacher.is_active == True,
+            ).order_by(Teacher.rating.desc(), Teacher.name))).scalars().all()
+        await call.message.edit_text(
+            course_compare_section_text(left, right, left_school, right_school, section, left_teachers, right_teachers),
+            reply_markup=course_compare_keyboard(left.id, right.id),
+            parse_mode=ParseMode.HTML,
+        )
+        await call.answer()
+
+    @dp.callback_query(F.data.startswith("review_course_school:"))
+    async def review_course_school(call: CallbackQuery, state: FSMContext):
+        course_id = int(call.data.split(":")[1])
+        async with session_factory() as session:
+            item = await session.get(Course, course_id)
+        await review_school_start(call, state, school_id=item.school_id)
 
     @dp.callback_query(F.data.startswith("school:"))
     async def school(call: CallbackQuery):
@@ -1344,10 +1785,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             await state.clear()
             await call.message.edit_text(
                 teacher_compare_text(left, right, left_user_average=left_user_average, left_user_count=left_user_count, right_user_average=right_user_average, right_user_count=right_user_count),
-                reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text="ℹ️ Как считается рейтинг", callback_data="rating_methodology:teacher_compare")],
-                    [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
-                ]),
+                reply_markup=teacher_compare_keyboard(left, right),
             )
             await call.answer()
             return
@@ -1360,12 +1798,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         await state.clear()
         await call.message.edit_text(
             teacher_compare_text(left, right, school, left_user_average, left_user_count, right_user_average, right_user_count),
-            reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-                [InlineKeyboardButton(text="ℹ️ Как считается рейтинг", callback_data="rating_methodology:teacher_compare")],
-                [InlineKeyboardButton(text="← Преподаватели школы", callback_data=f"teachers:{school.id}")],
-                [InlineKeyboardButton(text="← Карточка школы", callback_data=f"school:{school.id}")],
-                [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
-            ]),
+            reply_markup=teacher_compare_keyboard(left, right, school.id),
         )
         await call.answer()
 
@@ -1377,8 +1810,9 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             school = await session.get(School, item.school_id)
             user_reviews = await approved_reviews_text(session, school.id, item.id)
             user_average, user_count = await approved_review_stats(session, school.id, item.id)
+            criteria_stats = await approved_teacher_criteria_stats(session, school.id, item.id)
         await call.message.edit_text(
-            teacher_card(item, school, user_average, user_count) + user_reviews,
+            teacher_card(item, school, user_average, user_count, criteria_stats) + user_reviews,
             reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                 [InlineKeyboardButton(text="💬 Оставить отзыв о преподавателе", callback_data=f"review_teacher:{item.id}")],
                 [InlineKeyboardButton(text="← Все преподаватели", callback_data=f"teachers:{school.id}")],
@@ -1469,11 +1903,23 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                 right_user_average, right_user_count,
                 left_criteria_stats, right_criteria_stats,
             ),
-            reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-                [InlineKeyboardButton(text="ℹ️ Как считается рейтинг", callback_data="rating_methodology:compare")],
-                [InlineKeyboardButton(text="📰 Новости и разборы ЕГЭ", callback_data="channel")],
-                [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
-            ]),
+            reply_markup=comparison_keyboard(left.id, right.id),
+            parse_mode=ParseMode.HTML,
+        )
+        await call.answer()
+
+    @dp.callback_query(F.data.startswith("compare_section:"))
+    async def compare_section(call: CallbackQuery):
+        _, left_id, right_id, section = call.data.split(":", 3)
+        async with session_factory() as session:
+            left = await session.get(School, int(left_id))
+            right = await session.get(School, int(right_id))
+            left_stats = await approved_school_criteria_stats(session, left.id) if section == "criteria" else None
+            right_stats = await approved_school_criteria_stats(session, right.id) if section == "criteria" else None
+        await call.message.edit_text(
+            comparison_section_text(left, right, section, left_stats, right_stats),
+            reply_markup=comparison_keyboard(left.id, right.id),
+            parse_mode=ParseMode.HTML,
         )
         await call.answer()
 
@@ -1495,6 +1941,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                 [InlineKeyboardButton(text=back_label, callback_data=back_callback)],
                 [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
             ]),
+            parse_mode=ParseMode.HTML,
         )
         await call.answer()
 
@@ -1539,10 +1986,22 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
 
 
 async def run(settings: Settings):
-    from .db import init_db
+    from .db import cleanup_expired_proofs, init_db
 
-    _, session_factory = await init_db(settings.database_url)
+    engine, session_factory = await init_db(settings.database_url)
     bot = Bot(settings.bot_token)
     dp = Dispatcher()
     await setup(dp, session_factory, settings)
-    await dp.start_polling(bot)
+
+    async def proof_cleanup_loop():
+        while True:
+            await asyncio.sleep(24 * 60 * 60)
+            await cleanup_expired_proofs(session_factory)
+
+    cleanup_task = asyncio.create_task(proof_cleanup_loop())
+    try:
+        await dp.start_polling(bot)
+    finally:
+        cleanup_task.cancel()
+        await bot.session.close()
+        await engine.dispose()

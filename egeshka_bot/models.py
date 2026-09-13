@@ -56,6 +56,25 @@ class Teacher(Base):
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 
 
+class Course(Base):
+    """A current, subject-specific preparation option offered by a school."""
+
+    __tablename__ = "courses"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id"), index=True)
+    subject: Mapped[str] = mapped_column(String(120), index=True)
+    name: Mapped[str] = mapped_column(String(200))
+    price_from: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    price_text: Mapped[str] = mapped_column(Text, default="")
+    format_text: Mapped[str] = mapped_column(Text, default="")
+    support_text: Mapped[str] = mapped_column(Text, default="")
+    practice_text: Mapped[str] = mapped_column(Text, default="")
+    tariffs_json: Mapped[str] = mapped_column(Text, default="[]")
+    source_url: Mapped[str] = mapped_column(String(500), default="")
+    verified_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+
+
 class User(Base):
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -78,6 +97,8 @@ class Review(Base):
     verified: Mapped[bool] = mapped_column(Boolean, default=False)
     proof_file_id: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
     proof_file_type: Mapped[Optional[str]] = mapped_column(String(30), nullable=True)
+    proof_delete_after: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    proof_consent: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
 
