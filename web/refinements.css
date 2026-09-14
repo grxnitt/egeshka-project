@@ -1,9 +1,10 @@
 /* Readable display type, focused comparison controls, restrained motion. */
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@600;700;800&display=swap');
 html,body{overflow-x:hidden}body{font-family:'Manrope',Arial,sans-serif;background:var(--paper)}
-h1,h2,h3,.logo{font-family:'Onest',Arial,sans-serif;font-weight:700;text-wrap:balance}
-h1{font-size:clamp(48px,5.2vw,72px);letter-spacing:-2.6px;line-height:1.09}
-h2{font-size:44px;letter-spacing:-1.4px;line-height:1.15}
+h1,h2,.logo{font-family:'Unbounded','Onest',Arial,sans-serif;text-wrap:balance}
+h3{font-family:'Onest',Arial,sans-serif;font-weight:700;text-wrap:balance}
+h1{font-size:clamp(46px,4.85vw,68px);font-weight:700;letter-spacing:-3.7px;line-height:1.07}
+h2{font-size:42px;font-weight:700;letter-spacing:-2.1px;line-height:1.14}
 h3{letter-spacing:-.5px;line-height:1.18}
 .logo{font-family:'Unbounded',Arial,sans-serif;font-weight:800;letter-spacing:-1.8px;font-size:30px;white-space:nowrap;font-feature-settings:'kern'}
 .header{position:sticky;top:0;z-index:20;height:78px;background:rgb(250 248 245 / .82);backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%)}
@@ -14,12 +15,13 @@ h3{letter-spacing:-.5px;line-height:1.18}
 .hero-copy{position:relative;z-index:2}.hero-copy>*{animation:hero-rise .75s cubic-bezier(.2,.75,.2,1) both}.hero-copy>:nth-child(2){animation-delay:.08s}.hero-copy>:nth-child(3){animation-delay:.16s}.hero-copy>:nth-child(4),.hero-copy>:nth-child(5){animation-delay:.24s}
 .hero-art{min-height:490px}
 .lead{max-width:38ch}
-.underline:after{height:7px;bottom:-1px;transform:rotate(-2deg)}
+.underline{display:inline-block;padding:.02em .15em .08em;background:var(--pink);border-radius:.18em;transform:rotate(-1.5deg);box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.underline:after{display:none}
 .handnote{display:none}
 .match-card{--rx:0deg;--ry:0deg;transform:perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)) rotateZ(3deg);transition:transform .25s ease;box-shadow:0 28px 60px -28px #2539afaa;overflow:hidden}
 .match-card:after{content:'';position:absolute;inset:-80% -120%;background:linear-gradient(105deg,transparent 40%,rgb(255 255 255 / .16) 50%,transparent 60%);transform:translateX(-35%);animation:card-sheen 5.5s ease-in-out infinite;pointer-events:none}
 .match-card:hover{transform:perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)) rotateZ(1deg) translateY(-5px)}
-.match-card h2{font-weight:700;line-height:1.2}
+.match-card h2{font-family:'Onest',sans-serif;font-weight:700;line-height:1.2;letter-spacing:-1.2px}
 .art-label{position:relative;transform:none;bottom:auto;left:auto;justify-self:center;margin-top:20px;border-radius:12px;padding:12px 24px;font-size:14px}
 .hero-art{align-content:center}.orbit{align-self:center}
 .ribbon{padding:12px 0}.ribbon div{font-family:'Unbounded',sans-serif;font-size:10px;letter-spacing:.4px;animation:ribbon-drift 24s linear infinite}
@@ -52,6 +54,9 @@ h3{letter-spacing:-.5px;line-height:1.18}
 .comparison-row .meter i{display:block;height:100%;background:currentColor;border-radius:inherit;transform-origin:left;animation:meter-enter .5s ease both}
 .comparison-row .metric{display:inline;font-weight:600;font-size:15px}
 .comparison-summary{cursor:pointer;font-size:13px;font-weight:600;padding:18px 12px;color:var(--blue)}
+.criteria-title{display:flex;align-items:end;justify-content:space-between;gap:20px;margin:28px 0 8px;padding:20px 12px 12px;border-bottom:2px solid var(--ink)}
+.criteria-title strong{font-family:'Unbounded',sans-serif;font-size:14px;letter-spacing:-.5px}.criteria-title span{color:var(--muted);font-size:11px}
+.comparison-row.teacher-metric .no-score{display:inline-block;color:#737481;font-size:11px;line-height:1.25}
 .column-heads{position:sticky;top:0;z-index:1;background:var(--paper);border-bottom:1px solid #cbd0e1}
 .column-heads p{font-size:12px;font-weight:700;line-height:1.4}
 .school-grid{grid-template-columns:repeat(12,1fr);gap:18px}.school-card{grid-column:span 4;position:relative;isolation:isolate;overflow:hidden;border:1px solid rgb(24 25 35 / .06)}
@@ -60,7 +65,7 @@ h3{letter-spacing:-.5px;line-height:1.18}
 .school-card h3{min-height:60px;font-size:clamp(24px,2.3vw,34px);line-height:1.02}.card-description{line-height:1.65;max-width:58ch}.card-score strong{font-variant-numeric:tabular-nums;font-weight:700}
 .channel-stamp{transform:rotate(-5deg);font-family:'Onest',sans-serif;letter-spacing:-1.5px;font-size:57px;line-height:1.03;font-weight:800}
 .channel-stamp span{display:none}
-.channel-section{gap:65px;padding:58px 68px;position:relative;overflow:hidden}.channel-section:after{content:'@EGESHKABLOG';position:absolute;right:-10px;bottom:-13px;font-family:'Unbounded',sans-serif;font-size:clamp(34px,6vw,76px);letter-spacing:-4px;color:rgb(52 75 216 / .07);pointer-events:none}.channel-section h2{line-height:1.2;font-size:34px;position:relative;z-index:1}
+.channel-section{gap:65px;padding:58px 68px;position:relative;overflow:hidden}.channel-section:after{content:'@EGESHKABLOG';position:absolute;right:-10px;bottom:-13px;font-family:'Unbounded',sans-serif;font-size:clamp(34px,6vw,76px);letter-spacing:-4px;color:rgb(52 75 216 / .07);pointer-events:none}.channel-section h2{font-family:'Onest',sans-serif;line-height:1.2;font-size:34px;letter-spacing:-1.2px;position:relative;z-index:1}
 .button,.subject,.card-open,.tabs button{transition:transform .2s ease,background .2s ease,box-shadow .2s ease}
 .button span,.card-open span,.mini-link span{transition:transform .22s ease}.button:hover span,.card-open:hover span,.mini-link:hover span{transform:translate(3px,-3px)}
 .button:active,.subject:active,.card-open:active{transform:scale(.98)}
@@ -75,10 +80,10 @@ h3{letter-spacing:-.5px;line-height:1.18}
 @keyframes meter-enter{from{opacity:0;scale:.15 1}to{opacity:1;scale:1 1}}
 @media(max-width:700px){
  .logo{font-size:21px;letter-spacing:-1.2px}.header-action{font-size:13px}.header{height:68px}
- .hero{padding-top:35px;padding-bottom:38px}.hero h1{font-size:clamp(43px,10vw,60px);letter-spacing:-1.8px;line-height:1.12}
+ .hero{padding-top:35px;padding-bottom:38px}.hero h1{font-size:clamp(36px,9.5vw,48px);letter-spacing:-2.5px;line-height:1.12}
  .hero-art{min-height:425px;margin-top:15px}.match-card{width:min(290px,90%)}.art-label{margin-top:24px;font-size:12px;padding:10px 20px}
  .hero .lead{font-size:15px;line-height:1.6}.section{padding-top:48px;padding-bottom:48px}
- h2{font-size:32px;letter-spacing:-.9px}.compare-section .section-heading h2{font-size:32px}
+ h2{font-size:29px;letter-spacing:-1.5px}.compare-section .section-heading h2{font-size:30px}
  .section-heading .eyebrow{margin-bottom:12px}.comparison-box{padding:16px}
  .tabs{width:100%;min-width:0}.tabs button{padding:11px 13px;font-size:13px}
  #teacher-subject-wrap{grid-template-columns:1fr;gap:8px;padding:15px;font-size:14px}
@@ -87,7 +92,7 @@ h3{letter-spacing:-.5px;line-height:1.18}
  .compare-selects label{padding:13px 15px;font-size:12px}.compare-selects select{font-size:14px;padding:11px 9px;min-height:48px;margin-top:7px}
  .comparison-row{grid-template-columns:1.1fr 1fr 1fr;padding:13px 7px;gap:12px;font-size:12px}.comparison-row strong{font-size:18px}
  .comparison-row.details{grid-template-columns:1fr 1fr}.comparison-row.details>span{grid-column:1/-1}
- .column-heads p{font-size:11px}.comparison-row .metric{font-size:13px}
+ .column-heads p{font-size:11px}.comparison-row .metric{font-size:13px}.criteria-title{display:block;margin-top:22px;padding-left:7px}.criteria-title strong,.criteria-title span{display:block}.criteria-title span{margin-top:5px}.comparison-row.teacher-metric .no-score{font-size:9px}
  .school-grid{grid-template-columns:1fr}.school-card,.school-card:nth-child(n){grid-column:1}.school-card h3{min-height:0;font-size:27px}.channel-section{padding:32px 25px 82px;gap:28px}.channel-stamp{font-size:42px;line-height:1.08}
  .channel-section h2{font-size:28px;letter-spacing:-.7px}.reviews{gap:10px}
 }

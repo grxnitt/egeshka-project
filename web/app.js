@@ -2,6 +2,7 @@ const $ = (selector) => document.querySelector(selector);
 const escape = (value) => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = n => Number(n).toFixed(1).replace('.', ',');
 const criteria = {teachers_score:'Преподаватели',practice_score:'Практика и ДЗ',feedback_score:'Проверка работ',curator_score:'Кураторы',platform_score:'Платформа',workload_score:'Нагрузка и темп',price_quality_score:'Цена / качество'};
+const teacherCriteria = {explanation:'Объяснение материала',practice:'Практика и разбор ошибок',feedback:'Обратная связь',tempo:'Темп и нагрузка',communication:'Общение и атмосфера'};
 const labels = {'русский':'Русский язык','математика':'Математика','обществознание':'Обществознание','физика':'Физика','химия':'Химия','биология':'Биология','информатика':'Информатика','английский':'Английский язык','история':'История','литература':'Литература','география':'География'};
 const dialog = $('#detail-dialog');
 let catalog, subject = '', expanded = false, mode = 'schools';
@@ -27,8 +28,13 @@ const row=(title,a,b,cls='')=>`<div class="comparison-row ${cls}"><span>${title}
 const meter=value=>`<span class="meter-value">${number(value)}</span><span class="meter" aria-hidden="true"><i style="width:${Math.max(0,Math.min(100,Number(value)*10))}%"></i></span>`;
 let html=row('Шкала 0–10*',escape(left.name),escape(right.name),'column-heads');
 html+=row('Общая оценка',`<strong>${number(left.score)}</strong>`,`<strong>${number(right.score)}</strong>`);
-if(mode==='schools'){html+=Object.entries(criteria).map(([key,label])=>row(label,meter(left.criteria[key]),meter(right.criteria[key]))).join('');}else{html+=row('Школа',escape(left.school),escape(right.school));}
-html+='<p class="fine">* Предварительно: по оценкам ЕГЭшки, без отзывов учеников.</p>';
+if(mode==='schools'){html+=Object.entries(criteria).map(([key,label])=>row(label,meter(left.criteria[key]),meter(right.criteria[key]))).join('');html+='<p class="fine">* Предварительно: по оценкам ЕГЭшки, без отзывов учеников.</p>';}else{
+ html+=row('Школа',escape(left.school),escape(right.school));
+ html+='<div class="criteria-title"><strong>По оценкам учеников</strong><span>Отдельные критерии · шкала 1–5</span></div>';
+ const teacherMetric=(teacher,key)=>Number.isFinite(Number(teacher.criteria?.[key]))?meter(Number(teacher.criteria[key])):'<span class="no-score">Пока нет оценок</span>';
+ html+=Object.entries(teacherCriteria).map(([key,label])=>row(label,teacherMetric(left,key),teacherMetric(right,key),'teacher-metric')).join('');
+ html+='<p class="fine">Критерии появятся после одобренных отзывов учеников.</p>';
+}
 const detailTitle=mode==='schools'?'Цена и условия':'О преподавателях';
 html+=`<details><summary class="comparison-summary">${detailTitle}</summary>${row(detailTitle,escape(mode==='schools'?left.price:left.description),escape(mode==='schools'?right.price:right.description),'details')}</details>`;
 $('#comparison-result').innerHTML=html;}

@@ -18,7 +18,7 @@ for row in SEED:
         'score': round(sum(row[key] * weight for key, weight in BASE_WEIGHTS.items()), 1),
     })
 catalog = {'schools': schools, 'teachers': [
-    {'school': t[0], 'name': t[1], 'subject': t[2], 'description': t[3], 'score': t[4], 'url': t[6]}
+    {'school': t[0], 'name': t[1], 'subject': t[2], 'description': t[3], 'score': t[4], 'criteria': {}, 'url': t[6]}
     for t in TEACHERS
 ]}
 Path(__file__).with_name('catalog.json').write_text(json.dumps(catalog, ensure_ascii=False, indent=2) + '\n')
