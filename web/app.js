@@ -24,11 +24,16 @@ function populateComparison(){const rows=candidates();['left','right'].forEach((
 function renderComparison(changed){const rows=candidates(),l=$('#left-select'),r=$('#right-select');if(l.value===r.value&&rows.length>1){const other=changed==='right'?l:r;other.value=String((Number(other.value)+1)%rows.length);}const left=rows[Number(l.value)],right=rows[Number(r.value)];if(!left||!right){$('#comparison-result').textContent='Для сравнения нужны два преподавателя по этому предмету.';return;}
 document.querySelectorAll('#left-select option').forEach(o=>o.disabled=o.value===r.value);document.querySelectorAll('#right-select option').forEach(o=>o.disabled=o.value===l.value);
 const row=(title,a,b,cls='')=>`<div class="comparison-row ${cls}"><span>${title}</span><p>${a}</p><p>${b}</p></div>`;
-let html=row('Оценка ЕГЭшки',`<strong>${number(left.score)}/10*</strong>`,`<strong>${number(right.score)}/10*</strong>`);
-if(mode==='schools'){html+=Object.entries(criteria).map(([key,label])=>row(label,`${number(left.criteria[key])}/10*`,`${number(right.criteria[key])}/10*`)).join('');html+=row('Цена и условия',escape(left.price),escape(right.price),'details');}else{html+=row('Школа',escape(left.school),escape(right.school));html+=row('О преподавателе',escape(left.description),escape(right.description),'details');}
-$('#comparison-result').innerHTML=html+'<p class="fine">* Предварительная редакционная оценка. Без оценок учеников.</p>';}
+const meter=value=>`<span class="meter-value">${number(value)}</span><span class="meter" aria-hidden="true"><i style="width:${Math.max(0,Math.min(100,Number(value)*10))}%"></i></span>`;
+let html=row('Шкала 0–10*',escape(left.name),escape(right.name),'column-heads');
+html+=row('Общая оценка',`<strong>${number(left.score)}</strong>`,`<strong>${number(right.score)}</strong>`);
+if(mode==='schools'){html+=Object.entries(criteria).map(([key,label])=>row(label,meter(left.criteria[key]),meter(right.criteria[key]))).join('');}else{html+=row('Школа',escape(left.school),escape(right.school));}
+html+='<p class="fine">* Предварительно: по оценкам ЕГЭшки, без отзывов учеников.</p>';
+const detailTitle=mode==='schools'?'Цена и условия':'О преподавателях';
+html+=`<details><summary class="comparison-summary">${detailTitle}</summary>${row(detailTitle,escape(mode==='schools'?left.price:left.description),escape(mode==='schools'?right.price:right.description),'details')}</details>`;
+$('#comparison-result').innerHTML=html;}
 $('#left-select').onchange=()=>renderComparison('left');$('#right-select').onchange=()=>renderComparison('right');$('#teacher-subject').onchange=populateComparison;
-document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',String(x===b));});$('#teacher-subject-wrap').hidden=mode!=='teachers';populateComparison();});
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',String(x===b));});$('#teacher-subject-wrap').hidden=mode!=='teachers';$('#left-label').textContent=mode==='teachers'?'2. Первый преподаватель':'Первая школа';$('#right-label').textContent=mode==='teachers'?'3. Второй преподаватель':'Вторая школа';populateComparison();});
 $('#sort').onchange=renderSchools;$('#show-more').onclick=()=>{expanded=true;renderSchools();};
 try{
  const response=await fetch('catalog.json');if(!response.ok)throw new Error('catalog');catalog=await response.json();
@@ -39,3 +44,10 @@ try{
  renderSchools();populateComparison();
  const config=await fetch('links.json').then(r=>r.json());$('#channel-link').href=config.channel;$('#review-link').href=config.bot;
 }catch(error){$('#school-list').innerHTML='<p>Не удалось загрузить каталог. Обнови страницу, чтобы попробовать ещё раз.</p>';console.error(error);}
+if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&'IntersectionObserver' in window){
+ const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('revealed');observer.unobserve(entry.target);}}),{threshold:0.08});
+ document.querySelectorAll('.section-heading,.school-grid,.reviews,.channel-section').forEach(node=>{node.classList.add('reveal-ready');observer.observe(node);});
+ const heroArt=$('.hero-art'),heroCard=$('.match-card');
+ heroArt.addEventListener('pointermove',event=>{const bounds=heroArt.getBoundingClientRect();heroCard.style.setProperty('--ry',`${((event.clientX-bounds.left)/bounds.width-.5)*8}deg`);heroCard.style.setProperty('--rx',`${((event.clientY-bounds.top)/bounds.height-.5)*-8}deg`);});
+ heroArt.addEventListener('pointerleave',()=>{heroCard.style.setProperty('--ry','0deg');heroCard.style.setProperty('--rx','0deg');});
+}
