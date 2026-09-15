@@ -929,10 +929,39 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                     await bot.send_document(admin_id, review.proof_file_id, caption=caption)
 
     @dp.message(CommandStart())
-    async def start(message: Message):
+    async def start(message: Message, state: FSMContext):
         await track(message.from_user.id, "start")
         async with session_factory() as session:
             await get_or_create_user(session, message.from_user.id)
+        payload = message.text.split(maxsplit=1)[1] if message.text and " " in message.text else ""
+        if payload.startswith("site_"):
+            try:
+                _, subject_index, budget_value, level_code, target_value = payload.split("_")
+                site_subjects = [item.lower() for item in SUBJECTS]
+                level = {"l": "low", "m": "middle", "h": "high"}[level_code]
+                await state.update_data(
+                    subject=site_subjects[int(subject_index)],
+                    budget=int(budget_value) or None,
+                    current_level=level,
+                    target=int(target_value),
+                )
+                await state.set_state(Quiz.curator)
+                await track(message.from_user.id, "quiz_started", {"source": "site"})
+                await message.answer(
+                    "Ответы с сайта сохранились ✓\n\nВопрос 5 из 8 · Какая поддержка тебе нужна?",
+                    reply_markup=options(
+                        [
+                            ("Разберусь сам", "1"),
+                            ("Хочу иногда задавать вопросы", "2"),
+                            ("Нужен регулярный контроль", "3"),
+                            ("Без куратора легко всё откладываю", "4"),
+                        ],
+                        "curator",
+                    ),
+                )
+                return
+            except (ValueError, IndexError, KeyError):
+                await state.clear()
         await message.answer(
             "Привет! Я ЕГЭшка — помогу выбрать школу и преподавателя для ЕГЭ. Здесь можно пройти подбор, посмотреть оценки по критериям, сравнить школы и преподавателей и оставить свой отзыв.",
             reply_markup=menu(),
