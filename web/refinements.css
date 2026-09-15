@@ -170,3 +170,6 @@ dialog:has(.school-detail){max-width:1000px;padding:0;overflow:auto}.school-deta
 /* Keep punctuation intentional and separate the moving ribbon */
 .ribbon{margin:-18px 0 20px}.compare-section{margin-top:0}.channel-stamp strong{padding:0;background:transparent;color:white}
 @media(max-width:700px){.ribbon{margin:-10px 0 14px}.compare-section{margin-top:0}}
+
+/* Signature dots use the primary brand pink */
+.logo span{color:var(--pink)}.hero-copy .brand-dot:after{background:var(--pink)}
