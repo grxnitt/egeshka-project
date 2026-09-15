@@ -5,10 +5,11 @@
   <meta name="theme-color" content="#FAF8F5">
   <meta name="description" content="Выбирай подготовку к ЕГЭ: сравнивай онлайн-школы и преподавателей по предметам, цене и формату обучения.">
   <title>ЕГЭшка — найди свою подготовку</title>
-  <link rel="stylesheet" href="styles.css?v=416de55">
-  <link rel="stylesheet" href="refinements.css?v=416de55">
+  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="refinements.css?v=3">
 </head>
 <body>
+<div class="scroll-orbit" aria-hidden="true"><span></span></div>
 <header class="header wrap"><a class="logo" href="#" aria-label="ЕГЭшка, главная">ЕГЭшка<span>.</span></a><nav aria-label="Главная навигация"><a href="#schools">Школы</a><a href="#compare">Сравнение</a><a href="#reviews">Отзывы</a></nav><a class="header-action" href="#compare">Сравнить <span>↗</span></a></header>
 <main>
 <section class="hero wrap">
@@ -20,9 +21,9 @@
 <section class="school-section" id="schools"><div class="wrap section"><div class="section-heading"><div><p class="eyebrow">НАЙДИ СВОЙ ВАРИАНТ</p><h2>Школы. По существу.</h2></div><button class="text-link" id="methodology">Как считаем рейтинг ↗</button></div><div class="catalog-toolbar"><p id="catalog-label" aria-live="polite">Все предметы</p><label><span>Сортировка</span><select id="sort"><option value="rating">По оценке ЕГЭшки</option><option value="name">По названию</option></select></label></div><div class="school-grid" id="school-list"></div><button class="button outline more" id="show-more">Показать все школы <span>↓</span></button><p class="fine">* Предварительные оценки по открытым данным. Условия обучения уточняй на странице выбранного курса.</p></div></section>
 <section class="compare-section" id="compare"><div class="wrap section"><div class="section-heading"><div><p class="eyebrow">ШКОЛЫ И ПРЕПОДАВАТЕЛИ</p><h2>Сравни и выбери.</h2></div><p>Выбери два варианта.<br>Посмотри, чем они отличаются.</p></div><div class="comparison-box"><div class="comparison-controls"><div class="tabs" role="group" aria-label="Тип сравнения"><button class="active" data-mode="schools" aria-pressed="true">Школы</button><button data-mode="teachers" aria-pressed="false">Преподаватели</button></div><label id="teacher-subject-wrap" hidden><span>1. Выбери предмет</span><select id="teacher-subject"></select></label></div><div class="compare-selects"><label><span id="left-label">Первая школа</span><select id="left-select"></select></label><span class="versus">или</span><label><span id="right-label">Вторая школа</span><select id="right-select"></select></label></div><div id="comparison-result" aria-live="polite"></div><button class="method-link" id="compare-method">Как считается оценка ↗</button></div></div></section>
 <section class="section wrap reviews" id="reviews"><div class="review-heading"><p class="eyebrow">ЗА ЦИФРАМИ — ЛЮДИ</p><h2>Твой опыт<br>кому-то <span class="underline">поможет.</span></h2><span class="review-mark" aria-hidden="true">“</span></div><div class="review-copy"><p>Как проверяли домашки? Был ли куратор на связи? Что получилось, а что разочаровало?</p><p class="muted">Расскажи о реальном опыте — так другим будет проще выбрать.</p><div class="review-steps" aria-label="Как оставить отзыв"><span><b>01</b> Оцени</span><span><b>02</b> Расскажи</span><span><b>03</b> Подтверди</span></div><a class="button dark" id="review-link" target="_blank" rel="noopener">Оставить отзыв <span>↗</span></a></div></section>
-<section class="channel-section wrap" id="channel"><div class="channel-stamp" aria-hidden="true"><small>КАНАЛ ЕГЭШКИ</small>ЕГЭ<br>без<br>паники<span>↗</span></div><div class="channel-copy"><p class="eyebrow">ОСТАЁМСЯ НА СВЯЗИ</p><h2>Подготовка — в школе.<br>Всё вокруг — у нас.</h2><p>Изменения ЕГЭ, честные разборы онлайн-школ и поступление — коротко и по делу.</p><a class="button blue" id="channel-link" target="_blank" rel="noopener">Открыть Telegram-канал <span>↗</span></a></div></section>
+<section class="channel-section wrap" id="channel"><div class="channel-stamp" aria-hidden="true"><small>КАНАЛ ЕГЭШКИ</small><strong>ЕГЭ</strong><br>без паники<i>в Telegram</i></div><div class="channel-copy"><p class="eyebrow">ОСТАЁМСЯ НА СВЯЗИ</p><h2>Подготовка — в школе.<br>Всё вокруг — у нас.</h2><p>Изменения ЕГЭ, честные разборы онлайн-школ и поступление — коротко и по делу.</p><a class="button blue" id="channel-link" target="_blank" rel="noopener">Открыть Telegram-канал <span>↗</span></a></div></section>
 </main>
 <footer class="wrap footer"><a class="logo" href="#">ЕГЭшка<span>.</span></a><p>Выбирай осознанно.<br>Готовься по-своему.</p><a href="#subjects">Наверх ↑</a><span>© ЕГЭшка, 2026</span></footer>
 <dialog id="detail-dialog"><button class="close" aria-label="Закрыть">×</button><div id="dialog-content"></div></dialog>
-<script type="module" src="app.js?v=416de55"></script>
+<script type="module" src="app.js?v=3"></script>
 </body></html>
