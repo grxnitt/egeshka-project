@@ -11,7 +11,7 @@ function showDialog(html){ $('#dialog-content').innerHTML = html; dialog.showMod
 $('.close').onclick = () => dialog.close();
 dialog.addEventListener('click', e => { if(e.target === dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();} });
 function methodology(){showDialog(`<div class="method-view"><p class="eyebrow">ПРОЗРАЧНО О ГЛАВНОМ</p><h2>Как работает рейтинг</h2><p class="method-lead">Две независимые оценки складываются в один понятный результат.</p><div class="rating-formula"><div class="formula-card expert"><small>Редакция ЕГЭшки</small><strong>до 5</strong><span>по открытым данным</span></div><b class="formula-sign">+</b><div class="formula-card students"><small>Ученики</small><strong>до 5</strong><span>по одобренным отзывам</span></div><b class="formula-sign">=</b><div class="formula-card total"><small>Общий рейтинг</small><strong>до 10</strong><span>итоговая оценка</span></div></div><div class="method-note"><strong>★ Предварительная оценка</strong><span>Отзывов учеников пока недостаточно, поэтому показана только редакционная часть, пересчитанная на шкалу 0–10.</span></div><h3>Что входит в оценку ЕГЭшки</h3><div class="weight-grid"><div class="weight-item"><b>24%</b><span>Преподаватели</span></div><div class="weight-item"><b>16%</b><span>Практика</span></div><div class="weight-item"><b>14%</b><span>Проверка работ</span></div><div class="weight-item"><b>14%</b><span>Кураторы</span></div><div class="weight-item"><b>14%</b><span>Цена / качество</span></div><div class="weight-item"><b>10%</b><span>Платформа</span></div><div class="weight-item"><b>8%</b><span>Нагрузка</span></div></div><p class="trust-note"><strong>Важно:</strong> результаты учеников, которые публикуют школы, — заявления самих школ. Они не гарантируют такой же результат каждому.</p></div>`);}
-$('#methodology').onclick = methodology; $('#compare-method').onclick = methodology;
+$('#compare-method').onclick = methodology;
 function renderSchools(){
   let rows = catalog.schools.filter(s => !subject || s.subjects.includes(subject));
   rows.sort($('#sort').value === 'name' ? (a,b)=>a.name.localeCompare(b.name,'ru') : (a,b)=>b.score-a.score);
@@ -52,19 +52,16 @@ if(mode==='schools'){html+=`<details><summary class="comparison-summary">Цен�
 $('#comparison-result').innerHTML=html;}
 $('#left-select').onchange=()=>renderComparison('left');$('#right-select').onchange=()=>renderComparison('right');$('#teacher-subject').onchange=populateComparison;
 document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',String(x===b));});$('#teacher-subject-wrap').hidden=mode!=='teachers';$('#left-label').textContent=mode==='teachers'?'2. Первый преподаватель':'Первая школа';$('#right-label').textContent=mode==='teachers'?'3. Второй преподаватель':'Вторая школа';populateComparison();});
-$('#sort').onchange=renderSchools;$('#show-more').onclick=()=>{expanded=true;renderSchools();};
 try{
  const response=await fetch('catalog.json');if(!response.ok)throw new Error('catalog');catalog=await response.json();
- $('#subject-list').innerHTML=[['','Все предметы'],...Object.entries(labels)].map(([value,label])=>`<button class="subject ${value===''?'active':''}" data-subject="${value}" aria-pressed="${value===''}">${label}</button>`).join('');
- document.querySelectorAll('[data-subject]').forEach(b=>b.onclick=()=>{subject=b.dataset.subject;expanded=false;document.querySelectorAll('[data-subject]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',String(x===b));});renderSchools();$('#schools').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});});
  $('#teacher-subject').innerHTML=[...new Set(catalog.teachers.map(t=>t.subject))].sort().map(s=>`<option>${escape(s)}</option>`).join('');
  $('#hero-score-one').textContent=number(catalog.schools.find(s=>s.name==='Умскул').score)+'*';$('#hero-score-two').textContent=number(catalog.schools.find(s=>s.name==='100балльный репетитор').score)+'*';
- renderSchools();populateComparison();
+ populateComparison();
  links=await fetch('links.json').then(r=>r.json());$('#channel-link').href=links.channel;$('#review-link').href=links.bot;
-}catch(error){$('#school-list').innerHTML='<p>Не удалось загрузить каталог. Обнови страницу, чтобы попробовать ещё раз.</p>';console.error(error);}
+}catch(error){console.error(error);}
 if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&'IntersectionObserver' in window){
  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('revealed');observer.unobserve(entry.target);}}),{threshold:0.08});
- document.querySelectorAll('.school-grid,.reviews,.channel-section').forEach(node=>{node.classList.add('reveal-ready');observer.observe(node);});
+ document.querySelectorAll('.reviews,.channel-section').forEach(node=>{node.classList.add('reveal-ready');observer.observe(node);});
  const heroArt=$('.hero-art'),heroCard=$('.match-card');
  heroArt.addEventListener('pointermove',event=>{const bounds=heroArt.getBoundingClientRect();heroCard.style.setProperty('--ry',`${((event.clientX-bounds.left)/bounds.width-.5)*8}deg`);heroCard.style.setProperty('--rx',`${((event.clientY-bounds.top)/bounds.height-.5)*-8}deg`);});
  heroArt.addEventListener('pointerleave',()=>{heroCard.style.setProperty('--ry','0deg');heroCard.style.setProperty('--rx','0deg');});

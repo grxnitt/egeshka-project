@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FAF8F5">
+  <meta name="description" content="Рейтинг онлайн-школ для подготовки к ЕГЭ: оценки, сильные стороны, цены и условия обучения.">
+  <title>Рейтинг онлайн-школ — ЕГЭшка</title>
+  <link rel="stylesheet" href="styles.css?v=8">
+  <link rel="stylesheet" href="refinements.css?v=8">
+</head>
+<body class="ratings-page">
+<header class="header wrap"><a class="logo" href="index.html" aria-label="ЕГЭшка, главная">ЕГЭшка<span>.</span></a><nav aria-label="Главная навигация"><a class="active" href="ratings.html">Рейтинг школ</a><a href="index.html#compare">Сравнение</a><a href="index.html#reviews">Отзывы</a></nav><a class="header-action" href="index.html">На главную <span>↗</span></a></header>
+<main>
+  <section class="rating-hero wrap">
+    <div><p class="eyebrow">НЕ РЕКЛАМНЫЙ ТОП</p><h1>Рейтинг<br><span>онлайн-школ.</span></h1></div>
+    <div class="rating-intro"><p>Собрали школы в одном месте, чтобы быстро увидеть разницу и открыть только подходящие варианты.</p><button class="method-pill" id="methodology">Как считаем оценку <span>↗</span></button></div>
+    <div class="rating-orbit" aria-hidden="true"><strong>10</strong><span>баллов<br>максимум</span></div>
+  </section>
+  <section class="rating-catalog">
+    <div class="wrap section">
+      <div class="rating-filter-head"><div><p class="eyebrow">ВЫБЕРИ ПРЕДМЕТ</p><h2>Найди свой вариант.</h2></div><p>Оценка помогает начать выбор.<br>Детали — принять решение.</p></div>
+      <div class="subjects rating-subjects" id="subject-list"></div>
+      <div class="catalog-toolbar"><p id="catalog-label" aria-live="polite">Все предметы</p><label><span>Порядок</span><select id="sort"><option value="rating">Сначала лучшие</option><option value="name">По названию</option></select></label></div>
+      <div class="school-grid" id="school-list"></div>
+      <button class="button outline more" id="show-more">Показать все школы <span>↓</span></button>
+      <p class="fine rating-fine">* Предварительные оценки по открытым данным. Условия обучения уточняй в карточке выбранной школы.</p>
+    </div>
+  </section>
+  <section class="rating-next wrap"><div><p class="eyebrow">ДВА ФИНАЛИСТА?</p><h2>Сравни их<br>по критериям.</h2></div><a class="button pink" href="index.html#compare">Перейти к сравнению <span>↗</span></a></section>
+</main>
+<footer class="wrap footer"><a class="logo" href="index.html">ЕГЭшка<span>.</span></a><p>Выбирай осознанно.<br>Готовься по-своему.</p><a href="#">Наверх ↑</a><span>© ЕГЭшка, 2026</span></footer>
+<dialog id="detail-dialog"><button class="close" aria-label="Закрыть">×</button><div id="dialog-content"></div></dialog>
+<script type="module" src="ratings.js?v=8"></script>
+</body></html>
