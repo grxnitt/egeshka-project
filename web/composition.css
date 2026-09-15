@@ -132,3 +132,7 @@ select:focus-visible,a:focus-visible,button:focus-visible{outline:3px solid #8a9
 @media(max-width:700px){.hero.hero-centered{padding-inline:16px}.hero-glow-blue{left:-140px}.hero-glow-pink{right:-130px}}
 @media(prefers-reduced-motion:reduce){.hero-glow,.channel-section:after,.rating-next:after{animation:none!important}.button:after,.card-open:after,.method-pill:after{display:none}.ratings-page .school-card:before,.compare-price-card{transition:none}}
 @keyframes button-sheen{from{transform:translateX(0) skewX(-18deg)}to{transform:translateX(500%) skewX(-18deg)}}
+/* Rating landing shares the homepage's type scale, alignment and light. */
+.rating-centered .hero-title-line.brand-dot{display:inline-block}
+.rating-centered .hero-actions>.button{min-width:280px}
+@media(max-width:700px){.rating-centered .lead br{display:none}.rating-centered .hero-actions>.button{min-width:0}}
