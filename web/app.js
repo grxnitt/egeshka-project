@@ -72,7 +72,6 @@ document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.datase
 try{
  const response=await fetch('catalog.json');if(!response.ok)throw new Error('catalog');catalog=await response.json();
  $('#teacher-subject').innerHTML=[...new Set(catalog.teachers.map(t=>t.subject))].sort().map(s=>`<option>${escape(s)}</option>`).join('');
- $('#hero-score-one').textContent=number(catalog.schools.find(s=>s.name==='Умскул').score)+'*';$('#hero-score-two').textContent=number(catalog.schools.find(s=>s.name==='100балльный репетитор').score)+'*';
  populateComparison();
  links=await fetch('links.json').then(r=>r.json());$('#channel-link').href=links.channel;$('#review-link').href=links.bot;
  if(new URLSearchParams(location.search).get('start')==='quiz'){$('#quiz-start').click();history.replaceState(null,'',location.pathname);}

@@ -5,16 +5,16 @@
   <meta name="theme-color" content="#FAF8F5">
   <meta name="description" content="Выбирай подготовку к ЕГЭ: сравнивай онлайн-школы и преподавателей по предметам, цене и формату обучения.">
   <title>ЕГЭшка — найди свою подготовку</title>
-  <link rel="stylesheet" href="styles.css?v=19">
-  <link rel="stylesheet" href="refinements.css?v=19">
-  <link rel="stylesheet" href="typography.css?v=19">
+  <link rel="stylesheet" href="styles.css?v=20">
+  <link rel="stylesheet" href="refinements.css?v=20">
+  <link rel="stylesheet" href="typography.css?v=20">
 </head>
 <body>
 <header class="header wrap"><a class="logo" href="#" aria-label="ЕГЭшка, главная">ЕГЭшка<span>.</span></a><nav aria-label="Главная навигация"><a href="ratings.html">Рейтинг школ</a><a href="#compare">Сравнение</a><a href="#reviews">Отзывы</a></nav><a class="header-action" href="#compare">Сравнить <span>↗</span></a></header>
 <main>
 <section class="hero wrap">
-  <div class="hero-copy"><h1>Подготовка<br>под тебя.<br>Выбор за <span class="brand-dot">тобой</span></h1><p class="lead">Школы, преподаватели и честное сравнение.<br> Найди тех, с кем тебе будет по пути.</p><button class="button pink" id="quiz-start">Подобрать подготовку <span>↗</span></button></div>
-  <div class="hero-art" aria-label="Быстрое сравнение школ"><div class="match-card"><h2>Сравни школы<br>до оплаты.</h2><div class="mini-school"><span class="school-mark blue-mark">У</span><span>Умскул<small>Годовая подготовка</small></span><strong id="hero-score-one">—</strong></div><div class="mini-school"><span class="school-mark pink-mark">100</span><span>100балльный<small>Подготовка по блокам</small></span><strong id="hero-score-two">—</strong></div><div class="hero-criteria"><div><span>Преподаватели</span><b>8,9</b><b>9,2</b></div><div><span>Практика</span><b>8,7</b><b>8,5</b></div><div><span>Цена / качество</span><b>8,0</b><b>8,2</b></div></div><p class="fine">* Предварительные оценки ЕГЭшки</p><a href="#compare" class="mini-link">Сравнить школы <span>↗</span></a></div></div>
+  <div class="hero-copy"><h1>Подготовка<br>под тебя.<br>Выбор за <span class="brand-dot">тобой</span></h1><p class="lead">Школы, преподаватели и честное сравнение.<br> Найди тех, с кем тебе будет по пути.</p><button class="button pink" id="quiz-start">Подобрать подготовку <span>↗</span></button><div class="hero-compare-entry"><p>Уже есть варианты?</p><a class="hero-compare-link" href="#compare">Сравнить школы <span aria-hidden="true">↗</span></a></div></div>
+  <div class="hero-portrait" aria-hidden="true"><div class="portrait-orbit"></div><img src="assets/hero-student.png" alt="" width="1122" height="1402" fetchpriority="high"><span class="portrait-dot"></span></div>
 </section>
 <div class="ribbon" aria-label="Что можно сравнить"><div>ПРЕДМЕТ <span>✳</span> ПРЕПОДАВАТЕЛЬ <span>✳</span> ЦЕНА <span>✳</span> ПРАКТИКА <span>✳</span> ПОДДЕРЖКА <span>✳</span> ТЕМП <span>✳</span> ПРЕДМЕТ <span>✳</span> ПРЕПОДАВАТЕЛЬ <span>✳</span></div></div>
 <section class="compare-section" id="compare"><div class="wrap section"><div class="section-heading"><div><h2>Сравни и выбери.</h2></div><p>Выбери два варианта.<br>Посмотри, чем они отличаются.</p></div><div class="comparison-box"><div class="comparison-controls"><div class="tabs" role="group" aria-label="Тип сравнения"><button class="active" data-mode="schools" aria-pressed="true">Школы</button><button data-mode="teachers" aria-pressed="false">Преподаватели</button></div><label id="teacher-subject-wrap" hidden><span>1. Выбери предмет</span><select id="teacher-subject"></select></label></div><div class="compare-selects"><label><span id="left-label">Первая школа</span><select id="left-select"></select></label><span class="versus">или</span><label><span id="right-label">Вторая школа</span><select id="right-select"></select></label></div><div id="comparison-result" aria-live="polite"></div><button class="method-link" id="compare-method">Как считается оценка ↗</button></div></div></section>
@@ -25,5 +25,5 @@
 <nav class="mobile-product-nav" aria-label="Разделы сервиса"><a href="?start=quiz">Подобрать</a><a href="ratings.html">Рейтинг</a><a href="#compare">Сравнить</a></nav>
 <footer class="wrap footer"><a class="logo" href="#">ЕГЭшка<span>.</span></a><p>Выбирай осознанно.<br>Готовься по-своему.</p><a href="#">Наверх ↑</a><span>© ЕГЭшка, 2026</span></footer>
 <dialog id="detail-dialog"><button class="close" aria-label="Закрыть">×</button><div id="dialog-content" tabindex="0" aria-label="Подробности"></div></dialog>
-<script type="module" src="app.js?v=19"></script>
+<script type="module" src="app.js?v=20"></script>
 </body></html>

@@ -389,3 +389,19 @@ dialog .close:hover{transform:none;background:#e1e5f7}
 .detail-hero>div,.detail-card,.detail-highlights>div{min-width:0}
 dialog{inset:0;margin:auto;width:min(900px,calc(100vw - 32px))}
 @media(max-width:700px){dialog,dialog:has(.school-detail){width:calc(100vw - 20px)}}
+
+/* Editorial hero: one primary action, comparison as a compact second step. */
+.hero-compare-entry{margin-top:24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.hero-compare-entry p{margin:0;color:#626777;font-size:14px;line-height:1.5}
+.hero-compare-link{display:inline-flex;align-items:center;justify-content:space-between;gap:24px;background:var(--blue);color:white;padding:13px 19px;border-radius:24px;font:600 14px/1.4 var(--font-ui);text-decoration:none;transition:background .2s}
+.hero-compare-link:hover{background:#263dbb}
+.hero-compare-link span{transition:transform .2s}
+.hero-compare-link:hover span{transform:translate(2px,-2px)}
+.hero-portrait{position:relative;isolation:isolate;align-self:center;width:100%;min-width:0;aspect-ratio:4/5;max-height:660px}
+.hero-portrait img{position:relative;z-index:1;display:block;width:100%;height:100%;object-fit:cover;mix-blend-mode:multiply;mask-image:linear-gradient(to bottom,transparent 0%,#000 8%,#000 74%,transparent 98%);-webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 8%,#000 74%,transparent 98%)}
+.portrait-orbit{position:absolute;inset:24% -2% 2% 4%;border-radius:50%;background:#e5e9ff;z-index:0}
+.portrait-dot{position:absolute;right:1%;bottom:18%;width:17%;aspect-ratio:1;border-radius:50%;background:#ffd3e5;z-index:2}
+@media(min-width:1051px){.hero{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);align-items:center}.hero-portrait{margin-top:-20px}}
+@media(min-width:701px) and (max-width:1050px){.hero-portrait{width:min(480px,75%);justify-self:center;max-height:500px;margin-top:-10px}}
+@media(max-width:700px){.hero-compare-entry{gap:10px 14px;margin-top:18px}.hero-compare-link{padding:12px 17px}.hero-portrait{width:min(360px,90%);justify-self:center;max-height:400px;margin-top:0}.portrait-dot{right:0;bottom:20%}}
+@media(prefers-reduced-motion:reduce){.hero-compare-link,.hero-compare-link span{transition:none}}
