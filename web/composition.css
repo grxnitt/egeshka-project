@@ -104,3 +104,31 @@ select:focus-visible,a:focus-visible,button:focus-visible{outline:3px solid #8a9
 @media(max-width:1050px){.hero.hero-centered{min-height:550px;padding:64px 16px}.hero-centered .hero-copy{max-width:100%}.hero-centered h1{font-size:clamp(44px,6.15vw,76px)}}
 @media(max-width:700px){.hero.hero-centered{min-height:0;padding:52px 0 56px}.hero-centered h1{font-size:clamp(34px,8.8vw,56px);letter-spacing:-.05em;line-height:1.16}.hero-centered .lead{font-size:15px;margin:24px auto 28px;max-width:34ch}.hero-centered .hero-actions{flex-direction:column;gap:12px;max-width:360px;margin:auto}.hero-centered .hero-actions>.button,.hero-centered .hero-compare-link{width:100%;min-width:0;min-height:56px;padding:17px 24px;font-size:14px}.hero-glow{width:280px;height:280px;opacity:.5}.hero-glow-blue{left:-160px;top:0}.hero-glow-pink{right:-160px;bottom:-40px}}
 @media(prefers-reduced-motion:reduce){.hero-glow{animation:none}.hero-centered .hero-actions>.button:after,.hero-centered .hero-compare-link:after{display:none}.hero-centered .hero-actions>.button:active,.hero-centered .hero-compare-link:active{transform:none}}
+
+/* Full-bleed light has no clipped edge at the content container. */
+.hero.hero-centered{width:100%;max-width:none;margin-inline:0;padding-inline:max(24px,calc((100% - 1184px)/2));overflow:hidden}
+.hero-glow-blue{left:-140px}
+.hero-glow-pink{right:-120px;bottom:-60px}
+.hero-glow{animation-play-state:paused}
+.hero-centered.motion-visible .hero-glow{animation-play-state:running}
+/* Shared light sweep on actions across both pages. */
+.button,.card-open,.method-pill{position:relative;isolation:isolate;overflow:hidden}
+.button:after,.card-open:after,.method-pill:after{content:'';position:absolute;inset:-35% auto -35% -70%;width:45%;background:linear-gradient(100deg,transparent,#ffffff55,transparent);transform:skewX(-18deg);pointer-events:none}
+@media(hover:hover){
+ .button:hover:after,.card-open:hover:after,.method-pill:hover:after{animation:button-sheen .75s ease-out both}
+ .ratings-page .school-card:hover:before{transform:translate(-22px,24px) scale(1.15);border-color:#ced6ff}
+ .ratings-page .school-card:nth-child(even):hover:before{border-color:#f6c9dd}
+ .compare-price-card:hover{border-color:#a8b5f1;box-shadow:0 8px 28px #344bd810}
+ .subject:hover{box-shadow:0 0 0 4px #344bd80c}
+}
+.ratings-page .school-card:before{border-color:#e8ecfc;transition:transform .6s cubic-bezier(.2,.7,.2,1),border-color .6s}
+.compare-price-card{transition:border-color .25s,box-shadow .25s}
+.channel-section{position:relative;isolation:isolate;overflow:hidden}
+.channel-section:after{display:block;content:'';position:absolute;z-index:-1;width:380px;height:380px;right:-180px;top:-150px;border:1px solid #ffffff30;border-radius:50%;box-shadow:0 0 0 45px #ffffff05,0 0 0 90px #ffffff04;pointer-events:none;animation:channel-orbit 11s ease-in-out infinite alternate;animation-play-state:paused}
+.channel-section.motion-visible:after{animation-play-state:running}
+@keyframes channel-orbit{to{transform:translate(-45px,65px) scale(1.12)}}
+.rating-next:after{animation:channel-orbit 12s ease-in-out infinite alternate;animation-play-state:paused}
+.rating-next.motion-visible:after{animation-play-state:running}
+@media(max-width:700px){.hero.hero-centered{padding-inline:16px}.hero-glow-blue{left:-140px}.hero-glow-pink{right:-130px}}
+@media(prefers-reduced-motion:reduce){.hero-glow,.channel-section:after,.rating-next:after{animation:none!important}.button:after,.card-open:after,.method-pill:after{display:none}.ratings-page .school-card:before,.compare-price-card{transition:none}}
+@keyframes button-sheen{from{transform:translateX(0) skewX(-18deg)}to{transform:translateX(500%) skewX(-18deg)}}
