@@ -1,0 +1,37 @@
+/* Two families, four roles: brand, section heading, interface, supporting copy. */
+body,button,input,select,textarea{font-family:var(--font-ui)}
+h1,h2,.logo,.channel-stamp{font-family:var(--font-display)}
+h3,.eyebrow,.ribbon div,.criteria-title strong,.teacher-compare-card h3{font-family:var(--font-ui)}
+.logo{font-weight:800}
+h1{font-weight:700}
+/* One heading treatment across the hero preview, sections and dialogs. */
+.hero-art .match-card h2,.compare-section .section-heading h2,.reviews h2,
+.channel-section h2,.rating-filter-head h2,.method-view h2,.site-quiz h2,
+.quiz-result h2,.detail-hero h2{font-family:var(--font-display);font-weight:600;letter-spacing:-.045em;line-height:1.18}
+.hero-art .match-card h2{font-size:30px}
+.compare-section .section-heading h2,.reviews h2{font-size:38px}
+.channel-section h2{font-size:28px}
+.rating-filter-head h2{font-size:26px}
+.method-view h2,.site-quiz h2,.quiz-result h2{font-size:34px}
+.detail-hero h2{font-size:38px}
+.section-heading:hover h2{letter-spacing:-.045em}
+.channel-stamp{font-weight:600;font-size:clamp(30px,3.1vw,44px);letter-spacing:-.045em;line-height:1.2}
+.channel-stamp strong,.channel-stamp>span{font:inherit}
+.button,.mini-link,.card-open,.method-pill,.tabs button{font-family:var(--font-ui);font-weight:600;letter-spacing:0;font-size:14px}
+.header nav a,.header-action{font-weight:600}
+.school-card h3,.teacher-compare-card h3,.quiz-match-head h3{font-family:var(--font-ui);font-weight:600;letter-spacing:-.025em;line-height:1.2}
+.compare-selects select,#teacher-subject-wrap select{font-family:var(--font-ui);font-weight:600}
+.eyebrow,.ribbon div{font-size:11px;font-weight:600;letter-spacing:.06em}
+.card-score strong,.detail-score strong,.detail-highlights strong,.formula-card strong,
+.weight-item b,.quiz-match-head strong,.teacher-compare-card>div>strong,
+.hero-criteria b,.mini-school strong,.comparison-row strong{font-family:var(--font-ui);font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.025em}
+.formula-card small,.formula-card span,.quiz-match-head strong small,.teacher-compare-card>div small{font-family:var(--font-ui);letter-spacing:0}
+.versus{font-style:normal}
+@media(max-width:700px){
+ .hero-art .match-card h2,.compare-section .section-heading h2,.reviews h2{font-size:28px}
+ .channel-section h2,.rating-filter-head h2{font-size:24px}
+ .method-view h2,.site-quiz h2,.quiz-result h2,.detail-hero h2{font-size:27px;overflow-wrap:break-word}
+ .channel-stamp{font-size:30px}
+ .tabs button,.card-open,.mini-link{font-size:13px}
+ .ribbon div{font-size:10px}
+}
