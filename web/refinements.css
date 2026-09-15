@@ -166,3 +166,7 @@ dialog:has(.school-detail){max-width:1000px;padding:0;overflow:auto}.school-deta
 /* Brand punctuation: soft dots replace loud text highlights */
 .brand-dot{position:relative;display:inline-block;padding-right:.19em;background:none!important;color:inherit!important;transform:none!important}.brand-dot:after{content:'';position:absolute;width:.13em;height:.13em;right:.01em;bottom:.11em;border-radius:50%;background:var(--blush)}.hero-copy .brand-dot:after{box-shadow:0 0 0 1px rgb(255 77 141/.04)}.reviews .brand-dot{padding:0 .19em 0 0;background:none;color:inherit}.reviews .brand-dot:after{background:var(--blush)}.channel-stamp strong.brand-dot{padding:0 .2em 0 0;border-radius:0;background:none;color:white;font:inherit;letter-spacing:inherit}.channel-stamp strong.brand-dot:after{bottom:.09em;background:var(--blush)}
 .logo span{color:var(--blush)}.header nav a:after,.header nav a.active:after{background:var(--blush)}.ribbon span:nth-of-type(odd){color:#efb8ce}.reviews .eyebrow{color:#dba5ba}.review-mark{color:#e5b5c8}.rating-orbit:after{background:var(--blush)}
+
+/* Keep punctuation intentional and separate the moving ribbon */
+.ribbon{margin:-18px 0 20px}.compare-section{margin-top:0}.channel-stamp strong{padding:0;background:transparent;color:white}
+@media(max-width:700px){.ribbon{margin:-10px 0 14px}.compare-section{margin-top:0}}
