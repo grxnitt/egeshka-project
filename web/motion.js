@@ -1,6 +1,6 @@
 // Animate visible surfaces once; keep content available without JavaScript.
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-const surfaces = '.comparison-box,.school-card,.compare-price-card,.about-grid article,.detail-card,.quiz-match';
+const surfaces = '.comparison-box,.school-card,.compare-price-card,.about-grid article,.detail-card,.quiz-match,.reviews,.channel-section,.rating-next';
 const seen = new WeakSet();
 const observer = new IntersectionObserver(entries => {
   for (const {target, isIntersecting} of entries) {
@@ -16,7 +16,7 @@ const observer = new IntersectionObserver(entries => {
 }, {threshold: .05});
 const registered = new WeakSet();
 function register(root) {
-  const nodes = [...root.querySelectorAll(`${surfaces},.hero-centered,.channel-section,.rating-next`)];
+  const nodes = [...root.querySelectorAll(`${surfaces},.hero-centered`)];
   if(root.matches?.(surfaces)) nodes.push(root);
   for(const node of nodes) if(!registered.has(node)){ registered.add(node); observer.observe(node); }
 }

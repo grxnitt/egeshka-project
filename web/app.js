@@ -76,8 +76,3 @@ try{
  links=await fetch('links.json').then(r=>r.json());$('#channel-link').href=links.channel;$('#review-link').href=links.bot;
  if(new URLSearchParams(location.search).get('start')==='quiz'){$('#quiz-start').click();history.replaceState(null,'',location.pathname);}
 }catch(error){console.error(error);}
-if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&'IntersectionObserver' in window){
- const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('revealed');observer.unobserve(entry.target);}}),{threshold:0.08});
- document.querySelectorAll('.reviews,.channel-section').forEach(node=>{node.classList.add('reveal-ready');observer.observe(node);});
-
-}

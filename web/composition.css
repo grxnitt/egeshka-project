@@ -131,6 +131,16 @@ select:focus-visible,a:focus-visible,button:focus-visible{outline:3px solid #8a9
 .rating-next.motion-visible:after{animation-play-state:running}
 @media(max-width:700px){.hero.hero-centered{padding-inline:16px}.hero-glow-blue{left:-140px}.hero-glow-pink{right:-130px}}
 @media(prefers-reduced-motion:reduce){.hero-glow,.channel-section:after,.rating-next:after{animation:none!important}.button:after,.card-open:after,.method-pill:after{display:none}.ratings-page .school-card:before,.compare-price-card{transition:none}}
+
+/* Content never depends on animation to be readable. */
+.reveal-ready{opacity:1;transform:none}
+.compare-section{position:relative}
+.compare-section>.section{position:relative;z-index:1}
+.comparison-box{box-shadow:0 28px 80px -58px rgb(24 25 35/.34)}
+.reviews{margin-top:72px;margin-bottom:72px}
+.channel-section{margin-top:0;margin-bottom:72px}
+.about-project{margin-bottom:24px}
+@media(max-width:700px){.reviews{margin-top:48px;margin-bottom:48px}.channel-section{margin-bottom:48px}.comparison-box{box-shadow:none}}
 @keyframes button-sheen{from{transform:translateX(0) skewX(-18deg)}to{transform:translateX(500%) skewX(-18deg)}}
 /* Rating landing shares the homepage's type scale, alignment and light. */
 .rating-centered .hero-title-line.brand-dot{display:inline-block}
