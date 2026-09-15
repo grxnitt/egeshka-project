@@ -325,3 +325,26 @@ body:has(dialog[open]){overflow:hidden}
 .rating-orbit{display:none}
 .subject{white-space:nowrap;flex-shrink:0}
 @media(max-width:700px){.mobile-product-nav a{font-size:12px}.catalog-toolbar select{background:#e5e9ff;color:var(--blue)}.catalog-toolbar label:after{color:var(--blue)}}
+
+/* Visible pricing and a compact, data-derived comparison conclusion. */
+.compare-prices,.compare-verdict{margin-top:32px;padding-top:28px;border-top:1px solid var(--line)}
+.compare-prices h3,.compare-verdict h3{font-family:var(--font-ui);font-size:24px;font-weight:600;letter-spacing:-.5px;line-height:1.25}
+.compare-price-context{font-size:13px;color:var(--muted);margin:10px 0 20px}
+.compare-price-grid,.compare-verdict-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.compare-price-card{padding:24px;border-radius:20px;background:#edf0fc;min-width:0;display:flex;flex-direction:column}
+.compare-price-card:nth-child(2){background:#fae8f0}
+.compare-price-card h4,.compare-verdict h4{margin:0 0 12px;font-size:16px;font-weight:600;line-height:1.35}
+.compare-price-card>strong{font-size:23px;font-weight:700;color:var(--blue);line-height:1.3;font-variant-numeric:tabular-nums}
+.compare-price-card:nth-child(2)>strong{color:#89324e}
+.compare-price-card dl{margin:20px 0 0}
+.compare-price-card dl>div{padding:12px 0;border-top:1px solid rgb(24 25 35/.1)}
+.compare-price-card dt{font-size:12px;color:#666b7a;margin-bottom:5px}
+.compare-price-card dd{margin:0;font-size:14px;line-height:1.5}
+.compare-price-card>p{font-size:13px;line-height:1.6;color:#606575;margin:12px 0 20px}
+.compare-price-card>a{margin-top:auto;font-size:13px;font-weight:600;text-decoration:underline;text-underline-offset:4px}
+.compare-verdict-grid{margin:20px 0}
+.compare-verdict-grid article{padding:0 20px;border-left:3px solid #b8c4fc}
+.compare-verdict-grid article:nth-child(2){border-color:#ecc1d4}
+.compare-verdict-grid p{font-size:14px;line-height:1.65;margin:0}
+.compare-verdict>.fine{max-width:85ch;font-size:12px;line-height:1.6}
+@media(max-width:700px){.compare-price-grid,.compare-verdict-grid{grid-template-columns:1fr;gap:12px}.compare-price-card{padding:20px}.compare-prices h3,.compare-verdict h3{font-size:22px}.compare-verdict-grid article{padding:8px 16px}.compare-price-card>strong{font-size:22px}}

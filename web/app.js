@@ -1,3 +1,4 @@
+import { priceDetails, relativeStrengths } from './comparison.js?v=18';
 const $ = (selector) => document.querySelector(selector);
 const escape = (value) => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = n => Number(n).toFixed(1).replace('.', ',');
@@ -48,7 +49,19 @@ if(mode==='schools'){html+=Object.entries(criteria).map(([key,label])=>row(label
  html+=Object.entries(teacherCriteria).map(([key,label])=>row(label,teacherMetric(left,key),teacherMetric(right,key),'teacher-metric')).join('');
  html+='<p class="fine">Критерии появятся после одобренных отзывов учеников.</p>';
 }
-if(mode==='schools'){html+=`<details><summary class="comparison-summary">Цена и условия</summary>${row('Цена и условия',escape(left.price),escape(right.price),'details')}</details>`;}else{
+if(mode==='schools'){
+ const priceCard=school=>{
+  const price=priceDetails[school.name];
+  if(!price)return `<article class="compare-price-card"><h4>${escape(school.name)}</h4><p>${escape(school.price)}</p></article>`;
+  return `<article class="compare-price-card"><h4>${escape(school.name)}</h4><strong>${escape(price.period)}</strong><dl><div><dt>За весь курс</dt><dd>${escape(price.total)}</dd></div><div><dt>Рассрочка / оплата частями</dt><dd>${escape(price.installment)}</dd></div></dl><p>${escape(price.note)}</p><a href="${escape(school.url)}" target="_blank" rel="noopener">Проверить тариф на сайте ↗</a></article>`;
+ };
+ const summaryCard=(school,other)=>{
+  const strengths=relativeStrengths(school,other);
+  const text=strengths.length?`Выше оценки по критериям: ${strengths.map(key=>criteria[key].toLowerCase()).join(' и ')}.`:'В этой паре нет критериев с более высокой оценкой. Сравни конкретного преподавателя, тариф и формат занятий.';
+  return `<article><h4>${escape(school.name)}</h4><p>${escape(text)}</p></article>`;
+ };
+ html+=`<section class="compare-prices" aria-label="Стоимость подготовки"><h3>Сколько стоит подготовка</h3><p class="compare-price-context">Ориентиры из каталога: пакеты и сроки обучения отличаются.</p><div class="compare-price-grid">${priceCard(left)}${priceCard(right)}</div></section><section class="compare-verdict" aria-label="Краткий вывод"><h3>Что это значит для выбора</h3><div class="compare-verdict-grid">${summaryCard(left,right)}${summaryCard(right,left)}</div><p class="fine">Вывод по редакционным оценкам школы в целом. Небольшая разница баллов не гарантирует лучший результат. «Цена / качество» оценивает соотношение, а не самую низкую цену.</p></section>`;
+}else{
  const teacherCard=t=>`<article class="teacher-compare-card"><div><span>${escape(t.school)}</span><strong>${number(t.score)}<small>/10*</small></strong></div><h3>${escape(t.name)}</h3><p>${escape(t.description)}</p><a href="${escape(t.url)}" target="_blank" rel="noopener">Открыть профиль <b>↗</b></a></article>`;
  html+=`<details class="teacher-details"><summary class="comparison-summary">Подробнее о преподавателях</summary><div class="teacher-compare-cards">${teacherCard(left)}${teacherCard(right)}</div></details>`;
 }
