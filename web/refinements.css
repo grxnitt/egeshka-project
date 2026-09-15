@@ -173,3 +173,4 @@ dialog:has(.school-detail){max-width:1000px;padding:0;overflow:auto}.school-deta
 
 /* Signature dots use the primary brand pink */
 .logo span{color:var(--pink)}.hero-copy .brand-dot:after{background:var(--pink)}
+.hero-copy .brand-dot{padding-right:.24em}.hero-copy .brand-dot:after{width:.18em;height:.18em;right:0;bottom:.075em}
