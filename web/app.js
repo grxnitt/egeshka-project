@@ -25,7 +25,7 @@ function populateComparison(){const rows=candidates();['left','right'].forEach((
 function renderComparison(changed){const rows=candidates(),l=$('#left-select'),r=$('#right-select');if(l.value===r.value&&rows.length>1){const other=changed==='right'?l:r;other.value=String((Number(other.value)+1)%rows.length);}const left=rows[Number(l.value)],right=rows[Number(r.value)];if(!left||!right){$('#comparison-result').textContent='Для сравнения нужны два преподавателя по этому предмету.';return;}
 document.querySelectorAll('#left-select option').forEach(o=>o.disabled=o.value===r.value);document.querySelectorAll('#right-select option').forEach(o=>o.disabled=o.value===l.value);
 const row=(title,a,b,cls='')=>`<div class="comparison-row ${cls}"><span>${title}</span><p>${a}</p><p>${b}</p></div>`;
-const meter=value=>`<span class="meter-value">${number(value)}</span><span class="meter" aria-hidden="true"><i style="width:${Math.max(0,Math.min(100,Number(value)*10))}%"></i></span>`;
+const meter=value=>{const score=Math.max(0,Math.min(10,Number(value)));return `<span class="meter-value">${number(score)}</span><span class="meter meter-segments" aria-hidden="true">${Array.from({length:10},(_,i)=>`<i style="--fill:${Math.max(0,Math.min(1,score-i))*100}%"></i>`).join('')}</span>`;};
 let html=row('Шкала 0–10*',escape(left.name),escape(right.name),'column-heads');
 html+=row('Общая оценка',`<strong>${number(left.score)}</strong>`,`<strong>${number(right.score)}</strong>`);
 if(mode==='schools'){html+=Object.entries(criteria).map(([key,label])=>row(label,meter(left.criteria[key]),meter(right.criteria[key]))).join('');html+='<p class="fine">* Предварительно: по оценкам ЕГЭшки, без отзывов учеников.</p>';}else{
