@@ -35,8 +35,10 @@ if(mode==='schools'){html+=Object.entries(criteria).map(([key,label])=>row(label
  html+=Object.entries(teacherCriteria).map(([key,label])=>row(label,teacherMetric(left,key),teacherMetric(right,key),'teacher-metric')).join('');
  html+='<p class="fine">Критерии появятся после одобренных отзывов учеников.</p>';
 }
-const detailTitle=mode==='schools'?'Цена и условия':'О преподавателях';
-html+=`<details><summary class="comparison-summary">${detailTitle}</summary>${row(detailTitle,escape(mode==='schools'?left.price:left.description),escape(mode==='schools'?right.price:right.description),'details')}</details>`;
+if(mode==='schools'){html+=`<details><summary class="comparison-summary">Цена и условия</summary>${row('Цена и условия',escape(left.price),escape(right.price),'details')}</details>`;}else{
+ const teacherCard=t=>`<article class="teacher-compare-card"><div><span>${escape(t.school)}</span><strong>${number(t.score)}<small>/10*</small></strong></div><h3>${escape(t.name)}</h3><p>${escape(t.description)}</p><a href="${escape(t.url)}" target="_blank" rel="noopener">Открыть профиль <b>↗</b></a></article>`;
+ html+=`<details class="teacher-details"><summary class="comparison-summary">Подробнее о преподавателях</summary><div class="teacher-compare-cards">${teacherCard(left)}${teacherCard(right)}</div></details>`;
+}
 $('#comparison-result').innerHTML=html;}
 $('#left-select').onchange=()=>renderComparison('left');$('#right-select').onchange=()=>renderComparison('right');$('#teacher-subject').onchange=populateComparison;
 document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',String(x===b));});$('#teacher-subject-wrap').hidden=mode!=='teachers';$('#left-label').textContent=mode==='teachers'?'2. Первый преподаватель':'Первая школа';$('#right-label').textContent=mode==='teachers'?'3. Второй преподаватель':'Вторая школа';populateComparison();});
@@ -52,10 +54,8 @@ try{
 }catch(error){$('#school-list').innerHTML='<p>Не удалось загрузить каталог. Обнови страницу, чтобы попробовать ещё раз.</p>';console.error(error);}
 if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&'IntersectionObserver' in window){
  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('revealed');observer.unobserve(entry.target);}}),{threshold:0.08});
- document.querySelectorAll('.section-heading,.school-grid,.reviews,.channel-section').forEach(node=>{node.classList.add('reveal-ready');observer.observe(node);});
+ document.querySelectorAll('.school-grid,.reviews,.channel-section').forEach(node=>{node.classList.add('reveal-ready');observer.observe(node);});
  const heroArt=$('.hero-art'),heroCard=$('.match-card');
  heroArt.addEventListener('pointermove',event=>{const bounds=heroArt.getBoundingClientRect();heroCard.style.setProperty('--ry',`${((event.clientX-bounds.left)/bounds.width-.5)*8}deg`);heroCard.style.setProperty('--rx',`${((event.clientY-bounds.top)/bounds.height-.5)*-8}deg`);});
  heroArt.addEventListener('pointerleave',()=>{heroCard.style.setProperty('--ry','0deg');heroCard.style.setProperty('--rx','0deg');});
 }
-const updateScroll=()=>{const max=document.documentElement.scrollHeight-innerHeight;document.documentElement.style.setProperty('--scroll-progress',max>0?String(scrollY/max):'0');};
-addEventListener('scroll',updateScroll,{passive:true});updateScroll();
