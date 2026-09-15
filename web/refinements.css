@@ -348,3 +348,44 @@ body:has(dialog[open]){overflow:hidden}
 .compare-verdict-grid p{font-size:14px;line-height:1.65;margin:0}
 .compare-verdict>.fine{max-width:85ch;font-size:12px;line-height:1.6}
 @media(max-width:700px){.compare-price-grid,.compare-verdict-grid{grid-template-columns:1fr;gap:12px}.compare-price-card{padding:20px}.compare-prices h3,.compare-verdict h3{font-size:22px}.compare-verdict-grid article{padding:8px 16px}.compare-price-card>strong{font-size:22px}}
+
+/* Compact first screen, readable supporting copy, consistent detail panels. */
+.hero{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:36px;min-height:0;padding-top:48px;padding-bottom:48px}
+.hero-art{min-height:0;padding:24px 8px 24px 24px}
+.hero .lead{margin:24px 0;max-width:40ch}
+.fine,.hero-art .match-card .fine,.detail-footer p,.rank{font-size:12px;line-height:1.6;color:#626777}
+.column-heads p,.compare-selects label,.hero-criteria>div,.detail-subjects span,.detail-highlights span{font-size:13px}
+.formula-card small,.formula-card span,.weight-item span{font-size:12px;letter-spacing:0;text-transform:none}
+.detail-card p,.teacher-compare-card p{font-size:14px;line-height:1.65}
+.footer p,.footer>a:not(.logo),.footer>span{font-size:12px;color:#626777}
+.school-decision{margin:20px 0 24px;display:grid;gap:14px}
+.school-decision>div{display:grid;grid-template-columns:105px 1fr;gap:12px}
+.school-decision dt{font-size:12px;font-weight:600;color:#636979}
+.school-decision dd{margin:0;font-size:14px;line-height:1.55}
+.price-provenance{padding-top:12px;margin-top:16px;border-top:1px solid rgb(24 25 35/.12)}
+.price-provenance p{font-size:12px!important;line-height:1.5!important;margin:0 0 7px!important;color:#616777!important}
+.price-provenance a{font-size:13px;text-decoration:underline;text-underline-offset:3px}
+.compare-price-card>.price-provenance{margin-bottom:16px}
+.compare-price-card>.price-provenance+a{display:none}
+.about-project{padding-top:56px;padding-bottom:64px}
+.about-project h2{font-size:32px;line-height:1.2}
+.about-lead{max-width:64ch;font-size:17px;color:#606575;margin:20px 0 32px}
+.about-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px}
+.about-grid h3{font-size:20px;letter-spacing:-.3px}
+.about-grid p{font-size:14px;line-height:1.7;color:#606575}
+/* The dialog shell stays still; only its body scrolls. */
+dialog,dialog:has(.school-detail){padding:64px 0 0;max-width:900px;max-height:90dvh;overflow:hidden;border-radius:28px}
+dialog #dialog-content{padding:0 36px 32px;max-height:calc(90dvh - 64px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+dialog .close{top:12px;right:16px;width:40px;height:40px;transform:none}
+dialog .close:hover{transform:none;background:#e1e5f7}
+.school-detail{padding:0}
+.detail-hero{gap:24px;align-items:start}
+.detail-hero h2{margin-top:0;overflow-wrap:anywhere}
+.detail-card{min-height:0;padding:24px}
+.detail-card h3{margin-top:0}
+@media(min-width:701px) and (max-width:1050px){.hero{grid-template-columns:1fr;gap:24px}.hero-copy{max-width:720px}.hero-art{width:min(500px,100%);justify-self:center}.hero h1{font-size:clamp(58px,7vw,76px)}.about-grid{gap:20px}}
+@media(max-width:700px){.hero{grid-template-columns:1fr;padding-top:30px;padding-bottom:30px;gap:24px}.hero-art{width:100%;padding:20px 8px;margin:0}.hero h1{font-size:clamp(38px,10.5vw,56px)}.school-decision>div{grid-template-columns:1fr;gap:3px}.about-project{padding-top:36px;padding-bottom:40px}.about-project h2{font-size:26px}.about-lead{font-size:15px}.about-grid{grid-template-columns:1fr;gap:16px}.about-grid p{margin-bottom:0}.column-heads p{font-size:12px}.compare-selects label{font-size:12px}dialog,dialog:has(.school-detail){width:calc(100% - 20px);padding-top:60px;border-radius:24px}dialog #dialog-content{padding:0 20px 24px;max-height:calc(90dvh - 60px)}.school-detail{padding:0}.detail-card{padding:20px}.detail-hero{grid-template-columns:1fr}.detail-hero h2{overflow-wrap:break-word}}
+.card-price-scope{display:block;margin-top:5px;font-size:12px;line-height:1.5;color:#626777}
+.detail-hero>div,.detail-card,.detail-highlights>div{min-width:0}
+dialog{inset:0;margin:auto;width:min(900px,calc(100vw - 32px))}
+@media(max-width:700px){dialog,dialog:has(.school-detail){width:calc(100vw - 20px)}}
