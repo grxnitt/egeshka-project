@@ -211,3 +211,118 @@ dialog:has(.school-detail){max-width:1000px;padding:0;overflow:auto}.school-deta
  .quiz-match-head strong{font-size:17px}
  .quiz-match p{font-size:10px}
 }
+
+/* Editorial cleanup: hierarchy, consistent surfaces and quiet interaction. */
+:root{--ui-radius:16px;--ui-ease:cubic-bezier(.22,.7,.25,1)}
+body{font-family:'Onest','Manrope',Arial,sans-serif}
+p{text-wrap:pretty}
+.hero{gap:56px;padding-top:72px;padding-bottom:72px;min-height:640px}
+.hero:before{display:none}
+.hero-copy>*{animation:none}
+.hero-art{min-height:450px;padding:28px 12px 28px 36px}
+.hero-art:before{width:410px;height:410px;background:#e9edff}
+.hero-art:after{width:86px;height:86px;bottom:18px;right:0}
+.hero-art .match-card h2{font-family:'Onest',sans-serif;font-size:36px;letter-spacing:-1.2px;margin:0 0 24px}
+.hero-art .mini-school{box-shadow:none;border:0;padding:14px 16px;background:rgb(255 255 255/.72)}
+.hero-art .mini-school small{font-size:12px}
+.hero-criteria{background:transparent;padding:10px 16px;margin:12px 0}
+.hero-criteria>div{font-size:12px;padding:6px 0}
+.hero-criteria b{font-size:13px}
+.hero-art .match-card .fine{font-size:11px;line-height:1.5;margin:12px 0 18px}
+.hero-art .mini-link{min-height:52px;max-width:none;padding:14px 20px;border-radius:999px;font-size:14px}
+.ribbon{margin:0 0 28px;padding:14px 0}
+.ribbon span{font-size:17px}
+.compare-section:after,.channel-section:after,.rating-catalog:before{display:none}
+.compare-section{border-radius:36px 36px 0 0}
+.section-heading h2,.section-heading:hover h2{letter-spacing:-2.1px;transform:none;transition:none}
+.comparison-box{border-radius:28px;padding:32px;box-shadow:none}
+.compare-selects{grid-template-columns:minmax(0,1fr) 20px minmax(0,1fr);gap:12px}
+.compare-selects label{padding:16px;border-radius:var(--ui-radius);font-size:12px}
+.compare-selects select{background:white;border-color:transparent;min-height:54px;padding:12px;font-size:15px}
+#teacher-subject-wrap{padding:16px;border:0;border-radius:var(--ui-radius);font-size:14px}
+.comparison-row{padding:16px 12px;font-size:14px}
+.comparison-row:nth-child(even){background:#f0f1f7}
+.comparison-summary{font-size:14px;padding:20px 12px}
+.method-link{font-size:13px;padding-top:24px;color:#575d72;text-decoration-color:#b8bed3}
+.rating-hero{min-height:380px;padding-top:64px;padding-bottom:64px;gap:48px;align-items:center}
+.rating-hero h1{font-size:clamp(48px,6.5vw,82px);line-height:1.07;letter-spacing:-3px}
+.rating-orbit{width:230px;height:230px;right:-70px;top:-85px;opacity:.6}
+.rating-intro>p{font-size:17px}
+.rating-filter-head{margin-bottom:24px}
+.rating-filter-head h2{font-family:'Onest',sans-serif;font-size:30px;letter-spacing:-1px}
+.rating-subjects{margin-bottom:24px;gap:8px}
+.subject{font-size:13px;padding:11px 18px}
+.catalog-toolbar{box-shadow:none;border:0;background:transparent;padding:0;min-height:60px;margin-bottom:16px}
+.ratings-page .catalog-toolbar{position:relative;top:auto}
+.rating-scope-note{border:0;background:transparent;padding:0;margin:0 0 28px;font-size:13px;color:#666b7a;max-width:64ch}
+.ratings-page .school-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.ratings-page .school-card:nth-child(n){grid-column:auto;background:#fff;color:var(--ink);padding:28px;border:0;border-radius:24px;box-shadow:none}
+.ratings-page .school-card:nth-child(1){background:#e7ecff}
+.ratings-page .school-card:nth-child(1) .rank,.ratings-page .school-card:nth-child(1) p{color:#626879}
+.ratings-page .school-card:nth-child(1) .card-score{border-color:#cdd4ed}
+.ratings-page .school-card h3{font-size:30px;min-height:0;line-height:1.15}
+.ratings-page .school-card .card-description{font-size:14px;line-height:1.65;min-height:0;margin-bottom:24px}
+.card-score{margin-top:auto}
+.card-open{min-height:48px;border-radius:999px;font-size:13px;background:#edf0ff}
+.channel-section{padding:64px;gap:60px;border-radius:32px;box-shadow:none}
+.channel-stamp{font-family:'Unbounded',sans-serif;font-size:clamp(32px,3.5vw,48px);line-height:1.2;letter-spacing:-2px}
+.channel-section h2{font-size:30px;line-height:1.25}
+.channel-section p:not(.eyebrow){font-size:16px;line-height:1.6}
+.channel-section:before{opacity:.35}
+.button,.mini-link,.card-open,.subject,.method-pill{transition:background .2s var(--ui-ease),color .2s var(--ui-ease),transform .2s var(--ui-ease)}
+.button:hover,.subject:hover,.school-card:hover,.method-pill:hover{transform:none}
+.button:active,.mini-link:active,.card-open:active{transform:translateY(1px)}
+.comparison-row .meter-segments i:after{animation:segment-fill .45s var(--ui-ease) both;transform-origin:left}
+@keyframes segment-fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+dialog{overscroll-behavior:contain;scrollbar-width:thin}
+body:has(dialog[open]){overflow:hidden}
+.detail-card{border:0;border-radius:20px}
+.detail-card h3{margin-top:0}
+.quiz-result{padding:28px;background:#eef1ff}
+.quiz-result h2{font-family:'Onest',sans-serif;font-size:36px;letter-spacing:-1px;line-height:1.15}
+.quiz-result>p{font-size:14px;line-height:1.6}
+.quiz-match{box-shadow:none;border:0;padding:20px}
+.quiz-match p{font-size:13px;line-height:1.5}
+.quiz-match>small{font-size:12px;line-height:1.5}
+.quiz-result>small{font-size:12px;line-height:1.5}
+@media(max-width:1150px) and (min-width:701px){.hero{gap:36px}.hero-art{width:min(540px,100%);padding:24px;min-height:450px}.rating-hero{gap:30px;grid-template-columns:1.2fr 1fr}}
+@media(max-width:700px){
+ .hero{padding-top:40px;padding-bottom:36px;gap:36px;min-height:0}
+ .hero-art{min-height:0;margin:0;padding:28px 8px;isolation:isolate}
+ .hero-art:before{width:330px;height:330px}
+ .hero-art .match-card{max-width:390px}
+ .hero-art .match-card h2{font-size:31px}
+ .hero-art .mini-school{font-size:14px}
+ .hero-criteria>div{font-size:12px}
+ .section-heading h2,.section-heading:hover h2{letter-spacing:-1.5px}
+ .comparison-box{padding:16px;border-radius:22px}
+ .compare-selects{gap:8px;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+ .compare-selects .versus{display:none}
+ .compare-selects label{padding:10px;font-size:11px}
+ .compare-selects select{font-size:12px;padding:10px 4px}
+ .comparison-row{font-size:12px;gap:10px;padding:14px 8px}
+ .rating-hero{min-height:0;grid-template-columns:1fr;padding-top:46px;padding-bottom:42px;gap:24px}
+ .rating-hero h1{font-size:clamp(42px,11vw,68px);letter-spacing:-2px}
+ .rating-intro>p{font-size:15px;margin-bottom:20px}
+ .rating-orbit{right:-100px;top:-100px}
+ .rating-filter-head h2{font-size:26px}
+ .rating-scope-note{margin:0 0 24px;font-size:12px}
+ .ratings-page .school-grid{grid-template-columns:1fr}
+ .ratings-page .school-card:nth-child(n){padding:24px}
+ .ratings-page .school-card h3{font-size:27px}
+ .channel-section{padding:36px 26px;gap:28px;border-radius:28px}
+ .channel-stamp{font-size:34px;line-height:1.18;letter-spacing:-1.8px}
+ .channel-section h2{font-size:26px}
+ .channel-section p:not(.eyebrow){font-size:14px}
+ .quiz-result{padding:24px 14px}
+ .quiz-result h2{font-size:29px}
+ .quiz-match{padding:16px}
+ .quiz-match-head{grid-template-columns:24px 1fr;gap:8px}
+ .quiz-match-head strong{grid-column:2;font-size:17px}
+ .quiz-match-head>span{width:24px;height:24px}
+ .quiz-match p{font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.reveal-ready{opacity:1;transform:none}}
+.rating-orbit{display:none}
+.subject{white-space:nowrap;flex-shrink:0}
+@media(max-width:700px){.mobile-product-nav a{font-size:12px}.catalog-toolbar select{background:#e5e9ff;color:var(--blue)}.catalog-toolbar label:after{color:var(--blue)}}
