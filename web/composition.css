@@ -42,7 +42,7 @@
 .rating-hero{padding-top:48px;padding-bottom:48px}
 .rating-orbit{display:none}
 .ratings-page .school-card:nth-child(n){border:1px solid var(--surface-line);border-radius:18px;padding:28px}
-.ratings-page .school-card:nth-child(1){background:#eef1ff}
+.ratings-page .school-card:nth-child(1){background:#fff}
 .ratings-page .school-grid{gap:24px}
 .ratings-page .card-open{border-radius:12px}
 .catalog-toolbar select{border:1px solid #d9deef;background:white;border-radius:10px;min-height:44px}
