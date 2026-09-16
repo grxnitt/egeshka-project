@@ -127,10 +127,21 @@ select:focus-visible,a:focus-visible,button:focus-visible{outline:3px solid #8a9
 .channel-section:after{display:block;content:'';position:absolute;z-index:-1;width:380px;height:380px;right:-180px;top:-150px;border:1px solid #ffffff30;border-radius:50%;box-shadow:0 0 0 45px #ffffff05,0 0 0 90px #ffffff04;pointer-events:none;animation:channel-orbit 11s ease-in-out infinite alternate;animation-play-state:paused}
 .channel-section.motion-visible:after{animation-play-state:running}
 @keyframes channel-orbit{to{transform:translate(-45px,65px) scale(1.12)}}
+.reviews{position:relative;isolation:isolate;overflow:hidden}
+.reviews:after{width:330px;height:330px;right:-125px;top:-155px;border-width:58px;border-color:#c9d2ff;box-shadow:0 0 0 42px rgb(52 75 216/.035),0 0 0 84px rgb(255 77 141/.025);opacity:1;animation:review-orbit 10s ease-in-out infinite alternate;animation-play-state:paused;will-change:transform,border-color,box-shadow}
+.reviews.motion-visible:after{animation-play-state:running}
+.review-copy{align-self:center}
+.review-copy>p:first-child{margin-bottom:28px}
+.review-steps{margin-top:0}
+@keyframes review-orbit{
+ 0%{transform:translate3d(0,0,0) scale(1);border-color:#c9d2ff;box-shadow:0 0 0 42px rgb(52 75 216/.035),0 0 0 84px rgb(255 77 141/.025)}
+ 55%{border-color:#efd0de;box-shadow:0 0 0 55px rgb(255 77 141/.04),0 0 0 96px rgb(52 75 216/.025)}
+ 100%{transform:translate3d(-44px,58px,0) scale(1.1);border-color:#bfcaff;box-shadow:0 0 0 48px rgb(52 75 216/.045),0 0 0 102px rgb(255 77 141/.03)}
+}
 .rating-next:after{animation:channel-orbit 12s ease-in-out infinite alternate;animation-play-state:paused}
 .rating-next.motion-visible:after{animation-play-state:running}
-@media(max-width:700px){.hero.hero-centered{padding-inline:16px}.hero-glow-blue{left:-140px}.hero-glow-pink{right:-130px}}
-@media(prefers-reduced-motion:reduce){.hero-glow,.channel-section:after,.rating-next:after{animation:none!important}.button:after,.card-open:after,.method-pill:after{display:none}.ratings-page .school-card:before,.compare-price-card{transition:none}}
+@media(max-width:700px){.hero.hero-centered{padding-inline:16px}.hero-glow-blue{left:-140px}.hero-glow-pink{right:-130px}.reviews:after{width:205px;height:205px;right:-92px;top:-90px;border-width:38px}.review-copy>p:first-child{margin-bottom:24px}}
+@media(prefers-reduced-motion:reduce){.hero-glow,.channel-section:after,.reviews:after,.rating-next:after{animation:none!important}.button:after,.card-open:after,.method-pill:after{display:none}.ratings-page .school-card:before,.compare-price-card{transition:none}}
 
 /* School teacher directory: a compact secondary layer inside the existing rating flow. */
 .school-card-actions{display:grid;grid-template-columns:1fr 1.15fr;gap:8px;margin-top:auto}
