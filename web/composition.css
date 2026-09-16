@@ -206,7 +206,29 @@ dialog:has(.teacher-directory){max-width:1080px;padding:0;overflow:auto}
  .teacher-profile{padding:16px;border-radius:16px}
  .teacher-description{min-height:0;margin-bottom:12px}
  .teacher-more{display:block}
- .teacher-profile.description-open .teacher-description{display:block;overflow:visible;-webkit-line-clamp:unset}
+.teacher-profile.description-open .teacher-description{display:block;overflow:visible;-webkit-line-clamp:unset}
+}
+
+/* Review and Telegram cards share the same two typographic roles. */
+.reviews h2{
+ font-family:var(--font-display);
+ font-size:38px;
+ font-weight:600;
+ letter-spacing:-.045em;
+ line-height:1.2;
+}
+.review-copy>p:first-child{
+ max-width:520px;
+ margin-bottom:28px;
+ font-family:var(--font-display);
+ font-size:30px;
+ font-weight:600;
+ letter-spacing:-1.35px;
+ line-height:1.25;
+}
+@media(max-width:700px){
+ .reviews h2{font-size:28px;letter-spacing:-.045em}
+ .review-copy>p:first-child{margin-bottom:24px;font-size:26px;letter-spacing:-1.1px}
 }
 
 /* Content never depends on animation to be readable. */
