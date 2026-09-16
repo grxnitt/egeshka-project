@@ -29,3 +29,17 @@ def test_teacher_subjects_are_listed_by_their_school():
         if subject.lower().replace(" язык", "") not in school_subjects[school]
     }
     assert missing == set()
+
+
+def test_researched_teacher_cards_use_factual_descriptions():
+    researched = [row for row in TEACHERS if row[0] in {"ЕГЭLand", "PARTA", "Школково"}]
+    banned = ("официальной линейке", "официальном каталоге", "официальной команде", "профиль подтверждён")
+
+    assert all(len(description) >= 90 for _school, _name, _subject, description, *_rest in researched)
+    assert all(not any(fragment in description.lower() for fragment in banned) for _school, _name, _subject, description, *_rest in researched)
+
+
+def test_ege_land_physics_card_tracks_current_teacher():
+    physics_names = {name for school, name, subject, *_rest in TEACHERS if school == "ЕГЭLand" and subject == "Физика"}
+
+    assert physics_names == {"Даня Физик"}
