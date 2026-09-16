@@ -9,7 +9,7 @@ BASE_WEIGHTS = {
     "curator_score": 0.14,
     "platform_score": 0.10,
     "workload_score": 0.08,
-    "price_quality_score": 0.14,
+    "organization_score": 0.14,
 }
 
 
@@ -18,7 +18,6 @@ PRIORITY_TO_FIELD = {
     "practice": "practice_score",
     "curator": "curator_score",
     "platform": "platform_score",
-    "price": "price_quality_score",
 }
 
 
@@ -86,5 +85,9 @@ def school_score(school, profile: QuizProfile) -> Tuple[float, list]:
         field = PRIORITY_TO_FIELD.get(priority)
         if field:
             score += float(getattr(school, field, 0)) * 0.7
+        elif priority == "price" and profile.budget is not None:
+            # Affordability is already measured with the actual monthly price
+            # above. It must not be disguised as a subjective quality score.
+            reasons.append("цена учтена отдельно по бюджету")
 
     return round(max(0, min(100, score)), 1), reasons[:3]

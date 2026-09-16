@@ -12,6 +12,7 @@ for row in SEED:
     schools.append({
         'name': row['name'], 'description': row['description'],
         'subjects': row['subjects'].split(','), 'price': row['price_text'],
+        'monthlyPriceFrom': row['monthly_price_from'],
         'strengths': row['strengths'], 'weaknesses': row['weaknesses'],
         'format': row['format_text'], 'url': row['official_url'],
         'criteria': {key: row[key] for key in BASE_WEIGHTS},

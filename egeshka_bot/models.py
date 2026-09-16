@@ -35,7 +35,9 @@ class School(Base):
     curator_score: Mapped[float] = mapped_column(Float, default=7.0)
     platform_score: Mapped[float] = mapped_column(Float, default=7.0)
     workload_score: Mapped[float] = mapped_column(Float, default=7.0)
-    price_quality_score: Mapped[float] = mapped_column(Float, default=7.0)
+    # Keep the physical column name for existing SQLite installations while
+    # exposing the new, clearer criterion throughout the application.
+    organization_score: Mapped[float] = mapped_column("price_quality_score", Float, default=7.0)
     review_count: Mapped[int] = mapped_column(Integer, default=0)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     verified_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)

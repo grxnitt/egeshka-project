@@ -53,9 +53,10 @@ CRITERIA = (
     ("curator_score", "Кураторы", 0.14),
     ("platform_score", "Платформа", 0.10),
     ("workload_score", "Нагрузка и темп", 0.08),
-    ("price_quality_score", "Цена/качество", 0.14),
+    ("organization_score", "Организация обучения", 0.14),
 )
 CRITERIA_BY_KEY = {field: label for field, label, _ in CRITERIA}
+LEGACY_CRITERIA_KEYS = {"price_quality_score": "organization_score"}
 
 # These are deliberately kept separate from the school criteria.  We collect
 # the parts that a student can fairly assess after studying with a teacher,
@@ -69,7 +70,7 @@ TEACHER_CRITERIA = (
     ("communication", "Общение и атмосфера"),
 )
 TEACHER_CRITERIA_BY_KEY = {field: label for field, label in TEACHER_CRITERIA}
-REVIEW_CRITERIA_BY_KEY = {**CRITERIA_BY_KEY, **TEACHER_CRITERIA_BY_KEY}
+REVIEW_CRITERIA_BY_KEY = {**CRITERIA_BY_KEY, **TEACHER_CRITERIA_BY_KEY, "price_quality_score": "Организация обучения (старый отзыв)"}
 
 
 class Quiz(StatesGroup):
@@ -691,7 +692,7 @@ def rating_entry(position, school, user_average, user_count):
         f"преподаватели {n(school.teachers_score)} · практика {n(school.practice_score)} · "
         f"проверка {n(school.feedback_score)} · кураторы {n(school.curator_score)}\n"
         f"платформа {n(school.platform_score)} · нагрузка {n(school.workload_score)} · "
-        f"цена/качество {n(school.price_quality_score)}"
+        f"организация обучения {n(school.organization_score)}"
     )
 
 
@@ -815,8 +816,9 @@ async def approved_school_criteria_stats(session, school_id):
         Review.moderation_status == "approved",
     ))).scalars().all()
     for review in dedicated:
-        if review.criterion in values:
-            values[review.criterion].append(review.score)
+        criterion = LEGACY_CRITERIA_KEYS.get(review.criterion, review.criterion)
+        if criterion in values:
+            values[criterion].append(review.score)
     overall = (await session.execute(select(Review).where(
         Review.school_id == school_id,
         Review.teacher_id.is_(None),
@@ -829,6 +831,7 @@ async def approved_school_criteria_stats(session, school_id):
         except json.JSONDecodeError:
             scores = {}
         for field, score in scores.items():
+            field = LEGACY_CRITERIA_KEYS.get(field, field)
             if field in values:
                 values[field].append(float(score))
     return {field: (sum(items) / len(items) if items else None, len(items)) for field, items in values.items()}
