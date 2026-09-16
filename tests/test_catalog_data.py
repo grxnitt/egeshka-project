@@ -19,3 +19,13 @@ def test_price_quality_was_replaced_everywhere_in_seed():
 def test_new_school_teacher_cards_are_available():
     counts = {name: sum(teacher[0] == name for teacher in TEACHERS) for name in ("PARTA", "Skysmart", "Школково")}
     assert counts == {"PARTA": 8, "Skysmart": 3, "Школково": 3}
+
+
+def test_teacher_subjects_are_listed_by_their_school():
+    school_subjects = {row["name"]: set(row["subjects"].split(",")) for row in SEED}
+    missing = {
+        (school, subject)
+        for school, _name, subject, *_rest in TEACHERS
+        if subject.lower().replace(" язык", "") not in school_subjects[school]
+    }
+    assert missing == set()
