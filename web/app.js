@@ -1,5 +1,5 @@
-import { decisionFields, priceContext } from './school-content.js?v=19';
-import { priceDetails, relativeStrengths } from './comparison.js?v=18';
+import { decisionFields, priceContext } from './school-content.js?v=20';
+import { priceDetails, relativeStrengths } from './comparison.js?v=19';
 const $ = (selector) => document.querySelector(selector);
 const escape = (value) => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = n => Number(n).toFixed(1).replace('.', ',');
