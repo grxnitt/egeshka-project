@@ -4,7 +4,7 @@ from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from egeshka_bot.db import SEED, TEACHERS
+from egeshka_bot.db import SCHOOL_REVIEW_SLUGS, SEED, TEACHERS
 from egeshka_bot.scoring import BASE_WEIGHTS
 
 schools = []
@@ -15,6 +15,7 @@ for row in SEED:
         'monthlyPriceFrom': row['monthly_price_from'],
         'strengths': row['strengths'], 'weaknesses': row['weaknesses'],
         'format': row['format_text'], 'url': row['official_url'],
+        'reviewSlug': SCHOOL_REVIEW_SLUGS[row['name']],
         'criteria': {key: row[key] for key in BASE_WEIGHTS},
         'score': round(sum(row[key] * weight for key, weight in BASE_WEIGHTS.items()), 1),
     })

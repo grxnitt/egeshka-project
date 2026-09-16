@@ -1,4 +1,4 @@
-from egeshka_bot.db import SEED, TEACHERS
+from egeshka_bot.db import SCHOOL_REVIEW_SLUGS, SEED, TEACHERS
 from egeshka_bot.scoring import BASE_WEIGHTS
 
 
@@ -43,3 +43,11 @@ def test_ege_land_physics_card_tracks_current_teacher():
     physics_names = {name for school, name, subject, *_rest in TEACHERS if school == "ЕГЭLand" and subject == "Физика"}
 
     assert physics_names == {"Даня Физик"}
+
+
+def test_every_school_has_a_unique_review_deeplink_slug():
+    school_names = {row["name"] for row in SEED}
+
+    assert set(SCHOOL_REVIEW_SLUGS) == school_names
+    assert len(set(SCHOOL_REVIEW_SLUGS.values())) == len(school_names)
+    assert all(slug.replace("_", "").isalnum() and slug.isascii() for slug in SCHOOL_REVIEW_SLUGS.values())

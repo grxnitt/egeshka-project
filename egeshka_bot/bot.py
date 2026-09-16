@@ -12,7 +12,7 @@ from html import escape
 from sqlalchemy import func, select
 
 from .config import Settings
-from .db import get_or_create_user
+from .db import SCHOOL_REVIEW_SLUGS, get_or_create_user
 from .models import Course, Event, Review, School, Teacher
 from .scoring import QuizProfile, school_score
 
@@ -71,6 +71,7 @@ TEACHER_CRITERIA = (
 )
 TEACHER_CRITERIA_BY_KEY = {field: label for field, label in TEACHER_CRITERIA}
 REVIEW_CRITERIA_BY_KEY = {**CRITERIA_BY_KEY, **TEACHER_CRITERIA_BY_KEY, "price_quality_score": "Организация обучения (старый отзыв)"}
+SCHOOL_BY_REVIEW_SLUG = {slug: name for name, slug in SCHOOL_REVIEW_SLUGS.items()}
 
 
 class Quiz(StatesGroup):
@@ -937,6 +938,25 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         async with session_factory() as session:
             await get_or_create_user(session, message.from_user.id)
         payload = message.text.split(maxsplit=1)[1] if message.text and " " in message.text else ""
+        if payload.startswith("review_"):
+            school_name = SCHOOL_BY_REVIEW_SLUG.get(payload.removeprefix("review_"))
+            if school_name:
+                async with session_factory() as session:
+                    school = (await session.execute(select(School).where(
+                        School.name == school_name,
+                        School.is_active.is_(True),
+                    ))).scalar_one_or_none()
+                if school:
+                    await state.clear()
+                    await track(message.from_user.id, "review_deeplink_opened", {"school_id": school.id})
+                    await message.answer(
+                        f"Отзыв о школе «{school.name}»\n\nОцени весь опыт обучения: занятия, практику, проверку работ, поддержку, платформу и организацию курса.",
+                        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                            [InlineKeyboardButton(text="Оставить отзыв о школе", callback_data=f"review_school:{school.id}")],
+                            [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
+                        ]),
+                    )
+                    return
         if payload.startswith("site_"):
             try:
                 _, subject_index, budget_value, level_code, target_value = payload.split("_")

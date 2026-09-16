@@ -327,3 +327,36 @@ dialog:has(.teacher-directory){max-width:1080px;padding:0;overflow:auto}
 .ratings-page .school-card:nth-child(1):before{
  border-color:#e8ecfc;
 }
+
+/* Methodology cards explain the evidence behind every score. */
+.weight-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.weight-item{display:grid;grid-template-columns:68px minmax(0,1fr);grid-template-rows:auto 1fr;min-height:132px;padding:19px 20px;justify-content:initial;column-gap:14px;row-gap:8px;background:#fff}
+.weight-item b{grid-row:1/3;font-size:24px}
+.weight-item span{font-size:14px;font-weight:750;line-height:1.25}
+.weight-item small{color:#646978;font-size:12px;line-height:1.5}
+
+/* Every school card uses the same action hierarchy, including first place. */
+.ratings-page .school-card:nth-child(1) .card-open{background:#edf0ff;color:var(--ink)}
+
+/* Review CTA appears after the user has read the school's details. */
+.detail-review-entry{display:flex;margin-top:12px;padding:22px 24px;align-items:center;justify-content:space-between;gap:24px;border:1px solid #f0cfdd;border-radius:18px;background:#fbe7ef}
+.detail-review-entry>div{display:flex;min-width:0;flex-direction:column;gap:4px}
+.detail-review-entry small{color:#9a4263;font-size:10px;font-weight:750;letter-spacing:.06em;text-transform:uppercase}
+.detail-review-entry strong{font:750 18px/1.3 var(--font-ui)}
+.detail-review-entry p{max-width:510px;margin:2px 0 0;color:#66616a;font-size:12px;line-height:1.55}
+.detail-review-entry>a{display:flex;min-width:210px;min-height:48px;padding:13px 16px;align-items:center;justify-content:space-between;gap:20px;border-radius:12px;background:var(--ink);color:#fff;font-size:12px;font-weight:750;transition:background .2s,transform .2s}
+.detail-review-entry>a:hover{background:var(--blue)}
+.detail-review-entry>a:active{transform:translateY(1px)}
+
+.review-copy .button.dark{max-width:390px;line-height:1.25;text-align:left}
+
+@media(max-width:700px){
+ .weight-grid{grid-template-columns:1fr}
+ .weight-item{min-height:0;grid-template-columns:56px minmax(0,1fr);padding:16px}
+ .weight-item b{font-size:21px}
+ .weight-item span{font-size:13px}
+ .weight-item small{font-size:11px}
+ .detail-review-entry{padding:18px;align-items:stretch;flex-direction:column;gap:16px}
+ .detail-review-entry>a{width:100%;min-width:0}
+ .review-copy .button.dark{max-width:none;font-size:12px;gap:14px}
+}
