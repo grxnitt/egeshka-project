@@ -402,11 +402,13 @@ dialog:has(.detail-simple){max-width:900px}
 .detail-primary-action button>b{display:flex;align-items:center;gap:20px;font-size:13px}
 .detail-primary-action i{font-style:normal;font-size:20px;transition:transform .22s}
 .detail-primary-action button:hover i{transform:translateX(3px)}
-.detail-secondary-actions{display:flex;padding:17px 2px 0;align-items:center;justify-content:flex-end;gap:24px}
+.detail-secondary-actions{display:flex;padding:14px 0 0;align-items:center;justify-content:flex-end;gap:24px}
 .detail-secondary-actions a{display:inline-flex;align-items:center;gap:8px;color:#4f5565;font-size:11px;font-weight:700;text-decoration:none;transition:color .2s}
 .detail-secondary-actions a:hover{color:var(--blue)}
-.detail-secondary-actions a:first-child{margin-right:auto;color:#8d3a5b}
-.detail-secondary-actions a:first-child:hover{color:var(--pink)}
+.detail-secondary-actions a:first-child{min-height:42px;margin-right:auto;padding:10px 14px;border:1px solid #f0cfdd;border-radius:12px;background:#fbe7ef;color:#7e2f50;font-size:12px;transition:background .2s,border-color .2s,transform .2s}
+.detail-secondary-actions a:first-child:hover{border-color:#e8adc4;background:#f8dce8;color:#6f2443;transform:translateY(-1px)}
+.detail-secondary-actions a:first-child:active{transform:translateY(1px)}
+.detail-secondary-actions a:first-child:focus-visible{outline:3px solid rgb(255 77 141/.28);outline-offset:2px}
 .detail-note{margin:22px 0 0;color:#858996;font-size:10px;line-height:1.5}
 
 @media(max-width:700px){
