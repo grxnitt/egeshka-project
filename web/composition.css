@@ -132,6 +132,60 @@ select:focus-visible,a:focus-visible,button:focus-visible{outline:3px solid #8a9
 @media(max-width:700px){.hero.hero-centered{padding-inline:16px}.hero-glow-blue{left:-140px}.hero-glow-pink{right:-130px}}
 @media(prefers-reduced-motion:reduce){.hero-glow,.channel-section:after,.rating-next:after{animation:none!important}.button:after,.card-open:after,.method-pill:after{display:none}.ratings-page .school-card:before,.compare-price-card{transition:none}}
 
+/* School teacher directory: a compact secondary layer inside the existing rating flow. */
+.school-card-actions{display:grid;grid-template-columns:1fr 1.15fr;gap:8px;margin-top:auto}
+.school-card-actions .card-open{margin-top:0}
+.card-teachers{display:flex;min-height:48px;padding:12px 14px;align-items:center;justify-content:space-between;gap:10px;border:1px solid #dfe3f3;border-radius:12px;background:white;color:var(--ink);font:700 12px/1 var(--font-ui);transition:border-color .2s,background .2s,transform .2s}
+.card-teachers>span{display:grid;min-width:27px;height:27px;padding:0 7px;place-items:center;border-radius:9px;background:var(--blush);color:#8a3155;font-variant-numeric:tabular-nums}
+.card-teachers:hover{border-color:#aeb9ec;background:#f8f9ff}
+.card-teachers:active{transform:translateY(1px)}
+.detail-teachers-entry{display:flex;margin-top:12px;padding:22px 24px;align-items:center;justify-content:space-between;gap:20px;border-radius:18px;background:#eef1ff}
+.detail-teachers-entry>div{display:flex;flex-direction:column;gap:5px}
+.detail-teachers-entry small{color:#666d84;font-size:11px}
+.detail-teachers-entry strong{font:700 20px/1.2 var(--font-ui)}
+.detail-teachers-entry button{display:flex;min-height:44px;padding:12px 16px;align-items:center;gap:24px;border:0;border-radius:12px;background:var(--blue);color:white;font-weight:700}
+dialog:has(.teacher-directory){max-width:1080px;padding:0;overflow:auto}
+.teacher-directory{padding:52px}
+.teacher-directory-head{display:grid;grid-template-columns:1fr 120px;gap:32px;align-items:end}
+.teacher-kicker{margin:0 0 10px;color:var(--blue);font:700 11px/1 var(--font-ui);letter-spacing:.12em;text-transform:uppercase}
+.teacher-directory h2{margin:0 0 14px;font-size:clamp(38px,5vw,68px);overflow-wrap:anywhere}
+.teacher-directory-head>div>p:last-child{max-width:620px;margin:0;color:var(--muted);font-size:15px;line-height:1.6}
+.teacher-directory-count{display:flex;min-height:120px;padding:18px;flex-direction:column;justify-content:space-between;border-radius:18px;background:var(--blush);color:#7f2e50}
+.teacher-directory-count strong{font:750 42px/1 var(--font-ui);font-variant-numeric:tabular-nums}
+.teacher-directory-count span{font-size:11px}
+.teacher-subjects{display:flex;gap:8px;margin:30px -4px 14px;padding:4px;overflow-x:auto;scrollbar-width:none}
+.teacher-subjects::-webkit-scrollbar{display:none}
+.teacher-subjects button{flex-shrink:0;padding:11px 16px;border:1px solid #dde1ef;border-radius:999px;background:white;color:#5f6473;font-size:12px;transition:background .2s,color .2s,border-color .2s}
+.teacher-subjects button.active{border-color:var(--blue);background:var(--blue);color:white}
+.teacher-result{margin:0 0 18px;color:#696e7d;font-size:12px}
+.teacher-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.teacher-profile{display:flex;min-width:0;padding:20px;border:1px solid #e2e4ed;border-radius:18px;background:white;flex-direction:column}
+.teacher-profile-head{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:12px;align-items:center}
+.teacher-monogram{display:grid;width:44px;height:44px;place-items:center;border-radius:14px;background:#e4e9ff;color:var(--blue);font:750 19px/1 var(--font-ui)}
+.teacher-profile:nth-child(even) .teacher-monogram{background:var(--blush);color:#8a3155}
+.teacher-profile-head p{margin:0 0 4px;color:#6a7080;font-size:11px}
+.teacher-profile-head h3{margin:0;font:700 18px/1.2 var(--font-ui);letter-spacing:-.02em;overflow-wrap:anywhere}
+.teacher-profile-head>strong{color:var(--blue);font:750 22px/1 var(--font-ui);font-variant-numeric:tabular-nums}
+.teacher-scale{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin:17px 0}
+.teacher-scale i{height:5px;border-radius:5px;background:linear-gradient(90deg,var(--blue) var(--fill),#e4e6ef var(--fill))}
+.teacher-description{display:-webkit-box;min-height:66px;margin:0 0 18px;overflow:hidden;color:#606574;font-size:13px;line-height:1.65;-webkit-box-orient:vertical;-webkit-line-clamp:3}
+.teacher-profile>a{display:flex;margin-top:auto;padding-top:14px;align-items:center;justify-content:space-between;border-top:1px solid #eceef4;color:var(--ink);font-size:12px;font-weight:700;text-decoration:none}
+.teacher-profile>a span{color:var(--blue);font-size:17px}
+.teacher-note{margin:22px 0 0;color:#737887;font-size:11px;line-height:1.55}
+@media(max-width:700px){
+ .school-card-actions{grid-template-columns:1fr}
+ .detail-teachers-entry{align-items:stretch;flex-direction:column}
+ .detail-teachers-entry button{justify-content:space-between}
+ dialog:has(.teacher-directory){width:calc(100% - 20px);padding-top:60px;border-radius:24px}
+ .teacher-directory{padding:0 20px 24px}
+ .teacher-directory-head{grid-template-columns:1fr}
+ .teacher-directory-count{min-height:82px;display:grid;grid-template-columns:1fr auto;align-items:center}
+ .teacher-directory-count strong{font-size:34px}
+ .teacher-grid{grid-template-columns:1fr}
+ .teacher-profile{padding:17px}
+ .teacher-description{min-height:0}
+}
+
 /* Content never depends on animation to be readable. */
 .reveal-ready{opacity:1;transform:none}
 .compare-section{position:relative}
