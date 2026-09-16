@@ -416,13 +416,13 @@ dialog:has(.detail-simple){max-width:900px}
  dialog:has(.detail-simple) #dialog-content{padding:0;max-height:calc(100dvh - 62px)}
  dialog:has(.detail-simple) .close{right:10px;top:8px}
  .detail-simple{padding:0 16px 24px}
- .detail-simple .detail-hero{align-items:flex-start;gap:14px}
- .detail-simple .detail-hero h2{font-size:38px}
+ .detail-simple .detail-hero{grid-template-columns:minmax(0,1fr) 92px;align-items:start;gap:12px}
+ .detail-simple .detail-hero h2{font-size:clamp(32px,9.5vw,38px)}
  .detail-simple .detail-hero p{font-size:13px;line-height:1.5}
- .detail-simple .detail-score{width:82px;height:82px;flex-basis:82px}
- .detail-simple .detail-score small{font-size:7px}
- .detail-simple .detail-score strong{font-size:26px}
- .detail-simple .detail-score span{font-size:8px}
+ .detail-simple .detail-score{display:flex;width:92px;height:108px;min-height:108px;padding:12px;align-self:start;flex:0 0 auto;flex-direction:column;justify-content:space-between}
+ .detail-simple .detail-score small{font-size:7px;line-height:1.25}
+ .detail-simple .detail-score strong{font-size:30px;white-space:nowrap}
+ .detail-simple .detail-score span{font-size:8px;text-align:left}
  .detail-subject-line,.detail-strength-line{grid-template-columns:1fr;gap:7px}
  .detail-facts{grid-template-columns:1fr}
  .detail-facts article{padding:20px 0}
