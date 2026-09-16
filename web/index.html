@@ -5,10 +5,10 @@
   <meta name="theme-color" content="#FAF8F5">
   <meta name="description" content="Выбирай подготовку к ЕГЭ: сравнивай онлайн-школы и преподавателей по предметам, цене и формату обучения.">
   <title>ЕГЭшка — найди свою подготовку</title>
-  <link rel="stylesheet" href="styles.css?v=29">
-  <link rel="stylesheet" href="refinements.css?v=29">
-  <link rel="stylesheet" href="typography.css?v=29">
-  <link rel="stylesheet" href="composition.css?v=29">
+  <link rel="stylesheet" href="styles.css?v=30">
+  <link rel="stylesheet" href="refinements.css?v=30">
+  <link rel="stylesheet" href="typography.css?v=30">
+  <link rel="stylesheet" href="composition.css?v=32">
 </head>
 <body>
 <header class="header wrap"><a class="logo" href="#" aria-label="ЕГЭшка, главная">ЕГЭшка<span>.</span></a><nav aria-label="Главная навигация"><a href="ratings.html">Рейтинг школ</a><a href="#compare">Сравнение</a><a href="#reviews">Отзывы</a></nav><a class="header-action" href="#compare">Сравнить <span>↗</span></a></header>
@@ -17,7 +17,12 @@
   <div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div class="hero-glow hero-glow-pink" aria-hidden="true"></div>
   <div class="hero-copy"><h1><span class="hero-title-line">Подготовка под тебя.</span> <span class="hero-title-line">Выбор за <span class="brand-dot">тобой</span></span></h1><p class="lead">Школы, преподаватели и честное сравнение.<br> Найди тех, с кем тебе будет по пути.</p><div class="hero-actions"><button class="button pink" id="quiz-start">Подобрать подготовку <span aria-hidden="true">↗</span></button><a class="hero-compare-link" href="#compare">Сравнить школы <span aria-hidden="true">↗</span></a></div></div>
 </section>
-<div class="ribbon" aria-label="Что можно сравнить"><div>ПРЕДМЕТ <span>✳</span> ПРЕПОДАВАТЕЛЬ <span>✳</span> ЦЕНА <span>✳</span> ПРАКТИКА <span>✳</span> ПОДДЕРЖКА <span>✳</span> ТЕМП <span>✳</span> ПРЕДМЕТ <span>✳</span> ПРЕПОДАВАТЕЛЬ <span>✳</span></div></div>
+<div class="ribbon" role="img" aria-label="Можно сравнить предмет, преподавателя, цену, практику, поддержку и темп обучения">
+  <div class="ribbon-track" aria-hidden="true">
+    <div class="ribbon-set"><span class="ribbon-word">Предмет</span><i></i><span class="ribbon-word">Преподаватель</span><i></i><span class="ribbon-word">Цена</span><i></i><span class="ribbon-word">Практика</span><i></i><span class="ribbon-word">Поддержка</span><i></i><span class="ribbon-word">Темп</span><i></i></div>
+    <div class="ribbon-set"><span class="ribbon-word">Предмет</span><i></i><span class="ribbon-word">Преподаватель</span><i></i><span class="ribbon-word">Цена</span><i></i><span class="ribbon-word">Практика</span><i></i><span class="ribbon-word">Поддержка</span><i></i><span class="ribbon-word">Темп</span><i></i></div>
+  </div>
+</div>
 <section class="compare-section" id="compare"><div class="wrap section"><div class="section-heading"><div><h2>Сравни и выбери.</h2></div><p>Выбери два варианта.<br>Посмотри, чем они отличаются.</p></div><div class="comparison-box"><div class="comparison-controls"><div class="tabs" role="group" aria-label="Тип сравнения"><button class="active" data-mode="schools" aria-pressed="true">Школы</button><button data-mode="teachers" aria-pressed="false">Преподаватели</button></div><label id="teacher-subject-wrap" hidden><span>1. Выбери предмет</span><select id="teacher-subject"></select></label></div><div class="compare-selects"><label><span id="left-label">Первая школа</span><select id="left-select"></select></label><span class="versus">или</span><label><span id="right-label">Вторая школа</span><select id="right-select"></select></label></div><div id="comparison-result" aria-live="polite"></div><button class="method-link" id="compare-method">Как считается оценка ↗</button></div></div></section>
 <section class="section wrap reviews" id="reviews"><div class="review-heading"><p class="eyebrow">ЗА ЦИФРАМИ — ЛЮДИ</p><h2>Твой опыт<br>кому-то <span class="brand-dot">поможет</span></h2><span class="review-mark" aria-hidden="true">“</span></div><div class="review-copy"><p>Как проверяли домашки? Был ли куратор на связи? Что получилось, а что разочаровало?</p><div class="review-steps" aria-label="Как оставить отзыв"><span><b>01</b> Оцени</span><span><b>02</b> Расскажи</span><span><b>03</b> Подтверди</span></div><a class="button dark" id="review-link" target="_blank" rel="noopener">Оставить отзыв <span>↗</span></a></div></section>
 <section class="channel-section wrap" id="channel"><div class="channel-stamp" aria-hidden="true"><span>Разбираемся</span><br><strong>в ЕГЭ</strong> вместе</div><div class="channel-copy"><h2>Подготовка — в школе.<br>Всё вокруг — у нас.</h2><p>Изменения ЕГЭ, честные разборы онлайн-школ и поступление — коротко и по делу.</p><a class="button blue" id="channel-link" target="_blank" rel="noopener">Открыть Telegram-канал <span>↗</span></a></div></section>

@@ -245,3 +245,85 @@ dialog:has(.teacher-directory){max-width:1080px;padding:0;overflow:auto}
 .rating-centered .hero-title-line.brand-dot{display:inline-block}
 .rating-centered .hero-actions>.button{min-width:280px}
 @media(max-width:700px){.rating-centered .lead br{display:none}.rating-centered .hero-actions>.button{min-width:0}}
+
+/* A calm, continuous comparison rail between the hero and the product. */
+.ribbon{
+ position:relative;
+ isolation:isolate;
+ width:min(1420px,calc(100% - 64px));
+ height:62px;
+ margin:10px auto 32px;
+ padding:0;
+ overflow:hidden;
+ border:1px solid #eed4df;
+ border-radius:999px;
+ background:#f8e3ec;
+ box-shadow:0 14px 38px rgb(118 49 78/.07),inset 0 1px 0 rgb(255 255 255/.72);
+ -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);
+ mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);
+}
+.ribbon:before{
+ content:'';
+ position:absolute;
+ z-index:0;
+ inset:0;
+ border-radius:inherit;
+ background:linear-gradient(105deg,transparent 28%,rgb(255 255 255/.5) 45%,transparent 62%);
+ transform:translateX(-70%);
+ animation:ribbon-glint 9s ease-in-out infinite;
+ pointer-events:none;
+}
+.ribbon-track{
+ position:relative;
+ z-index:1;
+ display:flex;
+ width:max-content;
+ height:100%;
+ align-items:center;
+ animation:ribbon-loop 30s linear infinite;
+ will-change:transform;
+}
+.ribbon-set{
+ display:flex;
+ flex-shrink:0;
+ align-items:center;
+ gap:24px;
+ padding:0 12px;
+}
+.ribbon .ribbon-set .ribbon-word{
+ color:#272735;
+ font:650 12px/1 var(--font-ui);
+ letter-spacing:.025em;
+ white-space:nowrap;
+}
+.ribbon-set i{
+ display:block;
+ width:8px;
+ height:8px;
+ flex:0 0 8px;
+ border-radius:50%;
+ background:var(--pink);
+ box-shadow:0 0 0 4px rgb(255 77 141/.1);
+}
+.ribbon-set i:nth-of-type(even){
+ background:var(--blue);
+ box-shadow:0 0 0 4px rgb(52 75 216/.09);
+}
+.ribbon:hover .ribbon-track{animation-play-state:paused}
+@keyframes ribbon-loop{to{transform:translateX(-50%)}}
+@keyframes ribbon-glint{0%,58%{transform:translateX(-70%)}82%,100%{transform:translateX(70%)}}
+@media(max-width:700px){
+ .ribbon{width:calc(100% - 24px);height:52px;margin:8px auto 22px}
+ .ribbon-set{gap:18px;padding:0 9px}
+ .ribbon-word{font-size:11px}
+ .ribbon-set i{width:7px;height:7px;flex-basis:7px;box-shadow:0 0 0 3px rgb(255 77 141/.1)}
+ .ribbon-set i:nth-of-type(even){box-shadow:0 0 0 3px rgb(52 75 216/.09)}
+}
+@media(prefers-reduced-motion:reduce){
+ .ribbon-track,.ribbon:before{animation:none}
+}
+
+/* The first rating card uses the same quiet orbit as the rest of the grid. */
+.ratings-page .school-card:nth-child(1):before{
+ border-color:#e8ecfc;
+}
