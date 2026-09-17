@@ -220,15 +220,15 @@ dialog:has(.teacher-directory){max-width:1080px;padding:0;overflow:auto}
 .review-copy>p:first-child{
  max-width:520px;
  margin-bottom:28px;
- font-family:var(--font-display);
- font-size:30px;
- font-weight:600;
- letter-spacing:-1.35px;
- line-height:1.25;
+ font-family:var(--font-ui);
+ font-size:20px;
+ font-weight:500;
+ letter-spacing:-.35px;
+ line-height:1.5;
 }
 @media(max-width:700px){
  .reviews h2{font-size:28px;letter-spacing:-.045em}
- .review-copy>p:first-child{margin-bottom:24px;font-size:26px;letter-spacing:-1.1px}
+ .review-copy>p:first-child{margin-bottom:24px;font-size:17px;letter-spacing:-.2px;line-height:1.55}
 }
 
 /* Content never depends on animation to be readable. */
