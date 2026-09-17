@@ -1,4 +1,4 @@
-import { decisionFields, schoolContent } from './school-content.js?v=22';
+import { decisionFields, schoolContent } from './school-content.js?v=23';
 const $ = selector => document.querySelector(selector);
 const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = n => Number(n).toFixed(1).replace('.', ',');
@@ -14,7 +14,7 @@ const criterionDetails = [
 ];
 const methodologyCriteria = () => criterionDetails.map(([weight, title, description]) => `<article class="weight-item"><b>${weight}</b><span>${title}</span><small>${description}</small></article>`).join('');
 const labels = {'русский':'Русский язык','математика':'Математика','обществознание':'Обществознание','физика':'Физика','химия':'Химия','биология':'Биология','информатика':'Информатика','английский':'Английский язык','история':'История','литература':'Литература','география':'География'};
-const schoolLogos = {'Умскул':'assets/schools/umskul.svg','100балльный репетитор':'assets/schools/100points.svg','Сотка':'assets/schools/sotka.webp','Фоксфорд':'assets/schools/foxford.ico','Вебиум':'assets/schools/webium.ico','99 Баллов':'assets/schools/99ballov.ico','Турбо ЕГЭ':'assets/schools/turbo.png','ЕГЭLand':'assets/schools/egeland.png','СМИТАП':'assets/schools/smitup.svg','PARTA':'assets/schools/parta.svg','Skysmart':'assets/schools/skysmart.svg','Школково':'assets/schools/shkolkovo.ico'};
+const schoolLogos = {'Умскул':'assets/schools/umskul.svg','100балльный репетитор':'assets/schools/100points.svg','Сотка':'assets/schools/sotka.webp','Фоксфорд':'assets/schools/foxford.ico','Вебиум':'assets/schools/webium.ico','99 Баллов':'assets/schools/99ballov.ico','Турбо ЕГЭ':'assets/schools/turbo.png','ЕГЭLand':'assets/schools/egeland.png','СМИТАП':'assets/schools/smitup.svg','PARTA':'assets/schools/parta.svg','Skysmart':'assets/schools/skysmart.svg','Школково':'assets/schools/shkolkovo.ico','ЕГЭ Налегке':'assets/schools/egenalegke.png','StudyCats':'assets/schools/studycats.png'};
 const dialog = $('#detail-dialog');
 let catalog, links = {bot: 'https://t.me/egeshka_rate_bot'}, subject = '', expanded = false;
 const compareSelection = [];

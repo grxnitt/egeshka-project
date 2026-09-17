@@ -4,7 +4,7 @@ from egeshka_bot.scoring import BASE_WEIGHTS
 
 def test_new_schools_have_complete_catalog_entries():
     schools = {row["name"]: row for row in SEED}
-    for name in ("PARTA", "Skysmart", "Школково"):
+    for name in ("PARTA", "Skysmart", "Школково", "ЕГЭ Налегке", "StudyCats"):
         assert name in schools
         assert all(key in schools[name] for key in BASE_WEIGHTS)
         assert schools[name]["official_url"].startswith("https://")
@@ -17,8 +17,9 @@ def test_price_quality_was_replaced_everywhere_in_seed():
 
 
 def test_new_school_teacher_cards_are_available():
-    counts = {name: sum(teacher[0] == name for teacher in TEACHERS) for name in ("PARTA", "Skysmart", "Школково")}
-    assert counts == {"PARTA": 8, "Skysmart": 3, "Школково": 3}
+    names = ("PARTA", "Skysmart", "Школково", "ЕГЭ Налегке", "StudyCats")
+    counts = {name: sum(teacher[0] == name for teacher in TEACHERS) for name in names}
+    assert counts == {"PARTA": 8, "Skysmart": 3, "Школково": 3, "ЕГЭ Налегке": 4, "StudyCats": 9}
 
 
 def test_teacher_subjects_are_listed_by_their_school():
@@ -32,7 +33,11 @@ def test_teacher_subjects_are_listed_by_their_school():
 
 
 def test_researched_teacher_cards_use_factual_descriptions():
-    researched = [row for row in TEACHERS if row[0] in {"ЕГЭLand", "PARTA", "Школково"}]
+    researched = [
+        row
+        for row in TEACHERS
+        if row[0] in {"ЕГЭLand", "PARTA", "Школково", "ЕГЭ Налегке", "StudyCats"}
+    ]
     banned = ("официальной линейке", "официальном каталоге", "официальной команде", "профиль подтверждён")
 
     assert all(len(description) >= 90 for _school, _name, _subject, description, *_rest in researched)

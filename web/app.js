@@ -1,4 +1,4 @@
-import { decisionFields, priceContext } from './school-content.js?v=22';
+import { decisionFields, priceContext } from './school-content.js?v=23';
 import { priceDetails, relativeStrengths } from './comparison.js?v=20';
 const $ = (selector) => document.querySelector(selector);
 const escape = (value) => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -71,7 +71,7 @@ if(mode==='schools'){
   const text=strengths.length?`Выше оценки по критериям: ${strengths.map(key=>criteria[key].toLowerCase()).join(' и ')}.`:'В этой паре нет критериев с более высокой оценкой. Сравни конкретного преподавателя, тариф и формат занятий.';
   return `<article><h4>${escape(school.name)}</h4><p>${escape(text)}</p></article>`;
  };
- html+=`<section class="compare-prices" aria-label="Стоимость подготовки"><h3>Сколько стоит подготовка</h3><p class="compare-price-context">Ориентиры из каталога: пакеты и сроки обучения отличаются.</p><div class="compare-price-grid">${priceCard(left)}${priceCard(right)}</div></section><section class="compare-verdict" aria-label="Краткий вывод"><h3>Что это значит для выбора</h3><div class="compare-verdict-grid">${summaryCard(left,right)}${summaryCard(right,left)}</div><p class="fine">Вывод по редакционным оценкам школы в целом. Небольшая разница баллов не гарантирует лучший результат. «Организация обучения» учитывает ясность расписания, учебного маршрута, контроля прогресса и правил курса; стоимость показана отдельно.</p></section>`;
+ html+=`<section class="compare-prices" aria-label="Стоимость подготовки"><h3>Сколько стоит подготовка</h3><p class="compare-price-context">Ориентиры из каталога: пакеты и сроки обучения отличаются.</p><div class="compare-price-grid">${priceCard(left)}${priceCard(right)}</div></section><section class="compare-verdict" aria-label="Краткий вывод"><h3>Что это значит для выбора</h3><div class="compare-verdict-grid">${summaryCard(left,right)}${summaryCard(right,left)}</div></section>`;
 }else{
  const teacherCard=t=>`<article class="teacher-compare-card"><div><span>${escape(t.school)}</span><strong>${number(t.score)}<small>/10*</small></strong></div><h3>${escape(t.name)}</h3><p>${escape(t.description)}</p><a href="${escape(t.url)}" target="_blank" rel="noopener">Открыть профиль <b>↗</b></a></article>`;
  html+=`<details class="teacher-details"><summary class="comparison-summary">Подробнее о преподавателях</summary><div class="teacher-compare-cards">${teacherCard(left)}${teacherCard(right)}</div></details>`;
