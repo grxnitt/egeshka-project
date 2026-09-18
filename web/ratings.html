@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="styles.css?v=30">
   <link rel="stylesheet" href="refinements.css?v=32">
   <link rel="stylesheet" href="typography.css?v=30">
-  <link rel="stylesheet" href="composition.css?v=40">
+  <link rel="stylesheet" href="composition.css?v=41">
 </head>
 <body class="ratings-page">
 <header class="header wrap"><a class="logo" href="index.html" aria-label="ЕГЭшка, главная">ЕГЭшка<span>.</span></a><nav aria-label="Главная навигация"><a class="active" href="ratings.html">Рейтинг школ</a><a href="index.html#compare">Сравнение</a><a href="index.html#reviews">Отзывы</a></nav><a class="header-action" href="index.html">На главную <span>↗</span></a></header>
@@ -21,6 +21,14 @@
     <div class="wrap section">
       <div class="rating-filter-head"><div><h2>Какой предмет сдаёшь?</h2></div></div>
       <div class="subjects rating-subjects" id="subject-list"></div>
+      <div class="catalog-filters" aria-label="Дополнительные фильтры">
+        <label><span>Бюджет в месяц</span><select id="filter-budget"><option value="">Любой</option><option value="3000">До 3 000 ₽</option><option value="5000">До 5 000 ₽</option><option value="8000">До 8 000 ₽</option><option value="12000">До 12 000 ₽</option></select></label>
+        <label><span>Занятия</span><select id="filter-lessons"><option value="">Любые</option><option value="live">В прямом эфире</option><option value="recorded">В записи</option><option value="individual">Индивидуально</option></select></label>
+        <label class="filter-check"><input id="filter-curator" type="checkbox"><span>Куратор доступен</span></label>
+        <label class="filter-check"><input id="filter-feedback" type="checkbox"><span>Проверка работ</span></label>
+        <button id="reset-filters" type="button" hidden>Сбросить</button>
+      </div>
+      <p class="filter-note">Фильтры показывают возможности, доступные хотя бы в одном тарифе. Точные условия проверь в карточке школы.</p>
       <div class="catalog-toolbar"><p id="catalog-label" aria-live="polite">Все предметы</p><label><span>Порядок</span><select id="sort"><option value="rating">По оценке</option><option value="name">По названию</option></select></label></div>
       <p class="rating-scope-note">Показаны школы с выбранным предметом. Баллы — общая оценка школы, а не отдельного курса.</p>
       <div class="school-grid" id="school-list"></div>
@@ -34,6 +42,6 @@
 <nav class="mobile-product-nav" aria-label="Разделы сервиса"><a href="index.html?start=quiz">Подобрать</a><a class="active" href="ratings.html">Рейтинг</a><a href="index.html#compare">Сравнить</a></nav>
 <footer class="wrap footer"><a class="logo" href="index.html">ЕГЭшка<span>.</span></a><p>Выбирай осознанно.<br>Готовься по-своему.</p><a href="#">Наверх ↑</a><span>© ЕГЭшка, 2026</span></footer>
 <dialog id="detail-dialog"><button class="close" aria-label="Закрыть">×</button><div id="dialog-content" tabindex="0" aria-label="Подробности"></div></dialog>
-<script type="module" src="ratings.js?v=37"></script>
+<script type="module" src="ratings.js?v=38"></script>
 <script type="module" src="motion.js?v=30"></script>
 </body></html>
