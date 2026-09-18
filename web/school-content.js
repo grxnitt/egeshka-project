@@ -17,22 +17,23 @@ export const schoolContent={
 };
 
 // Product filters describe whether an option is available in at least one current tariff.
-// `monthly` is null when the catalog does not provide a comparable monthly price.
+// `priceFrom` mirrors the minimum visible price in the card, regardless of whether
+// that price is stated per month, lesson or introductory block.
 export const schoolFilters={
- 'Умскул':{monthly:5490,lessons:['live','recorded'],curator:true,feedback:true},
- '100балльный репетитор':{monthly:null,lessons:['live','recorded'],curator:true,feedback:true},
- 'Сотка':{monthly:3990,lessons:['recorded'],curator:true,feedback:true},
- 'Фоксфорд':{monthly:4029,lessons:['live','recorded','individual'],curator:true,feedback:true},
- 'Вебиум':{monthly:3912,lessons:['recorded'],curator:true,feedback:true},
- '99 Баллов':{monthly:null,lessons:['live','recorded'],curator:true,feedback:true},
- 'Турбо ЕГЭ':{monthly:4333,lessons:['recorded'],curator:true,feedback:true},
- 'ЕГЭLand':{monthly:6165,lessons:['live','recorded'],curator:true,feedback:true},
- 'СМИТАП':{monthly:3590,lessons:['live','recorded'],curator:true,feedback:true},
- 'PARTA':{monthly:3900,lessons:['live','recorded'],curator:true,feedback:true},
- 'Skysmart':{monthly:10120,lessons:['live','individual'],curator:false,feedback:true},
- 'Школково':{monthly:null,lessons:['live','recorded'],curator:false,feedback:true},
- 'ЕГЭ Налегке':{monthly:2350,lessons:['live','recorded'],curator:true,feedback:true},
- 'StudyCats':{monthly:4890,lessons:['live','recorded'],curator:false,feedback:true}
+ 'Умскул':{priceFrom:5490,lessons:['live','recorded'],curator:true,feedback:true},
+ '100балльный репетитор':{priceFrom:990,lessons:['live','recorded'],curator:true,feedback:true},
+ 'Сотка':{priceFrom:3990,lessons:['recorded'],curator:true,feedback:true},
+ 'Фоксфорд':{priceFrom:4029,lessons:['live','recorded','individual'],curator:true,feedback:true},
+ 'Вебиум':{priceFrom:3912,lessons:['recorded'],curator:true,feedback:true},
+ '99 Баллов':{priceFrom:null,lessons:['live','recorded'],curator:true,feedback:true},
+ 'Турбо ЕГЭ':{priceFrom:4333,lessons:['recorded'],curator:true,feedback:true},
+ 'ЕГЭLand':{priceFrom:6165,lessons:['live','recorded'],curator:true,feedback:true},
+ 'СМИТАП':{priceFrom:3590,lessons:['live','recorded'],curator:true,feedback:true},
+ 'PARTA':{priceFrom:3900,lessons:['live','recorded'],curator:true,feedback:true},
+ 'Skysmart':{priceFrom:1880,lessons:['live','individual'],curator:false,feedback:true},
+ 'Школково':{priceFrom:null,lessons:['live','recorded'],curator:false,feedback:true},
+ 'ЕГЭ Налегке':{priceFrom:2350,lessons:['live','recorded'],curator:true,feedback:true},
+ 'StudyCats':{priceFrom:4890,lessons:['live','recorded'],curator:false,feedback:true}
 };
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function decisionFields(school){const c=schoolContent[school.name],p=priceDetails[school.name];if(!c)return `<p>${esc(school.description)}</p>`;return `<dl class="school-decision"><div><dt>Подойдёт, если</dt><dd>${esc(c.fit)}</dd></div><div><dt>Формат</dt><dd>${esc(c.format)}</dd></div><div><dt>Цена</dt><dd>${esc(p.period)}<small class="card-price-scope">${esc(c.scope)}</small></dd></div></dl>`;}

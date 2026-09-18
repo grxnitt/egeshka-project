@@ -382,11 +382,13 @@ dialog:has(.detail-simple){max-width:900px}
 .detail-facts article+article{padding-left:28px;border-left:1px solid #e4e3e1}
 .detail-facts small{display:block;margin-bottom:9px;color:var(--blue);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
 .detail-facts p{margin:0;font-size:15px;line-height:1.5;text-wrap:pretty}
-.detail-strength-line{display:grid;grid-template-columns:120px minmax(0,1fr);gap:18px;padding:22px 0;align-items:center;border-bottom:1px solid #e4e3e1}
-.detail-strength-line>span{color:#666b79;font-size:12px;font-weight:700}
-.detail-strength-line>div{display:flex;gap:7px;flex-wrap:wrap}
+.detail-strength-line,.detail-weakness-line{display:grid;grid-template-columns:120px minmax(0,1fr);gap:18px;padding:22px 0;align-items:center;border-bottom:1px solid #e4e3e1}
+.detail-strength-line>span,.detail-weakness-line>span{color:#666b79;font-size:12px;font-weight:700}
+.detail-strength-line>div,.detail-weakness-line>div{display:flex;gap:7px;flex-wrap:wrap}
 .detail-strength-line b{display:flex;padding:8px 10px;align-items:center;gap:9px;border-radius:10px;background:#eff2ff;font-size:11px;font-weight:700}
 .detail-strength-line em{color:var(--blue);font-style:normal;font-variant-numeric:tabular-nums}
+.detail-weakness-line b{display:flex;padding:8px 10px;align-items:center;gap:9px;border-radius:10px;background:#fbe7ef;font-size:11px;font-weight:700;color:#6f2e4c}
+.detail-weakness-line em{color:#b33466;font-style:normal;font-variant-numeric:tabular-nums}
 .detail-more{border-bottom:1px solid #e4e3e1}
 .detail-more summary{display:flex;padding:20px 0;align-items:center;justify-content:space-between;list-style:none;font-size:14px;font-weight:750;cursor:pointer}
 .detail-more summary::-webkit-details-marker{display:none}
@@ -441,7 +443,7 @@ body:has(.compare-tray){padding-bottom:108px}
  .detail-simple .detail-score small{font-size:7px;line-height:1.25}
  .detail-simple .detail-score strong{font-size:30px;white-space:nowrap}
  .detail-simple .detail-score span{font-size:8px;text-align:left}
- .detail-subject-line,.detail-strength-line{grid-template-columns:1fr;gap:7px}
+ .detail-subject-line,.detail-strength-line,.detail-weakness-line{grid-template-columns:1fr;gap:7px}
  .detail-facts{grid-template-columns:1fr}
  .detail-facts article{padding:20px 0}
  .detail-facts article+article{padding:20px 0;border-top:1px solid #e4e3e1;border-left:0}
