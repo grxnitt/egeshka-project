@@ -3,6 +3,7 @@ body,button,input,select,textarea{font-family:var(--font-ui)}
 h1,h2,.logo,.channel-stamp{font-family:var(--font-display)}
 h3,.eyebrow,.ribbon div,.criteria-title strong,.teacher-compare-card h3{font-family:var(--font-ui)}
 .logo{font-weight:800}
+.logo img{display:block;width:auto;height:36px}
 h1{font-weight:700}
 /* One heading treatment across the hero preview, sections and dialogs. */
 .hero-art .match-card h2,.compare-section .section-heading h2,.reviews h2,
@@ -28,6 +29,7 @@ h1{font-weight:700}
 .formula-card small,.formula-card span,.quiz-match-head strong small,.teacher-compare-card>div small{font-family:var(--font-ui);letter-spacing:0}
 .versus{font-style:normal}
 @media(max-width:700px){
+ .logo img{height:29px}
  .hero-art .match-card h2,.compare-section .section-heading h2,.reviews h2{font-size:28px}
  .channel-section h2,.rating-filter-head h2{font-size:24px}
  .method-view h2,.site-quiz h2,.quiz-result h2,.detail-hero h2{font-size:27px;overflow-wrap:break-word}
