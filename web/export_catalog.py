@@ -7,6 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from egeshka_bot.db import SCHOOL_REVIEW_SLUGS, SEED, TEACHERS
 from egeshka_bot.scoring import BASE_WEIGHTS
 from egeshka_bot.subjects import SUBJECTS
+from egeshka_bot.teacher_copy import teacher_description
 
 schools = []
 for school_id, row in enumerate(SEED, start=1):
@@ -21,7 +22,7 @@ for school_id, row in enumerate(SEED, start=1):
         'score': round(sum(row[key] * weight for key, weight in BASE_WEIGHTS.items()), 1),
     })
 catalog = {'schools': schools, 'teachers': [
-    {'school': t[0], 'name': t[1], 'subject': t[2], 'subjects': t[2].split(' / '), 'description': t[3], 'score': t[4], 'criteria': {}, 'url': t[6]}
+    {'school': t[0], 'name': t[1], 'subject': t[2], 'subjects': t[2].split(' / '), 'description': teacher_description(t[3]), 'score': t[4], 'criteria': {}, 'url': t[6]}
     for t in TEACHERS
 ]}
 Path(__file__).with_name('catalog.json').write_text(json.dumps(catalog, ensure_ascii=False, indent=2) + '\n')

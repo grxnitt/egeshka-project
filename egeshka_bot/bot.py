@@ -2,6 +2,7 @@ from aiogram import Bot, Dispatcher, F
 from aiogram.enums import ParseMode
 from aiogram.filters import Command, CommandStart
 from aiogram.exceptions import TelegramBadRequest
+from .teacher_copy import teacher_description
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message
@@ -719,7 +720,7 @@ def teacher_card(teacher, school, user_average=None, user_count=0, criteria_stat
         f"📚 Предмет: {teacher.subject}\n\n"
         f"⭐ Оценка ЕГЭшки\n{hybrid_rating(teacher.rating, user_average, user_count)}\n\n"
         f"{teacher_criteria_text(criteria_stats or {})}\n\n"
-        f"👤 О преподавателе\n{teacher.description}\n\n"
+        f"👤 О преподавателе\n{teacher_description(teacher.description)}\n\n"
         f"💬 Отзывы и сигналы\n{teacher.review_summary}\n\n"
         f"📱 Соцсеть\n{social}\n\n"
         f"🔎 Источник\n{teacher.source_url}\n"
