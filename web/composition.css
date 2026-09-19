@@ -138,10 +138,14 @@ select:focus-visible,a:focus-visible,button:focus-visible{outline:3px solid #8a9
  55%{border-color:#efd0de;box-shadow:0 0 0 55px rgb(255 77 141/.04),0 0 0 96px rgb(52 75 216/.025)}
  100%{transform:translate3d(-44px,58px,0) scale(1.1);border-color:#bfcaff;box-shadow:0 0 0 48px rgb(52 75 216/.045),0 0 0 102px rgb(255 77 141/.03)}
 }
-.rating-next:after{animation:channel-orbit 12s ease-in-out infinite alternate;animation-play-state:paused}
+.rating-next:after{top:50%;transform:translate3d(0,-50%,0);animation:rating-next-orbit 12s ease-in-out infinite alternate;animation-play-state:paused;will-change:transform}
 .rating-next.motion-visible:after{animation-play-state:running}
+@keyframes rating-next-orbit{
+ from{transform:translate3d(0,-50%,0) scale(1)}
+ to{transform:translate3d(-34px,-50%,0) scale(1.05)}
+}
 @media(max-width:700px){.hero.hero-centered{padding-inline:16px}.hero-glow-blue{left:-140px}.hero-glow-pink{right:-130px}.reviews:after{width:205px;height:205px;right:-92px;top:-90px;border-width:38px}.review-copy>p:first-child{margin-bottom:24px}}
-@media(prefers-reduced-motion:reduce){.hero-glow,.channel-section:after,.reviews:after,.rating-next:after{animation:none!important}.button:after,.card-open:after,.method-pill:after{display:none}.ratings-page .school-card:before,.compare-price-card{transition:none}}
+@media(prefers-reduced-motion:reduce){.hero-glow,.channel-section:after,.reviews:after,.rating-next:after{animation:none!important}.rating-next:after{transform:translate3d(0,-50%,0)}.button:after,.card-open:after,.method-pill:after{display:none}.ratings-page .school-card:before,.compare-price-card{transition:none}}
 
 /* School teacher directory: a compact secondary layer inside the existing rating flow. */
 .school-card-actions{display:grid;grid-template-columns:1fr 1.15fr;gap:8px;margin-top:auto}
