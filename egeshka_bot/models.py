@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional
-from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Integer, Numeric, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -102,6 +102,24 @@ class Review(Base):
     proof_delete_after: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
     proof_consent: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+
+class ReviewCriterionScore(Base):
+    __tablename__ = "review_criterion_scores"
+    review_id: Mapped[int] = mapped_column(ForeignKey("reviews.id"), primary_key=True)
+    criterion: Mapped[str] = mapped_column(String(80), primary_key=True)
+    score: Mapped[float] = mapped_column(Float)
+
+
+class RatingSnapshot(Base):
+    __tablename__ = "rating_snapshots"
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id"), primary_key=True)
+    editorial_score: Mapped[float] = mapped_column(Numeric(3, 1))
+    verified_user_score: Mapped[Optional[float]] = mapped_column(Numeric(2, 1), nullable=True)
+    verified_review_count: Mapped[int] = mapped_column(Integer, default=0)
+    final_score: Mapped[float] = mapped_column(Numeric(3, 1))
+    is_preliminary: Mapped[bool] = mapped_column(Boolean, default=True)
+    calculated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
 
 class Event(Base):

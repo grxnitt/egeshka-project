@@ -30,6 +30,13 @@ def test_school_total_is_preliminary_without_student_reviews():
     assert preliminary is True
 
 
+def test_school_total_waits_for_three_verified_reviews_and_uses_confidence_weight():
+    assert school_total_score(school(), 2.0, 2) == (8.0, True)
+    total, preliminary = school_total_score(school(), 2.0, 10)
+    assert total == 7.0
+    assert preliminary is False
+
+
 def test_comparison_summary_is_short_and_sections_keep_all_criteria():
     left, right = school("Левая"), school("Правая")
     summary = comparison_text(left, right)

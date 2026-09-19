@@ -13,7 +13,7 @@ from sqlalchemy import func, select
 
 from .config import Settings
 from .db import SCHOOL_REVIEW_SLUGS, get_or_create_user
-from .models import Course, Event, Review, School, Teacher
+from .models import Course, Event, Review, ReviewCriterionScore, School, Teacher
 from .scoring import QuizProfile, school_score
 
 
@@ -432,16 +432,23 @@ def card_keyboard(school_id):
 
 def school_total_score(school, user_average=None, user_count=0):
     """A display score on the shared 0–10 scale and a preliminary flag."""
-    professional = school_professional_score(school)
-    if user_average is not None and user_count:
-        return professional + max(0.0, min(5.0, float(user_average))), False
-    return professional * 2, True
+    editorial = school_professional_score(school) * 2
+    if user_average is None or user_count < 3:
+        return editorial, True
+    confidence = user_count / (user_count + 10)
+    editorial_half = editorial / 2
+    user_score = max(0.0, min(5.0, float(user_average)))
+    effective_user = editorial_half * (1 - confidence) + user_score * confidence
+    return round(editorial_half + effective_user, 1), False
 
 
 def criterion_total(value, stats, field):
     average, count = (stats or {}).get(field, (None, 0))
-    if count:
-        return float(value) / 2 + float(average), False
+    if average is not None and count >= 3:
+        confidence = count / (count + 10)
+        editorial_half = float(value) / 2
+        effective_user = editorial_half * (1 - confidence) + float(average) * confidence
+        return round(editorial_half + effective_user, 1), False
     return float(value), True
 
 
@@ -525,9 +532,11 @@ def comparison_keyboard(left_id, right_id):
 def rating_methodology_text():
     return (
         "ℹ️ Как считается рейтинг\n\n"
-        "<b>Школы:</b> по каждому критерию есть оценка ЕГЭшки до 5 и средняя оценка учеников до 5. Вместе — до 10.\n\n"
+        "<b>Школы:</b> редакционная часть даёт до 5 баллов, подтверждённые отзывы учеников — ещё до 5. "
+        "Отзывы начинают влиять на итог после трёх подтверждений; их вес растёт постепенно вместе с выборкой.\n\n"
         "<b>Преподаватели:</b> общий рейтинг тоже складывается из оценки ЕГЭшки и отзывов учеников. В отзывах отдельно собираем оценки объяснения, практики, обратной связи, темпа и общения.\n\n"
-        "Звёздочка означает предварительный балл: по критерию ещё нет одобренных отзывов учеников. Источники и методика доступны в этом разделе; они используются при модерации и обновлении оценок."
+        "Звёздочка означает предварительный балл: подтверждённых отзывов пока меньше трёх. "
+        "Неподтверждённые отзывы можно читать после модерации, но они не меняют рейтинг."
     )
 
 
@@ -646,13 +655,20 @@ def teacher_compare_keyboard(left, right, school_id=None):
 
 def hybrid_rating(professional_out_of_10, user_average=None, user_count=0):
     professional = max(0.0, min(5.0, float(professional_out_of_10) / 2))
-    if user_average is None or user_count == 0:
+    if user_average is None or user_count < 3:
+        user_line = (
+            f"Пользовательская оценка: {float(user_average):.1f}/5 ({user_count} отзывов)"
+            if user_average is not None
+            else "Пользовательская оценка: нет данных"
+        )
         return (
             f"Профессиональная оценка: {professional:.1f}/5\n"
-            "Пользовательская оценка: нет данных\n"
-            "Итог: не рассчитан — нужны одобренные отзывы"
+            f"{user_line}\n"
+            f"Итог: {professional * 2:.1f}/10* — нужно 3 подтверждённых отзыва"
         )
-    total = professional + max(0.0, min(5.0, float(user_average)))
+    confidence = user_count / (user_count + 10)
+    effective_user = professional * (1 - confidence) + max(0.0, min(5.0, float(user_average))) * confidence
+    total = professional + effective_user
     return (
         f"Профессиональная оценка: {professional:.1f}/5\n"
         f"Пользовательская оценка: {float(user_average):.1f}/5 ({user_count} отзывов)\n"
@@ -668,13 +684,10 @@ def rating_entry(position, school, user_average, user_count):
     def n(value):
         return f"{value:.1f}".replace(".", ",")
 
-    professional = school_professional_score(school)
-    if user_count:
-        total_score = professional + user_average
-        score_suffix = f" · {user_count} отзывов"
-    else:
-        total_score = professional * 2
-        score_suffix = "*"
+    total_score, preliminary = school_total_score(school, user_average, user_count)
+    score_suffix = f" · {user_count} подтверждённых отзывов" if user_count else ""
+    if preliminary:
+        score_suffix += "*"
     score_text = n(total_score)
     return (
         f"{rating_medal(position)} <b>{escape(school.name)}</b>\n"
@@ -788,6 +801,7 @@ async def approved_review_stats(session, school_id, teacher_id=None, criterion=N
     query = select(func.avg(Review.score), func.count(Review.id)).where(
         Review.school_id == school_id,
         Review.moderation_status == "approved",
+        Review.verified == True,
     )
     if teacher_id is None:
         query = query.where(Review.teacher_id.is_(None))
@@ -805,6 +819,7 @@ async def approved_school_criteria_stats(session, school_id):
         Review.teacher_id.is_(None),
         Review.criterion.is_not(None),
         Review.moderation_status == "approved",
+        Review.verified == True,
     ))).scalars().all()
     for review in dedicated:
         criterion = LEGACY_CRITERIA_KEYS.get(review.criterion, review.criterion)
@@ -815,6 +830,7 @@ async def approved_school_criteria_stats(session, school_id):
         Review.teacher_id.is_(None),
         Review.criterion.is_(None),
         Review.moderation_status == "approved",
+        Review.verified == True,
     ))).scalars().all()
     for review in overall:
         try:
@@ -835,6 +851,7 @@ async def approved_teacher_criteria_stats(session, school_id, teacher_id):
         Review.teacher_id == teacher_id,
         Review.criterion.is_(None),
         Review.moderation_status == "approved",
+        Review.verified == True,
     ))).scalars().all()
     for review in reviews:
         try:
@@ -1192,6 +1209,13 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                 text_negative=negative,
             )
             session.add(review)
+            await session.flush()
+            for criterion, score in data.get("review_criteria_scores", {}).items():
+                session.add(ReviewCriterionScore(
+                    review_id=review.id,
+                    criterion=LEGACY_CRITERIA_KEYS.get(criterion, criterion),
+                    score=float(score),
+                ))
             await session.commit()
             review_id = review.id
             school = await session.get(School, data["review_school_id"])
@@ -2052,16 +2076,19 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             stats = {}
             for item in rows:
                 stats[item.id] = await approved_review_stats(session, item.id)
-            rows.sort(key=school_professional_score, reverse=True)
+            rows.sort(
+                key=lambda item: school_total_score(item, stats[item.id][0], stats[item.id][1])[0],
+                reverse=True,
+            )
         await call.message.edit_text(
             "🏆 <b>Рейтинг школ</b>\n"
-            "Первые три места отмечены медалями. Если по школе ещё нет одобренных отзывов, её балл отмечен звёздочкой как предварительный.\n\n"
+            "Первые три места отмечены медалями. Пока у школы меньше трёх подтверждённых отзывов, её балл отмечен звёздочкой как предварительный.\n\n"
             + "\n────────────\n".join(
                 rating_entry(index, item, stats[item.id][0], stats[item.id][1])
                 for index, item in enumerate(rows, 1)
             )
             + "\n\n<i>Профессиональная часть — аналитика ЕГЭшки по открытым данным.\n"
-            "Пользовательская часть учитывает только одобренные отзывы в боте.</i>",
+            "Пользовательская часть учитывает только одобренные и подтверждённые отзывы в боте.</i>",
             reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                 [InlineKeyboardButton(text="ℹ️ Как считается рейтинг", callback_data="rating_methodology:rating")],
                 [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],

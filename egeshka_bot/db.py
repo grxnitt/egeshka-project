@@ -1,5 +1,6 @@
 from datetime import datetime
 import json
+from typing import Optional
 
 from sqlalchemy import inspect, select, text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
@@ -1257,13 +1258,27 @@ async def _remove_obsolete_teacher_rows(session: AsyncSession):
     await session.commit()
 
 
-async def init_db(url: str):
-    engine = create_async_engine(url)
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    await _ensure_school_columns(engine)
-    await _ensure_review_columns(engine)
+async def init_db(url: str, manage_schema: Optional[bool] = None):
+    is_postgres = url.startswith(("postgresql+asyncpg://", "postgres+asyncpg://"))
+    engine_options = {}
+    if is_postgres:
+        engine_options["connect_args"] = {"ssl": "require", "statement_cache_size": 0}
+        engine_options["pool_size"] = 3
+        engine_options["max_overflow"] = 2
+        engine_options["pool_pre_ping"] = True
+    engine = create_async_engine(url, **engine_options)
+    if manage_schema is None:
+        manage_schema = not is_postgres
+    if manage_schema:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        await _ensure_school_columns(engine)
+        await _ensure_review_columns(engine)
     session_factory = async_sessionmaker(engine, expire_on_commit=False)
+    if not manage_schema:
+        async with session_factory() as session:
+            await _remove_expired_proofs(session)
+        return engine, session_factory
     async with session_factory() as session:
         await _upsert_schools(session)
         # Update existing rows in place: teacher IDs and attached reviews survive.
