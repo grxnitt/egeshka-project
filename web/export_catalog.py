@@ -9,9 +9,9 @@ from egeshka_bot.scoring import BASE_WEIGHTS
 from egeshka_bot.subjects import SUBJECTS
 
 schools = []
-for row in SEED:
+for school_id, row in enumerate(SEED, start=1):
     schools.append({
-        'name': row['name'], 'description': row['description'],
+        'id': school_id, 'name': row['name'], 'description': row['description'],
         'subjects': row['subjects'].split(','), 'price': row['price_text'],
         'monthlyPriceFrom': row['monthly_price_from'],
         'strengths': row['strengths'], 'weaknesses': row['weaknesses'],

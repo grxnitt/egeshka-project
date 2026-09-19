@@ -528,3 +528,19 @@ body:has(.compare-tray){padding-bottom:108px}
 .quiz-return{display:inline-flex;align-items:center;min-height:44px;margin:0 0 20px;padding:8px 14px;border-radius:12px;background:#edf0ff;color:var(--blue);font-size:14px;font-weight:700;text-decoration:none}
 main>.quiz-return{margin:20px 5% 0}
 @media(max-width:700px){.quiz-result .quiz-bot-note{margin-top:20px;padding-top:16px;font-size:12px}.quiz-return{margin-bottom:16px}}
+
+/* Live rating details */
+.detail-score .rating-breakdown {
+  display: block;
+  max-width: 15rem;
+  margin-top: .55rem;
+  color: #6d7180;
+  font-size: .72rem;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: 0;
+  text-transform: none;
+}
+@media (max-width: 700px) {
+  .detail-score .rating-breakdown { max-width: 9.5rem; font-size: .62rem; }
+}
