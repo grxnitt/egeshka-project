@@ -17,18 +17,8 @@ from .models import Course, Event, Review, School, Teacher
 from .scoring import QuizProfile, school_score
 
 
-SUBJECTS = [
-    "Русский",
-    "Математика",
-    "Обществознание",
-    "Физика",
-    "Химия",
-    "Биология",
-    "Информатика",
-    "Английский",
-    "История",
-    "Литература",
-]
+from .subjects import SUBJECTS, MATH_BOTH, target_options, split_teacher_subjects, subject_token, subject_from_token
+
 
 PRIORITIES = {
     "teacher": "преподаватели",
@@ -120,7 +110,7 @@ def teacher_subject_variants(subject: str) -> tuple[str, ...]:
         "Английский": "Английский язык",
         "Математика": "Математика профильная",
     }
-    return tuple(dict.fromkeys((subject, aliases.get(subject, subject))))
+    return tuple(dict.fromkeys((subject, aliases.get(subject, subject), *([MATH_BOTH] if subject in ("Математика профильная", "Математика базовая") else []))))
 
 
 def score_bar(value, width=5):
@@ -560,8 +550,8 @@ def teacher_buttons(rows, school_id, include_compare=True):
 def teacher_subject_buttons(subjects, school_id):
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text=subject, callback_data=f"teacher_subject:{school_id}:{subject}")]
-            for subject in subjects
+            [InlineKeyboardButton(text=subject, callback_data=f"teacher_subject:{school_id}:{subject_token(subject)}")]
+            for subject in split_teacher_subjects(subjects)
         ] + [[InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")]]
     )
 
@@ -569,8 +559,8 @@ def teacher_subject_buttons(subjects, school_id):
 def global_teacher_subject_buttons(subjects):
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text=subject, callback_data=f"global_teacher_subject:{subject}")]
-            for subject in subjects
+            [InlineKeyboardButton(text=subject, callback_data=f"global_teacher_subject:{subject_token(subject)}")]
+            for subject in split_teacher_subjects(subjects)
         ] + [[InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")]]
     )
 
@@ -578,8 +568,8 @@ def global_teacher_subject_buttons(subjects):
 def review_teacher_subject_buttons(subjects):
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text=subject, callback_data=f"review_teacher_subject:{subject}")]
-            for subject in subjects
+            [InlineKeyboardButton(text=subject, callback_data=f"review_teacher_subject:{subject_token(subject)}")]
+            for subject in split_teacher_subjects(subjects)
         ] + [[InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")]]
     )
 
@@ -1024,7 +1014,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             await call.message.edit_text("Вопрос 3 из 8 · Как оцениваешь свою базу?", reply_markup=options([("Начинаю почти с нуля", "low"), ("Что-то знаю, нужна система", "middle"), ("База хорошая, хочу усилить результат", "high")], "level"))
         elif current == "Quiz:curator":
             await state.set_state(Quiz.target)
-            await call.message.edit_text("Вопрос 4 из 8 · На какой результат ориентируешься?", reply_markup=options([(item, item) for item in ["60+", "70+", "80+", "90+"]], "target"))
+            await call.message.edit_text("Вопрос 4 из 8 · На какой результат ориентируешься?", reply_markup=options(target_options((await state.get_data()).get("subject")), "target"))
         elif current == "Quiz:workload":
             await state.set_state(Quiz.curator)
             await call.message.edit_text("Вопрос 5 из 8 · Какая поддержка тебе нужна?", reply_markup=options([("Разберусь сам", "1"), ("Хочу иногда задавать вопросы", "2"), ("Нужен регулярный контроль", "3"), ("Без куратора легко всё откладываю", "4")], "curator"))
@@ -1069,12 +1059,12 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
 
     @dp.callback_query(F.data.startswith("review_teacher_subject:"))
     async def global_teacher_subject_review(call: CallbackQuery):
-        subject = call.data.split(":", 1)[1]
+        subject = subject_from_token(call.data.split(":", 1)[1])
         async with session_factory() as session:
             rows = (await session.execute(
                 select(Teacher.id, Teacher.name, Teacher.subject, School.name.label("school_name"))
                 .join(School, School.id == Teacher.school_id)
-                .where(Teacher.subject == subject, Teacher.is_active == True)
+                .where(Teacher.subject.in_(teacher_subject_variants(subject)), Teacher.is_active == True)
                 .order_by(Teacher.rating.desc(), Teacher.name)
             )).all()
         await call.message.edit_text(
@@ -1440,7 +1430,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         await state.set_state(Quiz.target)
         await call.message.edit_text(
             "Вопрос 4 из 8 · На какой результат ориентируешься?",
-            reply_markup=options([(item, item) for item in ["60+", "70+", "80+", "90+"]], "target"),
+            reply_markup=options(target_options((await state.get_data()).get("subject")), "target"),
         )
         await call.answer()
 
@@ -1603,7 +1593,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
 
     @dp.callback_query(F.data.startswith("course_subject:"))
     async def course_subject(call: CallbackQuery):
-        subject = call.data.split(":", 1)[1]
+        subject = subject_from_token(call.data.split(":", 1)[1])
         async with session_factory() as session:
             rows = (await session.execute(
                 select(Course, School.name.label("school_name"))
@@ -1843,9 +1833,10 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
     @dp.callback_query(TeacherCompare.subject, F.data.startswith("teacher_subject:"))
     async def teacher_compare_subject(call: CallbackQuery, state: FSMContext):
         _, school_id, subject = call.data.split(":", 2)
+        subject = subject_from_token(subject)
         async with session_factory() as session:
             rows = (await session.execute(
-                select(Teacher).where(Teacher.school_id == int(school_id), Teacher.subject == subject, Teacher.is_active == True).order_by(Teacher.rating.desc(), Teacher.name)
+                select(Teacher).where(Teacher.school_id == int(school_id), Teacher.subject.in_(teacher_subject_variants(subject)), Teacher.is_active == True).order_by(Teacher.rating.desc(), Teacher.name)
             )).scalars().all()
         await state.update_data(school_id=int(school_id), subject=subject)
         await state.set_state(TeacherCompare.first)
@@ -1861,7 +1852,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                 rows = (await session.execute(
                     select(Teacher.id, Teacher.name, Teacher.subject, Teacher.rating, School.name.label("school_name"))
                     .join(School, School.id == Teacher.school_id)
-                    .where(Teacher.subject == data["subject"], Teacher.id != first_id, Teacher.is_active == True)
+                    .where(Teacher.subject.in_(teacher_subject_variants(data["subject"])), Teacher.id != first_id, Teacher.is_active == True)
                     .order_by(Teacher.rating.desc(), Teacher.name)
                 )).all()
             await state.update_data(first_id=first_id)
@@ -1871,7 +1862,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             return
         async with session_factory() as session:
             rows = (await session.execute(
-                select(Teacher).where(Teacher.school_id == data["school_id"], Teacher.subject == data["subject"], Teacher.id != first_id, Teacher.is_active == True).order_by(Teacher.rating.desc(), Teacher.name)
+                select(Teacher).where(Teacher.school_id == data["school_id"], Teacher.subject.in_(teacher_subject_variants(data["subject"])), Teacher.id != first_id, Teacher.is_active == True).order_by(Teacher.rating.desc(), Teacher.name)
             )).scalars().all()
         await state.update_data(first_id=first_id)
         await state.set_state(TeacherCompare.second)
@@ -1951,12 +1942,12 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
 
     @dp.callback_query(TeacherCompare.subject, F.data.startswith("global_teacher_subject:"))
     async def global_teacher_compare_subject(call: CallbackQuery, state: FSMContext):
-        subject = call.data.split(":", 1)[1]
+        subject = subject_from_token(call.data.split(":", 1)[1])
         async with session_factory() as session:
             rows = (await session.execute(
                 select(Teacher.id, Teacher.name, Teacher.subject, Teacher.rating, School.name.label("school_name"))
                 .join(School, School.id == Teacher.school_id)
-                .where(Teacher.subject == subject, Teacher.is_active == True)
+                .where(Teacher.subject.in_(teacher_subject_variants(subject)), Teacher.is_active == True)
                 .order_by(Teacher.rating.desc(), Teacher.name)
             )).all()
         await state.update_data(global_compare=True, subject=subject)

@@ -486,7 +486,7 @@ body:has(.compare-tray){padding-bottom:108px}
 .quiz-match-reasons{margin:8px 0 10px;padding:0;list-style:none}
 .quiz-match-reasons li{position:relative;margin:5px 0;padding-left:17px;color:#4f5567;font-size:12px;line-height:1.45}
 .quiz-match-reasons li:before{content:'✓';position:absolute;left:0;color:var(--blue);font-weight:800}
-.quiz-match-caution{padding:9px 11px;border-radius:10px;background:#f6f3f4}
+.quiz-match-caution{padding:9px 11px;border-radius:10px;background:#edf0ff}
 .quiz-card-link{display:inline-flex;margin-top:11px;align-items:center;gap:7px;color:var(--blue);font-size:11px;font-weight:750}
 .quiz-result-actions{position:relative;z-index:1;display:flex;margin-top:20px;align-items:center;gap:9px;flex-wrap:wrap}
 .quiz-result-actions .button{margin:0;min-height:48px;padding-top:12px;padding-bottom:12px}
@@ -522,3 +522,9 @@ body:has(.compare-tray){padding-bottom:108px}
  .compare-tray-actions a{min-height:44px;padding:10px 12px;gap:12px}
  body:has(.compare-tray){padding-bottom:90px}
 }
+
+/* Keep the bot explanation separate from the action row. */
+.quiz-result .quiz-bot-note{position:relative;z-index:1;display:block;margin:24px 0 0;padding-top:18px;border-top:1px solid #dfe3f5;max-width:640px;color:#666d7d;font-size:13px;line-height:1.65;text-align:left}
+.quiz-return{display:inline-flex;align-items:center;min-height:44px;margin:0 0 20px;padding:8px 14px;border-radius:12px;background:#edf0ff;color:var(--blue);font-size:14px;font-weight:700;text-decoration:none}
+main>.quiz-return{margin:20px 5% 0}
+@media(max-width:700px){.quiz-result .quiz-bot-note{margin-top:20px;padding-top:16px;font-size:12px}.quiz-return{margin-bottom:16px}}

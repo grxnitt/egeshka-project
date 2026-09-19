@@ -5,6 +5,7 @@ from sqlalchemy import inspect, select, text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from .models import Base, Course, Review, School, Teacher, User
+from .subjects import BASE_SCHOOL_SOURCES, teacher_exam_subject
 
 
 CORE_SUBJECTS = (
@@ -814,6 +815,15 @@ TEACHERS = [
 ]
 
 
+# Keep base and profile separate in every consumer of this catalogue.
+for school in SEED:
+    subjects = ["математика профильная" if item == "математика" else item for item in school["subjects"].split(",")]
+    if school["name"] in BASE_SCHOOL_SOURCES:
+        subjects.insert(subjects.index("математика профильная") + 1, "математика базовая")
+    school["subjects"] = ",".join(subjects)
+TEACHERS = [(school, name, teacher_exam_subject(school, name, subject), *rest)
+            for school, name, subject, *rest in TEACHERS]
+
 TEACHER_RENAMES = {
     ("ЕГЭLand", "Макс Физик", "Физика"): "Даня Физик",
     ("PARTA", "Майя", "Русский язык"): "Майя Николаевна",
@@ -1166,9 +1176,16 @@ async def _upsert_courses(session: AsyncSession):
         if not config:
             continue
         for subject in (item.strip() for item in school.subjects.split(",") if item.strip()):
-            subject_name = subject.title()
+            subject_name = subject.capitalize()
             override = COURSE_OVERRIDES.get((school.name, subject_name), {})
             course_config = {**config, **override}
+            if subject == "математика базовая":
+                course_config = {**course_config, "name": "Подготовка к ЕГЭ · базовая математика",
+                    "price_from": 0, "price_text": "Стоимость курса базовой математики уточняется отдельно; цена школы может относиться к другому предмету.",
+                    "format_text": "Подготовка к отдельному экзамену по базовой математике. Сроки и расписание уточни на странице курса.",
+                    "support_text": "Наличие куратора и условия проверки зависят от выбранного тарифа.",
+                    "practice_text": "Задания и пробные варианты базового уровня ЕГЭ.",
+                    "tariffs": [], "source_url": BASE_SCHOOL_SOURCES[school.name]}
             name = course_config["name"]
             if subject_name not in name:
                 name = f"{name} · {subject_name}"
@@ -1249,6 +1266,13 @@ async def init_db(url: str):
     session_factory = async_sessionmaker(engine, expire_on_commit=False)
     async with session_factory() as session:
         await _upsert_schools(session)
+        # Update existing rows in place: teacher IDs and attached reviews survive.
+        for teacher in (await session.execute(select(Teacher))).scalars():
+            school_name = (await session.get(School, teacher.school_id)).name
+            teacher.subject = teacher_exam_subject(school_name, teacher.name, teacher.subject)
+        for course in (await session.execute(select(Course).where(Course.subject == "Математика"))).scalars():
+            course.subject = "Математика профильная"
+        await session.commit()
         await _upsert_teachers(session)
         await _upsert_courses(session)
         await _remove_obsolete_teacher_rows(session)
