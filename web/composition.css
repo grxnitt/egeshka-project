@@ -486,6 +486,50 @@ body:has(.compare-tray){padding-bottom:108px}
 .teacher-card-links a,.teacher-card-links button{display:inline-flex;padding:0;align-items:center;gap:7px;border:0;background:transparent;color:#2e45d3;font-size:11px;font-weight:750}
 .teacher-profile.shared-target{outline:3px solid rgb(52 75 216/.24);outline-offset:3px}
 
+/* A teacher opens into a full decision card; the compact grid remains easy to scan. */
+.teacher-card-links .teacher-open{font-size:12px}
+.teacher-detail{padding:50px 54px 42px}
+.teacher-detail-back{margin:0 0 30px;padding:0;border:0;background:transparent;color:#5f6576;font-size:12px;font-weight:750}
+.teacher-detail-back:hover{color:var(--blue)}
+.teacher-detail-head{display:grid;grid-template-columns:minmax(0,1fr) 150px;gap:34px;align-items:end}
+.teacher-detail-head h2{margin:0 0 12px;font-size:clamp(42px,5vw,68px);overflow-wrap:anywhere}
+.teacher-detail-head>div>p:last-child{margin:0;color:#626879;font-size:14px}
+.teacher-detail-score{display:flex;min-height:150px;padding:20px;border-radius:22px;background:var(--blue);color:white;flex-direction:column;justify-content:space-between}
+.teacher-detail-score small{font-size:9px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+.teacher-detail-score strong{font:800 48px/1 var(--font-ui)}
+.teacher-detail-score span{color:#dce1ff;font-size:11px}
+.teacher-detail-description{max-width:760px;margin:34px 0;color:#505666;font-size:16px;line-height:1.7}
+.teacher-detail-ratings{border-top:1px solid #e0e2e9;border-bottom:1px solid #e0e2e9}
+.teacher-detail-ratings-head{display:flex;padding:22px 0 16px;align-items:baseline;justify-content:space-between;gap:20px}
+.teacher-detail-ratings-head h3{margin:0;font-size:22px}
+.teacher-detail-ratings-head p{margin:0;color:#737989;font-size:11px}
+.teacher-detail-criterion{display:grid;grid-template-columns:minmax(180px,1fr) 74px minmax(180px,1.25fr);gap:18px;padding:15px 0;align-items:center;border-top:1px solid #eceef3}
+.teacher-detail-criterion>span{font-size:13px;font-weight:650}
+.teacher-detail-criterion strong{color:var(--blue);font:750 19px/1 var(--font-ui)}
+.teacher-detail-criterion strong small{margin-left:3px;color:#777d8d;font-size:10px}
+.teacher-detail-criterion>i{height:7px;overflow:hidden;border-radius:8px;background:#e4e7f1}
+.teacher-detail-criterion>i b{display:block;height:100%;border-radius:inherit;background:var(--blue)}
+.teacher-detail-criterion em{grid-column:2/-1;color:#858a98;font-size:12px;font-style:normal}
+.teacher-detail-actions{display:flex;margin-top:28px;align-items:center;gap:20px;flex-wrap:wrap}
+.teacher-detail-actions .button{margin:0}
+.teacher-detail-actions>button{padding:10px 0;border:0;background:transparent;color:#555c6d;font-size:11px;font-weight:750}
+@media(max-width:700px){
+ .teacher-detail{padding:0 14px 24px}
+ .teacher-detail-back{margin-bottom:22px}
+ .teacher-detail-head{grid-template-columns:minmax(0,1fr) 96px;gap:12px;align-items:stretch}
+ .teacher-detail-head h2{font-size:30px;line-height:1.04;letter-spacing:-.04em}
+ .teacher-detail-score{min-height:108px;padding:13px;border-radius:17px}
+ .teacher-detail-score strong{font-size:37px}
+ .teacher-detail-description{margin:24px 0;font-size:14px}
+ .teacher-detail-ratings-head{display:block}.teacher-detail-ratings-head p{margin-top:6px}
+ .teacher-detail-criterion{grid-template-columns:1fr auto;gap:8px 14px;padding:14px 0}
+ .teacher-detail-criterion>i{grid-column:1/-1}
+ .teacher-detail-criterion em{grid-column:2;text-align:right}
+ .teacher-detail-actions{align-items:stretch;flex-direction:column;gap:8px}
+ .teacher-detail-actions .button{width:100%;min-height:54px;padding:15px 18px}
+ .teacher-detail-actions>button{align-self:flex-start}
+}
+
 /* Quiz results explain each match and keep the next actions inside the site. */
 .quiz-match-reasons{margin:8px 0 10px;padding:0;list-style:none}
 .quiz-match-reasons li{position:relative;margin:5px 0;padding-left:17px;color:#4f5567;font-size:12px;line-height:1.45}

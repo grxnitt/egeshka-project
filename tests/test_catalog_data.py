@@ -1,5 +1,6 @@
 from egeshka_bot.db import SCHOOL_REVIEW_SLUGS, SEED, TEACHERS
 from egeshka_bot.scoring import BASE_WEIGHTS
+from pathlib import Path
 
 
 def test_new_schools_have_complete_catalog_entries():
@@ -57,3 +58,13 @@ def test_every_school_has_a_unique_review_deeplink_slug():
     assert set(SCHOOL_REVIEW_SLUGS) == school_names
     assert len(set(SCHOOL_REVIEW_SLUGS.values())) == len(school_names)
     assert all(slug.replace("_", "").isalnum() and slug.isascii() for slug in SCHOOL_REVIEW_SLUGS.values())
+
+
+def test_teacher_directory_opens_full_profile_with_criteria_and_external_link():
+    script = Path("web/ratings.js").read_text()
+
+    assert "Открыть карточку" in script
+    assert "teacherDetails" in script
+    assert "Оценки учеников" in script
+    assert "Перейти в профиль преподавателя" in script
+    assert all(label in script for label in ("Объяснение материала", "Практика и разбор ошибок", "Обратная связь"))
