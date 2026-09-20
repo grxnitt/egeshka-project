@@ -534,17 +534,21 @@ main>.quiz-return{margin:20px 5% 0}
 @media(max-width:700px){.quiz-result .quiz-bot-note{margin-top:20px;padding-top:16px;font-size:12px}.quiz-return{margin-bottom:16px}}
 
 /* Live rating details */
-.detail-score .rating-breakdown {
-  display: block;
-  max-width: 15rem;
-  margin-top: .55rem;
-  color: #6d7180;
-  font-size: .72rem;
-  font-weight: 600;
-  line-height: 1.35;
-  letter-spacing: 0;
-  text-transform: none;
+.school-detail>.rating-breakdown {
+  display:flex;
+  margin:-6px 0 22px;
+  padding:11px 14px;
+  align-items:center;
+  gap:12px;
+  border:1px solid #dce1f7;
+  border-radius:12px;
+  background:#f1f3ff;
+  color:#666b7c;
+  font-size:11px;
+  line-height:1.4;
 }
-@media (max-width: 700px) {
-  .detail-score .rating-breakdown { max-width: 9.5rem; font-size: .62rem; }
+.school-detail>.rating-breakdown b { flex:0 0 auto; color:var(--blue); font-size:10px; letter-spacing:.04em; text-transform:uppercase; }
+.school-detail>.rating-breakdown span { min-width:0; }
+@media (max-width:700px) {
+  .school-detail>.rating-breakdown { margin:14px 0 18px; padding:10px 12px; align-items:flex-start; flex-direction:column; gap:3px; font-size:11px; }
 }

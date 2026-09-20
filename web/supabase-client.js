@@ -37,9 +37,9 @@ export const ratingMark = school => school.isPreliminary ? '*' : '';
 
 export function ratingBreakdown(school) {
   if (school.isPreliminary || school.verifiedUserScore == null) {
-    return '<small class="rating-breakdown">Пока недостаточно подтверждённых отзывов</small>';
+    return '<p class="rating-breakdown preliminary"><b>Предварительная оценка</b><span>Пока недостаточно подтверждённых отзывов</span></p>';
   }
   const editorial = Number(school.editorialScore).toFixed(1).replace('.', ',');
   const users = Number(school.verifiedUserScore).toFixed(1).replace('.', ',');
-  return `<small class="rating-breakdown">Редакция: ${editorial}/10 · Ученики: ${users}/5 · ${Number(school.verifiedReviewCount)} подтверждённых</small>`;
+  return `<p class="rating-breakdown"><b>Из чего сложился балл</b><span>Редакция: ${editorial}/10 · Ученики: ${users}/5 · ${Number(school.verifiedReviewCount)} подтверждённых</span></p>`;
 }
