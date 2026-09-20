@@ -552,3 +552,31 @@ main>.quiz-return{margin:20px 5% 0}
 @media (max-width:700px) {
   .school-detail>.rating-breakdown { margin:14px 0 18px; padding:10px 12px; align-items:flex-start; flex-direction:column; gap:3px; font-size:11px; }
 }
+
+/* Teacher count reads as metadata, not a separate statistics card. */
+.teacher-directory-head{grid-template-columns:minmax(0,1fr) auto;align-items:end}
+.teacher-directory-count{
+  display:inline-flex;
+  min-height:0;
+  padding:11px 15px;
+  align-items:baseline;
+  justify-content:flex-start;
+  gap:7px;
+  border:1px solid #f1cddd;
+  border-radius:999px;
+  background:#fbe7ef;
+  color:#812a50;
+  white-space:nowrap;
+}
+.teacher-directory-count strong{font:750 24px/1 var(--font-ui);font-variant-numeric:tabular-nums}
+.teacher-directory-count span{font:650 12px/1 var(--font-ui)}
+
+@media(max-width:700px){
+  .hero-centered .hero-glow{width:340px;height:340px;opacity:.46;filter:blur(2px)}
+  .hero-centered .hero-glow-blue{left:-125px;top:110px}
+  .hero-centered .hero-glow-pink{right:-95px;bottom:70px;opacity:.42}
+  .teacher-directory-head{grid-template-columns:1fr;gap:14px}
+  .teacher-directory-count{display:inline-flex;min-height:0;width:max-content;padding:10px 14px;grid-template-columns:none;justify-self:start;border-radius:999px}
+  .teacher-directory-count strong{font-size:22px}
+  .teacher-directory-count span{font-size:12px}
+}
