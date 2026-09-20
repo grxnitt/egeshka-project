@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="styles.css?v=30">
   <link rel="stylesheet" href="refinements.css?v=32">
   <link rel="stylesheet" href="typography.css?v=31">
-  <link rel="stylesheet" href="composition.css?v=50">
+  <link rel="stylesheet" href="composition.css?v=51">
 </head>
 <body>
 <header class="header wrap"><a class="logo" href="#" aria-label="ЕГЭшка, главная"><img src="assets/egeshka-logo.svg" alt="ЕГЭшка"></a><nav aria-label="Главная навигация"><a href="ratings.html">Рейтинг школ</a><a href="#compare">Сравнение</a><a href="#reviews">Отзывы</a></nav><a class="header-action" href="#compare">Сравнить <span>↗</span></a></header>
@@ -24,14 +24,14 @@
       <path id="criteria-ribbon-path" d="M-80 68 C170 8 315 145 530 86 S850 28 1050 92 C1170 137 1265 145 1334 84 C1394 30 1464 24 1518 68 C1575 115 1517 155 1442 134 C1378 116 1430 69 1680 92"/>
     </defs>
     <use href="#criteria-ribbon-path" class="criteria-ribbon-line"/>
-    <text class="criteria-ribbon-copy"><textPath href="#criteria-ribbon-path" startOffset="2%">ПРЕДМЕТ  ·  ПРЕПОДАВАТЕЛЬ  ·  ЦЕНА  ·  ПРАКТИКА  ·  ПОДДЕРЖКА  ·  ТЕМП  ·  ПРЕДМЕТ  ·  ПРЕПОДАВАТЕЛЬ  ·  ЦЕНА  ·  ПРАКТИКА  ·  ПОДДЕРЖКА</textPath></text>
+    <text class="criteria-ribbon-copy"><textPath href="#criteria-ribbon-path" startOffset="-22%">ПРЕДМЕТ  ·  ПРЕПОДАВАТЕЛЬ  ·  ЦЕНА  ·  ПРАКТИКА  ·  ПОДДЕРЖКА  ·  ТЕМП  ·  ПРЕДМЕТ  ·  ПРЕПОДАВАТЕЛЬ  ·  ЦЕНА  ·  ПРАКТИКА  ·  ПОДДЕРЖКА  ·  ТЕМП  ·  ПРЕДМЕТ  ·  ПРЕПОДАВАТЕЛЬ  ·  ЦЕНА  ·  ПРАКТИКА  ·  ПОДДЕРЖКА  ·  ТЕМП  ·  ПРЕДМЕТ  ·  ПРЕПОДАВАТЕЛЬ  ·  ЦЕНА  ·  ПРАКТИКА  ·  ПОДДЕРЖКА  ·  ТЕМП  ·  ПРЕДМЕТ  ·  ПРЕПОДАВАТЕЛЬ  ·  ЦЕНА  ·  ПРАКТИКА  ·  ПОДДЕРЖКА  ·  ТЕМП  ·  <animate attributeName="startOffset" from="-22%" to="-2%" dur="22s" repeatCount="indefinite"/></textPath></text>
   </svg>
   <svg class="criteria-ribbon-mobile" viewBox="0 0 430 120" preserveAspectRatio="none" aria-hidden="true">
     <defs>
       <path id="criteria-ribbon-mobile-path" d="M-36 68 C58 22 125 101 214 63 C276 37 314 35 346 63 C379 92 353 116 317 101 C282 86 315 58 470 70"/>
     </defs>
     <use href="#criteria-ribbon-mobile-path" class="criteria-ribbon-line"/>
-    <text class="criteria-ribbon-copy"><textPath href="#criteria-ribbon-mobile-path" startOffset="1%">ПРЕДМЕТ  ·  ПРЕПОДАВАТЕЛЬ  ·  ЦЕНА  ·  ПРАКТИКА  ·  ПОДДЕРЖКА</textPath></text>
+    <text class="criteria-ribbon-copy"><textPath href="#criteria-ribbon-mobile-path" startOffset="-35%">ПРЕДМЕТ  ·  ПРЕПОДАВАТЕЛЬ  ·  ЦЕНА  ·  ПРАКТИКА  ·  ПОДДЕРЖКА  ·  ПРЕДМЕТ  ·  ПРЕПОДАВАТЕЛЬ  ·  ЦЕНА  ·  ПРАКТИКА  ·  ПОДДЕРЖКА  ·  ПРЕДМЕТ  ·  ПРЕПОДАВАТЕЛЬ  ·  ЦЕНА  ·  ПРАКТИКА  ·  ПОДДЕРЖКА  ·  ПРЕДМЕТ  ·  ПРЕПОДАВАТЕЛЬ  ·  ЦЕНА  ·  ПРАКТИКА  ·  ПОДДЕРЖКА  ·  <animate attributeName="startOffset" from="-35%" to="-5%" dur="18s" repeatCount="indefinite"/></textPath></text>
   </svg>
 </div>
 <section class="compare-section" id="compare"><div class="wrap section"><div class="section-heading"><div><h2>Сравни и выбери.</h2></div><p>Выбери два варианта.<br>Посмотри, чем они отличаются.</p></div><div class="comparison-box"><div class="comparison-controls"><div class="tabs" role="group" aria-label="Тип сравнения"><button class="active" data-mode="schools" aria-pressed="true">Школы</button><button data-mode="teachers" aria-pressed="false">Преподаватели</button></div><label id="teacher-subject-wrap" hidden><span>1. Выбери предмет</span><select id="teacher-subject"></select></label></div><div class="compare-selects"><label><span id="left-label">Первая школа</span><select id="left-select"></select></label><span class="versus">или</span><label><span id="right-label">Вторая школа</span><select id="right-select"></select></label></div><div id="comparison-result" aria-live="polite"></div><button class="method-link" id="compare-method">Как считается оценка ↗</button></div></div></section>

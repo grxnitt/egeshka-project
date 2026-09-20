@@ -626,3 +626,6 @@ main>.quiz-return{margin:20px 5% 0}
   .criteria-ribbon .criteria-ribbon-desktop{display:none}
   .criteria-ribbon .criteria-ribbon-mobile{display:block!important;left:0;width:100%;transform:none}
 }
+/* Softer brand treatment: the ribbon is calm, only its copy drifts. */
+.criteria-ribbon-line{stroke:var(--blush)}
+.criteria-ribbon-copy{fill:#7f2e50}
