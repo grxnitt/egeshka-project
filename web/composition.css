@@ -729,3 +729,38 @@ main>.quiz-return{margin:20px 5% 0}
 .compare-thread use,.compare-thread path{vector-effect:non-scaling-stroke}
 .compare-thread use{stroke-width:34px}
 .compare-thread text{font-size:8px}
+
+/* Restore the soft animated ring in the review panel. It sits behind the copy
+   and drifts just enough to keep the pale panel from feeling static. */
+.reviews:after{
+  display:block!important;
+  content:'';
+  position:absolute;
+  z-index:-1;
+  width:300px;
+  height:300px;
+  right:-116px;
+  top:-132px;
+  border:52px solid var(--blush);
+  border-radius:50%;
+  opacity:.82;
+  pointer-events:none;
+  animation:reviews-ring-drift 12s ease-in-out infinite;
+}
+@keyframes reviews-ring-drift{
+  0%,100%{transform:translate3d(0,0,0) rotate(0deg)}
+  50%{transform:translate3d(-18px,16px,0) rotate(10deg)}
+}
+@media(max-width:700px){
+  .reviews:after{
+    width:190px;
+    height:190px;
+    right:-88px;
+    top:-92px;
+    border-width:34px;
+    opacity:.68;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .reviews:after{animation:none}
+}
