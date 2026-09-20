@@ -1,16 +1,42 @@
 """Export public editorial catalog only; never reads users, reviews or secrets."""
 import json
+import asyncio
+import os
 from pathlib import Path
 import sys
+from sqlalchemy import select
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from egeshka_bot.db import SCHOOL_REVIEW_SLUGS, SEED, TEACHERS
+from egeshka_bot.db import SCHOOL_REVIEW_SLUGS, SEED, TEACHERS, init_db
+from egeshka_bot.models import School, Teacher
 from egeshka_bot.scoring import BASE_WEIGHTS
 from egeshka_bot.subjects import SUBJECTS
 from egeshka_bot.teacher_copy import teacher_description
 
+
+async def public_catalog_ids():
+    """Use database IDs for rating snapshots; retain deterministic IDs offline."""
+    url = os.environ.get('DATABASE_URL')
+    if not url:
+        return {}, {}
+    engine, sessions = await init_db(url, manage_schema=False)
+    try:
+        async with sessions() as session:
+            schools = {item.name: item.id for item in (await session.execute(select(School))).scalars()}
+            teachers = {
+                (school.name, teacher.name, teacher.subject): teacher.id
+                for teacher, school in (await session.execute(select(Teacher, School).join(School, Teacher.school_id == School.id))).all()
+            }
+            return schools, teachers
+    finally:
+        await engine.dispose()
+
+
+school_ids, teacher_ids = asyncio.run(public_catalog_ids())
+
 schools = []
-for school_id, row in enumerate(SEED, start=1):
+for fallback_school_id, row in enumerate(SEED, start=1):
+    school_id = school_ids.get(row['name'], fallback_school_id)
     schools.append({
         'id': school_id, 'name': row['name'], 'description': row['description'],
         'subjects': row['subjects'].split(','), 'price': row['price_text'],
@@ -22,8 +48,8 @@ for school_id, row in enumerate(SEED, start=1):
         'score': round(sum(row[key] * weight for key, weight in BASE_WEIGHTS.items()), 1),
     })
 catalog = {'schools': schools, 'teachers': [
-    {'id': teacher_id, 'school': t[0], 'name': t[1], 'subject': t[2], 'subjects': t[2].split(' / '), 'description': teacher_description(t[3]), 'studentScore': None, 'verifiedReviewCount': 0, 'isPreliminary': True, 'criteria': {}, 'url': t[6]}
-    for teacher_id, t in enumerate(TEACHERS, start=1)
+    {'id': teacher_ids.get((t[0], t[1], t[2]), fallback_teacher_id), 'school': t[0], 'name': t[1], 'subject': t[2], 'subjects': t[2].split(' / '), 'description': teacher_description(t[3]), 'studentScore': None, 'verifiedReviewCount': 0, 'isPreliminary': True, 'criteria': {}, 'url': t[6]}
+    for fallback_teacher_id, t in enumerate(TEACHERS, start=1)
 ]}
 Path(__file__).with_name('catalog.json').write_text(json.dumps(catalog, ensure_ascii=False, indent=2) + '\n')
 
