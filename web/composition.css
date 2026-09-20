@@ -629,3 +629,7 @@ main>.quiz-return{margin:20px 5% 0}
 /* Softer brand treatment: the ribbon is calm, only its copy drifts. */
 .criteria-ribbon-line{stroke:var(--blush)}
 .criteria-ribbon-copy{fill:#7f2e50}
+/* The loop weaves: this segment is redrawn over the lower ribbon and its copy. */
+.criteria-ribbon-overpass{stroke:var(--blush)}
+.criteria-ribbon-overpass-copy{fill:#7f2e50}
+.criteria-ribbon-knot{fill:var(--blush)}
