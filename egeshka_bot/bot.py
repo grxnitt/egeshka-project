@@ -56,9 +56,9 @@ LEGACY_CRITERIA_KEYS = {"price_quality_score": "organization_score"}
 TEACHER_CRITERIA = (
     ("explanation", "Объяснение материала"),
     ("practice", "Практика и разбор ошибок"),
-    ("feedback", "Обратная связь"),
-    ("tempo", "Темп и нагрузка"),
-    ("communication", "Общение и атмосфера"),
+    ("atmosphere", "Атмосфера и вовлечённость"),
+    ("structure", "Структура и темп занятий"),
+    ("exam_value", "Польза для экзамена"),
 )
 TEACHER_CRITERIA_BY_KEY = {field: label for field, label in TEACHER_CRITERIA}
 REVIEW_CRITERIA_BY_KEY = {**CRITERIA_BY_KEY, **TEACHER_CRITERIA_BY_KEY, "price_quality_score": "Организация обучения (старый отзыв)"}
@@ -535,8 +535,8 @@ def rating_methodology_text():
         "ℹ️ Как считается рейтинг\n\n"
         "<b>Школы:</b> редакционная часть даёт до 5 баллов, подтверждённые отзывы учеников — ещё до 5. "
         "Отзывы начинают влиять на итог после трёх подтверждений; их вес растёт постепенно вместе с выборкой.\n\n"
-        "<b>Преподаватели:</b> общий рейтинг тоже складывается из оценки ЕГЭшки и отзывов учеников. В отзывах отдельно собираем оценки объяснения, практики, обратной связи, темпа и общения.\n\n"
-        "Звёздочка означает предварительный балл: подтверждённых отзывов пока меньше трёх. "
+        "<b>Преподаватели:</b> оценку ставят только подтверждённые ученики по пяти критериям: понятность объяснений, практика и разбор ошибок, атмосфера, структура и темп, польза для ЕГЭ. Итог до 5 — среднее этих пяти оценок.\n\n"
+        "Для преподавателя оценка появляется после трёх подтверждённых отзывов и помечается как предварительная до десяти. Для школы звёздочка означает, что подтверждённых отзывов пока меньше трёх. "
         "Неподтверждённые отзывы можно читать после модерации, но они не меняют рейтинг."
     )
 
@@ -602,41 +602,41 @@ def review_teacher_buttons(rows):
     )
 
 
-def _teacher_display_score(teacher, user_average=None, user_count=0):
-    """Return a student-friendly teacher score on the shared 0–10 scale."""
-    professional = max(0.0, min(5.0, float(teacher.rating) / 2))
-    if user_average is not None and user_count:
-        return f"{professional + max(0.0, min(5.0, float(user_average))):.1f}".replace(".", ","), False, user_count
-    return f"{professional * 2:.1f}".replace(".", ","), True, 0
+def teacher_rating_from_criteria(stats):
+    """Return the student-only /5 rating and number of verified reviews."""
+    values = [float(average) for average, count in stats.values() if average is not None and count]
+    counts = [int(count) for _average, count in stats.values() if count]
+    if len(values) != len(TEACHER_CRITERIA) or not counts:
+        return None, 0
+    return round(sum(values) / len(values), 1), min(counts)
+
+
+def teacher_rating_text(stats):
+    average, count = teacher_rating_from_criteria(stats)
+    if average is None or count < 3:
+        return "Оценка учеников: пока не сформирована\nНужно минимум 3 подтверждённых отзыва"
+    marker = "*" if count < 10 else ""
+    return f"Оценка учеников: {average:.1f}/5{marker}\nПодтверждённых отзывов: {count}".replace(".", ",")
 
 
 def teacher_compare_text(
     left,
     right,
     school=None,
-    left_user_average=None,
-    left_user_count=0,
-    right_user_average=None,
-    right_user_count=0,
+    left_stats=None,
+    right_stats=None,
 ):
     school_line = f"🏫 {school.name}" if school else f"🏫 {left.school_name} и {right.school_name}"
     left_school_name = school.name if school else left.school_name
     right_school_name = school.name if school else right.school_name
-    left_score, left_preliminary, _ = _teacher_display_score(left, left_user_average, left_user_count)
-    right_score, right_preliminary, _ = _teacher_display_score(right, right_user_average, right_user_count)
-    left_marker = "*" if left_preliminary else ""
-    right_marker = "*" if right_preliminary else ""
-    left_reviews = f"💬 Одобренных отзывов: {left_user_count}" if left_user_count else "💬 Нет одобренных отзывов"
-    right_reviews = f"💬 Одобренных отзывов: {right_user_count}" if right_user_count else "💬 Нет одобренных отзывов"
-    preliminary_note = "\n* Предварительный балл — без одобренных отзывов учеников." if left_preliminary or right_preliminary else ""
+    left_rating = teacher_rating_text(left_stats or {})
+    right_rating = teacher_rating_text(right_stats or {})
     return (
         f"⚖️ Сравнение преподавателей\n\n"
         f"{school_line}\n"
         f"📚 {left.subject}\n\n"
-        f"👩‍🏫 {left.name} ({left_school_name}) · ⭐ {left_score}/10{left_marker}\n"
-        f"{left_reviews}\n\n"
-        f"👩‍🏫 {right.name} ({right_school_name}) · ⭐ {right_score}/10{right_marker}\n"
-        f"{right_reviews}{preliminary_note}\n\n"
+        f"👩‍🏫 {left.name} ({left_school_name})\n⭐ {left_rating}\n\n"
+        f"👩‍🏫 {right.name} ({right_school_name})\n⭐ {right_rating}\n\n"
         "Открой карточку преподавателя, если хочешь посмотреть биографию, результаты и ссылки."
     )
 
@@ -704,7 +704,7 @@ def rating_entry(position, school, user_average, user_count):
 def teacher_criteria_text(stats):
     if not any(count for _, count in stats.values()):
         return "📊 <b>По отзывам учеников</b>\nОценки отдельных аспектов появятся после одобренных отзывов."
-    lines = ["📊 <b>По отзывам учеников</b>", "Шкала 1–5"]
+    lines = ["📊 <b>Оценки учеников по критериям</b>", "Шкала 1–5"]
     for field, label in TEACHER_CRITERIA:
         average, count = stats.get(field, (None, 0))
         if count:
@@ -712,13 +712,13 @@ def teacher_criteria_text(stats):
     return "\n".join(lines)
 
 
-def teacher_card(teacher, school, user_average=None, user_count=0, criteria_stats=None):
+def teacher_card(teacher, school, criteria_stats=None):
     social = teacher.social_url or "Публичная ссылка на соцсеть не подтверждена"
     return (
         f"👩‍🏫 {teacher.name}\n\n"
         f"🏫 Школа: {school.name}\n"
         f"📚 Предмет: {teacher.subject}\n\n"
-        f"⭐ Оценка ЕГЭшки\n{hybrid_rating(teacher.rating, user_average, user_count)}\n\n"
+        f"⭐ {teacher_rating_text(criteria_stats or {})}\n\n"
         f"{teacher_criteria_text(criteria_stats or {})}\n\n"
         f"👤 О преподавателе\n{teacher_description(teacher.description)}\n\n"
         f"💬 Отзывы и сигналы\n{teacher.review_summary}\n\n"
@@ -1083,7 +1083,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                 select(Teacher.id, Teacher.name, Teacher.subject, School.name.label("school_name"))
                 .join(School, School.id == Teacher.school_id)
                 .where(Teacher.subject.in_(teacher_subject_variants(subject)), Teacher.is_active == True)
-                .order_by(Teacher.rating.desc(), Teacher.name)
+                .order_by(Teacher.name)
             )).all()
         await call.message.edit_text(
             f"💬 Отзыв о преподавателе · {subject}\n\nВыбери преподавателя:",
@@ -1168,13 +1168,23 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                 reply_markup=criterion_score_keyboard(),
             )
         else:
-            await state.update_data(review_criteria_scores=scores)
-            await state.set_state(ReviewForm.score)
-            object_name = "преподавателю" if data.get("review_kind") == "teacher" else "школе"
-            await call.message.edit_text(
-                f"Все критерии оценены.\n\nТеперь поставь общую оценку {object_name} от 1 до 5:",
-                reply_markup=review_score_keyboard(),
-            )
+            if data.get("review_kind") == "teacher":
+                await state.update_data(
+                    review_criteria_scores=scores,
+                    review_score=sum(scores.values()) / len(scores),
+                )
+                await state.set_state(ReviewForm.positive)
+                await call.message.edit_text(
+                    "Все пять критериев оценены. Итог посчитаем автоматически как их среднее.\n\n"
+                    "Что было полезно или понравилось? Напиши одним сообщением. Можно написать «пропустить»."
+                )
+            else:
+                await state.update_data(review_criteria_scores=scores)
+                await state.set_state(ReviewForm.score)
+                await call.message.edit_text(
+                    "Все критерии оценены.\n\nТеперь поставь общую оценку школе от 1 до 5:",
+                    reply_markup=review_score_keyboard(),
+                )
         await call.answer()
 
     @dp.message(ReviewForm.positive)
@@ -1647,7 +1657,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                     Teacher.school_id == item.school_id,
                     Teacher.subject.in_(teacher_subject_variants(item.subject)),
                     Teacher.is_active == True,
-                ).order_by(Teacher.rating.desc(), Teacher.name)
+                ).order_by(Teacher.name)
             )).scalars().all()
         await track(call.from_user.id, "course_opened", {"course_id": course_id, "subject": item.subject})
         await call.message.edit_text(
@@ -1686,7 +1696,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                     Teacher.school_id == item.school_id,
                     Teacher.subject.in_(teacher_subject_variants(item.subject)),
                     Teacher.is_active == True,
-                ).order_by(Teacher.rating.desc(), Teacher.name)
+                ).order_by(Teacher.name)
             )).scalars().all()
         if not rows:
             await call.message.edit_text(
@@ -1776,12 +1786,12 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                 Teacher.school_id == left.school_id,
                 Teacher.subject.in_(teacher_subject_variants(left.subject)),
                 Teacher.is_active == True,
-            ).order_by(Teacher.rating.desc(), Teacher.name))).scalars().all()
+            ).order_by(Teacher.name))).scalars().all()
             right_teachers = (await session.execute(select(Teacher).where(
                 Teacher.school_id == right.school_id,
                 Teacher.subject.in_(teacher_subject_variants(right.subject)),
                 Teacher.is_active == True,
-            ).order_by(Teacher.rating.desc(), Teacher.name))).scalars().all()
+            ).order_by(Teacher.name))).scalars().all()
         await call.message.edit_text(
             course_compare_section_text(left, right, left_school, right_school, section, left_teachers, right_teachers),
             reply_markup=(
@@ -1833,7 +1843,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         async with session_factory() as session:
             school = await session.get(School, school_id)
             rows = (await session.execute(
-                select(Teacher).where(Teacher.school_id == school_id, Teacher.is_active == True).order_by(Teacher.rating.desc(), Teacher.name)
+                select(Teacher).where(Teacher.school_id == school_id, Teacher.is_active == True).order_by(Teacher.name)
             )).scalars().all()
         await call.message.edit_text(
             f"👩‍🏫 Преподаватели школы {school.name}\n"
@@ -1861,7 +1871,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         subject = subject_from_token(subject)
         async with session_factory() as session:
             rows = (await session.execute(
-                select(Teacher).where(Teacher.school_id == int(school_id), Teacher.subject.in_(teacher_subject_variants(subject)), Teacher.is_active == True).order_by(Teacher.rating.desc(), Teacher.name)
+                select(Teacher).where(Teacher.school_id == int(school_id), Teacher.subject.in_(teacher_subject_variants(subject)), Teacher.is_active == True).order_by(Teacher.name)
             )).scalars().all()
         await state.update_data(school_id=int(school_id), subject=subject)
         await state.set_state(TeacherCompare.first)
@@ -1875,10 +1885,10 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         if data.get("global_compare"):
             async with session_factory() as session:
                 rows = (await session.execute(
-                    select(Teacher.id, Teacher.name, Teacher.subject, Teacher.rating, School.name.label("school_name"))
+                    select(Teacher.id, Teacher.name, Teacher.subject, School.name.label("school_name"))
                     .join(School, School.id == Teacher.school_id)
                     .where(Teacher.subject.in_(teacher_subject_variants(data["subject"])), Teacher.id != first_id, Teacher.is_active == True)
-                    .order_by(Teacher.rating.desc(), Teacher.name)
+                    .order_by(Teacher.name)
                 )).all()
             await state.update_data(first_id=first_id)
             await state.set_state(TeacherCompare.second)
@@ -1887,7 +1897,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             return
         async with session_factory() as session:
             rows = (await session.execute(
-                select(Teacher).where(Teacher.school_id == data["school_id"], Teacher.subject.in_(teacher_subject_variants(data["subject"])), Teacher.id != first_id, Teacher.is_active == True).order_by(Teacher.rating.desc(), Teacher.name)
+                select(Teacher).where(Teacher.school_id == data["school_id"], Teacher.subject.in_(teacher_subject_variants(data["subject"])), Teacher.id != first_id, Teacher.is_active == True).order_by(Teacher.name)
             )).scalars().all()
         await state.update_data(first_id=first_id)
         await state.set_state(TeacherCompare.second)
@@ -1903,13 +1913,13 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                 right = await session.get(Teacher, int(call.data.split(":")[1]))
                 left_school = await session.get(School, left.school_id)
                 right_school = await session.get(School, right.school_id)
-                left_user_average, left_user_count = await approved_review_stats(session, left.school_id, left.id)
-                right_user_average, right_user_count = await approved_review_stats(session, right.school_id, right.id)
+                left_stats = await approved_teacher_criteria_stats(session, left.school_id, left.id)
+                right_stats = await approved_teacher_criteria_stats(session, right.school_id, right.id)
             left.school_name = left_school.name
             right.school_name = right_school.name
             await state.clear()
             await call.message.edit_text(
-                teacher_compare_text(left, right, left_user_average=left_user_average, left_user_count=left_user_count, right_user_average=right_user_average, right_user_count=right_user_count),
+                teacher_compare_text(left, right, left_stats=left_stats, right_stats=right_stats),
                 reply_markup=teacher_compare_keyboard(left, right),
             )
             await call.answer()
@@ -1918,11 +1928,11 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             left = await session.get(Teacher, data["first_id"])
             right = await session.get(Teacher, int(call.data.split(":")[1]))
             school = await session.get(School, data["school_id"])
-            left_user_average, left_user_count = await approved_review_stats(session, left.school_id, left.id)
-            right_user_average, right_user_count = await approved_review_stats(session, right.school_id, right.id)
+            left_stats = await approved_teacher_criteria_stats(session, left.school_id, left.id)
+            right_stats = await approved_teacher_criteria_stats(session, right.school_id, right.id)
         await state.clear()
         await call.message.edit_text(
-            teacher_compare_text(left, right, school, left_user_average, left_user_count, right_user_average, right_user_count),
+            teacher_compare_text(left, right, school, left_stats, right_stats),
             reply_markup=teacher_compare_keyboard(left, right, school.id),
         )
         await call.answer()
@@ -1934,10 +1944,9 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             item = await session.get(Teacher, teacher_id)
             school = await session.get(School, item.school_id)
             user_reviews = await approved_reviews_text(session, school.id, item.id)
-            user_average, user_count = await approved_review_stats(session, school.id, item.id)
             criteria_stats = await approved_teacher_criteria_stats(session, school.id, item.id)
         await call.message.edit_text(
-            teacher_card(item, school, user_average, user_count, criteria_stats) + user_reviews,
+            teacher_card(item, school, criteria_stats) + user_reviews,
             reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                 [InlineKeyboardButton(text="💬 Оставить отзыв о преподавателе", callback_data=f"review_teacher:{item.id}")],
                 [InlineKeyboardButton(text="← Все преподаватели", callback_data=f"teachers:{school.id}")],
@@ -1970,10 +1979,10 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         subject = subject_from_token(call.data.split(":", 1)[1])
         async with session_factory() as session:
             rows = (await session.execute(
-                select(Teacher.id, Teacher.name, Teacher.subject, Teacher.rating, School.name.label("school_name"))
+                select(Teacher.id, Teacher.name, Teacher.subject, School.name.label("school_name"))
                 .join(School, School.id == Teacher.school_id)
                 .where(Teacher.subject.in_(teacher_subject_variants(subject)), Teacher.is_active == True)
-                .order_by(Teacher.rating.desc(), Teacher.name)
+                .order_by(Teacher.name)
             )).all()
         await state.update_data(global_compare=True, subject=subject)
         await state.set_state(TeacherCompare.first)

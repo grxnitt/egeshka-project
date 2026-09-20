@@ -1,6 +1,6 @@
 import { decisionFields, priceContext, schoolContent } from './school-content.js?v=26';
 import { priceDetails, relativeStrengths } from './comparison.js?v=22';
-import { applyLiveRatings, ratingBreakdown, ratingMark } from './supabase-client.js?v=3';
+import { applyLiveRatings, ratingBreakdown, ratingMark, teacherRatingLabel } from './supabase-client.js?v=4';
 const $ = (selector) => document.querySelector(selector);
 const escape = (value) => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = n => Number(n).toFixed(1).replace('.', ',');
@@ -15,14 +15,14 @@ const criterionDetails = [
   ['8%', 'Нагрузка и темп', 'Интенсивность занятий и домашних работ, возможность совмещать курс со школой и другими предметами.'],
 ];
 const methodologyCriteria = () => criterionDetails.map(([weight, title, description]) => `<article class="weight-item"><b>${weight}</b><span>${title}</span><small>${description}</small></article>`).join('');
-const teacherCriteria = {explanation:'Объяснение материала',practice:'Практика и разбор ошибок',feedback:'Обратная связь',tempo:'Темп и нагрузка',communication:'Общение и атмосфера'};
+const teacherCriteria = {explanation:'Объяснение материала',practice:'Практика и разбор ошибок',atmosphere:'Атмосфера и вовлечённость',structure:'Структура и темп занятий',exam_value:'Польза для экзамена'};
 import { labels, quizSubjectKeys, teacherSubjects } from './subjects.js?v=1';
 const dialog = $('#detail-dialog');
 let catalog, links = {}, subject = '', expanded = false, mode = 'schools';
 function showDialog(html){ $('#dialog-content').innerHTML = html; dialog.showModal();document.querySelector("#dialog-content").scrollTop=0; }
 $('.close').onclick = () => dialog.close();
 dialog.addEventListener('click', e => { if(e.target === dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();} });
-function methodology(){showDialog(`<div class="method-view"><h2>Как работает рейтинг</h2><p class="method-lead">Две независимые оценки складываются в один понятный результат.</p><div class="rating-formula"><div class="formula-card expert"><small>Редакция ЕГЭшки</small><strong>до 5</strong><span>по открытым данным</span></div><b class="formula-sign">+</b><div class="formula-card students"><small>Ученики</small><strong>до 5</strong><span>по подтверждённым отзывам</span></div><b class="formula-sign">=</b><div class="formula-card total"><small>Общий рейтинг</small><strong>до 10</strong><span>итоговая оценка</span></div></div><div class="method-note"><strong>★ Предварительная оценка</strong><span>До трёх подтверждённых отзывов показываем редакционную оценку. Затем отзывы начинают влиять на итог, а их вес постепенно растёт вместе с выборкой.</span></div><h3>Что входит в оценку ЕГЭшки</h3><div class="weight-grid">${methodologyCriteria()}</div><p class="trust-note"><strong>Стоимость не влияет на балл:</strong> цены и тарифы показаны отдельно, потому что один и тот же бюджет может быть приемлемым для одного ученика и недоступным для другого.</p><p class="trust-note"><strong>Важно:</strong> результаты учеников, которые публикуют школы, — заявления самих школ. Они не гарантируют такой же результат каждому.</p></div>`);}
+function methodology(){showDialog(`<div class="method-view"><h2>Как работает рейтинг</h2><p class="method-lead">Для школ и преподавателей используются разные модели.</p><div class="rating-formula"><div class="formula-card expert"><small>Редакция школы</small><strong>до 5</strong><span>по открытым данным</span></div><b class="formula-sign">+</b><div class="formula-card students"><small>Ученики школы</small><strong>до 5</strong><span>по подтверждённым отзывам</span></div><b class="formula-sign">=</b><div class="formula-card total"><small>Рейтинг школы</small><strong>до 10</strong><span>итоговая оценка</span></div></div><div class="method-note"><strong>Преподаватели — только ученики</strong><span>Оценка преподавателя до 5 — среднее пяти критериев из подтверждённых отзывов. Она появляется после трёх отзывов и остаётся предварительной до десяти.</span></div><h3>Что входит в редакционную оценку школы</h3><div class="weight-grid">${methodologyCriteria()}</div><p class="trust-note"><strong>Стоимость не влияет на балл:</strong> цены и тарифы показаны отдельно, потому что один и тот же бюджет может быть приемлемым для одного ученика и недоступным для другого.</p><p class="trust-note"><strong>Важно:</strong> результаты учеников, которые публикуют школы, — заявления самих школ. Они не гарантируют такой же результат каждому.</p></div>`);}
 $('#compare-method').onclick = methodology;
 function renderSchools(){
   let rows = catalog.schools.filter(s => !subject || s.subjects.includes(subject));
@@ -54,14 +54,15 @@ function renderComparison(changed){const rows=candidates(),l=$('#left-select'),r
 document.querySelectorAll('#left-select option').forEach(o=>o.disabled=o.value===r.value);document.querySelectorAll('#right-select option').forEach(o=>o.disabled=o.value===l.value);
 const row=(title,a,b,cls='')=>`<div class="comparison-row ${cls}"><span>${title}</span><p>${a}</p><p>${b}</p></div>`;
 const meter=value=>{const score=Math.max(0,Math.min(10,Number(value)));return `<span class="meter-value">${number(score)}</span><span class="meter meter-segments" aria-hidden="true">${Array.from({length:10},(_,i)=>`<i style="--fill:${Math.max(0,Math.min(1,score-i))*100}%"></i>`).join('')}</span>`;};
+const teacherMeter=value=>{if(value==null||!Number.isFinite(Number(value)))return '<span class="no-score">Пока нет оценки</span>';const score=Math.max(0,Math.min(5,Number(value)));return `<span class="meter-value">${number(score)}</span><span class="meter meter-segments teacher-meter" aria-hidden="true">${Array.from({length:5},(_,i)=>`<i style="--fill:${Math.max(0,Math.min(1,score-i))*100}%"></i>`).join('')}</span>`;};
 let html=row('',escape(left.name),escape(right.name),'column-heads');
-html+=row('Общая оценка',`<strong>${number(left.score)}</strong>`,`<strong>${number(right.score)}</strong>`);
-if(mode==='schools'){html+=Object.entries(criteria).map(([key,label])=>row(label,meter(left.criteria[key]),meter(right.criteria[key]))).join('');html+=catalog.schools.some(school=>school.isPreliminary)?'<p class="fine">* Предварительно: подтверждённых отзывов пока недостаточно.</p>':'';}else{
+if(mode==='schools'){html+=row('Общая оценка',`<strong>${number(left.score)}/10</strong>`,`<strong>${number(right.score)}/10</strong>`);html+=Object.entries(criteria).map(([key,label])=>row(label,meter(left.criteria[key]),meter(right.criteria[key]))).join('');html+=catalog.schools.some(school=>school.isPreliminary)?'<p class="fine">* Предварительно: подтверждённых отзывов пока недостаточно.</p>':'';}else{
+ html+=row('Оценка учеников',`<strong>${escape(teacherRatingLabel(left))}</strong>`,`<strong>${escape(teacherRatingLabel(right))}</strong>`);
  html+=row('Школа',escape(left.school),escape(right.school));
  html+='<div class="criteria-title"><strong>По оценкам учеников</strong><span>Отдельные критерии · шкала 1–5</span></div>';
- const teacherMetric=(teacher,key)=>Number.isFinite(Number(teacher.criteria?.[key]))?meter(Number(teacher.criteria[key])):'<span class="no-score">Пока нет оценок</span>';
+ const teacherMetric=(teacher,key)=>teacherMeter(teacher.criteria?.[key]);
  html+=Object.entries(teacherCriteria).map(([key,label])=>row(label,teacherMetric(left,key),teacherMetric(right,key),'teacher-metric')).join('');
- html+='<p class="fine">Критерии появятся после одобренных отзывов учеников.</p>';
+ html+='<p class="fine">Оценка появляется после трёх подтверждённых отзывов и считается как среднее пяти критериев.</p>';
 }
 if(mode==='schools'){
  const priceCard=school=>{
@@ -76,7 +77,7 @@ if(mode==='schools'){
  };
  html+=`<section class="compare-prices" aria-label="Стоимость подготовки"><h3>Сколько стоит подготовка</h3><p class="compare-price-context">Ориентиры из каталога: пакеты и сроки обучения отличаются.</p><div class="compare-price-grid">${priceCard(left)}${priceCard(right)}</div></section><section class="compare-verdict" aria-label="Краткий вывод"><h3>Что это значит для выбора</h3><div class="compare-verdict-grid">${summaryCard(left,right)}${summaryCard(right,left)}</div></section>`;
 }else{
- const teacherCard=t=>`<article class="teacher-compare-card"><div><span>${escape(t.school)}</span><strong>${number(t.score)}<small>/10*</small></strong></div><h3>${escape(t.name)}</h3><p>${escape(t.description)}</p><a href="${escape(t.url)}" target="_blank" rel="noopener">Открыть профиль <b>↗</b></a></article>`;
+ const teacherCard=t=>`<article class="teacher-compare-card"><div><span>${escape(t.school)}</span><strong>${escape(teacherRatingLabel(t))}</strong></div><h3>${escape(t.name)}</h3><p>${escape(t.description)}</p><a href="${escape(t.url)}" target="_blank" rel="noopener">Открыть профиль <b>↗</b></a></article>`;
  html+=`<details class="teacher-details"><summary class="comparison-summary">Подробнее о преподавателях</summary><div class="teacher-compare-cards">${teacherCard(left)}${teacherCard(right)}</div></details>`;
 }
 $('#comparison-result').innerHTML=html;}

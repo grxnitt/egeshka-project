@@ -122,6 +122,20 @@ class RatingSnapshot(Base):
     calculated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
 
+class TeacherRatingSnapshot(Base):
+    __tablename__ = "teacher_rating_snapshots"
+    teacher_id: Mapped[int] = mapped_column(ForeignKey("teachers.id"), primary_key=True)
+    verified_review_count: Mapped[int] = mapped_column(Integer, default=0)
+    student_score: Mapped[Optional[float]] = mapped_column(Numeric(2, 1), nullable=True)
+    explanation_score: Mapped[Optional[float]] = mapped_column(Numeric(2, 1), nullable=True)
+    practice_score: Mapped[Optional[float]] = mapped_column(Numeric(2, 1), nullable=True)
+    atmosphere_score: Mapped[Optional[float]] = mapped_column(Numeric(2, 1), nullable=True)
+    structure_score: Mapped[Optional[float]] = mapped_column(Numeric(2, 1), nullable=True)
+    exam_value_score: Mapped[Optional[float]] = mapped_column(Numeric(2, 1), nullable=True)
+    is_preliminary: Mapped[bool] = mapped_column(Boolean, default=True)
+    calculated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+
 class Event(Base):
     __tablename__ = "events"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)

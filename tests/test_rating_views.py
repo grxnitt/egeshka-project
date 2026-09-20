@@ -7,6 +7,8 @@ from egeshka_bot.bot import (
     comparison_text,
     school_total_score,
     teacher_criteria_text,
+    teacher_rating_from_criteria,
+    teacher_rating_text,
 )
 
 
@@ -52,3 +54,27 @@ def test_teacher_criteria_only_lists_submitted_aspects():
     result = teacher_criteria_text(stats)
     assert "Объяснение материала" in result
     assert "Практика и разбор ошибок" not in result
+
+
+def test_teacher_rating_is_student_only_average_of_five_criteria():
+    stats = {field: (score, 4) for (field, _), score in zip(TEACHER_CRITERIA, (5, 4, 4.5, 3.5, 4))}
+
+    assert teacher_rating_from_criteria(stats) == (4.2, 4)
+    assert "4,2/5*" in teacher_rating_text(stats)
+    assert "/10" not in teacher_rating_text(stats)
+
+
+def test_teacher_rating_waits_for_three_complete_verified_reviews():
+    stats = {field: (5.0, 2) for field, _ in TEACHER_CRITERIA}
+
+    assert "пока не сформирована" in teacher_rating_text(stats)
+
+
+def test_teacher_criteria_are_the_universal_five():
+    assert [label for _field, label in TEACHER_CRITERIA] == [
+        "Объяснение материала",
+        "Практика и разбор ошибок",
+        "Атмосфера и вовлечённость",
+        "Структура и темп занятий",
+        "Польза для экзамена",
+    ]

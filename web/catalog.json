@@ -544,6 +544,7 @@
   ],
   "teachers": [
     {
+      "id": 1,
       "school": "Умскул",
       "name": "Александр Долгих",
       "subject": "Русский язык",
@@ -551,11 +552,14 @@
         "Русский язык"
       ],
       "description": "1 495 стобалльников и 19 887 результатов 90+. Публикует открытые разборы, материалы к итоговому сочинению и задания.",
-      "score": 8.7,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://umschool.net/tutor/"
     },
     {
+      "id": 2,
       "school": "Умскул",
       "name": "Надежда Ковалевская",
       "subject": "Математика базовая",
@@ -563,11 +567,14 @@
         "Математика базовая"
       ],
       "description": "12 лет опыта и 40 195 учеников. Ведёт курс базовой математики; это указано в карточке, чтобы не смешивать её с преподавателями профильного уровня.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://umschool.net/tutor/2/"
     },
     {
+      "id": 3,
       "school": "Умскул",
       "name": "Анастасия Малова",
       "subject": "Обществознание",
@@ -575,11 +582,14 @@
         "Обществознание"
       ],
       "description": "222 стобалльника и 5 324 результата 90+. В текущей карточке курса указано 11 занятий в месяц с сентября по июнь.",
-      "score": 8.4,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://umschool.net/tutor/2/"
     },
     {
+      "id": 4,
       "school": "100балльный репетитор",
       "name": "Маша Птипца",
       "subject": "Русский язык",
@@ -587,11 +597,14 @@
         "Русский язык"
       ],
       "description": "8 лет подготовки; заявлены 20 000+ учеников и 146 стобалльников, а в посте от 9 сентября 2026 года — 2 436 результатов 90+ и 114 стобалльников по прошлой программе. Показатели нужно датировать и не смешивать между наборами.",
-      "score": 9.2,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://100points.ru/teachers/"
     },
     {
+      "id": 5,
       "school": "100балльный репетитор",
       "name": "Ильич",
       "subject": "Математика профильная",
@@ -599,11 +612,14 @@
         "Математика профильная"
       ],
       "description": "9 лет подготовки. Заявляет 112 стобалльников, 1 999 учеников с 90+ и 8 527 с 80+.",
-      "score": 9.3,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://100points.ru/teachers/"
     },
     {
+      "id": 6,
       "school": "100балльный репетитор",
       "name": "Катя Строганова",
       "subject": "Химия",
@@ -611,11 +627,14 @@
         "Химия"
       ],
       "description": "Преподаватель химии с 12‑летним опытом. Также указано обучение на кандидата химических наук; количественные результаты нужно считать заявлением преподавателя.",
-      "score": 9.4,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://100points.ru/results/"
     },
     {
+      "id": 7,
       "school": "Сотка",
       "name": "Дарья Устинова",
       "subject": "Русский язык",
@@ -623,11 +642,14 @@
         "Русский язык"
       ],
       "description": "Эксперт ЕГЭ, 6 лет опыта, магистратура КФУ с отличием; средний балл учеников 91. Публикует материалы по орфографии и подготовке к ЕГЭ.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://sotkaonline.ru/ege"
     },
     {
+      "id": 8,
       "school": "Сотка",
       "name": "Айзиля Мусина",
       "subject": "Английский язык",
@@ -635,11 +657,14 @@
         "Английский язык"
       ],
       "description": "10 лет опыта, три красных диплома; 28 стобалльников и 2 472 результата 80+, а также личные 100 баллов в 2024 году.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://sotkaonline.ru/ege/11class/angliskii-yazik"
     },
     {
+      "id": 9,
       "school": "Сотка",
       "name": "Паша Англичанин",
       "subject": "Английский язык",
@@ -647,11 +672,14 @@
         "Английский язык"
       ],
       "description": "Более 4 лет опыта, заявленный средний балл учеников 77,5; регулярно использует английский в международном общении.",
-      "score": 8.2,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://sotkaonline.ru/ege/11class/angliskii-yazik"
     },
     {
+      "id": 10,
       "school": "Сотка",
       "name": "Алексей Кулагин",
       "subject": "Обществознание",
@@ -659,11 +687,14 @@
         "Обществознание"
       ],
       "description": "12 лет опыта, аспирантура КФУ, «Лучший учитель Казани — 2021». 44 стобалльника и 4 212 результатов 80+.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://sotkaonline.ru/ege/11class/obshestvoznanie"
     },
     {
+      "id": 11,
       "school": "Сотка",
       "name": "Ксения Рерих",
       "subject": "Обществознание",
@@ -671,11 +702,14 @@
         "Обществознание"
       ],
       "description": "8 лет опыта, красный диплом РУДН; 4 стобалльника и 303 результата 80+.",
-      "score": 8.4,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://sotkaonline.ru/ege/11class/obshestvoznanie"
     },
     {
+      "id": 12,
       "school": "Сотка",
       "name": "Никита Петяшин",
       "subject": "Обществознание",
@@ -683,11 +717,14 @@
         "Обществознание"
       ],
       "description": "2 года опыта, студент МГУ, призёр регионального этапа ВсОШ; личный ЕГЭ по обществознанию — 100 в 2025 году, заявленный средний балл учеников — 82.",
-      "score": 8.2,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://sotkaonline.ru/ege/11class/obshestvoznanie"
     },
     {
+      "id": 13,
       "school": "Фоксфорд",
       "name": "Борис Трушин",
       "subject": "Математика профильная",
@@ -695,11 +732,14 @@
         "Математика профильная"
       ],
       "description": "Кандидат физико-математических наук; средний балл ЕГЭ учеников 86 и 40 000+ выпускников с 80+ баллами.",
-      "score": 9.0,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://foxford.ru/teachers"
     },
     {
+      "id": 14,
       "school": "Фоксфорд",
       "name": "Дарья Ильичева",
       "subject": "Русский язык",
@@ -707,11 +747,14 @@
         "Русский язык"
       ],
       "description": "75+ стобалльников и средний балл ЕГЭ учеников 83.",
-      "score": 8.9,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://foxford.ru/teachers"
     },
     {
+      "id": 15,
       "school": "Фоксфорд",
       "name": "Александр Чорбу",
       "subject": "Химия",
@@ -719,11 +762,14 @@
         "Химия"
       ],
       "description": "Эксперт ОГЭ/ЕГЭ, выпускник химфака МГУ; средний балл учеников 86 и 6 000+ учеников.",
-      "score": 8.8,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://foxford.ru/teachers"
     },
     {
+      "id": 16,
       "school": "Фоксфорд",
       "name": "Михаил Пенкин",
       "subject": "Физика",
@@ -731,11 +777,14 @@
         "Физика"
       ],
       "description": "Преподаватель МФТИ, с 2005 года; средний балл ЕГЭ 88, 10 000+ учеников и 47 стобалльников в 2026 году.",
-      "score": 9.0,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://foxford.ru/ege/fizika"
     },
     {
+      "id": 17,
       "school": "Фоксфорд",
       "name": "Сергей Горбачёв",
       "subject": "Информатика",
@@ -743,11 +792,14 @@
         "Информатика"
       ],
       "description": "Средний балл ЕГЭ учеников 85, 3 500+ учеников, преподавание с 2017 года; школа также заявляет, что каждый второй получает 90+.",
-      "score": 8.7,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://foxford.ru/ege/courses"
     },
     {
+      "id": 18,
       "school": "Фоксфорд",
       "name": "Полина Кузнецова",
       "subject": "Обществознание",
@@ -755,11 +807,14 @@
         "Обществознание"
       ],
       "description": "Выпускница УрГЮУ, преподаёт с 2015 года; 5 000+ учеников, 80+ у каждого второго и личные 98 баллов в 2026 году.",
-      "score": 8.7,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://foxford.ru/ege/obschestvoznanie-courses"
     },
     {
+      "id": 19,
       "school": "Фоксфорд",
       "name": "Нина Максимова",
       "subject": "Математика профильная / Математика базовая",
@@ -768,11 +823,14 @@
         "Математика базовая"
       ],
       "description": "Преподаёт с 2011 года, подготовила 3 500+ учеников; 80+ у каждого второго и личные 100 баллов в 2026 году.",
-      "score": 8.7,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://foxford.ru/ege/matematika-courses"
     },
     {
+      "id": 20,
       "school": "Фоксфорд",
       "name": "Вероника Авраменко",
       "subject": "Русский язык",
@@ -780,11 +838,14 @@
         "Русский язык"
       ],
       "description": "Выпускница ЛГПУ по профилю «Русский язык», автор сообщества с 13 000+ учениками; 80+ у каждого второго на ЕГЭ.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://foxford.ru/ege/courses"
     },
     {
+      "id": 21,
       "school": "Фоксфорд",
       "name": "Виктория Симакова",
       "subject": "Английский язык",
@@ -792,11 +853,14 @@
         "Английский язык"
       ],
       "description": "Опыт с 2012 года, TESOL, обучение в США и Великобритании; средний балл ЕГЭ учеников 81 и 4 500+ учеников.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://foxford.ru/ege/courses"
     },
     {
+      "id": 22,
       "school": "Фоксфорд",
       "name": "Лера Луканцева",
       "subject": "Биология",
@@ -804,11 +868,14 @@
         "Биология"
       ],
       "description": "Средний балл ЕГЭ 87, 80+ у каждого второго, 1 800+ учеников и личные 98 баллов в 2026 году.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://foxford.ru/ege/courses"
     },
     {
+      "id": 23,
       "school": "Фоксфорд",
       "name": "Василиса Кравченко",
       "subject": "Литература",
@@ -816,11 +883,14 @@
         "Литература"
       ],
       "description": "169 стобалльников за 6 лет, средний балл ЕГЭ 81, 3 500+ учеников; личные 100 баллов в 2026 году.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://foxford.ru/ege/literatura-courses"
     },
     {
+      "id": 24,
       "school": "Фоксфорд",
       "name": "Елизавета Куликова",
       "subject": "История",
@@ -828,11 +898,14 @@
         "История"
       ],
       "description": "Выпускница истфака МГУ с отличием, преподаёт с 2017 года; средний балл ЕГЭ 86, 3 200+ учеников и личные 100 баллов в 2026 году.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://foxford.ru/ege/courses"
     },
     {
+      "id": 25,
       "school": "Вебиум",
       "name": "Вероника Вавилова",
       "subject": "Биология",
@@ -840,11 +913,14 @@
         "Биология"
       ],
       "description": "17 учеников сдали ЕГЭ на 100, каждый второй — на 80+, каждый третий — на 85+, средний результат — 79. Указаны 10 лет опыта и медицинское образование. Публикует конспекты, тесты, открытые вебинары и теорию.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://webium.ru/teachers/veronika-vavilova/"
     },
     {
+      "id": 26,
       "school": "Вебиум",
       "name": "Кристина Спенсер",
       "subject": "Английский язык",
@@ -852,11 +928,14 @@
         "Английский язык"
       ],
       "description": "3 ученика сдали ЕГЭ на 100, каждый второй — на 80+, средний результат — 78. Также указаны 9 лет преподавания, уровень C1 и собственные результаты ЕГЭ 97, 95 и 96.",
-      "score": 8.4,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://webium.ru/teachers/kristina-spenser/"
     },
     {
+      "id": 27,
       "school": "Вебиум",
       "name": "Валерия Энгельс",
       "subject": "Обществознание",
@@ -864,11 +943,14 @@
         "Обществознание"
       ],
       "description": "25 стобалльников, каждый третий ученик — 80+, средний результат — 74. Указаны 9 лет преподавания, 96 баллов на собственном ЕГЭ и юрфак ВШЭ. Использует фильмы и ассоциации в подготовке.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://webium.ru/teachers/valeriya-engels/"
     },
     {
+      "id": 28,
       "school": "99 Баллов",
       "name": "Мурад Гарлыев",
       "subject": "Информатика",
@@ -876,11 +958,14 @@
         "Информатика"
       ],
       "description": "3 000+ учеников. Публикует авторские разборы по информатике, включая игры, Excel и Python.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://service.99ballov.ru/teachers"
     },
     {
+      "id": 29,
       "school": "99 Баллов",
       "name": "Ляйсан Хайбуллина",
       "subject": "Биология",
@@ -888,11 +973,14 @@
         "Биология"
       ],
       "description": "Преподаватель биологии, 7 лет опыта и 1 700+ учеников. Ранее предмет был указан ошибочно; исправлено с информатики на биологию.",
-      "score": 8.4,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://service.99ballov.ru/teachers"
     },
     {
+      "id": 30,
       "school": "Турбо ЕГЭ",
       "name": "Виолетта",
       "subject": "Русский язык",
@@ -900,11 +988,14 @@
         "Русский язык"
       ],
       "description": "Более 9 000 учеников и средний результат 81 в 2025 году.",
-      "score": 8.8,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egeturbo.ru/teachers"
     },
     {
+      "id": 31,
       "school": "Турбо ЕГЭ",
       "name": "Илья",
       "subject": "Обществознание",
@@ -912,11 +1003,14 @@
         "Обществознание"
       ],
       "description": "1 450 учеников сдали на 90+; 7 лет подготовки.",
-      "score": 8.7,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egeturbo.ru/teachers"
     },
     {
+      "id": 32,
       "school": "Турбо ЕГЭ",
       "name": "Ира",
       "subject": "Английский язык",
@@ -924,11 +1018,14 @@
         "Английский язык"
       ],
       "description": "98 баллов на ЕГЭ, лингвистическое образование и призёрство олимпиад.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egeturbo.ru/teachers"
     },
     {
+      "id": 33,
       "school": "Умскул",
       "name": "Артур Шарафиев",
       "subject": "Математика профильная",
@@ -936,11 +1033,14 @@
         "Математика профильная"
       ],
       "description": "Профильная математика, 69 стобалльников и 1 187 результатов 90+. Публикует открытые стримы, разборы вариантов и план годового курса; показатели результатов опубликованы школой/преподавателем.",
-      "score": 8.8,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://umschool.net/tutor/"
     },
     {
+      "id": 34,
       "school": "Умскул",
       "name": "Татьяна Граева",
       "subject": "Химия",
@@ -948,11 +1048,14 @@
         "Химия"
       ],
       "description": "44 стобалльника и 376 результатов 90+.",
-      "score": 8.8,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://umschool.net/tutor/"
     },
     {
+      "id": 35,
       "school": "Умскул",
       "name": "Вероника Соколовская",
       "subject": "География",
@@ -960,11 +1063,14 @@
         "География"
       ],
       "description": "4 207 учеников сдали на 5, из них 1 828 — в 2025 году. Метрика опубликована школой и относится к оценке «5», а не к баллам ЕГЭ.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://umschool.net/ege/"
     },
     {
+      "id": 36,
       "school": "Умскул",
       "name": "Дарья Королёва",
       "subject": "Литература",
@@ -972,11 +1078,14 @@
         "Литература"
       ],
       "description": "7 673 ученика сдали на 5, из них 1 708 — в 2025 году. Школа приводит метрику «5», поэтому её нельзя сравнивать с числом результатов 90+.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://umschool.net/ege/"
     },
     {
+      "id": 37,
       "school": "Умскул",
       "name": "Данир Баев",
       "subject": "Математика ОГЭ",
@@ -984,11 +1093,14 @@
         "Математика ОГЭ"
       ],
       "description": "10 699 учеников сдали на 5, из них 4 263 — в 2025 году. Метрика опубликована школой и требует отдельного сопоставления с другими результатами.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://umschool.net/ege/"
     },
     {
+      "id": 38,
       "school": "Умскул",
       "name": "Максим Глухов",
       "subject": "Физика",
@@ -996,11 +1108,14 @@
         "Физика"
       ],
       "description": "7 лет опыта и 1 000+ выпускников.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://umschool.net/tutor/"
     },
     {
+      "id": 39,
       "school": "Умскул",
       "name": "Равиль Кандинский",
       "subject": "Обществознание",
@@ -1008,11 +1123,14 @@
         "Обществознание"
       ],
       "description": "11 лет опыта; собственный результат ЕГЭ по предмету — 90 баллов.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://umschool.net/tutor/"
     },
     {
+      "id": 40,
       "school": "Умскул",
       "name": "Алина Максимова",
       "subject": "Английский язык",
@@ -1020,11 +1138,14 @@
         "Английский язык"
       ],
       "description": "6 лет опыта; собственный результат ЕГЭ — 95 баллов.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://umschool.net/tutor/"
     },
     {
+      "id": 41,
       "school": "Умскул",
       "name": "Аля Виноградова",
       "subject": "История",
@@ -1032,11 +1153,14 @@
         "История"
       ],
       "description": "309 стобалльников и 3 326 результатов 90+. Публикует интерактивные занятия, мемы, лайфхаки, материалы и анонсы трёх вебинаров в неделю; показатели результатов опубликованы школой/преподавателем.",
-      "score": 8.7,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://umschool.net/tutor/2/"
     },
     {
+      "id": 42,
       "school": "Умскул",
       "name": "Жанна Казанская",
       "subject": "Биология",
@@ -1044,11 +1168,14 @@
         "Биология"
       ],
       "description": "42 стобалльника и 879 результатов 90+.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://umschool.net/tutor/2/"
     },
     {
+      "id": 43,
       "school": "Умскул",
       "name": "Виктория Ланская",
       "subject": "Информатика",
@@ -1056,11 +1183,14 @@
         "Информатика"
       ],
       "description": "135 стобалльников и 1 693 результата 90+.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://umschool.net/tutor/2/"
     },
     {
+      "id": 44,
       "school": "Умскул",
       "name": "Богдан Чагин",
       "subject": "Химия",
@@ -1068,11 +1198,14 @@
         "Химия"
       ],
       "description": "168 стобалльников и 1 471 результат 90+.",
-      "score": 8.7,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://umschool.net/tutor/3/"
     },
     {
+      "id": 45,
       "school": "Умскул",
       "name": "Макс Тесла",
       "subject": "Физика",
@@ -1080,11 +1213,14 @@
         "Физика"
       ],
       "description": "75 стобалльников и 835 результатов 90+. Также заявляет 9 лет работы и 2 121 результат 80+; эта дополнительная цифра — самозаявление.",
-      "score": 8.9,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://umschool.net/tutor/2/"
     },
     {
+      "id": 46,
       "school": "Умскул",
       "name": "Шерин Келли",
       "subject": "Английский язык",
@@ -1092,11 +1228,14 @@
         "Английский язык"
       ],
       "description": "33 стобалльника и 768 результатов 90+.",
-      "score": 8.7,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://umschool.net/tutor/2/"
     },
     {
+      "id": 47,
       "school": "Умскул",
       "name": "Кристина Мельникова",
       "subject": "Биология",
@@ -1104,11 +1243,14 @@
         "Биология"
       ],
       "description": "5 лет опыта и собственный результат ЕГЭ — 98 баллов.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://umschool.net/tutor/2/"
     },
     {
+      "id": 48,
       "school": "Умскул",
       "name": "Никита Равич",
       "subject": "История",
@@ -1116,11 +1258,14 @@
         "История"
       ],
       "description": "5 лет опыта и 5 098 учеников.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://umschool.net/tutor/2/"
     },
     {
+      "id": 49,
       "school": "Умскул",
       "name": "Мария Вельф",
       "subject": "Русский язык",
@@ -1128,11 +1273,14 @@
         "Русский язык"
       ],
       "description": "5 лет опыта и собственный результат ЕГЭ — 98 баллов.",
-      "score": 8.4,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://umschool.net/tutor/3/"
     },
     {
+      "id": 50,
       "school": "Умскул",
       "name": "Никита Сахаров",
       "subject": "Физика",
@@ -1140,11 +1288,14 @@
         "Физика"
       ],
       "description": "7 лет опыта и 4 551 выпускник.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://umschool.net/tutor/3/"
     },
     {
+      "id": 51,
       "school": "100балльный репетитор",
       "name": "МатемАня",
       "subject": "Математика профильная / Математика базовая",
@@ -1153,11 +1304,14 @@
         "Математика базовая"
       ],
       "description": "13 лет подготовки к профильной и базовой математике; преподаватель заявляет, что каждый пятый ученик сдаёт на 85+, личный результат — 100.",
-      "score": 9.2,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://100points.ru/teachers/"
     },
     {
+      "id": 52,
       "school": "100балльный репетитор",
       "name": "Саня Эбонит",
       "subject": "Физика",
@@ -1165,11 +1319,14 @@
         "Физика"
       ],
       "description": "20 лет преподавания, четыре результата 100 и 7 950 выпускников с 80+. Также заявляет 479 стобалльников.",
-      "score": 9.3,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://100points.ru/teachers/"
     },
     {
+      "id": 53,
       "school": "100балльный репетитор",
       "name": "Валентиныч",
       "subject": "Обществознание",
@@ -1177,11 +1334,14 @@
         "Обществознание"
       ],
       "description": "Подготовка с 2013 года, 73 стобалльника, каждый второй ученик сдаёт на 70+.",
-      "score": 9.1,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://100points.ru/results/"
     },
     {
+      "id": 54,
       "school": "100балльный репетитор",
       "name": "Ксения Напольская",
       "subject": "Биология",
@@ -1189,11 +1349,14 @@
         "Биология"
       ],
       "description": "Кандидат биологических наук, 21 год опыта и 69 стобалльников. Заявляет, что каждый четвёртый ученик сдаёт на 80+.",
-      "score": 9.2,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://100points.ru/teachers/"
     },
     {
+      "id": 55,
       "school": "100балльный репетитор",
       "name": "Марк Ламарк",
       "subject": "Биология",
@@ -1201,11 +1364,14 @@
         "Биология"
       ],
       "description": "Преподаватель биологии; заявлены 174 стобалльника, 3 200+ учеников с 80+ за два года и средний балл активного ученика 86,7.",
-      "score": 9.4,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://100points.ru/teachers/"
     },
     {
+      "id": 56,
       "school": "100балльный репетитор",
       "name": "Марина Медведева",
       "subject": "Биология",
@@ -1213,11 +1379,14 @@
         "Биология"
       ],
       "description": "7 лет подготовки, обучение на эксперта ЕГЭ по биологии, 1 100+ учеников с 80+. Также указаны биологическое образование СПбГУ и каждый третий ученик на 80+.",
-      "score": 8.9,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://100points.ru/teachers/"
     },
     {
+      "id": 57,
       "school": "100балльный репетитор",
       "name": "Артём Имаев",
       "subject": "Информатика",
@@ -1225,11 +1394,14 @@
         "Информатика"
       ],
       "description": "16 лет подготовки, 156 стобалльников и 2 100+ выпускников с 90+.",
-      "score": 9.1,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://100points.ru/teachers/"
     },
     {
+      "id": 58,
       "school": "100балльный репетитор",
       "name": "Топ-репетитор",
       "subject": "История",
@@ -1237,11 +1409,14 @@
         "История"
       ],
       "description": "15–16 лет подготовки, магистратура МГУ/педагогическое образование, рецензент учебников; заявлены 83–100+ стобалльников и каждого третьего ученика на 80+ в разных датах.",
-      "score": 8.9,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://100points.ru/teachers/"
     },
     {
+      "id": 59,
       "school": "100балльный репетитор",
       "name": "Таня Шибитова",
       "subject": "Английский язык",
@@ -1249,11 +1424,14 @@
         "Английский язык"
       ],
       "description": "Уровень C2, квалификация CELTA, 16 стобалльников. Также заявляет сдачу ЕГЭ на 100 в 2025 и 2026 годах.",
-      "score": 8.9,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://100points.ru/teachers/"
     },
     {
+      "id": 60,
       "school": "100балльный репетитор",
       "name": "Маша Коршунова",
       "subject": "Литература",
@@ -1261,11 +1439,14 @@
         "Литература"
       ],
       "description": "16 лет подготовки, 89 стобалльников, обучение на эксперта ЕГЭ.",
-      "score": 9.0,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://100points.ru/teachers/"
     },
     {
+      "id": 61,
       "school": "100балльный репетитор",
       "name": "Полина Белова",
       "subject": "География",
@@ -1273,11 +1454,14 @@
         "География"
       ],
       "description": "Окончила геофак МГУ с отличием, готовит 8 лет; заявляет, что каждый шестой ученик в 2025 году сдал на 90+, а сама Полина сдавала географию на 100 в 2024 и 2025 годах.",
-      "score": 8.8,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://100points.ru/teachers/"
     },
     {
+      "id": 62,
       "school": "100балльный репетитор",
       "name": "Настя Коржева",
       "subject": "Обществознание",
@@ -1285,11 +1469,14 @@
         "Обществознание"
       ],
       "description": "11 лет подготовки, 400+ выпускников с 80+. Также указаны ежегодное обучение на эксперта ФИПИ и лучший личный результат 99 баллов.",
-      "score": 8.8,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://100points.ru/teachers/"
     },
     {
+      "id": 63,
       "school": "100балльный репетитор",
       "name": "Даня Васильев",
       "subject": "Обществознание",
@@ -1297,11 +1484,14 @@
         "Обществознание"
       ],
       "description": "Готовит к ЕГЭ около 5 лет, обучил 1 000+ учеников, средний балл выпускников — 80; в другой публикации указано более 2 000 школьников. Число учеников расходится по датам.",
-      "score": 8.7,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://100points.ru/teachers/"
     },
     {
+      "id": 64,
       "school": "100балльный репетитор",
       "name": "Оля Степанова",
       "subject": "Химия",
@@ -1309,11 +1499,14 @@
         "Химия"
       ],
       "description": "8 лет подготовки, собственный результат 100; 80+ у каждого второго после годового курса. Указывает 47 стобалльников.",
-      "score": 8.9,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://100points.ru/results/"
     },
     {
+      "id": 65,
       "school": "100балльный репетитор",
       "name": "Настя Калиганова",
       "subject": "Английский язык",
@@ -1321,11 +1514,14 @@
         "Английский язык"
       ],
       "description": "13 лет преподавания, уровень C2, 10 000+ выпускников поступили в топовые вузы.",
-      "score": 8.8,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://100points.ru/teachers/"
     },
     {
+      "id": 66,
       "school": "100балльный репетитор",
       "name": "Артём Кармаз",
       "subject": "История",
@@ -1333,11 +1529,14 @@
         "История"
       ],
       "description": "7 лет подготовки; 97% школьников сдали ОГЭ на 4 и 5.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://100points.ru/teachers/"
     },
     {
+      "id": 67,
       "school": "99 Баллов",
       "name": "Мария Федотова",
       "subject": "Русский язык",
@@ -1345,11 +1544,14 @@
         "Русский язык"
       ],
       "description": "8 лет преподавания и более 22 стобалльников.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://service.99ballov.ru/teachers"
     },
     {
+      "id": 68,
       "school": "99 Баллов",
       "name": "Елена Казакова",
       "subject": "Обществознание",
@@ -1357,11 +1559,14 @@
         "Обществознание"
       ],
       "description": "Более 1 500 выпускников.",
-      "score": 8.3,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://service.99ballov.ru/teachers"
     },
     {
+      "id": 69,
       "school": "99 Баллов",
       "name": "Айнур Мурзаханов",
       "subject": "Английский язык",
@@ -1369,11 +1574,14 @@
         "Английский язык"
       ],
       "description": "Более 6 000 учеников.",
-      "score": 8.4,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://service.99ballov.ru/teachers"
     },
     {
+      "id": 70,
       "school": "99 Баллов",
       "name": "Клим Корнеевец",
       "subject": "Химия",
@@ -1381,11 +1589,14 @@
         "Химия"
       ],
       "description": "Более 2 000 учеников.",
-      "score": 8.4,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://service.99ballov.ru/teachers"
     },
     {
+      "id": 71,
       "school": "Сотка",
       "name": "Альбина Амирова",
       "subject": "Биология",
@@ -1393,11 +1604,14 @@
         "Биология"
       ],
       "description": "Преподаёт биологию: короткие уроки, тесты, практика и ДЗ.",
-      "score": 8.2,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://sotkaonline.ru/teachers"
     },
     {
+      "id": 72,
       "school": "Сотка",
       "name": "Гриша Грин",
       "subject": "Биология",
@@ -1405,11 +1619,14 @@
         "Биология"
       ],
       "description": "Преподаёт биологию в Сотке.",
-      "score": 8.2,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://sotkaonline.ru/teachers"
     },
     {
+      "id": 73,
       "school": "Сотка",
       "name": "Тимур Нейман",
       "subject": "Физика",
@@ -1417,11 +1634,14 @@
         "Физика"
       ],
       "description": "10 лет опыта, магистр СПбПУ, призёр региональных олимпиад; 34 стобалльника, 1 160 результатов 80+ и три личные сдачи ЕГЭ на 100.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://sotkaonline.ru/ege/11class/fizika"
     },
     {
+      "id": 74,
       "school": "Сотка",
       "name": "Юлия Вишневская",
       "subject": "Химия",
@@ -1429,11 +1649,14 @@
         "Химия"
       ],
       "description": "10 лет опыта, выпускница химфака КФУ; 122 стобалльника, 2 572 результата 80+ и личные 100 баллов по химии.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://sotkaonline.ru/ege/11class/himia"
     },
     {
+      "id": 75,
       "school": "Сотка",
       "name": "Мотя Кодиков",
       "subject": "Химия",
@@ -1441,11 +1664,14 @@
         "Химия"
       ],
       "description": "Сдал ЕГЭ по химии на 95 в 2025 году, учится в РНИМУ им. Пирогова; опыт преподавания более двух лет.",
-      "score": 8.0,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://sotkaonline.ru/ege/11class/himia"
     },
     {
+      "id": 76,
       "school": "Сотка",
       "name": "Лера Пантюхина",
       "subject": "Химия",
@@ -1453,11 +1679,14 @@
         "Химия"
       ],
       "description": "5 лет опыта, окончила НГТУ по химической технологии, работала в институте неорганической химии СО РАН; дважды сдала ЕГЭ по химии на 100.",
-      "score": 8.2,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://sotkaonline.ru/ege/11class/himia"
     },
     {
+      "id": 77,
       "school": "Вебиум",
       "name": "Мира Леви",
       "subject": "Биология",
@@ -1465,11 +1694,14 @@
         "Биология"
       ],
       "description": "4 500+ учеников сдали экзамены вместе с преподавательницей, средний результат ЕГЭ — 75, средний ОГЭ — 4,85. Указаны диплом биофака ТГУ и собственный результат ЕГЭ-2026 — 100.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://webium.ru/teachers/mira-levi/"
     },
     {
+      "id": 78,
       "school": "Вебиум",
       "name": "Настя Назарова",
       "subject": "Химия",
@@ -1477,11 +1709,14 @@
         "Химия"
       ],
       "description": "72 ученика сдали ЕГЭ на 100, каждый второй — на 90+, средний результат — 88. Указаны собственные 100 баллов в 2025 году. Публикует разборы, материалы и новости курса.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://webium.ru/teachers/nastya-nazarova/"
     },
     {
+      "id": 79,
       "school": "Вебиум",
       "name": "Эйджей Гаусс",
       "subject": "Математика профильная / Математика базовая",
@@ -1490,11 +1725,14 @@
         "Математика базовая"
       ],
       "description": "136 результатов 90+ по профильной математике, 3 стобалльника, средний результат — 78; 97% учеников базовой математики получили «4» или «5». Указаны 12 лет преподавания.",
-      "score": 8.7,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://webium.ru/teachers/eydzhey-gauss/"
     },
     {
+      "id": 80,
       "school": "Вебиум",
       "name": "Коля Касперский",
       "subject": "Информатика",
@@ -1502,11 +1740,14 @@
         "Информатика"
       ],
       "description": "19 учеников сдали ЕГЭ на 100, каждый второй — на 80+, каждый третий — на 85+, средний результат — 82.",
-      "score": 8.9,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://webium.ru/teachers/kolya-kasperskiy/"
     },
     {
+      "id": 81,
       "school": "Вебиум",
       "name": "Снежана Планк",
       "subject": "Физика",
@@ -1514,11 +1755,14 @@
         "Физика"
       ],
       "description": "Каждый второй ученик сдал на 80+, каждый третий — на 85+, средний результат — 79. Указаны 10 лет подготовки и образование СПбПУ. Публикует материалы по физике.",
-      "score": 8.4,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://webium.ru/teachers/snezhana-plank/"
     },
     {
+      "id": 82,
       "school": "Вебиум",
       "name": "Агния Розенталь",
       "subject": "Русский язык",
@@ -1526,11 +1770,14 @@
         "Русский язык"
       ],
       "description": "139 стобалльников, каждый второй ученик — 80+, каждый третий — 85+, средний результат — 78. Публикует новости и материалы по русскому языку.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://webium.ru/teachers/agniya-rozental/"
     },
     {
+      "id": 83,
       "school": "Вебиум",
       "name": "Ира Годунова",
       "subject": "История",
@@ -1538,11 +1785,14 @@
         "История"
       ],
       "description": "Преподаватель истории ЕГЭ в паре с Филом Сахаровым в Вебиуме.",
-      "score": 8.4,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://webium.ru/teachers/ira-godunova-ifil-sakharov/"
     },
     {
+      "id": 84,
       "school": "Вебиум",
       "name": "Фил Сахаров",
       "subject": "История",
@@ -1550,11 +1800,14 @@
         "История"
       ],
       "description": "Преподаватель истории ЕГЭ в паре с Ирой Годуновой в Вебиуме.",
-      "score": 8.4,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://webium.ru/teachers/ira-godunova-ifil-sakharov/"
     },
     {
+      "id": 85,
       "school": "Вебиум",
       "name": "Даня Грэм",
       "subject": "Математика профильная",
@@ -1562,11 +1815,14 @@
         "Математика профильная"
       ],
       "description": "Преподаватель профильной математики ЕГЭ и ОГЭ в Вебиуме.",
-      "score": 8.4,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://webium.ru/teachers/matematika/"
     },
     {
+      "id": 86,
       "school": "Турбо ЕГЭ",
       "name": "Софья",
       "subject": "Русский язык",
@@ -1574,11 +1830,14 @@
         "Русский язык"
       ],
       "description": "4+ года опыта, 96 баллов на ЕГЭ, красный диплом филолога.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egeturbo.ru/teachers"
     },
     {
+      "id": 87,
       "school": "Турбо ЕГЭ",
       "name": "Инна",
       "subject": "Обществознание",
@@ -1586,11 +1845,14 @@
         "Обществознание"
       ],
       "description": "Каждый четвёртый ученик 80+, средний результат 72 в 2025 году.",
-      "score": 8.4,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egeturbo.ru/teachers"
     },
     {
+      "id": 88,
       "school": "Турбо ЕГЭ",
       "name": "Влад",
       "subject": "Математика профильная",
@@ -1598,11 +1860,14 @@
         "Математика профильная"
       ],
       "description": "15 стобалльников, прирост учеников 53 балла, 94 на собственном ЕГЭ.",
-      "score": 8.8,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egeturbo.ru/teachers"
     },
     {
+      "id": 89,
       "school": "Турбо ЕГЭ",
       "name": "Катя",
       "subject": "Математика базовая",
@@ -1610,11 +1875,14 @@
         "Математика базовая"
       ],
       "description": "С 2019 года, призёр всероссийских олимпиад.",
-      "score": 8.3,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egeturbo.ru/teachers"
     },
     {
+      "id": 90,
       "school": "Турбо ЕГЭ",
       "name": "Саша",
       "subject": "Математика базовая",
@@ -1622,11 +1890,14 @@
         "Математика базовая"
       ],
       "description": "9 из 10 учеников сдают на 4+, собственный профильный ЕГЭ — 99.",
-      "score": 8.4,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egeturbo.ru/teachers"
     },
     {
+      "id": 91,
       "school": "Турбо ЕГЭ",
       "name": "Таня",
       "subject": "Биология",
@@ -1634,11 +1905,14 @@
         "Биология"
       ],
       "description": "Средний балл учеников 76, собственный результат 91.",
-      "score": 8.4,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egeturbo.ru/teachers"
     },
     {
+      "id": 92,
       "school": "Турбо ЕГЭ",
       "name": "Соня",
       "subject": "Биология",
@@ -1646,11 +1920,14 @@
         "Биология"
       ],
       "description": "Средний результат учеников 74, собственный результат 96.",
-      "score": 8.4,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egeturbo.ru/teachers"
     },
     {
+      "id": 93,
       "school": "Турбо ЕГЭ",
       "name": "Костя",
       "subject": "Химия",
@@ -1658,11 +1935,14 @@
         "Химия"
       ],
       "description": "Победитель олимпиады «Ломоносов», готовит 90+ за полгода.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egeturbo.ru/teachers"
     },
     {
+      "id": 94,
       "school": "Турбо ЕГЭ",
       "name": "Лёша",
       "subject": "Химия",
@@ -1670,11 +1950,14 @@
         "Химия"
       ],
       "description": "Кандидат химических наук, эксперт ЕГЭ, 573 ученика сдали на 90+.",
-      "score": 8.9,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egeturbo.ru/teachers"
     },
     {
+      "id": 95,
       "school": "Турбо ЕГЭ",
       "name": "Слава",
       "subject": "Литература",
@@ -1682,11 +1965,14 @@
         "Литература"
       ],
       "description": "96 на ЕГЭ, средний результат учеников 84.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egeturbo.ru/teachers"
     },
     {
+      "id": 96,
       "school": "Турбо ЕГЭ",
       "name": "Алина",
       "subject": "Литература",
@@ -1694,11 +1980,14 @@
         "Литература"
       ],
       "description": "94 на ЕГЭ, призёр всероссийских олимпиад.",
-      "score": 8.4,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egeturbo.ru/teachers"
     },
     {
+      "id": 97,
       "school": "Турбо ЕГЭ",
       "name": "Арсений",
       "subject": "Информатика",
@@ -1706,11 +1995,14 @@
         "Информатика"
       ],
       "description": "Знает 4 языка программирования, собственный результат 90.",
-      "score": 8.4,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egeturbo.ru/teachers"
     },
     {
+      "id": 98,
       "school": "Турбо ЕГЭ",
       "name": "Вероника",
       "subject": "Информатика",
@@ -1718,11 +2010,14 @@
         "Информатика"
       ],
       "description": "90 на ЕГЭ, специалист по защите информации, автор научных статей.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egeturbo.ru/teachers"
     },
     {
+      "id": 99,
       "school": "Турбо ЕГЭ",
       "name": "Саша",
       "subject": "История",
@@ -1730,11 +2025,14 @@
         "История"
       ],
       "description": "Более 3 лет подготовки, выпускница Финансового университета, призёр олимпиад.",
-      "score": 8.4,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egeturbo.ru/teachers"
     },
     {
+      "id": 100,
       "school": "Турбо ЕГЭ",
       "name": "Алина",
       "subject": "Английский язык",
@@ -1742,11 +2040,14 @@
         "Английский язык"
       ],
       "description": "4 года опыта, диплом лингвиста-переводчика МГПУ, 93 на ЕГЭ.",
-      "score": 8.4,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egeturbo.ru/teachers"
     },
     {
+      "id": 101,
       "school": "Турбо ЕГЭ",
       "name": "Игорь",
       "subject": "Физика",
@@ -1754,11 +2055,14 @@
         "Физика"
       ],
       "description": "ИТМО, специалист по квантовой физике, средний балл учеников 78.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egeturbo.ru/teachers"
     },
     {
+      "id": 102,
       "school": "Турбо ЕГЭ",
       "name": "Лёня",
       "subject": "Физика",
@@ -1766,11 +2070,14 @@
         "Физика"
       ],
       "description": "26 стобалльников, каждый пятый ученик получает 80+.",
-      "score": 8.8,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egeturbo.ru/teachers"
     },
     {
+      "id": 103,
       "school": "ЕГЭLand",
       "name": "Саша Обществознайка",
       "subject": "Обществознание",
@@ -1778,11 +2085,14 @@
         "Обществознание"
       ],
       "description": "9 лет готовит к ЕГЭ по обществознанию. Магистр права; объясняет объёмную теорию через примеры, ассоциации и практику.",
-      "score": 9.0,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://el-ed.ru/obshhestvoznanie/"
     },
     {
+      "id": 104,
       "school": "ЕГЭLand",
       "name": "Ася Русичка",
       "subject": "Русский язык",
@@ -1790,11 +2100,14 @@
         "Русский язык"
       ],
       "description": "Более 9 лет готовит к ЕГЭ по русскому языку. В курсе разбирает тестовую часть и сочинение, закрепляя темы регулярной практикой.",
-      "score": 8.8,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://el-ed.ru/russkij-asya/"
     },
     {
+      "id": 105,
       "school": "ЕГЭLand",
       "name": "Ильяс Зморка",
       "subject": "Математика профильная",
@@ -1802,11 +2115,14 @@
         "Математика профильная"
       ],
       "description": "Готовит к профильной математике и является резидентом Яндекс Образования. На курсе сочетает разбор теории, задач и пробников.",
-      "score": 8.8,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://el-ed.ru/matematika-ilyass/"
     },
     {
+      "id": 106,
       "school": "ЕГЭLand",
       "name": "Маша Математичка",
       "subject": "Математика профильная",
@@ -1814,11 +2130,14 @@
         "Математика профильная"
       ],
       "description": "13 лет преподаёт профильную математику, подготовила более 8 800 учеников. Учит разбирать условия и выбирать способ решения без заучивания шаблонов.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://el-ed.ru/matematika-masha/"
     },
     {
+      "id": 107,
       "school": "ЕГЭLand",
       "name": "Вова Информатик",
       "subject": "Информатика",
@@ -1826,11 +2145,14 @@
         "Информатика"
       ],
       "description": "12 лет готовит к ЕГЭ по информатике. В программе — программирование, работа с таблицами и практика на заданиях экзамена.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://el-ed.ru/informatika-vova/"
     },
     {
+      "id": 108,
       "school": "ЕГЭLand",
       "name": "Даня Физик",
       "subject": "Физика",
@@ -1838,11 +2160,14 @@
         "Физика"
       ],
       "description": "10 лет готовит к ЕГЭ по физике, подготовил более 3 500 выпускников. Получил инженерное и математическое образование.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://el-ed.ru/fizika-danya/"
     },
     {
+      "id": 109,
       "school": "ЕГЭLand",
       "name": "Настя Кико",
       "subject": "Английский язык",
@@ -1850,11 +2175,14 @@
         "Английский язык"
       ],
       "description": "Подготовила к ЕГЭ по английскому более 20 000 учеников. Отдельно отрабатывает чтение, аудирование, письмо, говорение и лексику.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://el-ed.ru/anglijskij-nastya/"
     },
     {
+      "id": 110,
       "school": "ЕГЭLand",
       "name": "Юля Литра",
       "subject": "Литература",
@@ -1862,11 +2190,14 @@
         "Литература"
       ],
       "description": "7 лет готовит к ЕГЭ по литературе. Учит анализировать произведения, видеть авторскую позицию и выстраивать аргументы для сочинений.",
-      "score": 8.9,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://el-ed.ru/litra-yulya/"
     },
     {
+      "id": 111,
       "school": "ЕГЭLand",
       "name": "Оля Исторяшка",
       "subject": "История",
@@ -1874,11 +2205,14 @@
         "История"
       ],
       "description": "7 лет готовит к ЕГЭ по истории, прошла подготовку экспертов ФИПИ. Связывает даты и события в цельную картину и закрепляет их практикой.",
-      "score": 8.8,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://el-ed.ru/istoriya-olya/"
     },
     {
+      "id": 112,
       "school": "ЕГЭLand",
       "name": "Женя Химичка",
       "subject": "Химия",
@@ -1886,11 +2220,14 @@
         "Химия"
       ],
       "description": "Пять раз сдала ЕГЭ по химии на 100 баллов. Разбирает темы пошагово, показывает химические опыты и закрепляет материал задачами.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://el-ed.ru/himiya-zhenya/"
     },
     {
+      "id": 113,
       "school": "ЕГЭLand",
       "name": "Глеб Мендель",
       "subject": "Биология",
@@ -1898,11 +2235,14 @@
         "Биология"
       ],
       "description": "Более 7 лет преподаёт биологию. Врач-психиатр и клинический психолог; связывает экзаменационные темы с медицинской практикой.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://el-ed.ru/biologiya-mendel/"
     },
     {
+      "id": 114,
       "school": "СМИТАП",
       "name": "Эля Смит",
       "subject": "История",
@@ -1910,11 +2250,14 @@
         "История"
       ],
       "description": "Основательница школы и преподаватель истории, окончила истфак СПбГУ с красным дипломом и магистратуру ВШЭ. 603 стобалльника и десять лет в онлайн-образовании.",
-      "score": 9.1,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://smitup.ru/author_elyasmith"
     },
     {
+      "id": 115,
       "school": "СМИТАП",
       "name": "Неля Лотман",
       "subject": "Русский язык",
@@ -1922,11 +2265,14 @@
         "Русский язык"
       ],
       "description": "Преподаватель русского языка. 161 стобалльника и результаты 81+ у части выпускников.",
-      "score": 8.8,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://smitup.ru/"
     },
     {
+      "id": 116,
       "school": "СМИТАП",
       "name": "Оля Вебер",
       "subject": "Обществознание",
@@ -1934,11 +2280,14 @@
         "Обществознание"
       ],
       "description": "Преподаватель обществознания. 101 стобалльника и результаты 81+ у части выпускников.",
-      "score": 8.8,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://smitup.ru/"
     },
     {
+      "id": 117,
       "school": "СМИТАП",
       "name": "Регина Брайт",
       "subject": "Английский язык",
@@ -1946,11 +2295,14 @@
         "Английский язык"
       ],
       "description": "Преподаватель английского языка, девятый год готовит к ЕГЭ.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://smitup.ru/"
     },
     {
+      "id": 118,
       "school": "СМИТАП",
       "name": "Виля Брик",
       "subject": "Литература",
@@ -1958,11 +2310,14 @@
         "Литература"
       ],
       "description": "Преподаватель литературы. 427 стобалльников и высокий процент результатов 84+.",
-      "score": 8.9,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://smitup.ru/"
     },
     {
+      "id": 119,
       "school": "СМИТАП",
       "name": "Миша Гис",
       "subject": "Биология",
@@ -1970,11 +2325,14 @@
         "Биология"
       ],
       "description": "Преподаватель биологии, десятый год готовит к ЕГЭ. Публикует материалы и разборы по предмету.",
-      "score": 8.7,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://smitup.ru/"
     },
     {
+      "id": 120,
       "school": "СМИТАП",
       "name": "Лана Сильвер",
       "subject": "Химия",
@@ -1982,11 +2340,14 @@
         "Химия"
       ],
       "description": "Преподаватель химии, шесть лет в образовании; двух собственных результатах 100 баллов на ЕГЭ.",
-      "score": 8.7,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://smitup.ru/"
     },
     {
+      "id": 121,
       "school": "СМИТАП",
       "name": "Кирилл Нэш",
       "subject": "Математика профильная",
@@ -1994,11 +2355,14 @@
         "Математика профильная"
       ],
       "description": "Преподаватель профильной математики, десятый год готовит к ЕГЭ по данным школы.",
-      "score": 8.7,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://smitup.ru/"
     },
     {
+      "id": 122,
       "school": "СМИТАП",
       "name": "Артём Вольт",
       "subject": "Физика",
@@ -2006,11 +2370,14 @@
         "Физика"
       ],
       "description": "Преподаватель физики, десятый год готовит к ЕГЭ.",
-      "score": 8.7,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://smitup.ru/"
     },
     {
+      "id": 123,
       "school": "СМИТАП",
       "name": "Даня Байт",
       "subject": "Информатика",
@@ -2018,11 +2385,14 @@
         "Информатика"
       ],
       "description": "Преподаватель информатики, шестой год готовит к ЕГЭ.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://smitup.ru/"
     },
     {
+      "id": 124,
       "school": "PARTA",
       "name": "Майя Николаевна",
       "subject": "Русский язык",
@@ -2030,11 +2400,14 @@
         "Русский язык"
       ],
       "description": "11 лет готовит к экзаменам. Эксперт ЕГЭ по русскому языку, получила квалификацию учителя русского языка и литературы.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://partaonline.ru/prepodavateli/russkij/maya"
     },
     {
+      "id": 125,
       "school": "PARTA",
       "name": "Ильсур Газизов",
       "subject": "Физика",
@@ -2042,11 +2415,14 @@
         "Физика"
       ],
       "description": "7 лет готовит к экзаменам. Окончил физический факультет КФУ, имеет педагогическую квалификацию и работает ML-инженером.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://partaonline.ru/prepodavateli/fizika/ilsur"
     },
     {
+      "id": 126,
       "school": "PARTA",
       "name": "Яна Сабирова",
       "subject": "Информатика",
@@ -2054,11 +2430,14 @@
         "Информатика"
       ],
       "description": "9 лет готовит к экзаменам. Специалист по информационной безопасности и квалифицированный педагог; делает упор на Python и алгоритмы.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://partaonline.ru/prepodavateli/informatika/yana"
     },
     {
+      "id": 127,
       "school": "PARTA",
       "name": "Елена Другова",
       "subject": "Химия",
@@ -2066,11 +2445,14 @@
         "Химия"
       ],
       "description": "7 лет готовит к экзаменам. Эксперт ЕГЭ по химии, биотехнолог и учитель химии; сама сдала экзамен на 100 баллов.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://partaonline.ru/prepodavateli/himiya/elena"
     },
     {
+      "id": 128,
       "school": "PARTA",
       "name": "Амина Илалтдинова",
       "subject": "Биология",
@@ -2078,11 +2460,14 @@
         "Биология"
       ],
       "description": "7 лет готовит к экзаменам. Практикующий врач, призёр ВсОШ по биологии и трёхкратный победитель научных конференций.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://partaonline.ru/prepodavateli/biologiya/amina"
     },
     {
+      "id": 129,
       "school": "PARTA",
       "name": "Шамиль Гайнуллин",
       "subject": "Математика профильная",
@@ -2090,11 +2475,14 @@
         "Математика профильная"
       ],
       "description": "8 лет готовит к экзаменам. Аспирант, эксперт ОГЭ и член жюри олимпиад; учит понимать логику решения вместо заучивания.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://partaonline.ru/prepodavateli/matematika/shamil"
     },
     {
+      "id": 130,
       "school": "PARTA",
       "name": "Светлана Морева",
       "subject": "Литература",
@@ -2102,11 +2490,14 @@
         "Литература"
       ],
       "description": "5 лет готовит к экзаменам. Учитель русского языка и литературы, окончила КФУ; сама сдала ЕГЭ по литературе на 100 баллов.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://partaonline.ru/prepodavateli/literatura/svetlana"
     },
     {
+      "id": 131,
       "school": "PARTA",
       "name": "Юлия Горянкина",
       "subject": "Обществознание",
@@ -2114,11 +2505,14 @@
         "Обществознание"
       ],
       "description": "3 года готовит к ЕГЭ по обществознанию. Учится на юридическом факультете КФУ, сама сдала экзамен на 94 балла.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://partaonline.ru/prepodavateli/obshestvoznaniye/yuliya"
     },
     {
+      "id": 132,
       "school": "Skysmart",
       "name": "Екатерина Семгайкина",
       "subject": "Русский язык",
@@ -2126,11 +2520,14 @@
         "Русский язык"
       ],
       "description": "Методист программы подготовки к ЕГЭ по русскому языку; по данным Skysmart, работает в экзаменационной комиссии.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://skysmart.ru/courses/ege"
     },
     {
+      "id": 133,
       "school": "Skysmart",
       "name": "Ирина Назарова",
       "subject": "История",
@@ -2138,11 +2535,14 @@
         "История"
       ],
       "description": "Методист программ по истории и обществознанию; по данным Skysmart, работает в региональной экзаменационной комиссии.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://skysmart.ru/courses/ege"
     },
     {
+      "id": 134,
       "school": "Skysmart",
       "name": "Ирина Стародубцева",
       "subject": "Английский язык",
@@ -2150,11 +2550,14 @@
         "Английский язык"
       ],
       "description": "Методист программы подготовки к ЕГЭ по английскому языку в Skysmart.",
-      "score": 8.5,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://skysmart.ru/courses/ege"
     },
     {
+      "id": 135,
       "school": "Школково",
       "name": "Алипаша Бабаев",
       "subject": "Математика профильная",
@@ -2162,11 +2565,14 @@
         "Математика профильная"
       ],
       "description": "Преподаёт с 2012 года. Выпускник бакалавриата и магистратуры МФТИ, эксперт ЕГЭ по профильной математике.",
-      "score": 8.8,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://t.me/egenaprogib"
     },
     {
+      "id": 136,
       "school": "Школково",
       "name": "Артём Кондрашкин",
       "subject": "Физика",
@@ -2174,11 +2580,14 @@
         "Физика"
       ],
       "description": "10 лет готовит к ЕГЭ, ОГЭ и олимпиадам. Руководит направлением физики; трижды сдавал ЕГЭ по физике на 100 баллов.",
-      "score": 8.8,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://t.me/AV_EGE"
     },
     {
+      "id": 137,
       "school": "Школково",
       "name": "Илья Хистракторович",
       "subject": "История",
@@ -2186,11 +2595,14 @@
         "История"
       ],
       "description": "Преподаёт историю и обществознание. Приглашённый лектор МГУ, НИУ ВШЭ и бизнес-школы Сколково, научный редактор книг Леонида Парфёнова.",
-      "score": 8.7,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://t.me/histructor"
     },
     {
+      "id": 138,
       "school": "ЕГЭ Налегке",
       "name": "Альбина Маратовна",
       "subject": "Обществознание",
@@ -2198,11 +2610,14 @@
         "Обществознание"
       ],
       "description": "Основательница школы, кандидат политических наук. Более 16 лет готовит к ЕГЭ по обществознанию и имеет опыт проверки экзаменационных работ.",
-      "score": 9.0,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egenalegke.ru/"
     },
     {
+      "id": 139,
       "school": "ЕГЭ Налегке",
       "name": "Виталий Николаевич",
       "subject": "История",
@@ -2210,11 +2625,14 @@
         "История"
       ],
       "description": "Дипломированный историк, выпускник СПбГУ с красным дипломом. Сам сдал ЕГЭ на 100 баллов и участвует в создании годового курса по истории.",
-      "score": 8.7,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egenalegke.ru/"
     },
     {
+      "id": 140,
       "school": "ЕГЭ Налегке",
       "name": "Олеся Витальевна",
       "subject": "История",
@@ -2222,11 +2640,14 @@
         "История"
       ],
       "description": "Историк по образованию, более 15 лет готовит к ЕГЭ и олимпиадам. Создала авторский тренажёр и ведёт волонтёрский проект «Культурный код».",
-      "score": 8.7,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egenalegke.ru/"
     },
     {
+      "id": 141,
       "school": "ЕГЭ Налегке",
       "name": "Алина Коданова",
       "subject": "Обществознание",
@@ -2234,11 +2655,14 @@
         "Обществознание"
       ],
       "description": "Политолог, выпускница НИУ ВШЭ и руководитель отдела проверки. Ведёт дополнительные вебинары и уроки по российским реалиям.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://egenalegke.ru/"
     },
     {
+      "id": 142,
       "school": "StudyCats",
       "name": "Мария Селиверстова",
       "subject": "История",
@@ -2246,11 +2670,14 @@
         "История"
       ],
       "description": "Создательница «Истории и котиков» и соосновательница StudyCats. Более семи лет готовит к ЕГЭ и строит курс вокруг связного объяснения событий и регулярной практики.",
-      "score": 8.9,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://historyandcats.ru/"
     },
     {
+      "id": 143,
       "school": "StudyCats",
       "name": "Алина Грачёва",
       "subject": "Английский язык",
@@ -2258,11 +2685,14 @@
         "Английский язык"
       ],
       "description": "Более семи лет готовит к ЕГЭ, имеет сертификат CELTA и прошла обучение по оцениванию работ ЕГЭ. Курс охватывает все части экзамена и рассчитан на уровни A2–B2.",
-      "score": 8.8,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://studycats.ru/"
     },
     {
+      "id": 144,
       "school": "StudyCats",
       "name": "Карина Горшкова",
       "subject": "Обществознание",
@@ -2270,11 +2700,14 @@
         "Обществознание"
       ],
       "description": "Десять лет готовит к ЕГЭ по обществознанию. Окончила бакалавриат и магистратуру политологии МГУ и прошла обучение экспертов ФИПИ.",
-      "score": 8.8,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://studycats.ru/"
     },
     {
+      "id": 145,
       "school": "StudyCats",
       "name": "Мила Боженова",
       "subject": "Математика профильная",
@@ -2282,11 +2715,14 @@
         "Математика профильная"
       ],
       "description": "Более семи лет готовит к ЕГЭ и ОГЭ. Окончила ИТМО с красным дипломом и имеет два высших математических образования.",
-      "score": 8.7,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://studycats.ru/"
     },
     {
+      "id": 146,
       "school": "StudyCats",
       "name": "Лилия Бочкарева",
       "subject": "Русский язык",
@@ -2294,11 +2730,14 @@
         "Русский язык"
       ],
       "description": "Семь лет готовит к ЕГЭ по русскому языку. Имеет два профильных высших образования и проходила подготовку экспертов ФИПИ в 2024 и 2025 годах.",
-      "score": 8.9,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://russianandcats.ru/"
     },
     {
+      "id": 147,
       "school": "StudyCats",
       "name": "Марина Пэкэлэу",
       "subject": "Литература",
@@ -2306,11 +2745,14 @@
         "Литература"
       ],
       "description": "Восемь лет готовит к ЕГЭ и ОГЭ по литературе, четыре раза сдавала ЕГЭ на 100 баллов. В программе — полный кодификатор, повторение и практика сочинений.",
-      "score": 8.8,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://studycats.ru/"
     },
     {
+      "id": 148,
       "school": "StudyCats",
       "name": "Влада Жабинская",
       "subject": "Химия",
@@ -2318,11 +2760,14 @@
         "Химия"
       ],
       "description": "Семь лет готовит к ЕГЭ по химии. По образованию биотехнолог, окончила вуз с красным дипломом и проходила курсы экспертов ЕГЭ.",
-      "score": 8.7,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://studycats.ru/"
     },
     {
+      "id": 149,
       "school": "StudyCats",
       "name": "Татьяна Модина",
       "subject": "Биология",
@@ -2330,11 +2775,14 @@
         "Биология"
       ],
       "description": "Восемь лет преподаёт и готовит к экзаменам. Окончила РХТУ имени Менделеева с красным дипломом и подтвердила экспертный уровень в МЦКО.",
-      "score": 8.7,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://studycats.ru/"
     },
     {
+      "id": 150,
       "school": "StudyCats",
       "name": "Алексей Мелкозеров",
       "subject": "Информатика",
@@ -2342,11 +2790,14 @@
         "Информатика"
       ],
       "description": "Пять лет преподаёт программирование, работал backend-разработчиком и создавал игры на Unity и Python. На курсе объясняет алгоритмы и программирование с базового уровня.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://studycats.ru/"
     },
     {
+      "id": 151,
       "school": "NeoFamily",
       "name": "Андрей Фомин",
       "subject": "Биология",
@@ -2354,11 +2805,14 @@
         "Биология"
       ],
       "description": "Создатель платформы NeoFamily и автор «Умного справочника». Преподаёт восемь лет; на годовом курсе ведёт живые вебинары по биологии.",
-      "score": 8.9,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://neofamily.ru/shop/biologiya-god"
     },
     {
+      "id": 152,
       "school": "NeoFamily",
       "name": "Нурлан Жангалиев",
       "subject": "Биология",
@@ -2366,11 +2820,14 @@
         "Биология"
       ],
       "description": "Дважды сдавал ЕГЭ по биологии на 100 баллов, преподаёт десятый год и учится в аспирантуре по клеточной биологии. На курсе записывает короткие видеоуроки для повторения.",
-      "score": 9.0,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://neofamily.ru/shop/biologiya-god"
     },
     {
+      "id": 153,
       "school": "NeoFamily",
       "name": "Юлиан Рыжов",
       "subject": "Химия",
@@ -2378,11 +2835,14 @@
         "Химия"
       ],
       "description": "Готовит к ЕГЭ с 2013 года, кандидат медицинских наук и выпускник Первого медицинского университета с красным дипломом. 154 стобалльника за всё время.",
-      "score": 9.2,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://neofamily.ru/shop/himiya-god"
     },
     {
+      "id": 154,
       "school": "NeoFamily",
       "name": "Дима Щербина",
       "subject": "Химия",
@@ -2390,11 +2850,14 @@
         "Химия"
       ],
       "description": "Десять лет готовит к ЕГЭ, окончил бакалавриат и магистратуру РГПУ имени Герцена с отличием по направлению «Химическое образование». Проводит опыты прямо на вебинарах.",
-      "score": 8.9,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://neofamily.ru/shop/himiya-dima-god"
     },
     {
+      "id": 155,
       "school": "NeoFamily",
       "name": "Ян Ожегов",
       "subject": "Русский язык",
@@ -2402,11 +2865,14 @@
         "Русский язык"
       ],
       "description": "Готовит к ЕГЭ с 2016 года, магистр лингвистики СПбГУ. 111 стобалльников; годовой курс включает вебинары, практикумы, диктанты и контрольные работы.",
-      "score": 9.0,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://neofamily.ru/shop/russkiy-yazyk-god"
     },
     {
+      "id": 156,
       "school": "Морозилка",
       "name": "Дядя Тоша",
       "subject": "Русский язык",
@@ -2414,11 +2880,14 @@
         "Русский язык"
       ],
       "description": "Дипломированный филолог, окончил СГУ имени Питирима Сорокина с красным дипломом и преподаёт пять лет. 2 100+ выпускников и 700+ результатов 85+.",
-      "score": 8.7,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://school.morozilka.site/godovoy"
     },
     {
+      "id": 157,
       "school": "Морозилка",
       "name": "Папа Даня",
       "subject": "Математика профильная",
@@ -2426,11 +2895,14 @@
         "Математика профильная"
       ],
       "description": "Основатель школы Даниил Морозов, выпускник физфака НИУ ВШЭ. Преподаёт шесть лет; личный результат — 98 баллов по профильной математике.",
-      "score": 8.8,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://t.me/morozilka_math"
     },
     {
+      "id": 158,
       "school": "Морозилка",
       "name": "Профессор Ден",
       "subject": "Физика",
@@ -2438,11 +2910,14 @@
         "Физика"
       ],
       "description": "Готовит к ЕГЭ с 2015 года, сдал экзамен по физике на 100 баллов и окончил РГУ нефти и газа имени Губкина. Ведёт открытые разборы задач и годовой курс.",
-      "score": 8.6,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://t.me/professorfos"
     },
     {
+      "id": 159,
       "school": "Морозилка",
       "name": "Граф Марат",
       "subject": "Информатика",
@@ -2450,7 +2925,9 @@
         "Информатика"
       ],
       "description": "Готовит к ЕГЭ с 2021 года, дважды сдавал информатику на 100 баллов и составляет варианты СтатГрад. средний балл его учеников 91,7.",
-      "score": 8.7,
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
       "criteria": {},
       "url": "https://school.morozilka.site/godovoy"
     }

@@ -18,7 +18,7 @@ string and replace the SQLAlchemy prefix with `postgresql+asyncpg://`.
 
 After the data migration:
 
-1. Run `select public.refresh_rating_snapshots();` once.
+1. Run `select public.refresh_all_rating_snapshots();` once.
 2. Enable Supabase Cron.
 3. Schedule the function using the commented statement in migration 003.
 4. Verify that `anon` can select active catalog rows and rating snapshots but

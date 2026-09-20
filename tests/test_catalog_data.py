@@ -67,4 +67,7 @@ def test_teacher_directory_opens_full_profile_with_criteria_and_external_link():
     assert "teacherDetails" in script
     assert "Оценки учеников" in script
     assert "Перейти в профиль преподавателя" in script
-    assert all(label in script for label in ("Объяснение материала", "Практика и разбор ошибок", "Обратная связь"))
+    assert all(label in script for label in (
+        "Объяснение материала", "Практика и разбор ошибок",
+        "Атмосфера и вовлечённость", "Структура и темп занятий", "Польза для экзамена",
+    ))

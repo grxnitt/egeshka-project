@@ -22,8 +22,8 @@ for school_id, row in enumerate(SEED, start=1):
         'score': round(sum(row[key] * weight for key, weight in BASE_WEIGHTS.items()), 1),
     })
 catalog = {'schools': schools, 'teachers': [
-    {'school': t[0], 'name': t[1], 'subject': t[2], 'subjects': t[2].split(' / '), 'description': teacher_description(t[3]), 'score': t[4], 'criteria': {}, 'url': t[6]}
-    for t in TEACHERS
+    {'id': teacher_id, 'school': t[0], 'name': t[1], 'subject': t[2], 'subjects': t[2].split(' / '), 'description': teacher_description(t[3]), 'studentScore': None, 'verifiedReviewCount': 0, 'isPreliminary': True, 'criteria': {}, 'url': t[6]}
+    for teacher_id, t in enumerate(TEACHERS, start=1)
 ]}
 Path(__file__).with_name('catalog.json').write_text(json.dumps(catalog, ensure_ascii=False, indent=2) + '\n')
 
