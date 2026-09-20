@@ -633,3 +633,29 @@ main>.quiz-return{margin:20px 5% 0}
 .criteria-ribbon-overpass{stroke:var(--blush)}
 .criteria-ribbon-overpass-copy{fill:#7f2e50}
 .criteria-ribbon-knot{fill:var(--blush)}
+
+/* The ribbon continues as sparse fragments through key sections. */
+.section-thread{
+  position:absolute;
+  z-index:0;
+  display:block;
+  overflow:visible;
+  pointer-events:none;
+}
+.section-thread path{
+  fill:none;
+  stroke:var(--blush);
+  stroke-width:28px;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.compare-thread{right:-72px;top:118px;width:360px;height:560px;opacity:.72}
+.reviews:after{display:none!important}
+.reviews-thread{right:-154px;top:-38px;width:430px;height:300px;opacity:.8}
+.reviews>.review-heading,.reviews>.review-copy{position:relative;z-index:1}
+
+@media(max-width:700px){
+  .section-thread path{stroke-width:20px}
+  .compare-thread{right:-155px;top:112px;width:300px;height:470px;opacity:.64}
+  .reviews-thread{right:-205px;top:-24px;width:340px;height:238px;opacity:.72}
+}
