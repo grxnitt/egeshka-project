@@ -560,25 +560,25 @@ main>.quiz-return{margin:20px 5% 0}
   width:120px;
   min-height:120px;
   padding:18px 14px;
-  align-items:center;
-  justify-content:center;
+  align-items:flex-start;
+  justify-content:space-between;
   flex-direction:column;
   gap:12px;
   border:0;
   border-radius:18px;
   background:var(--blush);
   color:#812a50;
-  text-align:center;
+  text-align:left;
 }
-.teacher-directory-count strong{font:750 42px/1 var(--font-ui);font-variant-numeric:tabular-nums}
-.teacher-directory-count span{font:650 12px/1.15 var(--font-ui)}
+.teacher-directory-count strong{font:800 44px/.9 var(--font-ui);font-variant-numeric:tabular-nums;letter-spacing:-.04em}
+.teacher-directory-count span{font:650 12px/1.15 var(--font-ui);letter-spacing:-.01em}
 
 @media(max-width:700px){
   .hero-centered .hero-glow{width:340px;height:340px;opacity:.46;filter:blur(2px)}
   .hero-centered .hero-glow-blue{left:-125px;top:110px}
   .hero-centered .hero-glow-pink{right:-95px;bottom:70px;opacity:.42}
   .teacher-directory-head{grid-template-columns:minmax(0,1fr) 104px;gap:14px;align-items:end}
-  .teacher-directory-count{width:104px;min-height:104px;padding:14px 10px;border-radius:16px;gap:9px;justify-self:end}
-  .teacher-directory-count strong{font-size:36px}
-  .teacher-directory-count span{font-size:11px}
+  .teacher-directory-count{width:104px;min-height:104px;padding:15px 13px;border-radius:16px;gap:9px;justify-self:end}
+  .teacher-directory-count strong{font-size:38px}
+  .teacher-directory-count span{font-size:10px}
 }
