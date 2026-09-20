@@ -1,5 +1,5 @@
 import { decisionFields, schoolContent, schoolFilters } from './school-content.js?v=26';
-import { applyLiveRatings, ratingBreakdown, ratingMark } from './supabase-client.js?v=2';
+import { applyLiveRatings, ratingBreakdown, ratingMark } from './supabase-client.js?v=3';
 const $ = selector => document.querySelector(selector);
 const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = n => Number(n).toFixed(1).replace('.', ',');
