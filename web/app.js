@@ -1,4 +1,4 @@
-import { decisionFields, priceContext, schoolContent } from './school-content.js?v=26';
+import { decisionFields, priceContext, schoolContent } from './school-content.js?v=28';
 import { priceDetails, relativeStrengths } from './comparison.js?v=22';
 import { applyLiveRatings, ratingBreakdown, ratingMark, teacherRatingLabel } from './supabase-client.js?v=4';
 const $ = (selector) => document.querySelector(selector);

@@ -1,4 +1,4 @@
-import {priceDetails} from './comparison.js?v=22';
+import {priceDetails} from './comparison.js?v=23';
 export const schoolContent={
  'Умскул':{fit:'Нужен годовой план с эфирами, записями и практикой на одной платформе.',format:'8–16 занятий в месяц в зависимости от предмета; годовой курс.',caution:'Сравни расписание и тариф именно своего преподавателя.',scope:'ЕГЭ-2027 · годовой курс; предмет и тариф для этой цены не уточнены',checked:'16 сентября 2026'},
  '100балльный репетитор':{fit:'Хочешь выбрать конкретного преподавателя и уровень сопровождения.',format:'Вебинары, записи, практика и пробники; программа по блокам.',caution:'Входной блок за 990 ₽ не равен полной программе подготовки.',scope:'ЕГЭ · входной тариф за блок; цена зависит от предмета и преподавателя',checked:'16 сентября 2026'},
@@ -42,5 +42,5 @@ export const schoolFilters={
  'Инсперия':{priceFrom:5090,lessons:['live','recorded'],curator:true,feedback:true}
 };
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-export function decisionFields(school){const c=schoolContent[school.name],p=priceDetails[school.name];if(!c)return `<p>${esc(school.description)}</p>`;return `<dl class="school-decision"><div><dt>Подойдёт, если</dt><dd>${esc(c.fit)}</dd></div><div><dt>Формат</dt><dd>${esc(c.format)}</dd></div><div><dt>Цена</dt><dd>${esc(p.period)}<small class="card-price-scope">${esc(c.scope)}</small></dd></div></dl>`;}
+export function decisionFields(school){const c=schoolContent[school.name],p=priceDetails[school.name];if(!c)return `<p>${esc(school.description)}</p>`;const period=p?.period||school.price||'Уточнить у школы';return `<dl class="school-decision"><div><dt>Подойдёт, если</dt><dd>${esc(c.fit)}</dd></div><div><dt>Формат</dt><dd>${esc(c.format)}</dd></div><div><dt>Цена</dt><dd>${esc(period)}<small class="card-price-scope">${esc(c.scope)}</small></dd></div></dl>`;}
 export function priceContext(school){const c=schoolContent[school.name];return `<div class="price-provenance"><p>${esc(c?.scope||'Предмет и тариф не уточнены')}</p><p>${c?.checked?`Цена проверена ${esc(c.checked)}.`:'Дата проверки цены не зафиксирована.'}</p><a href="${esc(school.url)}" target="_blank" rel="noopener">Уточнить на официальном сайте ↗</a></div>`;}
