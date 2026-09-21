@@ -1,0 +1,11 @@
+{
+  "name": "ЕГЭшка",
+  "short_name": "ЕГЭшка",
+  "description": "Сравнение онлайн-школ и преподавателей для подготовки к ЕГЭ",
+  "lang": "ru",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF8F5",
+  "theme_color": "#FAF8F5",
+  "icons": [{"src": "/assets/egeshka-logo-icon.svg", "sizes": "any", "type": "image/svg+xml"}]
+}

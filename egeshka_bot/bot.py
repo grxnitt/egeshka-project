@@ -13,7 +13,7 @@ from html import escape
 from sqlalchemy import func, select
 
 from .config import Settings
-from .db import SCHOOL_REVIEW_SLUGS, get_or_create_user
+from .db import SCHOOL_REVIEW_SLUGS, delete_user_data, get_or_create_user
 from .models import Course, Event, Review, ReviewCriterionScore, School, Teacher
 from .scoring import QuizProfile, school_score
 
@@ -169,6 +169,7 @@ def menu():
              InlineKeyboardButton(text="🏫 Школы", callback_data="schools")],
             [InlineKeyboardButton(text="🏆 Рейтинг", callback_data="rating")],
             [InlineKeyboardButton(text="📰 Канал", callback_data="channel")],
+            [InlineKeyboardButton(text="🔐 Мои данные", callback_data="my_data")],
         ]
     )
 
@@ -942,10 +943,24 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
 
     @dp.message(CommandStart())
     async def start(message: Message, state: FSMContext):
+        payload = message.text.split(maxsplit=1)[1] if message.text and " " in message.text else ""
+        if payload == "delete_data":
+            await state.clear()
+            await message.answer(
+                "🔐 <b>Твои данные</b>\n\n"
+                "Можно удалить профиль в ЕГЭшке, отправленные отзывы, оценки по критериям, ссылки на подтверждения и историю действий в боте. "
+                "После удаления вклад этих отзывов исчезнет из пользовательской части рейтинга.\n\n"
+                "Сообщения в самом чате Telegram управляются приложением Telegram и в базу ЕГЭшки не входят.",
+                reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text="Удалить мои данные", callback_data="delete_data_request")],
+                    [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
+                ]),
+                parse_mode=ParseMode.HTML,
+            )
+            return
         await track(message.from_user.id, "start")
         async with session_factory() as session:
             await get_or_create_user(session, message.from_user.id)
-        payload = message.text.split(maxsplit=1)[1] if message.text and " " in message.text else ""
         if payload.startswith("review_"):
             school_name = SCHOOL_BY_REVIEW_SLUG.get(payload.removeprefix("review_"))
             if school_name:
@@ -997,6 +1012,64 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             "Привет! Я ЕГЭшка — помогу выбрать школу и преподавателя для ЕГЭ. Здесь можно пройти подбор, посмотреть оценки по критериям, сравнить школы и преподавателей и оставить свой отзыв.",
             reply_markup=menu(),
         )
+
+    async def show_data_controls(message: Message, edit: bool = False):
+        text_value = (
+            "🔐 <b>Твои данные</b>\n\n"
+            "Здесь можно удалить профиль в ЕГЭшке, отправленные отзывы, оценки по критериям, ссылки на подтверждения и историю действий в боте. "
+            "После удаления вклад этих отзывов исчезнет из пользовательской части рейтинга.\n\n"
+            "Сообщения в самом чате Telegram управляются приложением Telegram и в базу ЕГЭшки не входят."
+        )
+        keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="Удалить мои данные", callback_data="delete_data_request")],
+            [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
+        ])
+        if edit:
+            await message.edit_text(text_value, reply_markup=keyboard, parse_mode=ParseMode.HTML)
+        else:
+            await message.answer(text_value, reply_markup=keyboard, parse_mode=ParseMode.HTML)
+
+    @dp.message(Command("delete_data"))
+    async def delete_data_command(message: Message, state: FSMContext):
+        await state.clear()
+        await show_data_controls(message)
+
+    @dp.callback_query(F.data == "my_data")
+    async def my_data(call: CallbackQuery, state: FSMContext):
+        await state.clear()
+        await show_data_controls(call.message, edit=True)
+        await call.answer()
+
+    @dp.callback_query(F.data == "delete_data_request")
+    async def delete_data_request(call: CallbackQuery):
+        await call.message.edit_text(
+            "<b>Удалить все данные без возможности восстановления?</b>\n\n"
+            "Будут удалены профиль, отзывы, поставленные оценки, ссылки на подтверждения и история действий. "
+            "Если позже снова открыть бота, будет создан новый пустой профиль.",
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text="Да, удалить всё", callback_data="delete_data_confirm")],
+                [InlineKeyboardButton(text="Отмена", callback_data="menu")],
+            ]),
+            parse_mode=ParseMode.HTML,
+        )
+        await call.answer()
+
+    @dp.callback_query(F.data == "delete_data_confirm")
+    async def delete_data_confirm(call: CallbackQuery, state: FSMContext):
+        await state.clear()
+        async with session_factory() as session:
+            result = await delete_user_data(session, call.from_user.id)
+        if result["users"] or result["reviews"] or result["events"]:
+            text_value = "Данные удалены. Профиль, отзывы, оценки, ссылки на подтверждения и история действий больше не хранятся в базе ЕГЭшки."
+        else:
+            text_value = "В базе ЕГЭшки уже нет данных, связанных с твоим Telegram-профилем."
+        await call.message.edit_text(
+            text_value,
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text="Начать заново", callback_data="menu")],
+            ]),
+        )
+        await call.answer("Готово")
 
     @dp.callback_query(F.data == "menu")
     async def to_menu(call: CallbackQuery, state: FSMContext):

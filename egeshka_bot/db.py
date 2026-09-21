@@ -2,10 +2,10 @@ from datetime import datetime
 import json
 from typing import Optional
 
-from sqlalchemy import inspect, select, text
+from sqlalchemy import delete, inspect, select, text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
-from .models import Base, Course, Review, School, Teacher, User
+from .models import Base, Course, Event, Review, ReviewCriterionScore, School, Teacher, User
 from .subjects import BASE_SCHOOL_SOURCES, teacher_exam_subject
 
 
@@ -1365,3 +1365,48 @@ async def get_or_create_user(session: AsyncSession, telegram_id: int) -> User:
         session.add(user)
         await session.commit()
     return user
+
+
+async def delete_user_data(session: AsyncSession, telegram_id: int) -> dict[str, int]:
+    """Delete every row tied to a Telegram user and refresh public ratings.
+
+    The operation is deliberately idempotent: asking twice leaves the database
+    in the same state and reports zero deleted records on the second attempt.
+    """
+    user = (await session.execute(
+        select(User).where(User.telegram_id == telegram_id)
+    )).scalar_one_or_none()
+    review_ids: list[int] = []
+    if user:
+        review_ids = list((await session.execute(
+            select(Review.id).where(Review.user_id == user.id)
+        )).scalars())
+        if review_ids:
+            await session.execute(
+                delete(ReviewCriterionScore).where(ReviewCriterionScore.review_id.in_(review_ids))
+            )
+            await session.execute(delete(Review).where(Review.user_id == user.id))
+        await session.delete(user)
+
+    deleted_events = (await session.execute(
+        delete(Event).where(Event.telegram_id == telegram_id)
+    )).rowcount or 0
+    await session.commit()
+
+    # PostgreSQL serves cached snapshots to the website. Refresh them after an
+    # approved review disappears so the public score does not stay stale until
+    # the nightly job. SQLite is used locally and calculates ratings live.
+    if session.bind and session.bind.dialect.name == "postgresql" and review_ids:
+        try:
+            await session.execute(text("select public.refresh_all_rating_snapshots()"))
+            await session.commit()
+        except Exception:
+            # Deletion itself is already committed. The scheduled refresh is a
+            # safe fallback if this database role cannot execute the function.
+            await session.rollback()
+
+    return {
+        "users": 1 if user else 0,
+        "reviews": len(review_ids),
+        "events": int(deleted_events),
+    }
