@@ -20,7 +20,7 @@ def test_price_quality_was_replaced_everywhere_in_seed():
 def test_new_school_teacher_cards_are_available():
     names = ("PARTA", "Skysmart", "Школково", "ЕГЭ Налегке", "StudyCats", "NeoFamily", "Морозилка")
     counts = {name: sum(teacher[0] == name for teacher in TEACHERS) for name in names}
-    assert counts == {"PARTA": 8, "Skysmart": 3, "Школково": 3, "ЕГЭ Налегке": 3, "StudyCats": 9, "NeoFamily": 5, "Морозилка": 4}
+    assert counts == {"PARTA": 8, "Skysmart": 0, "Школково": 3, "ЕГЭ Налегке": 3, "StudyCats": 9, "NeoFamily": 5, "Морозилка": 4}
 
 
 def test_teacher_subjects_are_listed_by_their_school():

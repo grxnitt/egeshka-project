@@ -2540,51 +2540,6 @@
       "url": "https://partaonline.ru/prepodavateli/obshestvoznaniye/yuliya"
     },
     {
-      "id": 134,
-      "school": "Skysmart",
-      "name": "Екатерина Семгайкина",
-      "subject": "Русский язык",
-      "subjects": [
-        "Русский язык"
-      ],
-      "description": "Методист программы подготовки к ЕГЭ по русскому языку; по данным Skysmart, работает в экзаменационной комиссии.",
-      "studentScore": null,
-      "verifiedReviewCount": 0,
-      "isPreliminary": true,
-      "criteria": {},
-      "url": "https://skysmart.ru/courses/ege"
-    },
-    {
-      "id": 135,
-      "school": "Skysmart",
-      "name": "Ирина Назарова",
-      "subject": "История",
-      "subjects": [
-        "История"
-      ],
-      "description": "Методист программ по истории и обществознанию; по данным Skysmart, работает в региональной экзаменационной комиссии.",
-      "studentScore": null,
-      "verifiedReviewCount": 0,
-      "isPreliminary": true,
-      "criteria": {},
-      "url": "https://skysmart.ru/courses/ege"
-    },
-    {
-      "id": 136,
-      "school": "Skysmart",
-      "name": "Ирина Стародубцева",
-      "subject": "Английский язык",
-      "subjects": [
-        "Английский язык"
-      ],
-      "description": "Методист программы подготовки к ЕГЭ по английскому языку в Skysmart.",
-      "studentScore": null,
-      "verifiedReviewCount": 0,
-      "isPreliminary": true,
-      "criteria": {},
-      "url": "https://skysmart.ru/courses/ege"
-    },
-    {
       "id": 137,
       "school": "Школково",
       "name": "Алипаша Бабаев",
