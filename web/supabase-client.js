@@ -58,7 +58,7 @@ export async function applyLiveRatings(catalog) {
   return catalog;
 }
 
-export const teacherRatingLabel = teacher => teacher.studentScore == null ? 'Оценка формируется' : `${Number(teacher.studentScore).toFixed(1).replace('.', ',')}/5${teacher.isPreliminary?'*':''}`;
+export const teacherRatingLabel = teacher => teacher.studentScore == null ? 'Оценка формируется' : `${Number(teacher.studentScore).toFixed(1).replace('.', ',')}/10${teacher.isPreliminary?'*':''}`;
 
 export const ratingMark = school => school.isPreliminary ? '*' : '';
 
@@ -66,7 +66,7 @@ export function ratingBreakdown(school) {
   if (school.isPreliminary || school.verifiedUserScore == null) {
     return '';
   }
-  const editorial = (Number(school.editorialScore) / 2).toFixed(1).replace('.', ',');
+  const editorial = Number(school.editorialScore).toFixed(1).replace('.', ',');
   const users = Number(school.verifiedUserScore).toFixed(1).replace('.', ',');
-  return `<p class="rating-breakdown"><b>Из чего сложился балл</b><span>Редакция: ${editorial}/5 · Ученики: ${users}/5 · ${Number(school.verifiedReviewCount)} подтверждённых</span></p>`;
+  return `<p class="rating-breakdown"><b>Из чего сложился балл</b><span>Редакция: ${editorial}/10 · Ученики: ${users}/10 · ${Number(school.verifiedReviewCount)} подтверждённых</span></p>`;
 }

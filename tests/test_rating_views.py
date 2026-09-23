@@ -35,7 +35,7 @@ def test_school_total_is_preliminary_without_student_reviews():
 def test_school_total_waits_for_three_verified_reviews_and_uses_confidence_weight():
     assert school_total_score(school(), 2.0, 2) == (8.0, True)
     total, preliminary = school_total_score(school(), 2.0, 10)
-    assert total == 7.0
+    assert total == 4.0
     assert preliminary is False
 
 
@@ -60,8 +60,8 @@ def test_teacher_rating_is_student_only_average_of_five_criteria():
     stats = {field: (score, 4) for (field, _), score in zip(TEACHER_CRITERIA, (5, 4, 4.5, 3.5, 4))}
 
     assert teacher_rating_from_criteria(stats) == (4.2, 4)
-    assert "4,2/5*" in teacher_rating_text(stats)
-    assert "/10" not in teacher_rating_text(stats)
+    assert "4,2/10*" in teacher_rating_text(stats)
+    assert "/5" not in teacher_rating_text(stats)
 
 
 def test_teacher_rating_waits_for_three_complete_verified_reviews():

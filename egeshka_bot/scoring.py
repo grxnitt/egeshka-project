@@ -12,6 +12,15 @@ BASE_WEIGHTS = {
     "organization_score": 0.14,
 }
 
+CRITERION_LABELS = {
+    "teachers_score": "преподаватели",
+    "practice_score": "практика",
+    "feedback_score": "проверка работ",
+    "curator_score": "кураторы",
+    "platform_score": "платформа",
+    "workload_score": "нагрузка и темп",
+    "organization_score": "организация обучения",
+}
 
 PRIORITY_TO_FIELD = {
     "teacher": "teachers_score",
@@ -37,57 +46,100 @@ def _offered_subjects(school):
     return {s.strip().lower() for s in school.subjects.split(",") if s.strip()}
 
 
-def school_score(school, profile: QuizProfile) -> Tuple[float, list]:
-    if profile.subject.lower() not in _offered_subjects(school):
-        return -1, ["не готовит по выбранному предмету"]
+def _personalized_weights(profile: QuizProfile) -> dict:
+    """Reweight the editorial criteria toward what this student's answers say
+    matters most to them, then renormalize so weights still sum to 1.
 
-    score = 0.0
-    reasons = []
-    for key, weight in BASE_WEIGHTS.items():
-        score += float(getattr(school, key, 0)) * weight * 10
-
-    if profile.budget is not None and profile.subject != "математика базовая":
-        if school.monthly_price_from <= 0:
-            pass
-        elif school.monthly_price_from <= profile.budget:
-            score += 8
-            reasons.append("входит в бюджет")
-        else:
-            penalty = min(18, (school.monthly_price_from - profile.budget) / max(profile.budget, 1) * 12)
-            score -= penalty
-            reasons.append("может быть выше бюджета")
-
-    if profile.curator_need >= 3:
-        score += float(school.curator_score) * 0.8
-        if school.curator_score >= 8:
-            reasons.append("сильное сопровождение")
-
-    if profile.control_need >= 3:
-        score += (float(school.feedback_score) + float(school.practice_score)) * 0.35
-        reasons.append("подходит для контроля и дедлайнов")
-
-    if profile.workload <= 2 and school.workload_score >= 8.5:
-        score -= 3
-        reasons.append("темп может быть интенсивным")
-    elif profile.workload >= 3 and school.workload_score >= 8:
-        score += 4
-        reasons.append("подходит под высокий темп")
-
-    if profile.target >= 85:
-        score += (float(school.teachers_score) + float(school.practice_score)) * 0.35
-        reasons.append("сильнее для высокой цели")
-
-    if profile.current_level == "low":
-        score += float(school.curator_score) * 0.25
-        reasons.append("есть запас поддержки для старта")
+    This replaces a flat point-bonus system: instead of adding arbitrary
+    points on top of an already-0-10 score (which used to blow past 100
+    for almost every well-rated school), a student's answers shift *how
+    much each criterion counts*, and the match is the resulting weighted
+    average of that school's own (already 0-10) criteria.
+    """
+    weights = dict(BASE_WEIGHTS)
 
     for priority in profile.priorities:
         field = PRIORITY_TO_FIELD.get(priority)
         if field:
-            score += float(getattr(school, field, 0)) * 0.7
-        elif priority == "price" and profile.budget is not None and profile.subject != "математика базовая":
-            # Affordability is already measured with the actual monthly price
-            # above. It must not be disguised as a subjective quality score.
-            reasons.append("цена учтена отдельно по бюджету")
+            weights[field] += 0.10
 
-    return round(max(0, min(100, score)), 1), reasons[:3]
+    if profile.curator_need >= 3:
+        weights["curator_score"] += 0.06
+    if profile.curator_need >= 4:
+        weights["curator_score"] += 0.04
+
+    if profile.control_need >= 3:
+        weights["feedback_score"] += 0.05
+        weights["organization_score"] += 0.03
+    if profile.control_need >= 4:
+        weights["feedback_score"] += 0.04
+
+    if profile.current_level == "low":
+        weights["curator_score"] += 0.06
+        weights["feedback_score"] += 0.03
+    elif profile.current_level == "high":
+        weights["teachers_score"] += 0.04
+        weights["practice_score"] += 0.04
+
+    if profile.target >= 90:
+        weights["teachers_score"] += 0.06
+        weights["practice_score"] += 0.06
+    elif profile.target >= 85:
+        weights["teachers_score"] += 0.03
+        weights["practice_score"] += 0.03
+
+    if profile.workload in (1, 4):
+        weights["workload_score"] += 0.05
+
+    total = sum(weights.values())
+    return {key: value / total for key, value in weights.items()}
+
+
+def _budget_fit(school, profile: QuizProfile) -> float:
+    if profile.budget is None or profile.subject == "математика базовая":
+        return 0.0
+    price = float(getattr(school, "monthly_price_from", 0) or 0)
+    if price <= 0:
+        return 0.0
+    # A student who picked "price" as a priority feels budget fit more
+    # strongly than someone for whom it is just a filter.
+    amplify = 1.6 if "price" in profile.priorities else 1.0
+    if price <= profile.budget:
+        return 0.4 * amplify
+    over_ratio = (price - profile.budget) / max(profile.budget, 1)
+    return -min(1.2 * amplify, over_ratio * 0.8 * amplify)
+
+
+def school_score(school, profile: QuizProfile) -> Tuple[float, list]:
+    if profile.subject.lower() not in _offered_subjects(school):
+        return -1, ["не готовит по выбранному предмету"]
+
+    weights = _personalized_weights(profile)
+    fit = sum(float(getattr(school, key, 0)) * weight for key, weight in weights.items())
+    fit += _budget_fit(school, profile)
+    fit = max(0.0, min(10.0, fit))
+
+    reasons = []
+    budget_delta = _budget_fit(school, profile)
+    if budget_delta > 0:
+        reasons.append("входит в бюджет")
+    elif budget_delta < 0:
+        reasons.append("может быть выше бюджета")
+
+    boosted = sorted(
+        (key for key in BASE_WEIGHTS if weights[key] > BASE_WEIGHTS[key] + 0.01),
+        key=lambda key: weights[key],
+        reverse=True,
+    )
+    for key in boosted:
+        label = CRITERION_LABELS[key]
+        value = float(getattr(school, key, 0))
+        if value >= 8.5:
+            reasons.append(f"сильные {label} ({value:.1f})")
+        elif value <= 7.5:
+            reasons.append(f"стоит проверить {label} ({value:.1f})")
+
+    if not reasons:
+        reasons.append("ровное совпадение по всем критериям")
+
+    return round(fit / 10 * 100, 1), reasons[:3]

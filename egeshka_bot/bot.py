@@ -105,6 +105,31 @@ def money(value: int) -> str:
     return f"{value:,}".replace(",", " ")
 
 
+def profile_from_payload(payload: str):
+    """Parse the deep-link payload produced by the site's quiz
+    (`q_<subjectIndex>_<budget>_<level>_<target>_<curator>_<workload>_<priority1>_<priority2>_<control>`)
+    into the same QuizProfile the bot's own /quiz builds, so a student who
+    finished the quiz on the site lands on a result computed by the exact
+    same formula instead of answering everything again.
+    """
+    try:
+        _, subject_index, budget, level, target, curator, workload, priority1, priority2, control = payload.split("_")
+        site_subjects = [item.lower() for item in SUBJECTS]
+        priorities = tuple(value for value in (priority1, priority2) if value != "none")
+        return QuizProfile(
+            subject=site_subjects[int(subject_index)],
+            budget=int(budget) or None,
+            current_level=level,
+            target=int(target),
+            curator_need=int(curator),
+            workload=int(workload),
+            control_need=int(control),
+            priorities=priorities,
+        )
+    except (ValueError, IndexError):
+        return None
+
+
 def teacher_subject_variants(subject: str) -> tuple[str, ...]:
     """Course catalogue uses exam names; teacher catalogues sometimes spell them out."""
     aliases = {
@@ -120,19 +145,38 @@ def score_bar(value, width=5):
 
 
 def school_professional_score(school):
-    return sum(float(getattr(school, field, 0)) * weight for field, _, weight in CRITERIA) / 2
+    return sum(float(getattr(school, field, 0)) * weight for field, _, weight in CRITERIA)
+
+
+def blend_rating(editorial, user_average=None, user_count=0):
+    """Blend an editorial 0–10 score with a 0–10 average of confirmed student
+    reviews. Below 3 reviews the editorial score stands alone (preliminary).
+    From 3 reviews the student average is blended in with a weight that
+    grows with review_count, so it becomes noticeable after a handful of
+    reviews rather than only after several dozen; the result still counts
+    as preliminary (marked with *) until 10 reviews.
+    """
+    editorial = max(0.0, min(10.0, float(editorial)))
+    if user_average is None or user_count < 3:
+        return round(editorial, 1), True
+    weight = user_count / (user_count + 5)
+    user_score = max(0.0, min(10.0, float(user_average)))
+    blended = editorial * (1 - weight) + user_score * weight
+    return round(blended, 1), user_count < 10
 
 
 def school_criteria_text(school, user_stats=None):
     user_stats = user_stats or {}
-    lines = ["📊 Оценка по критериям", "Проф. оценка + оценки учеников · итоговая шкала 0–10"]
+    lines = ["📊 Оценка по критериям", "Редакция + отзывы учеников · итоговая шкала 0–10"]
     for field, label, weight in CRITERIA:
         value = float(getattr(school, field, 0))
         average, count = user_stats.get(field, (None, 0))
+        blended, preliminary = blend_rating(value, average, count)
         if count:
-            lines.append(f"{score_bar(value)} {label}: проф. {value / 2:.1f} + ученики {average:.1f} = {value / 2 + average:.1f}/10 · вес {weight:.0%}")
+            marker = "*" if preliminary else ""
+            lines.append(f"{score_bar(blended)} {label}: {blended:.1f}/10{marker} · вес {weight:.0%}")
         else:
-            lines.append(f"{score_bar(value)} {label}: проф. {value / 2:.1f} + ученики — · итог не рассчитан · вес {weight:.0%}")
+            lines.append(f"{score_bar(value)} {label}: {value:.1f}/10 · пока без отзывов · вес {weight:.0%}")
     return "\n".join(lines)
 
 
@@ -146,12 +190,9 @@ def school_criteria_simple_text(school, user_stats=None):
     for field, label, _ in CRITERIA:
         value = float(getattr(school, field, 0))
         average, count = user_stats.get(field, (None, 0))
-        if count:
-            final_score = value / 2 + float(average)
-            score_text = f"{number(final_score)}/10"
-        else:
-            score_text = f"{number(value)}/10 · предварительно"
-        lines.append(f"{score_bar(value)}  {label} · {score_text}")
+        blended, preliminary = blend_rating(value, average, count)
+        score_text = f"{number(blended)}/10" + (" · предварительно" if preliminary else "")
+        lines.append(f"{score_bar(blended)}  {label} · {score_text}")
     if not any(count for _, count in user_stats.values()):
         lines.append("\nОценка станет комбинированной, когда появятся одобренные отзывы учеников.")
     return "\n".join(lines)
@@ -367,7 +408,7 @@ def school_card(school, user_average=None, user_count=0, criteria_stats=None):
         f"🏫 <b>{e(school.name)}</b>\n\n{e(school.description)}\n\n"
         f"{divider}\n📚 <b>Предметы</b>\n{e(school.subjects.replace(',', ', '))}\n\n"
         f"{divider}\n{school_criteria_text(school, criteria_stats)}\n"
-        f"<b>{e(hybrid_rating(school_professional_score(school) * 2, user_average, user_count))}</b>\n\n"
+        f"<b>{e(hybrid_rating(school_professional_score(school), user_average, user_count))}</b>\n\n"
         f"{divider}\n🎯 <b>Кому подходит</b>\n{e(school.fit_text)}\n\n"
         f"{divider}\n💸 <b>Цена и тарифы</b>\n{e(school.price_text or f'от {money(school.monthly_price_from)} руб./мес')}\n\n"
         f"{divider}\n📈 <b>Результаты и баллы</b>\n{e(school.results_text)}\n\n"
@@ -384,7 +425,7 @@ def school_card(school, user_average=None, user_count=0, criteria_stats=None):
 
 def school_overview(school, user_average=None, user_count=0):
     e = escape
-    rating = hybrid_rating(school_professional_score(school) * 2, user_average, user_count)
+    rating = hybrid_rating(school_professional_score(school), user_average, user_count)
     return (
         f"🏫 <b>{e(school.name)}</b>\n\n"
         f"{e(school.description)}\n\n"
@@ -434,24 +475,12 @@ def card_keyboard(school_id):
 
 def school_total_score(school, user_average=None, user_count=0):
     """A display score on the shared 0–10 scale and a preliminary flag."""
-    editorial = school_professional_score(school) * 2
-    if user_average is None or user_count < 3:
-        return editorial, True
-    confidence = user_count / (user_count + 10)
-    editorial_half = editorial / 2
-    user_score = max(0.0, min(5.0, float(user_average)))
-    effective_user = editorial_half * (1 - confidence) + user_score * confidence
-    return round(editorial_half + effective_user, 1), False
+    return blend_rating(school_professional_score(school), user_average, user_count)
 
 
 def criterion_total(value, stats, field):
     average, count = (stats or {}).get(field, (None, 0))
-    if average is not None and count >= 3:
-        confidence = count / (count + 10)
-        editorial_half = float(value) / 2
-        effective_user = editorial_half * (1 - confidence) + float(average) * confidence
-        return round(editorial_half + effective_user, 1), False
-    return float(value), True
+    return blend_rating(value, average, count)
 
 
 def comparison_text(left, right, left_user_average=None, left_user_count=0, right_user_average=None, right_user_count=0, left_criteria_stats=None, right_criteria_stats=None):
@@ -534,10 +563,14 @@ def comparison_keyboard(left_id, right_id):
 def rating_methodology_text():
     return (
         "ℹ️ Как считается рейтинг\n\n"
-        "<b>Школы:</b> редакционная часть даёт до 5 баллов, подтверждённые отзывы учеников — ещё до 5. "
-        "Отзывы начинают влиять на итог после трёх подтверждений; их вес растёт постепенно вместе с выборкой.\n\n"
-        "<b>Преподаватели:</b> оценку ставят только подтверждённые ученики по пяти критериям: понятность объяснений, практика и разбор ошибок, атмосфера, структура и темп, польза для ЕГЭ. Итог до 5 — среднее этих пяти оценок.\n\n"
-        "Для преподавателя оценка появляется после трёх подтверждённых отзывов и помечается как предварительная до десяти. Для школы звёздочка означает, что подтверждённых отзывов пока меньше трёх. "
+        "<b>Школы:</b> сначала редакционная оценка по семи критериям — шкала 0–10. С трёх подтверждённых отзывов "
+        "в неё подмешивается оценка учеников: её вес растёт с числом отзывов и становится заметным уже после "
+        "5–10 отзывов, а не только после нескольких десятков — это специально сделано так, чтобы у небольших школ "
+        "тоже был реальный шанс повлиять на свою оценку отзывами.\n\n"
+        "<b>Преподаватели:</b> оценку ставят только подтверждённые ученики по пяти критериям — от 1 до 10 каждый: "
+        "понятность объяснений, практика и разбор ошибок, атмосфера, структура и темп, польза для ЕГЭ. "
+        "Итог до 10 — среднее этих пяти оценок.\n\n"
+        "Оценка появляется после трёх подтверждённых отзывов и помечается как предварительная (*), пока их меньше десяти. "
         "Неподтверждённые отзывы можно читать после модерации, но они не меняют рейтинг."
     )
 
@@ -604,7 +637,7 @@ def review_teacher_buttons(rows):
 
 
 def teacher_rating_from_criteria(stats):
-    """Return the student-only /5 rating and number of verified reviews."""
+    """Return the student-only /10 rating and number of verified reviews."""
     values = [float(average) for average, count in stats.values() if average is not None and count]
     counts = [int(count) for _average, count in stats.values() if count]
     if len(values) != len(TEACHER_CRITERIA) or not counts:
@@ -617,7 +650,7 @@ def teacher_rating_text(stats):
     if average is None or count < 3:
         return "Оценка учеников: пока не сформирована\nНужно минимум 3 подтверждённых отзыва"
     marker = "*" if count < 10 else ""
-    return f"Оценка учеников: {average:.1f}/5{marker}\nПодтверждённых отзывов: {count}".replace(".", ",")
+    return f"Оценка учеников: {average:.1f}/10{marker}\nПодтверждённых отзывов: {count}".replace(".", ",")
 
 
 def teacher_compare_text(
@@ -655,26 +688,25 @@ def teacher_compare_keyboard(left, right, school_id=None):
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
-def hybrid_rating(professional_out_of_10, user_average=None, user_count=0):
-    professional = max(0.0, min(5.0, float(professional_out_of_10) / 2))
+def hybrid_rating(editorial_out_of_10, user_average=None, user_count=0):
+    editorial = max(0.0, min(10.0, float(editorial_out_of_10)))
     if user_average is None or user_count < 3:
         user_line = (
-            f"Пользовательская оценка: {float(user_average):.1f}/5 ({user_count} отзывов)"
+            f"Пользовательская оценка: {float(user_average):.1f}/10 ({user_count} отзывов)"
             if user_average is not None
             else "Пользовательская оценка: нет данных"
         )
         return (
-            f"Профессиональная оценка: {professional:.1f}/5\n"
+            f"Редакционная оценка: {editorial:.1f}/10\n"
             f"{user_line}\n"
-            f"Итог: {professional * 2:.1f}/10* — нужно 3 подтверждённых отзыва"
+            f"Итог: {editorial:.1f}/10* — нужно 3 подтверждённых отзыва"
         )
-    confidence = user_count / (user_count + 10)
-    effective_user = professional * (1 - confidence) + max(0.0, min(5.0, float(user_average))) * confidence
-    total = professional + effective_user
+    blended, preliminary = blend_rating(editorial, user_average, user_count)
+    marker = "*" if preliminary else ""
     return (
-        f"Профессиональная оценка: {professional:.1f}/5\n"
-        f"Пользовательская оценка: {float(user_average):.1f}/5 ({user_count} отзывов)\n"
-        f"Итог: {total:.1f}/10"
+        f"Редакционная оценка: {editorial:.1f}/10\n"
+        f"Пользовательская оценка: {max(0.0, min(10.0, float(user_average))):.1f}/10 ({user_count} отзывов)\n"
+        f"Итог: {blended:.1f}/10{marker}"
     )
 
 
@@ -705,11 +737,11 @@ def rating_entry(position, school, user_average, user_count):
 def teacher_criteria_text(stats):
     if not any(count for _, count in stats.values()):
         return "📊 <b>По отзывам учеников</b>\nОценки отдельных аспектов появятся после одобренных отзывов."
-    lines = ["📊 <b>Оценки учеников по критериям</b>", "Шкала 1–5"]
+    lines = ["📊 <b>Оценки учеников по критериям</b>", "Шкала 1–10"]
     for field, label in TEACHER_CRITERIA:
         average, count = stats.get(field, (None, 0))
         if count:
-            lines.append(f"{escape(label)} — <b>{float(average):.1f}/5</b> · {count} оценок")
+            lines.append(f"{escape(label)} — <b>{float(average):.1f}/10</b> · {count} оценок")
     return "\n".join(lines)
 
 
@@ -730,24 +762,24 @@ def teacher_card(teacher, school, criteria_stats=None):
 
 
 def review_score_keyboard():
-    scores = (1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5)
+    scores = range(1, 11)
 
     def label(score):
-        return f"{score:g}".replace(".", ",") + " / 5"
+        return f"{score} / 10"
 
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=label(score), callback_data=f"review_score:{score}") for score in scores[index:index + 3]]
-        for index in range(0, len(scores), 3)
+        [InlineKeyboardButton(text=label(score), callback_data=f"review_score:{score}") for score in scores[index:index + 5]]
+        for index in range(0, len(scores), 5)
     ] + [
         [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
     ])
 
 
 def criterion_score_keyboard():
-    scores = (1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5)
+    scores = range(1, 11)
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=f"{score:g}".replace(".", ","), callback_data=f"criterion_score:{score}") for score in scores[index:index + 3]]
-        for index in range(0, len(scores), 3)
+        [InlineKeyboardButton(text=str(score), callback_data=f"criterion_score:{score}") for score in scores[index:index + 5]]
+        for index in range(0, len(scores), 5)
     ] + [[InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")]])
 
 
@@ -778,6 +810,57 @@ async def active_schools(session_factory):
         ).scalars().all()
 
 
+async def build_quiz_result(session_factory, profile: QuizProfile):
+    rows = await active_schools(session_factory)
+    ranked = [
+        (score, reasons, school)
+        for school in rows
+        for score, reasons in [school_score(school, profile)]
+        if score >= 0
+    ]
+    ranked.sort(key=lambda item: item[0], reverse=True)
+    top = ranked[:3]
+    subject_name = next((item for item in SUBJECTS if item.lower() == profile.subject), profile.subject.title())
+    async with session_factory() as session:
+        subject_courses = (await session.execute(
+            select(Course).where(Course.subject == subject_name, Course.is_active == True)
+        )).scalars().all()
+    course_by_school = {course.school_id: course for course in subject_courses}
+    if not top:
+        text = (
+            f"🎯 <b>Подбор по предмету: {escape(subject_name)}</b>\n\n"
+            "По этому предмету пока нет подходящих школ в каталоге. Загляни в общий рейтинг или попробуй другой предмет."
+        )
+        keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="🏆 Рейтинг", callback_data="rating")],
+            [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
+        ])
+        return text, keyboard
+    lines = []
+    for index, (score, reasons, school) in enumerate(top, 1):
+        reason_text = ", ".join(reasons) if reasons else "хорошее совпадение по анкете"
+        course = course_by_school.get(school.id)
+        price = course.price_text if course else school.price_text
+        lines.append(f"{index}. {school.name} — {score:.0f}% совпадение\nПочему: {reason_text}\n💸 {price}")
+    text = (
+        f"🎯 <b>Подбор по предмету: {escape(subject_name)}</b>\n\n"
+        "Мы отобрали школы по твоим ответам. Открой карточку курса: там формат, тарифы и преподаватели именно по предмету.\n\n"
+        + "\n\n".join(escape(line) for line in lines)
+    )
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(
+                text=f"Курс: {school.name}",
+                callback_data=f"course:{course_by_school[school.id].id}" if school.id in course_by_school else f"school:{school.id}",
+            )]
+            for _, _, school in top
+        ]
+        + [[InlineKeyboardButton(text="📰 Новости и разборы ЕГЭ", callback_data="channel")]]
+        + [[InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")]]
+    )
+    return text, keyboard
+
+
 async def approved_reviews_text(session, school_id, teacher_id=None, criterion=None):
     query = select(Review).where(Review.school_id == school_id, Review.moderation_status == "approved")
     if teacher_id is None:
@@ -790,7 +873,7 @@ async def approved_reviews_text(session, school_id, teacher_id=None, criterion=N
         return ""
     lines = ["\n\n💬 Отзывы пользователей"]
     for review in reviews:
-        parts = [f"⭐ {review.score:.1f}/5"]
+        parts = [f"⭐ {review.score:.1f}/10"]
         if review.text_positive:
             parts.append(f"Плюсы: {escape(review.text_positive)}")
         if review.text_negative:
@@ -916,13 +999,13 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         criteria_text = ""
         if criteria:
             criteria_text = "\n\nОценки критериев:\n" + "\n".join(
-                f"{REVIEW_CRITERIA_BY_KEY.get(key, key)}: {float(value):g}/5" for key, value in criteria.items()
+                f"{REVIEW_CRITERIA_BY_KEY.get(key, key)}: {float(value):g}/10" for key, value in criteria.items()
             ) + "\n\n"
         delete_note = ""
         if review.proof_delete_after:
             delete_note = f"\nСсылка на файл в базе удалится: {review.proof_delete_after.strftime('%d.%m.%Y')}"
         text = (
-            f"Новый отзыв №{review.id} о {target}. Оценка: {review.score:.1f}/5\n\n"
+            f"Новый отзыв №{review.id} о {target}. Оценка: {review.score:.1f}/10\n\n"
             f"{criteria_text}"
             f"Понравилось:\n{positive}\n\n"
             f"Не понравилось:\n{negative}\n\n"
@@ -980,34 +1063,15 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                         ]),
                     )
                     return
-        if payload.startswith("site_"):
-            try:
-                _, subject_index, budget_value, level_code, target_value = payload.split("_")
-                site_subjects = [item.lower() for item in SUBJECTS]
-                level = {"l": "low", "m": "middle", "h": "high"}[level_code]
-                await state.update_data(
-                    subject=site_subjects[int(subject_index)],
-                    budget=int(budget_value) or None,
-                    current_level=level,
-                    target=int(target_value),
-                )
-                await state.set_state(Quiz.curator)
-                await track(message.from_user.id, "quiz_started", {"source": "site"})
-                await message.answer(
-                    "Ответы с сайта сохранились ✓\n\nВопрос 5 из 8 · Какая поддержка тебе нужна?",
-                    reply_markup=options(
-                        [
-                            ("Разберусь сам", "1"),
-                            ("Хочу иногда задавать вопросы", "2"),
-                            ("Нужен регулярный контроль", "3"),
-                            ("Без куратора легко всё откладываю", "4"),
-                        ],
-                        "curator",
-                    ),
-                )
-                return
-            except (ValueError, IndexError, KeyError):
+        if payload.startswith("q_"):
+            profile = profile_from_payload(payload)
+            if profile:
                 await state.clear()
+                await track(message.from_user.id, "quiz_started", {"source": "site"})
+                text, keyboard = await build_quiz_result(session_factory, profile)
+                await track(message.from_user.id, "quiz_completed", {"subject": profile.subject, "source": "site"})
+                await message.answer(text, reply_markup=keyboard, parse_mode=ParseMode.HTML)
+                return
         await message.answer(
             "Привет! Я ЕГЭ Мэтч — помогу выбрать школу и преподавателя для ЕГЭ. Здесь можно пройти подбор, посмотреть оценки по критериям, сравнить школы и преподавателей и оставить свой отзыв.",
             reply_markup=menu(),
@@ -1099,19 +1163,19 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             await call.message.edit_text("Вопрос 1 из 8 · Какой предмет сдаёшь?", reply_markup=options([(item, item.lower()) for item in SUBJECTS], "subject"))
         elif current == "Quiz:current_level":
             await state.set_state(Quiz.budget)
-            await call.message.edit_text("Вопрос 2 из 8 · Сколько готов тратить в месяц?", reply_markup=options([("До 3 000 ₽", "3000"), ("3 000–5 000 ₽", "5000"), ("5 000–8 000 ₽", "8000"), ("Больше 8 000 ₽", "12000"), ("Пока не определился", "0")], "budget"))
+            await call.message.edit_text("Вопрос 2 из 8 · Сколько готов тратить на подготовку в месяц?", reply_markup=options([("До 3 000 ₽", "3000"), ("3 000–5 000 ₽", "5000"), ("5 000–8 000 ₽", "8000"), ("Больше 8 000 ₽", "12000"), ("Пока не определился", "0")], "budget"))
         elif current == "Quiz:target":
             await state.set_state(Quiz.current_level)
-            await call.message.edit_text("Вопрос 3 из 8 · Как оцениваешь свою базу?", reply_markup=options([("Начинаю почти с нуля", "low"), ("Что-то знаю, нужна система", "middle"), ("База хорошая, хочу усилить результат", "high")], "level"))
+            await call.message.edit_text("Вопрос 3 из 8 · Как оцениваешь свои знания по предмету сейчас?", reply_markup=options([("Начинаю почти с нуля", "low"), ("Что-то знаю, нужна система", "middle"), ("База хорошая, хочу усилить результат", "high")], "level"))
         elif current == "Quiz:curator":
             await state.set_state(Quiz.target)
-            await call.message.edit_text("Вопрос 4 из 8 · На какой результат ориентируешься?", reply_markup=options(target_options((await state.get_data()).get("subject")), "target"))
+            await call.message.edit_text("Вопрос 4 из 8 · На какой балл ЕГЭ ориентируешься?", reply_markup=options(target_options((await state.get_data()).get("subject")), "target"))
         elif current == "Quiz:workload":
             await state.set_state(Quiz.curator)
-            await call.message.edit_text("Вопрос 5 из 8 · Какая поддержка тебе нужна?", reply_markup=options([("Разберусь сам", "1"), ("Хочу иногда задавать вопросы", "2"), ("Нужен регулярный контроль", "3"), ("Без куратора легко всё откладываю", "4")], "curator"))
+            await call.message.edit_text("Вопрос 5 из 8 · Нужен ли тебе куратор, который следит за прогрессом?", reply_markup=options([("Справлюсь сам, куратор не нужен", "1"), ("Иногда хочу спросить куратора", "2"), ("Нужен регулярный контроль куратора", "3"), ("Без куратора я всё откладываю", "4")], "curator"))
         elif current == "Quiz:first_priority":
             await state.set_state(Quiz.workload)
-            await call.message.edit_text("Вопрос 6 из 8 · Сколько нагрузки тебе подходит?", reply_markup=options([("Небольшая нагрузка, без перегруза", "1"), ("Умеренный темп", "2"), ("Готов заниматься много", "3"), ("Максимум практики ради результата", "4")], "workload"))
+            await call.message.edit_text("Вопрос 6 из 8 · Какой темп подготовки тебе подходит?", reply_markup=options([("Небольшая нагрузка, без перегруза", "1"), ("Умеренный темп", "2"), ("Готов заниматься много", "3"), ("Максимум практики ради результата", "4")], "workload"))
         elif current == "Quiz:second_priority":
             await state.set_state(Quiz.first_priority)
             await call.message.edit_text("Вопрос 7 из 8 · Что для тебя важнее всего? Выбери главный приоритет.", reply_markup=priority_keyboard())
@@ -1183,13 +1247,13 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             await state.set_state(ReviewForm.criterion_score)
             await call.message.edit_text(
                 "Сначала оцени критерии школы по очереди.\n\n"
-                "1/7 · Преподаватели\nВыбери оценку от 1 до 5:",
+                "1/7 · Преподаватели\nВыбери оценку от 1 до 10:",
                 reply_markup=criterion_score_keyboard(),
             )
         else:
             await state.set_state(ReviewForm.score)
             subject = f"критерий «{CRITERIA_BY_KEY[criterion]}»"
-            await call.message.edit_text(f"Оцени {subject} от 1 до 5 с шагом 0,5. Отзыв будет опубликован только после модерации.", reply_markup=review_score_keyboard())
+            await call.message.edit_text(f"Оцени {subject} от 1 до 10. Отзыв будет опубликован только после модерации.", reply_markup=review_score_keyboard())
         await call.answer()
 
     @dp.callback_query(F.data.startswith("review_teacher:"))
@@ -1213,7 +1277,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         await state.set_state(ReviewForm.criterion_score)
         await call.message.edit_text(
             f"Сначала оцени преподавателя {teacher.name} по пяти понятным аспектам.\n\n"
-            "1/5 · Объяснение материала\nВыбери оценку от 1 до 5:",
+            "1/5 · Объяснение материала\nВыбери оценку от 1 до 10:",
             reply_markup=criterion_score_keyboard(),
         )
         await call.answer()
@@ -1237,7 +1301,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             next_field, next_label, *_ = criteria[index + 1]
             await state.update_data(review_criteria_scores=scores, review_criteria_index=index + 1)
             await call.message.edit_text(
-                f"{index + 2}/{len(criteria)} · {next_label}\nВыбери оценку от 1 до 5:",
+                f"{index + 2}/{len(criteria)} · {next_label}\nВыбери оценку от 1 до 10:",
                 reply_markup=criterion_score_keyboard(),
             )
         else:
@@ -1255,7 +1319,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                 await state.update_data(review_criteria_scores=scores)
                 await state.set_state(ReviewForm.score)
                 await call.message.edit_text(
-                    "Все критерии оценены.\n\nТеперь поставь общую оценку школе от 1 до 5:",
+                    "Все критерии оценены.\n\nТеперь поставь общую оценку школе от 1 до 10:",
                     reply_markup=review_score_keyboard(),
                 )
         await call.answer()
@@ -1433,11 +1497,11 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         criteria_text = ""
         if criteria:
             criteria_text = "\n\nОценки критериев:\n" + "\n".join(
-                f"{CRITERIA_BY_KEY.get(key, key)}: {float(value):g}/5" for key, value in criteria.items()
+                f"{CRITERIA_BY_KEY.get(key, key)}: {float(value):g}/10" for key, value in criteria.items()
             )
         await message.answer(
             f"Отзыв №{review.id} о {target}\n"
-            f"Оценка: {review.score:.1f}/5\n"
+            f"Оценка: {review.score:.1f}/10\n"
             f"Статус: {review.moderation_status}\n"
             f"Подтверждение: {proof}\n\n"
             f"{criteria_text}"
@@ -1501,7 +1565,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         await state.update_data(subject=call.data.split(":", 1)[1])
         await state.set_state(Quiz.budget)
         await call.message.edit_text(
-            "Вопрос 2 из 8 · Сколько готов тратить в месяц?",
+            "Вопрос 2 из 8 · Сколько готов тратить на подготовку в месяц?",
             reply_markup=options(
                 [
                     ("До 3 000 ₽", "3000"),
@@ -1520,7 +1584,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         await state.update_data(budget=int(call.data.split(":")[1]) or None)
         await state.set_state(Quiz.current_level)
         await call.message.edit_text(
-            "Вопрос 3 из 8 · Как оцениваешь свою базу?",
+            "Вопрос 3 из 8 · Как оцениваешь свои знания по предмету сейчас?",
             reply_markup=options(
                 [
                     ("Начинаю почти с нуля", "low"),
@@ -1537,7 +1601,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         await state.update_data(current_level=call.data.split(":")[1])
         await state.set_state(Quiz.target)
         await call.message.edit_text(
-            "Вопрос 4 из 8 · На какой результат ориентируешься?",
+            "Вопрос 4 из 8 · На какой балл ЕГЭ ориентируешься?",
             reply_markup=options(target_options((await state.get_data()).get("subject")), "target"),
         )
         await call.answer()
@@ -1547,13 +1611,13 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         await state.update_data(target=int(call.data.split(":")[1].replace("+", "")))
         await state.set_state(Quiz.curator)
         await call.message.edit_text(
-            "Вопрос 5 из 8 · Какая поддержка тебе нужна?",
+            "Вопрос 5 из 8 · Нужен ли тебе куратор, который следит за прогрессом?",
             reply_markup=options(
                 [
-                    ("Разберусь сам", "1"),
-                    ("Хочу иногда задавать вопросы", "2"),
-                    ("Нужен регулярный контроль", "3"),
-                    ("Без куратора легко всё откладываю", "4"),
+                    ("Справлюсь сам, куратор не нужен", "1"),
+                    ("Иногда хочу спросить куратора", "2"),
+                    ("Нужен регулярный контроль куратора", "3"),
+                    ("Без куратора я всё откладываю", "4"),
                 ],
                 "curator",
             ),
@@ -1565,7 +1629,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         await state.update_data(curator=int(call.data.split(":")[1]))
         await state.set_state(Quiz.workload)
         await call.message.edit_text(
-            "Вопрос 6 из 8 · Сколько нагрузки тебе подходит?",
+            "Вопрос 6 из 8 · Какой темп подготовки тебе подходит?",
             reply_markup=options(
                 [
                     ("Небольшая нагрузка, без перегруза", "1"),
@@ -1605,7 +1669,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         await state.update_data(second_priority=None if priority == "none" else priority)
         await state.set_state(Quiz.control)
         await call.message.edit_text(
-            "Вопрос 8 из 8 · Как тебе удобнее не откладывать учёбу?",
+            "Вопрос 8 из 8 · Что поможет не откладывать занятия?",
             reply_markup=options(
                 [
                     ("Сам планирую и выполняю", "1"),
@@ -1636,43 +1700,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             control_need=int(call.data.split(":")[1]),
             priorities=priorities,
         )
-        rows = await active_schools(session_factory)
-        ranked = [
-            (score, reasons, school)
-            for school in rows
-            for score, reasons in [school_score(school, profile)]
-            if score >= 0
-        ]
-        ranked.sort(key=lambda item: item[0], reverse=True)
-        top = ranked[:3]
-        subject_name = next((item for item in SUBJECTS if item.lower() == data["subject"]), data["subject"].title())
-        async with session_factory() as session:
-            subject_courses = (await session.execute(
-                select(Course).where(Course.subject == subject_name, Course.is_active == True)
-            )).scalars().all()
-        course_by_school = {course.school_id: course for course in subject_courses}
-        lines = []
-        for index, (score, reasons, school) in enumerate(top, 1):
-            reason_text = ", ".join(reasons) if reasons else "хорошее совпадение по анкете"
-            course = course_by_school.get(school.id)
-            price = course.price_text if course else school.price_text
-            lines.append(f"{index}. {school.name} — {score:.0f}%\nПочему: {reason_text}\n💸 {price}")
-        text = (
-            f"🎯 <b>Подбор по предмету: {escape(subject_name)}</b>\n\n"
-            "Мы отобрали школы по твоим ответам. Открой карточку курса: там формат, тарифы и преподаватели именно по предмету.\n\n"
-            + "\n\n".join(escape(line) for line in lines)
-        )
-        keyboard = InlineKeyboardMarkup(
-            inline_keyboard=[
-                [InlineKeyboardButton(
-                    text=f"Курс: {school.name}",
-                    callback_data=f"course:{course_by_school[school.id].id}" if school.id in course_by_school else f"school:{school.id}",
-                )]
-                for _, _, school in top
-            ]
-            + [[InlineKeyboardButton(text="📰 Новости и разборы ЕГЭ", callback_data="channel")]]
-            + [[InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")]]
-        )
+        text, keyboard = await build_quiz_result(session_factory, profile)
         await state.clear()
         await track(call.from_user.id, "quiz_completed", {"subject": data.get("subject")})
         await call.message.edit_text(text, reply_markup=keyboard, parse_mode=ParseMode.HTML)
