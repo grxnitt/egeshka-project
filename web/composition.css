@@ -845,3 +845,25 @@ main>.about-project{padding-top:var(--section-gap);margin-bottom:var(--section-g
 .channel-section .button.blue,.channel-section .button.blue:hover{background:var(--blue);color:#fff}
 .channel-section .button.blue span{background:var(--pink);color:var(--ink)}
 .channel-stamp span,.channel-stamp strong{color:var(--blue)}
+
+/* Calmer cards: no watermark/quote in reviews, single-color channel card. */
+.reviews:before,.review-mark{display:none!important}
+.channel-stamp,.channel-section:before,.channel-section:after{display:none!important}
+.channel-section{grid-template-columns:1fr auto;align-items:center;gap:48px;padding:48px 56px}
+.channel-section h2{font-size:clamp(28px,3vw,40px);line-height:1.15;letter-spacing:-1.2px}
+.channel-section p:not(.eyebrow){margin:16px 0 0;max-width:46ch}
+.channel-copy{display:contents}
+.channel-copy .button.blue{grid-column:2;grid-row:1;min-width:0;white-space:nowrap}
+.channel-copy h2{grid-column:1;grid-row:1}
+.channel-copy p{grid-column:1;grid-row:2}
+.channel-section .button.blue span{background:#fff;color:var(--blue)}
+@media(max-width:700px){
+  .channel-section{grid-template-columns:1fr;gap:20px}
+  main>.channel-section{padding:32px 24px}
+  .channel-copy .button.blue{grid-column:1;grid-row:3;width:100%;margin-top:8px}
+}
+.channel-section{grid-template-rows:auto auto;align-content:center;row-gap:0}
+.channel-copy .button.blue{grid-row:1/3;align-self:center}
+.channel-copy h2,.channel-copy p{align-self:start}
+@media(max-width:700px){.channel-copy .button.blue{grid-row:3}.channel-section{row-gap:12px}}
+@media(max-width:700px){main>.channel-section .channel-copy h2{font-size:26px;letter-spacing:-.8px;text-wrap:balance}}
