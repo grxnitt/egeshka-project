@@ -44,7 +44,7 @@ const quizSteps=[
  {key:'workload',questionNumber:6,title:'Какой темп подготовки тебе подходит?',options:()=>[['Небольшая нагрузка, без перегруза','1'],['Умеренный темп','2'],['Готов заниматься много','3'],['Максимум практики ради результата','4']]},
  {key:'priority1',questionNumber:7,title:'Что для тебя важнее всего? Выбери главный приоритет.',options:()=>Object.entries(PRIORITY_LABELS).map(([value,label])=>[label,value])},
  {key:'priority2',questionNumber:null,title:'Дополнительный приоритет',subtitle:'Можно выбрать ещё один пункт.',options:()=>[...Object.entries(PRIORITY_LABELS).filter(([value])=>value!==siteQuiz.answers.priority1).map(([value,label])=>[label,value]),['Пропустить второй приоритет','none']]},
- {key:'control',questionNumber:8,title:'Что поможет не откладывать занятия?',options:()=>[['Сам планирую и выполняю','1'],['Нужны напоминания','2'],['Нужны проверки и дедлайны','3'],['Нужен жёсткий контроль','4']]},
+ {key:'control',questionNumber:8,title:'Как у тебя с самодисциплиной в подготовке?',options:()=>[['Отлично — планирую и делаю сам','1'],['Хорошо, но нужны напоминания','2'],['Слабо — нужны проверки и дедлайны','3'],['Совсем никак без жёсткого контроля','4']]},
 ];
 
 // Mirrors egeshka_bot/scoring.py exactly (same weights, same thresholds) so

@@ -1669,13 +1669,13 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         await state.update_data(second_priority=None if priority == "none" else priority)
         await state.set_state(Quiz.control)
         await call.message.edit_text(
-            "Вопрос 8 из 8 · Что поможет не откладывать занятия?",
+            "Вопрос 8 из 8 · Как у тебя с самодисциплиной в подготовке?",
             reply_markup=options(
                 [
-                    ("Сам планирую и выполняю", "1"),
-                    ("Нужны напоминания", "2"),
-                    ("Нужны проверки и дедлайны", "3"),
-                    ("Нужен жёсткий контроль", "4"),
+                    ("Отлично — планирую и делаю сам", "1"),
+                    ("Хорошо, но нужны напоминания", "2"),
+                    ("Слабо — нужны проверки и дедлайны", "3"),
+                    ("Совсем никак без жёсткого контроля", "4"),
                 ],
                 "control",
             ),
