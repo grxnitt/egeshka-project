@@ -2645,6 +2645,21 @@
       "url": "https://egenalegke.ru/"
     },
     {
+      "id": 167,
+      "school": "ЕГЭ Налегке",
+      "name": "Альбина Маратовна",
+      "subject": "История",
+      "subjects": [
+        "История"
+      ],
+      "description": "Основательница школы, кандидат политических наук. Преподавала историю в вузе и много лет была репетитором по истории; больше 17 лет готовит к ЕГЭ и лично ведёт вебинары.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://egenalegke.ru/"
+    },
+    {
       "id": 143,
       "school": "ЕГЭ Налегке",
       "name": "Алина Коданова",
