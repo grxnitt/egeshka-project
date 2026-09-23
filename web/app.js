@@ -72,7 +72,7 @@ let html=row('',escape(left.name),escape(right.name),'column-heads');
 if(mode==='schools'){html+=row('Общая оценка',`<strong>${number(left.score)}/10</strong>`,`<strong>${number(right.score)}/10</strong>`);html+=Object.entries(criteria).map(([key,label])=>row(label,meter(left.criteria[key]),meter(right.criteria[key]))).join('');html+=catalog.schools.some(school=>school.isPreliminary)?'<p class="fine">* Предварительно: подтверждённых отзывов пока недостаточно.</p>':'';}else{
  html+=row('Оценка учеников',`<strong>${escape(teacherRatingLabel(left))}</strong>`,`<strong>${escape(teacherRatingLabel(right))}</strong>`);
  html+=row('Школа',escape(left.school),escape(right.school));
- html+='<div class="criteria-title"><strong>По оценкам учеников</strong><span>Отдельные критерии · шкала 1–5</span></div>';
+ html+='<div class="criteria-title"><strong>По оценкам учеников</strong><span>Отдельные критерии · шкала 1–10</span></div>';
  const teacherMetric=(teacher,key)=>teacherMeter(teacher.criteria?.[key]);
  html+=Object.entries(teacherCriteria).map(([key,label])=>row(label,teacherMetric(left,key),teacherMetric(right,key),'teacher-metric')).join('');
  html+='<p class="fine">Оценка появляется после трёх подтверждённых отзывов и считается как среднее пяти критериев.</p>';
