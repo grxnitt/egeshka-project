@@ -885,3 +885,10 @@ main>.faq{margin-top:var(--section-gap);margin-bottom:var(--section-gap);display
 .faq-item p a{color:var(--blue);text-decoration:underline;text-underline-offset:3px}
 @media(max-width:800px){main>.faq{grid-template-columns:1fr;gap:24px}.faq h2{position:static}.faq-item summary{padding:18px 20px;font-size:16px}.faq-item p{padding:0 20px 20px}}
 @media(prefers-reduced-motion:reduce){.faq-icon:before,.faq-icon:after,.faq-item{transition:none}}
+
+/* Ratings CTA card */
+main>.rating-next{min-height:0;margin-top:var(--section-gap);padding:56px 64px;flex-direction:row;align-items:center;justify-content:space-between;gap:40px;border:1px solid #dedcff;border-radius:28px;background:#f4f0ff;box-shadow:0 22px 65px rgb(52 75 216/.08)}
+.rating-next:after{display:none}
+.rating-next h2{margin:0;font-size:clamp(30px,3.6vw,48px);line-height:1.1;letter-spacing:-.04em}
+.rating-next .button{flex:none;width:auto;min-width:0;white-space:nowrap}
+@media(max-width:700px){main>.rating-next{flex-direction:column;align-items:stretch;gap:24px;padding:32px 24px;width:calc(100% - 36px)}.rating-next .button{width:100%}}
