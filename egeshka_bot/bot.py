@@ -234,12 +234,12 @@ def course_subject_profile(teachers):
     names = ", ".join(teacher.name for teacher in teachers)
     if count >= 4:
         return (
-            f"У ЕГЭшки есть карточки {count} преподавателей: {names}. "
+            f"У ЕГЭ Мэтча есть карточки {count} преподавателей: {names}. "
             "По предмету есть выбор — сначала сравни преподавателей и проверь, кто ведёт твой набор."
         )
     if count >= 2:
         return (
-            f"У ЕГЭшки есть карточки {count} преподавателей: {names}. "
+            f"У ЕГЭ Мэтча есть карточки {count} преподавателей: {names}. "
             "Можно открыть карточки и сравнить опыт, результаты и отзывы."
         )
     if count == 1:
@@ -948,9 +948,9 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             await state.clear()
             await message.answer(
                 "🔐 <b>Твои данные</b>\n\n"
-                "Можно удалить профиль в ЕГЭшке, отправленные отзывы, оценки по критериям, ссылки на подтверждения и историю действий в боте. "
+                "Можно удалить профиль в ЕГЭ Мэтче, отправленные отзывы, оценки по критериям, ссылки на подтверждения и историю действий в боте. "
                 "После удаления вклад этих отзывов исчезнет из пользовательской части рейтинга.\n\n"
-                "Сообщения в самом чате Telegram управляются приложением Telegram и в базу ЕГЭшки не входят.",
+                "Сообщения в самом чате Telegram управляются приложением Telegram и в базу ЕГЭ Мэтча не входят.",
                 reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                     [InlineKeyboardButton(text="Удалить мои данные", callback_data="delete_data_request")],
                     [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
@@ -1009,16 +1009,16 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             except (ValueError, IndexError, KeyError):
                 await state.clear()
         await message.answer(
-            "Привет! Я ЕГЭшка — помогу выбрать школу и преподавателя для ЕГЭ. Здесь можно пройти подбор, посмотреть оценки по критериям, сравнить школы и преподавателей и оставить свой отзыв.",
+            "Привет! Я ЕГЭ Мэтч — помогу выбрать школу и преподавателя для ЕГЭ. Здесь можно пройти подбор, посмотреть оценки по критериям, сравнить школы и преподавателей и оставить свой отзыв.",
             reply_markup=menu(),
         )
 
     async def show_data_controls(message: Message, edit: bool = False):
         text_value = (
             "🔐 <b>Твои данные</b>\n\n"
-            "Здесь можно удалить профиль в ЕГЭшке, отправленные отзывы, оценки по критериям, ссылки на подтверждения и историю действий в боте. "
+            "Здесь можно удалить профиль в ЕГЭ Мэтче, отправленные отзывы, оценки по критериям, ссылки на подтверждения и историю действий в боте. "
             "После удаления вклад этих отзывов исчезнет из пользовательской части рейтинга.\n\n"
-            "Сообщения в самом чате Telegram управляются приложением Telegram и в базу ЕГЭшки не входят."
+            "Сообщения в самом чате Telegram управляются приложением Telegram и в базу ЕГЭ Мэтча не входят."
         )
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="Удалить мои данные", callback_data="delete_data_request")],
@@ -1060,9 +1060,9 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         async with session_factory() as session:
             result = await delete_user_data(session, call.from_user.id)
         if result["users"] or result["reviews"] or result["events"]:
-            text_value = "Данные удалены. Профиль, отзывы, оценки, ссылки на подтверждения и история действий больше не хранятся в базе ЕГЭшки."
+            text_value = "Данные удалены. Профиль, отзывы, оценки, ссылки на подтверждения и история действий больше не хранятся в базе ЕГЭ Мэтча."
         else:
-            text_value = "В базе ЕГЭшки уже нет данных, связанных с твоим Telegram-профилем."
+            text_value = "В базе ЕГЭ Мэтча уже нет данных, связанных с твоим Telegram-профилем."
         await call.message.edit_text(
             text_value,
             reply_markup=InlineKeyboardMarkup(inline_keyboard=[
@@ -1328,7 +1328,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             "Пришли одним сообщением фото или файл подтверждения.\n\n"
             "Подойдут скриншот личного кабинета, чек, договор или другое подтверждение обучения. "
             "Перед отправкой закрой ФИО, телефон, адрес, номер заказа и другие лишние личные данные.\n\n"
-            "Файл не публикуется: его увидят только модераторы. Ссылку на файл ЕГЭшка удалит из базы через 30 дней.",
+            "Файл не публикуется: его увидят только модераторы. Ссылку на файл ЕГЭ Мэтч удалит из базы через 30 дней.",
             reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                 [InlineKeyboardButton(text="Пропустить", callback_data="review_proof:no")],
                 [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
@@ -2170,7 +2170,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                 rating_entry(index, item, stats[item.id][0], stats[item.id][1])
                 for index, item in enumerate(rows, 1)
             )
-            + "\n\n<i>Профессиональная часть — аналитика ЕГЭшки по открытым данным.\n"
+            + "\n\n<i>Профессиональная часть — аналитика ЕГЭ Мэтча по открытым данным.\n"
             "Пользовательская часть учитывает только одобренные и подтверждённые отзывы в боте.</i>",
             reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                 [InlineKeyboardButton(text="ℹ️ Как считается рейтинг", callback_data="rating_methodology:rating")],
@@ -2184,10 +2184,10 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
     async def channel(call: CallbackQuery):
         await track(call.from_user.id, "channel_cta_clicked")
         await call.message.edit_text(
-            "Новости, разборы ЕГЭ и поступление — в канале ЕГЭшка.",
+            "Новости, разборы ЕГЭ и поступление — в канале ЕГЭ Мэтч.",
             reply_markup=InlineKeyboardMarkup(
                 inline_keyboard=[
-                    [InlineKeyboardButton(text="Открыть канал ЕГЭшки", url=settings.channel_url)],
+                    [InlineKeyboardButton(text="Открыть канал ЕГЭ Мэтча", url=settings.channel_url)],
                     [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
                 ]
             ),

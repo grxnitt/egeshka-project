@@ -1,1 +1,1 @@
-"""ЕГЭшка Telegram MVP."""
+"""ЕГЭ Мэтч Telegram MVP."""
