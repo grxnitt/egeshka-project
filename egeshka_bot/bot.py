@@ -134,6 +134,7 @@ def teacher_subject_variants(subject: str) -> tuple[str, ...]:
     """Course catalogue uses exam names; teacher catalogues sometimes spell them out."""
     aliases = {
         "Английский": "Английский язык",
+        "Русский": "Русский язык",
         "Математика": "Математика профильная",
     }
     return tuple(dict.fromkeys((subject, aliases.get(subject, subject), *([MATH_BOTH] if subject in ("Математика профильная", "Математика базовая") else []))))
@@ -312,15 +313,20 @@ def course_card(course, school, teachers):
     )
 
 
-def course_card_keyboard(course_id):
-    return InlineKeyboardMarkup(inline_keyboard=[
+def course_card_keyboard(course_id, source_url=None):
+    rows = [
         [InlineKeyboardButton(text="💸 Тарифы", callback_data=f"course_section:{course_id}:tariffs")],
+    ]
+    if source_url:
+        rows.append([InlineKeyboardButton(text="🌐 Перейти на сайт школы", url=source_url)])
+    rows += [
         [InlineKeyboardButton(text="👩‍🏫 Преподаватели предмета", callback_data=f"course_teachers:{course_id}")],
         [InlineKeyboardButton(text="⚖️ Сравнить с курсом другой школы", callback_data=f"course_compare:{course_id}")],
         [InlineKeyboardButton(text="💬 Оставить отзыв о школе", callback_data=f"review_course_school:{course_id}")],
         [InlineKeyboardButton(text="← К курсам по предметам", callback_data="courses")],
         [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
-    ])
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
 def course_compare_keyboard(left_id, right_id):
@@ -821,11 +827,6 @@ async def build_quiz_result(session_factory, profile: QuizProfile):
     ranked.sort(key=lambda item: item[0], reverse=True)
     top = ranked[:3]
     subject_name = next((item for item in SUBJECTS if item.lower() == profile.subject), profile.subject.title())
-    async with session_factory() as session:
-        subject_courses = (await session.execute(
-            select(Course).where(Course.subject == subject_name, Course.is_active == True)
-        )).scalars().all()
-    course_by_school = {course.school_id: course for course in subject_courses}
     if not top:
         text = (
             f"🎯 <b>Подбор по предмету: {escape(subject_name)}</b>\n\n"
@@ -836,12 +837,48 @@ async def build_quiz_result(session_factory, profile: QuizProfile):
             [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
         ])
         return text, keyboard
+    top_school_ids = [school.id for _, _, school in top]
+    async with session_factory() as session:
+        subject_courses = (await session.execute(
+            select(Course).where(Course.subject == subject_name, Course.is_active == True)
+        )).scalars().all()
+        subject_teachers = (await session.execute(
+            select(Teacher).where(
+                Teacher.school_id.in_(top_school_ids),
+                Teacher.subject.in_(teacher_subject_variants(subject_name)),
+                Teacher.is_active == True,
+            )
+        )).scalars().all()
+        teacher_lines = {}
+        for school_id in top_school_ids:
+            school_teachers = [t for t in subject_teachers if t.school_id == school_id]
+            teacher_lines[school_id] = None
+            if not school_teachers:
+                continue
+            rated = []
+            for teacher in school_teachers:
+                stats = await approved_teacher_criteria_stats(session, school_id, teacher.id)
+                average, _count = teacher_rating_from_criteria(stats)
+                if average is not None:
+                    rated.append((average, teacher.name))
+            if rated:
+                rated.sort(reverse=True)
+                best_average, best_name = rated[0]
+                extra = f" (лучший из {len(school_teachers)})" if len(school_teachers) > 1 else ""
+                teacher_lines[school_id] = f"👩‍🏫 {best_name} — {best_average:.1f}/10{extra}"
+            else:
+                names = ", ".join(t.name for t in school_teachers[:3])
+                teacher_lines[school_id] = f"👩‍🏫 {names} — оценки пока формируются"
+    course_by_school = {course.school_id: course for course in subject_courses}
     lines = []
     for index, (score, reasons, school) in enumerate(top, 1):
         reason_text = ", ".join(reasons) if reasons else "хорошее совпадение по анкете"
         course = course_by_school.get(school.id)
         price = course.price_text if course else school.price_text
-        lines.append(f"{index}. {school.name} — {score:.0f}% совпадение\nПочему: {reason_text}\n💸 {price}")
+        line = f"{index}. {school.name} — {score:.0f}% совпадение\nПочему: {reason_text}\n💸 {price}"
+        if teacher_lines.get(school.id):
+            line += f"\n{teacher_lines[school.id]}"
+        lines.append(line)
     text = (
         f"🎯 <b>Подбор по предмету: {escape(subject_name)}</b>\n\n"
         "Мы отобрали школы по твоим ответам. Открой карточку курса: там формат, тарифы и преподаватели именно по предмету.\n\n"
@@ -1763,7 +1800,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         await track(call.from_user.id, "course_opened", {"course_id": course_id, "subject": item.subject})
         await call.message.edit_text(
             course_card(item, school, teachers),
-            reply_markup=course_card_keyboard(item.id),
+            reply_markup=course_card_keyboard(item.id, item.source_url),
             parse_mode=ParseMode.HTML,
         )
         await call.answer()
