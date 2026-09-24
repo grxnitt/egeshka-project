@@ -12,7 +12,7 @@ WEB = ROOT / "web"
 SITE = "https://egematch.online"
 BOT = "https://t.me/egematch_bot"
 CSS_VERSIONS = {
-    "styles.css": "30",
+    "styles.css": "32",
     "refinements.css": "35",
     "typography.css": "31",
     "composition.css": "76",
@@ -84,11 +84,12 @@ def page_head(school, url):
   <link rel="canonical" href="{url}">
   <meta property="og:type" content="website"><meta property="og:site_name" content="ЕГЭ Мэтч">
   <meta property="og:title" content="{escape(title, quote=True)}"><meta property="og:description" content="{escape(description, quote=True)}">
-  <meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}/assets/og-cover.png">
+  <meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}/assets/og-cover.png?v=2">
   <meta name="twitter:card" content="summary_large_image">
   <title>{escape(title)}</title>
   <link rel="icon" href="/assets/egeshka-logo-icon.svg" type="image/svg+xml">
   <link rel="manifest" href="/site.webmanifest">
+  <link rel="preload" href="/assets/fonts/onest-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/unbounded-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 {css}
   <script type="application/ld+json">{json.dumps(breadcrumb, ensure_ascii=False)}</script>
 </head>"""
