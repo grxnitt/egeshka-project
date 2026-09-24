@@ -20,7 +20,7 @@
     try{url=new URL(a.href,location.href)}catch(e){return null}
     if(url.protocol!=='http:'&&url.protocol!=='https:')return null;
     var host=url.hostname.toLowerCase();
-    if(OWN_HOSTS.indexOf(host)>-1||SKIP_HOSTS.indexOf(host)>-1||/supabase\.co$/.test(host))return null;
+    if(host===location.hostname.toLowerCase()||OWN_HOSTS.indexOf(host)>-1||SKIP_HOSTS.indexOf(host)>-1||/supabase\.co$/.test(host))return null;
     if(!url.searchParams.has('utm_source')){
       url.searchParams.set('utm_source','egematch');
       url.searchParams.set('utm_medium','referral');

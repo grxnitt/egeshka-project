@@ -32,11 +32,36 @@ def test_ratings_page_links_to_every_school_page():
     assert linked == {s["reviewSlug"] for s in catalog["schools"]}
 
 
-def test_school_pages_open_teacher_dialogs():
+def unique_teachers(catalog):
+    return {(t["school"], t["name"]) for t in catalog["teachers"]}
+
+
+def test_school_page_links_every_teacher_to_their_own_page():
     catalog = json.loads((WEB / "catalog.json").read_text(encoding="utf-8"))
-    teachers = [t for t in catalog["teachers"] if t["school"] == "Умскул"]
     page = (WEB / "schools" / "umskul.html").read_text(encoding="utf-8")
-    assert page.count("data-open-teacher=") == len(teachers)
-    assert '<dialog id="detail-dialog">' in page
-    assert '<script type="module" src="/ratings.js' in page
-    assert '<base href="/">' in page
+    people = {t["name"] for t in catalog["teachers"] if t["school"] == "Умскул"}
+
+    assert page.count('class="sp-teacher"') == len(people)
+    assert 'id="teachers"' in page and 'data-back="/ratings"' in page
+    assert "<dialog" not in page and "ratings.js" not in page
+
+
+def test_every_teacher_has_a_noindex_page_and_a_catalog_slug():
+    catalog = json.loads((WEB / "catalog.json").read_text(encoding="utf-8"))
+    slugs = {t["slug"] for t in catalog["teachers"]}
+
+    assert all(t.get("slug") for t in catalog["teachers"])
+    assert len(slugs) == len(unique_teachers(catalog))
+    for slug in slugs:
+        page = (WEB / "teachers" / f"{slug}.html").read_text(encoding="utf-8")
+        assert '<meta name="robots" content="noindex,follow">' in page
+        assert f'<link rel="canonical" href="https://egematch.ru/teachers/{slug}">' in page
+    assert "/teachers/" not in (WEB / "sitemap.xml").read_text(encoding="utf-8")
+
+
+def test_ratings_cards_are_plain_links_to_school_pages():
+    script = (WEB / "ratings.js").read_text(encoding="utf-8")
+
+    assert '<a class="card-open" href="/schools/${school.reviewSlug}">' in script
+    assert '<a class="card-teachers" href="/schools/${school.reviewSlug}#teachers">' in script
+    assert "location.replace(`/schools/" in script and "location.replace(`/teachers/" in script

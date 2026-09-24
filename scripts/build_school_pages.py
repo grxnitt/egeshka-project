@@ -15,7 +15,7 @@ CSS_VERSIONS = {
     "styles.css": "34",
     "refinements.css": "35",
     "typography.css": "31",
-    "composition.css": "82",
+    "composition.css": "84",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -26,6 +26,17 @@ CRITERIA = {
     "workload_score": "Нагрузка и темп",
     "organization_score": "Организация обучения",
 }
+TEACHER_CRITERIA = {
+    "explanation": "Объяснение материала",
+    "practice": "Практика и разбор ошибок",
+    "atmosphere": "Атмосфера и вовлечённость",
+    "structure": "Структура и темп занятий",
+    "exam_value": "Польза для экзамена",
+}
+TRANSLIT = dict(zip(
+    "абвгдеёжзийклмнопрстуфхцчшщъыьэюя",
+    ["a","b","v","g","d","e","e","zh","z","i","y","k","l","m","n","o","p","r","s","t","u","f","kh","ts","ch","sh","shch","","y","","e","yu","ya"],
+))
 LINKS_START = "<!-- school-links:start -->"
 LINKS_END = "<!-- school-links:end -->"
 
@@ -54,14 +65,58 @@ def shared_chrome():
     return abs_href(header), abs_href(nav) + "\n" + abs_href(footer)
 
 
-def page_head(school, url):
-    subjects = len(school["subjects"])
-    description = (
-        f"{first_sentence(school['description'])} "
-        f"Оценка {num(school['score'])} из 10, цены, {subjects} предметов, преподаватели "
-        f"и как оставить отзыв."
-    )
-    title = f"{school['name']}: оценка, цены и преподаватели для ЕГЭ — ЕГЭ Мэтч"
+def translit(text):
+    out = "".join(TRANSLIT.get(ch, ch) for ch in text.lower())
+    return re.sub(r"-+", "-", re.sub(r"[^a-z0-9]+", "-", out)).strip("-")
+
+
+def teacher_people(catalog, school_slugs):
+    """One entry per (school, name); subjects merged, slugs unique."""
+    people, used = {}, set()
+    for record in catalog["teachers"]:
+        key = (record["school"], record["name"])
+        if key not in people:
+            base = f"{school_slugs[record['school']]}-{translit(record['name'])}"
+            slug, n = base, 2
+            while slug in used:
+                slug, n = f"{base}-{n}", n + 1
+            used.add(slug)
+            people[key] = {**record, "slug": slug, "subjects": list(record.get("subjects") or [record["subject"]])}
+        else:
+            for subject in record.get("subjects") or [record["subject"]]:
+                if subject not in people[key]["subjects"]:
+                    people[key]["subjects"].append(subject)
+    return people
+
+
+NAV_SCRIPT = """<script>
+(function(){
+  var q=new URLSearchParams(location.search),back=document.querySelector('[data-back]');
+  if(back){
+    if(q.get('from')==='quiz'&&back.getAttribute('data-back')==='/ratings'){back.setAttribute('href','/?resume=quiz');back.textContent='\\u2190 \\u041a \\u0440\\u0435\\u0437\\u0443\\u043b\\u044c\\u0442\\u0430\\u0442\\u0430\\u043c \\u043f\\u043e\\u0434\\u0431\\u043e\\u0440\\u0430';}
+    else if(document.referrer){try{var r=new URL(document.referrer);if(r.origin===location.origin&&r.pathname.indexOf(back.getAttribute('data-back'))===0){back.addEventListener('click',function(e){e.preventDefault();history.back();});}}catch(e){}}
+  }
+  var map=window.TEACHER_SLUGS,t=q.get('teacher');
+  if(map&&t&&map[t])location.replace('/teachers/'+map[t]);
+})();
+</script>"""
+
+FILTER_SCRIPT = """<script>
+(function(){
+  var buttons=document.querySelectorAll('[data-filter]'),items=document.querySelectorAll('.sp-teachers li'),out=document.getElementById('sp-count');
+  if(!buttons.length)return;
+  function word(n){var a=n%100,b=n%10;return a>=11&&a<=14?'\\u043f\\u0440\\u0435\\u043f\\u043e\\u0434\\u0430\\u0432\\u0430\\u0442\\u0435\\u043b\\u0435\\u0439':b===1?'\\u043f\\u0440\\u0435\\u043f\\u043e\\u0434\\u0430\\u0432\\u0430\\u0442\\u0435\\u043b\\u044c':b>=2&&b<=4?'\\u043f\\u0440\\u0435\\u043f\\u043e\\u0434\\u0430\\u0432\\u0430\\u0442\\u0435\\u043b\\u044f':'\\u043f\\u0440\\u0435\\u043f\\u043e\\u0434\\u0430\\u0432\\u0430\\u0442\\u0435\\u043b\\u0435\\u0439';}
+  buttons.forEach(function(button){button.addEventListener('click',function(){
+    var value=button.getAttribute('data-filter'),shown=0;
+    buttons.forEach(function(b){var on=b===button;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));});
+    items.forEach(function(li){var ok=!value||li.getAttribute('data-subjects').split('|').indexOf(value)>-1;li.hidden=!ok;if(ok)shown++;});
+    if(out)out.textContent=value?value+' \\u00b7 '+shown+' '+word(shown):'';
+  });});
+})();
+</script>"""
+
+
+def make_head(title, description, url, crumbs, noindex=False):
     css = "\n".join(
         f'  <link rel="stylesheet" href="/{name}?v={version}">' for name, version in CSS_VERSIONS.items()
     )
@@ -69,16 +124,16 @@ def page_head(school, url):
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
-            {"@type": "ListItem", "position": 1, "name": "Главная", "item": f"{SITE}/"},
-            {"@type": "ListItem", "position": 2, "name": "Рейтинг школ", "item": f"{SITE}/ratings"},
-            {"@type": "ListItem", "position": 3, "name": school["name"], "item": url},
+            {"@type": "ListItem", "position": n, "name": name, "item": item}
+            for n, (name, item) in enumerate(crumbs, 1)
         ],
     }
+    robots = '\n  <meta name="robots" content="noindex,follow">' if noindex else ""
     return f"""<!doctype html>
 <html lang="ru">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <base href="/">
+  <base href="/">{robots}
   <meta name="theme-color" content="#FAF8F5">
   <meta name="description" content="{escape(description, quote=True)}">
   <link rel="canonical" href="{url}">
@@ -95,11 +150,34 @@ def page_head(school, url):
 </head>"""
 
 
+def page_head(school, url):
+    description = (
+        f"{first_sentence(school['description'])} "
+        f"Оценка {num(school['score'])} из 10, цены, {len(school['subjects'])} предметов, преподаватели "
+        f"и как оставить отзыв."
+    )
+    title = f"{school['name']}: оценка, цены и преподаватели для ЕГЭ — ЕГЭ Мэтч"
+    crumbs = [("Главная", f"{SITE}/"), ("Рейтинг школ", f"{SITE}/ratings"), (school["name"], url)]
+    return make_head(title, description, url, crumbs)
+
+
 def subject_label(subject):
     return subject[:1].upper() + subject[1:]
 
 
-def build_page(school, teachers, others, header, footer):
+def teacher_card(person):
+    subjects = ", ".join(person["subjects"])
+    initial = escape(person["name"].strip()[:1])
+    description = escape(person.get("description") or "")
+    return (
+        f'<li data-subjects="{escape("|".join(person["subjects"]), quote=True)}">'
+        f'<a class="sp-teacher" href="/teachers/{person["slug"]}"><span class="sp-monogram" aria-hidden="true">{initial}</span>'
+        f'<span class="sp-teacher-main"><b>{escape(person["name"])}</b><small>{escape(subjects)}</small>'
+        f'<span class="sp-desc">{description}</span></span><i aria-hidden="true">→</i></a></li>'
+    )
+
+
+def build_page(school, people, others, header, footer, teacher_slugs):
     slug = school["reviewSlug"]
     url = f"{SITE}/schools/{slug}"
     criteria_rows = "".join(
@@ -109,21 +187,22 @@ def build_page(school, teachers, others, header, footer):
         if key in school["criteria"]
     )
     subjects = "".join(f"<li>{escape(subject_label(s))}</li>" for s in school["subjects"])
-    if teachers:
-        teacher_items = "".join(
-            f'<li><button type="button" data-open-teacher="{escape(t["name"], quote=True)}" '
-            f'data-school="{escape(school["name"], quote=True)}"><b>{escape(t["name"])}</b>'
-            f'<span>{escape(", ".join(t["subjects"]))}</span></button></li>'
-            for t in teachers
-        )
+    if people:
+        teacher_subjects = sorted({s for person in people for s in person["subjects"]})
+        filter_html = ""
+        if len(teacher_subjects) > 1:
+            chips = '<button type="button" class="active" data-filter="" aria-pressed="true">Все</button>' + "".join(
+                f'<button type="button" data-filter="{escape(s, quote=True)}" aria-pressed="false">{escape(s)}</button>'
+                for s in teacher_subjects
+            )
+            filter_html = f'<div class="sp-filter" role="group" aria-label="Фильтр преподавателей по предмету">{chips}</div><p class="sp-hint" id="sp-count" aria-live="polite"></p>'
         teachers_block = (
-            f'<section class="sp-section"><h2>Преподаватели ({len(teachers)})</h2>'
-            f'<p class="sp-hint">Нажми на преподавателя, чтобы открыть карточку.</p>'
-            f'<ul class="sp-teachers">{teacher_items}</ul></section>'
+            f'<section class="sp-section" id="teachers"><h2>Преподаватели ({len(people)})</h2>'
+            f'{filter_html}<ul class="sp-teachers">{"".join(teacher_card(p) for p in people)}</ul></section>'
         )
     else:
         teachers_block = (
-            '<section class="sp-section"><h2>Преподаватели</h2>'
+            '<section class="sp-section" id="teachers"><h2>Преподаватели</h2>'
             "<p>Школа работает по модели репетиторского сервиса: конкретного преподавателя "
             "выбирают на сайте школы.</p></section>"
         )
@@ -132,10 +211,12 @@ def build_page(school, teachers, others, header, footer):
     )
     compare_url = "/?" + "compareLeft=" + re.sub(r"\s", "+", school["name"]) + "#compare"
     review_url = f'{BOT}?start=review_{slug}'
+    slug_map = json.dumps({p["name"]: p["slug"] for p in people}, ensure_ascii=False)
     body = f"""<body class="school-page-body">
 {header}
 <main class="school-page wrap">
   <nav class="breadcrumbs" aria-label="Навигация"><a href="/">Главная</a><span>›</span><a href="/ratings">Рейтинг школ</a><span>›</span><span aria-current="page">{escape(school["name"])}</span></nav>
+  <p class="back-row"><a class="back-link" href="/ratings" data-back="/ratings">← К рейтингу</a></p>
   <section class="hero hero-centered school-hero">
     <div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div class="hero-glow hero-glow-pink" aria-hidden="true"></div>
     <div class="hero-copy"><h1>{escape(school["name"])}</h1><p class="lead">{escape(school["description"])}</p><div class="sp-score"><small>Оценка ЕГЭ Мэтча</small><strong>{num(school["score"])}</strong><span>из 10</span></div></div>
@@ -150,15 +231,74 @@ def build_page(school, teachers, others, header, footer):
   <section class="sp-section"><h2>Другие школы</h2><nav class="sp-more" aria-label="Другие школы">{other_links}<a href="/ratings">Весь рейтинг →</a></nav></section>
 </main>
 {footer}
-<dialog id="detail-dialog"><button class="close" aria-label="Закрыть">×</button><div id="dialog-content" tabindex="0" aria-label="Подробности"></div></dialog>
+<script>window.TEACHER_SLUGS={slug_map};</script>
 <script src="/analytics-config.js?v=1"></script>
-<script src="/analytics.js?v=3"></script>
-<script src="/supabase-config.js?v=1"></script>
-<script type="module" src="/ratings.js?v=58"></script>
+<script src="/analytics.js?v=4"></script>
+{NAV_SCRIPT}
+{FILTER_SCRIPT}
 </body>
 </html>
 """
     return page_head(school, url) + "\n" + body
+
+
+def build_teacher_page(person, school, colleagues, header, footer):
+    school_slug = school["reviewSlug"]
+    school_url = f"/schools/{school_slug}"
+    url = f"{SITE}/teachers/{person['slug']}"
+    subjects = " · ".join(person["subjects"])
+    score = person.get("studentScore")
+    score_text = "—" if score is None else num(score)
+    score_note = "Нужно 3 отзыва" if score is None else "из 10" + ("*" if person.get("isPreliminary") else "")
+    criteria = person.get("criteria") or {}
+    has_criteria = any(v is not None for v in criteria.values())
+    rows = "".join(
+        (
+            f'<li><span>{escape(label)}</span><i aria-hidden="true"><b style="width:{criteria[key] * 10:.0f}%"></b></i><strong>{num(criteria[key])}</strong></li>'
+            if criteria.get(key) is not None
+            else f'<li class="sp-empty"><span>{escape(label)}</span><em>Пока нет оценки</em></li>'
+        )
+        for key, label in TEACHER_CRITERIA.items()
+    )
+    reviews_hint = (
+        f'{person.get("verifiedReviewCount", 0)} подтверждённых отзывов'
+        if has_criteria
+        else "Появятся, когда наберётся вес трёх подтверждённых отзывов."
+    )
+    same_subject = [c for c in colleagues if set(c["subjects"]) & set(person["subjects"])]
+    others = (same_subject + [c for c in colleagues if c not in same_subject])[:16]
+    other_links = "".join(f'<a href="/teachers/{c["slug"]}">{escape(c["name"])}</a>' for c in others)
+    review_url = f"{BOT}?start=review_{school_slug}"
+    title = f"{person['name']} — {subjects}, {school['name']} | ЕГЭ Мэтч"
+    description = f"{person['name']}, преподаватель {school['name']}: {subjects}. Описание, оценки учеников и как оставить отзыв."
+    crumbs = [
+        ("Главная", f"{SITE}/"),
+        ("Рейтинг школ", f"{SITE}/ratings"),
+        (school["name"], f"{SITE}{school_url}"),
+        (person["name"], url),
+    ]
+    body = f"""<body class="school-page-body teacher-page-body">
+{header}
+<main class="school-page wrap">
+  <nav class="breadcrumbs" aria-label="Навигация"><a href="/">Главная</a><span>›</span><a href="/ratings">Рейтинг школ</a><span>›</span><a href="{school_url}">{escape(school["name"])}</a><span>›</span><span aria-current="page">{escape(person["name"])}</span></nav>
+  <p class="back-row"><a class="back-link" href="{school_url}#teachers" data-back="{school_url}">← Все преподаватели школы</a></p>
+  <section class="hero hero-centered school-hero">
+    <div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div class="hero-glow hero-glow-pink" aria-hidden="true"></div>
+    <div class="hero-copy"><p class="teacher-kicker"><a href="{school_url}">{escape(school["name"])}</a></p><h1>{escape(person["name"])}</h1><p class="lead">{escape(subjects)}</p><div class="sp-score"><small>Оценка учеников</small><strong>{score_text}</strong><span>{score_note}</span></div></div>
+  </section>
+  <section class="sp-section"><h2>О преподавателе</h2><p class="sp-body">{escape(person.get("description") or "")}</p></section>
+  <section class="sp-section"><h2>Оценки учеников</h2><p class="sp-hint">{escape(reviews_hint)}</p><ul class="sp-criteria">{rows}</ul></section>
+  <div class="sp-actions"><a class="button dark" href="{escape(person["url"])}" target="_blank" rel="noopener">Профиль преподавателя <span>↗</span></a><a class="button outline" href="{review_url}" target="_blank" rel="noopener">Оставить отзыв <span>↗</span></a><a class="button blue" href="{school_url}">О школе <span>→</span></a></div>
+  <section class="sp-section"><h2>Другие преподаватели школы</h2><nav class="sp-more" aria-label="Другие преподаватели школы">{other_links}<a href="{school_url}#teachers">Все преподаватели →</a></nav></section>
+</main>
+{footer}
+<script src="/analytics-config.js?v=1"></script>
+<script src="/analytics.js?v=4"></script>
+{NAV_SCRIPT}
+</body>
+</html>
+"""
+    return make_head(title, description, url, crumbs, noindex=True) + "\n" + body
 
 
 def links_block(schools):
@@ -193,25 +333,42 @@ def write_sitemap(schools):
     (WEB / "sitemap.xml").write_text(xml, encoding="utf-8")
 
 
+def patch_catalog_slugs(catalog, people):
+    changed = False
+    for record in catalog["teachers"]:
+        slug = people[(record["school"], record["name"])]["slug"]
+        if record.get("slug") != slug:
+            record["slug"] = slug
+            changed = True
+    if changed:
+        (WEB / "catalog.json").write_text(json.dumps(catalog, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
 def main():
     catalog = json.loads((WEB / "catalog.json").read_text(encoding="utf-8"))
     schools = catalog["schools"]
+    school_slugs = {s["name"]: s["reviewSlug"] for s in schools}
+    people = teacher_people(catalog, school_slugs)
+    patch_catalog_slugs(catalog, people)
     header, footer = shared_chrome()
-    out = WEB / "schools"
-    out.mkdir(exist_ok=True)
-    for path in out.glob("*.html"):
-        path.unlink()
+    for folder in ("schools", "teachers"):
+        (WEB / folder).mkdir(exist_ok=True)
+        for path in (WEB / folder).glob("*.html"):
+            path.unlink()
     for school in schools:
-        teachers = sorted(
-            (t for t in catalog["teachers"] if t["school"] == school["name"]), key=lambda t: t["name"]
-        )
+        members = sorted((p for (name, _), p in people.items() if name == school["name"]), key=lambda p: p["name"])
         others = [s for s in sorted(schools, key=lambda s: -s["score"]) if s["name"] != school["name"]]
-        (out / f"{school['reviewSlug']}.html").write_text(
-            build_page(school, teachers, others, header, footer), encoding="utf-8"
+        (WEB / "schools" / f"{school['reviewSlug']}.html").write_text(
+            build_page(school, members, others, header, footer, school_slugs), encoding="utf-8"
         )
+        for person in members:
+            colleagues = [m for m in members if m is not person]
+            (WEB / "teachers" / f"{person['slug']}.html").write_text(
+                build_teacher_page(person, school, colleagues, header, footer), encoding="utf-8"
+            )
     update_ratings_links(schools)
     write_sitemap(schools)
-    print(f"Generated {len(schools)} school pages")
+    print(f"Generated {len(schools)} school pages and {len(people)} teacher pages")
 
 
 if __name__ == "__main__":

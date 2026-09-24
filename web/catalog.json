@@ -584,7 +584,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://umschool.net/tutor/"
+      "url": "https://umschool.net/tutor/",
+      "slug": "umskul-aleksandr-dolgikh"
     },
     {
       "id": 2,
@@ -599,7 +600,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://umschool.net/tutor/2/"
+      "url": "https://umschool.net/tutor/2/",
+      "slug": "umskul-nadezhda-kovalevskaya"
     },
     {
       "id": 3,
@@ -614,7 +616,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://umschool.net/tutor/2/"
+      "url": "https://umschool.net/tutor/2/",
+      "slug": "umskul-anastasiya-malova"
     },
     {
       "id": 4,
@@ -629,7 +632,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://100points.ru/teachers/"
+      "url": "https://100points.ru/teachers/",
+      "slug": "100ballov-masha-ptiptsa"
     },
     {
       "id": 5,
@@ -644,7 +648,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://100points.ru/teachers/"
+      "url": "https://100points.ru/teachers/",
+      "slug": "100ballov-ilich"
     },
     {
       "id": 6,
@@ -659,7 +664,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://100points.ru/results/"
+      "url": "https://100points.ru/results/",
+      "slug": "100ballov-katya-stroganova"
     },
     {
       "id": 89,
@@ -674,7 +680,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://sotkaonline.ru/ege"
+      "url": "https://sotkaonline.ru/ege",
+      "slug": "sotka-darya-ustinova"
     },
     {
       "id": 7,
@@ -689,7 +696,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://sotkaonline.ru/ege/11class/angliskii-yazik"
+      "url": "https://sotkaonline.ru/ege/11class/angliskii-yazik",
+      "slug": "sotka-ayzilya-musina"
     },
     {
       "id": 8,
@@ -704,7 +712,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://sotkaonline.ru/ege/11class/angliskii-yazik"
+      "url": "https://sotkaonline.ru/ege/11class/angliskii-yazik",
+      "slug": "sotka-pasha-anglichanin"
     },
     {
       "id": 95,
@@ -719,7 +728,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://sotkaonline.ru/ege/11class/obshestvoznanie"
+      "url": "https://sotkaonline.ru/ege/11class/obshestvoznanie",
+      "slug": "sotka-aleksey-kulagin"
     },
     {
       "id": 96,
@@ -734,7 +744,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://sotkaonline.ru/ege/11class/obshestvoznanie"
+      "url": "https://sotkaonline.ru/ege/11class/obshestvoznanie",
+      "slug": "sotka-kseniya-rerikh"
     },
     {
       "id": 97,
@@ -749,7 +760,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://sotkaonline.ru/ege/11class/obshestvoznanie"
+      "url": "https://sotkaonline.ru/ege/11class/obshestvoznanie",
+      "slug": "sotka-nikita-petyashin"
     },
     {
       "id": 9,
@@ -764,7 +776,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://foxford.ru/teachers"
+      "url": "https://foxford.ru/teachers",
+      "slug": "foxford-boris-trushin"
     },
     {
       "id": 10,
@@ -779,7 +792,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://foxford.ru/teachers"
+      "url": "https://foxford.ru/teachers",
+      "slug": "foxford-darya-ilicheva"
     },
     {
       "id": 11,
@@ -794,7 +808,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://foxford.ru/teachers"
+      "url": "https://foxford.ru/teachers",
+      "slug": "foxford-aleksandr-chorbu"
     },
     {
       "id": 90,
@@ -809,7 +824,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://foxford.ru/ege/fizika"
+      "url": "https://foxford.ru/ege/fizika",
+      "slug": "foxford-mikhail-penkin"
     },
     {
       "id": 91,
@@ -824,7 +840,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://foxford.ru/ege/courses"
+      "url": "https://foxford.ru/ege/courses",
+      "slug": "foxford-sergey-gorbachev"
     },
     {
       "id": 92,
@@ -839,7 +856,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://foxford.ru/ege/obschestvoznanie-courses"
+      "url": "https://foxford.ru/ege/obschestvoznanie-courses",
+      "slug": "foxford-polina-kuznetsova"
     },
     {
       "id": 93,
@@ -855,7 +873,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://foxford.ru/ege/matematika-courses"
+      "url": "https://foxford.ru/ege/matematika-courses",
+      "slug": "foxford-nina-maksimova"
     },
     {
       "id": 98,
@@ -870,7 +889,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://foxford.ru/ege/courses"
+      "url": "https://foxford.ru/ege/courses",
+      "slug": "foxford-veronika-avramenko"
     },
     {
       "id": 99,
@@ -885,7 +905,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://foxford.ru/ege/courses"
+      "url": "https://foxford.ru/ege/courses",
+      "slug": "foxford-viktoriya-simakova"
     },
     {
       "id": 100,
@@ -900,7 +921,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://foxford.ru/ege/courses"
+      "url": "https://foxford.ru/ege/courses",
+      "slug": "foxford-lera-lukantseva"
     },
     {
       "id": 101,
@@ -915,7 +937,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://foxford.ru/ege/literatura-courses"
+      "url": "https://foxford.ru/ege/literatura-courses",
+      "slug": "foxford-vasilisa-kravchenko"
     },
     {
       "id": 102,
@@ -930,7 +953,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://foxford.ru/ege/courses"
+      "url": "https://foxford.ru/ege/courses",
+      "slug": "foxford-elizaveta-kulikova"
     },
     {
       "id": 12,
@@ -945,7 +969,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://webium.ru/teachers/veronika-vavilova/"
+      "url": "https://webium.ru/teachers/veronika-vavilova/",
+      "slug": "webium-veronika-vavilova"
     },
     {
       "id": 13,
@@ -960,7 +985,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://webium.ru/teachers/kristina-spenser/"
+      "url": "https://webium.ru/teachers/kristina-spenser/",
+      "slug": "webium-kristina-spenser"
     },
     {
       "id": 14,
@@ -975,7 +1001,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://webium.ru/teachers/valeriya-engels/"
+      "url": "https://webium.ru/teachers/valeriya-engels/",
+      "slug": "webium-valeriya-engels"
     },
     {
       "id": 15,
@@ -990,7 +1017,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://service.99ballov.ru/teachers"
+      "url": "https://service.99ballov.ru/teachers",
+      "slug": "99ballov-murad-garlyev"
     },
     {
       "id": 94,
@@ -1005,7 +1033,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://service.99ballov.ru/teachers"
+      "url": "https://service.99ballov.ru/teachers",
+      "slug": "99ballov-lyaysan-khaybullina"
     },
     {
       "id": 17,
@@ -1020,7 +1049,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egeturbo.ru/teachers"
+      "url": "https://egeturbo.ru/teachers",
+      "slug": "turbo-violetta"
     },
     {
       "id": 18,
@@ -1035,7 +1065,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egeturbo.ru/teachers"
+      "url": "https://egeturbo.ru/teachers",
+      "slug": "turbo-ilya"
     },
     {
       "id": 19,
@@ -1050,7 +1081,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egeturbo.ru/teachers"
+      "url": "https://egeturbo.ru/teachers",
+      "slug": "turbo-ira"
     },
     {
       "id": 20,
@@ -1065,7 +1097,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://umschool.net/tutor/"
+      "url": "https://umschool.net/tutor/",
+      "slug": "umskul-artur-sharafiev"
     },
     {
       "id": 21,
@@ -1080,7 +1113,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://umschool.net/tutor/"
+      "url": "https://umschool.net/tutor/",
+      "slug": "umskul-tatyana-graeva"
     },
     {
       "id": 22,
@@ -1095,7 +1129,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://umschool.net/ege/"
+      "url": "https://umschool.net/ege/",
+      "slug": "umskul-veronika-sokolovskaya"
     },
     {
       "id": 23,
@@ -1110,7 +1145,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://umschool.net/ege/"
+      "url": "https://umschool.net/ege/",
+      "slug": "umskul-darya-koroleva"
     },
     {
       "id": 24,
@@ -1125,7 +1161,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://umschool.net/ege/"
+      "url": "https://umschool.net/ege/",
+      "slug": "umskul-danir-baev"
     },
     {
       "id": 25,
@@ -1140,7 +1177,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://umschool.net/tutor/"
+      "url": "https://umschool.net/tutor/",
+      "slug": "umskul-maksim-glukhov"
     },
     {
       "id": 26,
@@ -1155,7 +1193,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://umschool.net/tutor/"
+      "url": "https://umschool.net/tutor/",
+      "slug": "umskul-ravil-kandinskiy"
     },
     {
       "id": 27,
@@ -1170,7 +1209,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://umschool.net/tutor/"
+      "url": "https://umschool.net/tutor/",
+      "slug": "umskul-alina-maksimova"
     },
     {
       "id": 28,
@@ -1185,7 +1225,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://umschool.net/tutor/2/"
+      "url": "https://umschool.net/tutor/2/",
+      "slug": "umskul-alya-vinogradova"
     },
     {
       "id": 29,
@@ -1200,7 +1241,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://umschool.net/tutor/2/"
+      "url": "https://umschool.net/tutor/2/",
+      "slug": "umskul-zhanna-kazanskaya"
     },
     {
       "id": 30,
@@ -1215,7 +1257,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://umschool.net/tutor/2/"
+      "url": "https://umschool.net/tutor/2/",
+      "slug": "umskul-viktoriya-lanskaya"
     },
     {
       "id": 31,
@@ -1230,7 +1273,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://umschool.net/tutor/3/"
+      "url": "https://umschool.net/tutor/3/",
+      "slug": "umskul-bogdan-chagin"
     },
     {
       "id": 82,
@@ -1245,7 +1289,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://umschool.net/tutor/2/"
+      "url": "https://umschool.net/tutor/2/",
+      "slug": "umskul-maks-tesla"
     },
     {
       "id": 83,
@@ -1260,7 +1305,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://umschool.net/tutor/2/"
+      "url": "https://umschool.net/tutor/2/",
+      "slug": "umskul-sherin-kelli"
     },
     {
       "id": 84,
@@ -1275,7 +1321,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://umschool.net/tutor/2/"
+      "url": "https://umschool.net/tutor/2/",
+      "slug": "umskul-kristina-melnikova"
     },
     {
       "id": 85,
@@ -1290,7 +1337,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://umschool.net/tutor/2/"
+      "url": "https://umschool.net/tutor/2/",
+      "slug": "umskul-nikita-ravich"
     },
     {
       "id": 86,
@@ -1305,7 +1353,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://umschool.net/tutor/3/"
+      "url": "https://umschool.net/tutor/3/",
+      "slug": "umskul-mariya-velf"
     },
     {
       "id": 87,
@@ -1320,7 +1369,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://umschool.net/tutor/3/"
+      "url": "https://umschool.net/tutor/3/",
+      "slug": "umskul-nikita-sakharov"
     },
     {
       "id": 32,
@@ -1336,7 +1386,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://100points.ru/teachers/"
+      "url": "https://100points.ru/teachers/",
+      "slug": "100ballov-matemanya"
     },
     {
       "id": 33,
@@ -1351,7 +1402,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://100points.ru/teachers/"
+      "url": "https://100points.ru/teachers/",
+      "slug": "100ballov-sanya-ebonit"
     },
     {
       "id": 34,
@@ -1366,7 +1418,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://100points.ru/results/"
+      "url": "https://100points.ru/results/",
+      "slug": "100ballov-valentinych"
     },
     {
       "id": 35,
@@ -1381,7 +1434,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://100points.ru/teachers/"
+      "url": "https://100points.ru/teachers/",
+      "slug": "100ballov-kseniya-napolskaya"
     },
     {
       "id": 80,
@@ -1396,7 +1450,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://100points.ru/teachers/"
+      "url": "https://100points.ru/teachers/",
+      "slug": "100ballov-mark-lamark"
     },
     {
       "id": 36,
@@ -1411,7 +1466,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://100points.ru/teachers/"
+      "url": "https://100points.ru/teachers/",
+      "slug": "100ballov-marina-medvedeva"
     },
     {
       "id": 37,
@@ -1426,7 +1482,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://100points.ru/teachers/"
+      "url": "https://100points.ru/teachers/",
+      "slug": "100ballov-artem-imaev"
     },
     {
       "id": 38,
@@ -1441,7 +1498,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://100points.ru/teachers/"
+      "url": "https://100points.ru/teachers/",
+      "slug": "100ballov-top-repetitor"
     },
     {
       "id": 39,
@@ -1456,7 +1514,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://100points.ru/teachers/"
+      "url": "https://100points.ru/teachers/",
+      "slug": "100ballov-tanya-shibitova"
     },
     {
       "id": 40,
@@ -1471,7 +1530,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://100points.ru/teachers/"
+      "url": "https://100points.ru/teachers/",
+      "slug": "100ballov-masha-korshunova"
     },
     {
       "id": 41,
@@ -1486,7 +1546,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://100points.ru/teachers/"
+      "url": "https://100points.ru/teachers/",
+      "slug": "100ballov-polina-belova"
     },
     {
       "id": 42,
@@ -1501,7 +1562,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://100points.ru/teachers/"
+      "url": "https://100points.ru/teachers/",
+      "slug": "100ballov-nastya-korzheva"
     },
     {
       "id": 43,
@@ -1516,7 +1578,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://100points.ru/teachers/"
+      "url": "https://100points.ru/teachers/",
+      "slug": "100ballov-danya-vasilev"
     },
     {
       "id": 44,
@@ -1531,7 +1594,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://100points.ru/results/"
+      "url": "https://100points.ru/results/",
+      "slug": "100ballov-olya-stepanova"
     },
     {
       "id": 45,
@@ -1546,7 +1610,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://100points.ru/teachers/"
+      "url": "https://100points.ru/teachers/",
+      "slug": "100ballov-nastya-kaliganova"
     },
     {
       "id": 46,
@@ -1561,7 +1626,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://100points.ru/teachers/"
+      "url": "https://100points.ru/teachers/",
+      "slug": "100ballov-artem-karmaz"
     },
     {
       "id": 47,
@@ -1576,7 +1642,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://service.99ballov.ru/teachers"
+      "url": "https://service.99ballov.ru/teachers",
+      "slug": "99ballov-mariya-fedotova"
     },
     {
       "id": 48,
@@ -1591,7 +1658,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://service.99ballov.ru/teachers"
+      "url": "https://service.99ballov.ru/teachers",
+      "slug": "99ballov-elena-kazakova"
     },
     {
       "id": 49,
@@ -1606,7 +1674,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://service.99ballov.ru/teachers"
+      "url": "https://service.99ballov.ru/teachers",
+      "slug": "99ballov-aynur-murzakhanov"
     },
     {
       "id": 50,
@@ -1621,7 +1690,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://service.99ballov.ru/teachers"
+      "url": "https://service.99ballov.ru/teachers",
+      "slug": "99ballov-klim-korneevets"
     },
     {
       "id": 51,
@@ -1636,7 +1706,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://sotkaonline.ru/teachers"
+      "url": "https://sotkaonline.ru/teachers",
+      "slug": "sotka-albina-amirova"
     },
     {
       "id": 52,
@@ -1651,7 +1722,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://sotkaonline.ru/teachers"
+      "url": "https://sotkaonline.ru/teachers",
+      "slug": "sotka-grisha-grin"
     },
     {
       "id": 53,
@@ -1666,7 +1738,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://sotkaonline.ru/ege/11class/fizika"
+      "url": "https://sotkaonline.ru/ege/11class/fizika",
+      "slug": "sotka-timur-neyman"
     },
     {
       "id": 54,
@@ -1681,7 +1754,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://sotkaonline.ru/ege/11class/himia"
+      "url": "https://sotkaonline.ru/ege/11class/himia",
+      "slug": "sotka-yuliya-vishnevskaya"
     },
     {
       "id": 103,
@@ -1696,7 +1770,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://sotkaonline.ru/ege/11class/himia"
+      "url": "https://sotkaonline.ru/ege/11class/himia",
+      "slug": "sotka-motya-kodikov"
     },
     {
       "id": 104,
@@ -1711,7 +1786,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://sotkaonline.ru/ege/11class/himia"
+      "url": "https://sotkaonline.ru/ege/11class/himia",
+      "slug": "sotka-lera-pantyukhina"
     },
     {
       "id": 55,
@@ -1726,7 +1802,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://webium.ru/teachers/mira-levi/"
+      "url": "https://webium.ru/teachers/mira-levi/",
+      "slug": "webium-mira-levi"
     },
     {
       "id": 56,
@@ -1741,7 +1818,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://webium.ru/teachers/nastya-nazarova/"
+      "url": "https://webium.ru/teachers/nastya-nazarova/",
+      "slug": "webium-nastya-nazarova"
     },
     {
       "id": 57,
@@ -1757,7 +1835,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://webium.ru/teachers/eydzhey-gauss/"
+      "url": "https://webium.ru/teachers/eydzhey-gauss/",
+      "slug": "webium-eydzhey-gauss"
     },
     {
       "id": 58,
@@ -1772,7 +1851,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://webium.ru/teachers/kolya-kasperskiy/"
+      "url": "https://webium.ru/teachers/kolya-kasperskiy/",
+      "slug": "webium-kolya-kasperskiy"
     },
     {
       "id": 59,
@@ -1787,7 +1867,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://webium.ru/teachers/snezhana-plank/"
+      "url": "https://webium.ru/teachers/snezhana-plank/",
+      "slug": "webium-snezhana-plank"
     },
     {
       "id": 60,
@@ -1802,7 +1883,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://webium.ru/teachers/agniya-rozental/"
+      "url": "https://webium.ru/teachers/agniya-rozental/",
+      "slug": "webium-agniya-rozental"
     },
     {
       "id": 61,
@@ -1817,7 +1899,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://webium.ru/teachers/ira-godunova-ifil-sakharov/"
+      "url": "https://webium.ru/teachers/ira-godunova-ifil-sakharov/",
+      "slug": "webium-ira-godunova"
     },
     {
       "id": 62,
@@ -1832,7 +1915,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://webium.ru/teachers/ira-godunova-ifil-sakharov/"
+      "url": "https://webium.ru/teachers/ira-godunova-ifil-sakharov/",
+      "slug": "webium-fil-sakharov"
     },
     {
       "id": 88,
@@ -1847,7 +1931,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://webium.ru/teachers/matematika/"
+      "url": "https://webium.ru/teachers/matematika/",
+      "slug": "webium-danya-grem"
     },
     {
       "id": 63,
@@ -1862,7 +1947,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egeturbo.ru/teachers"
+      "url": "https://egeturbo.ru/teachers",
+      "slug": "turbo-sofya"
     },
     {
       "id": 64,
@@ -1877,7 +1963,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egeturbo.ru/teachers"
+      "url": "https://egeturbo.ru/teachers",
+      "slug": "turbo-inna"
     },
     {
       "id": 65,
@@ -1892,7 +1979,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egeturbo.ru/teachers"
+      "url": "https://egeturbo.ru/teachers",
+      "slug": "turbo-vlad"
     },
     {
       "id": 66,
@@ -1907,7 +1995,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egeturbo.ru/teachers"
+      "url": "https://egeturbo.ru/teachers",
+      "slug": "turbo-katya"
     },
     {
       "id": 67,
@@ -1922,7 +2011,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egeturbo.ru/teachers"
+      "url": "https://egeturbo.ru/teachers",
+      "slug": "turbo-sasha"
     },
     {
       "id": 68,
@@ -1937,7 +2027,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egeturbo.ru/teachers"
+      "url": "https://egeturbo.ru/teachers",
+      "slug": "turbo-tanya"
     },
     {
       "id": 69,
@@ -1952,7 +2043,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egeturbo.ru/teachers"
+      "url": "https://egeturbo.ru/teachers",
+      "slug": "turbo-sonya"
     },
     {
       "id": 70,
@@ -1967,7 +2059,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egeturbo.ru/teachers"
+      "url": "https://egeturbo.ru/teachers",
+      "slug": "turbo-kostya"
     },
     {
       "id": 71,
@@ -1982,7 +2075,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egeturbo.ru/teachers"
+      "url": "https://egeturbo.ru/teachers",
+      "slug": "turbo-lesha"
     },
     {
       "id": 72,
@@ -1997,7 +2091,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egeturbo.ru/teachers"
+      "url": "https://egeturbo.ru/teachers",
+      "slug": "turbo-slava"
     },
     {
       "id": 73,
@@ -2012,7 +2107,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egeturbo.ru/teachers"
+      "url": "https://egeturbo.ru/teachers",
+      "slug": "turbo-alina"
     },
     {
       "id": 74,
@@ -2027,7 +2123,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egeturbo.ru/teachers"
+      "url": "https://egeturbo.ru/teachers",
+      "slug": "turbo-arseniy"
     },
     {
       "id": 75,
@@ -2042,7 +2139,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egeturbo.ru/teachers"
+      "url": "https://egeturbo.ru/teachers",
+      "slug": "turbo-veronika"
     },
     {
       "id": 76,
@@ -2057,7 +2155,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egeturbo.ru/teachers"
+      "url": "https://egeturbo.ru/teachers",
+      "slug": "turbo-sasha"
     },
     {
       "id": 77,
@@ -2072,7 +2171,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egeturbo.ru/teachers"
+      "url": "https://egeturbo.ru/teachers",
+      "slug": "turbo-alina"
     },
     {
       "id": 78,
@@ -2087,7 +2187,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egeturbo.ru/teachers"
+      "url": "https://egeturbo.ru/teachers",
+      "slug": "turbo-igor"
     },
     {
       "id": 79,
@@ -2102,7 +2203,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egeturbo.ru/teachers"
+      "url": "https://egeturbo.ru/teachers",
+      "slug": "turbo-lenya"
     },
     {
       "id": 105,
@@ -2117,7 +2219,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://el-ed.ru/obshhestvoznanie/"
+      "url": "https://el-ed.ru/obshhestvoznanie/",
+      "slug": "egeland-sasha-obshchestvoznayka"
     },
     {
       "id": 106,
@@ -2132,7 +2235,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://el-ed.ru/russkij-asya/"
+      "url": "https://el-ed.ru/russkij-asya/",
+      "slug": "egeland-asya-rusichka"
     },
     {
       "id": 107,
@@ -2147,7 +2251,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://el-ed.ru/matematika-ilyass/"
+      "url": "https://el-ed.ru/matematika-ilyass/",
+      "slug": "egeland-ilyas-zmorka"
     },
     {
       "id": 108,
@@ -2162,7 +2267,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://el-ed.ru/matematika-masha/"
+      "url": "https://el-ed.ru/matematika-masha/",
+      "slug": "egeland-masha-matematichka"
     },
     {
       "id": 109,
@@ -2177,7 +2283,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://el-ed.ru/informatika-vova/"
+      "url": "https://el-ed.ru/informatika-vova/",
+      "slug": "egeland-vova-informatik"
     },
     {
       "id": 110,
@@ -2192,7 +2299,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://el-ed.ru/fizika-danya/"
+      "url": "https://el-ed.ru/fizika-danya/",
+      "slug": "egeland-danya-fizik"
     },
     {
       "id": 111,
@@ -2207,7 +2315,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://el-ed.ru/anglijskij-nastya/"
+      "url": "https://el-ed.ru/anglijskij-nastya/",
+      "slug": "egeland-nastya-kiko"
     },
     {
       "id": 112,
@@ -2222,7 +2331,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://el-ed.ru/litra-yulya/"
+      "url": "https://el-ed.ru/litra-yulya/",
+      "slug": "egeland-yulya-litra"
     },
     {
       "id": 113,
@@ -2237,7 +2347,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://el-ed.ru/istoriya-olya/"
+      "url": "https://el-ed.ru/istoriya-olya/",
+      "slug": "egeland-olya-istoryashka"
     },
     {
       "id": 114,
@@ -2252,7 +2363,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://el-ed.ru/himiya-zhenya/"
+      "url": "https://el-ed.ru/himiya-zhenya/",
+      "slug": "egeland-zhenya-khimichka"
     },
     {
       "id": 115,
@@ -2267,7 +2379,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://el-ed.ru/biologiya-mendel/"
+      "url": "https://el-ed.ru/biologiya-mendel/",
+      "slug": "egeland-gleb-mendel"
     },
     {
       "id": 116,
@@ -2282,7 +2395,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://smitup.ru/author_elyasmith"
+      "url": "https://smitup.ru/author_elyasmith",
+      "slug": "smitap-elya-smit"
     },
     {
       "id": 117,
@@ -2297,7 +2411,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://smitup.ru/"
+      "url": "https://smitup.ru/",
+      "slug": "smitap-nelya-lotman"
     },
     {
       "id": 118,
@@ -2312,7 +2427,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://smitup.ru/"
+      "url": "https://smitup.ru/",
+      "slug": "smitap-olya-veber"
     },
     {
       "id": 119,
@@ -2327,7 +2443,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://smitup.ru/"
+      "url": "https://smitup.ru/",
+      "slug": "smitap-regina-brayt"
     },
     {
       "id": 120,
@@ -2342,7 +2459,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://smitup.ru/"
+      "url": "https://smitup.ru/",
+      "slug": "smitap-vilya-brik"
     },
     {
       "id": 121,
@@ -2357,7 +2475,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://smitup.ru/"
+      "url": "https://smitup.ru/",
+      "slug": "smitap-misha-gis"
     },
     {
       "id": 122,
@@ -2372,7 +2491,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://smitup.ru/"
+      "url": "https://smitup.ru/",
+      "slug": "smitap-lana-silver"
     },
     {
       "id": 123,
@@ -2387,7 +2507,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://smitup.ru/"
+      "url": "https://smitup.ru/",
+      "slug": "smitap-kirill-nesh"
     },
     {
       "id": 124,
@@ -2402,7 +2523,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://smitup.ru/"
+      "url": "https://smitup.ru/",
+      "slug": "smitap-artem-volt"
     },
     {
       "id": 125,
@@ -2417,7 +2539,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://smitup.ru/"
+      "url": "https://smitup.ru/",
+      "slug": "smitap-danya-bayt"
     },
     {
       "id": 126,
@@ -2432,7 +2555,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://partaonline.ru/prepodavateli/russkij/maya"
+      "url": "https://partaonline.ru/prepodavateli/russkij/maya",
+      "slug": "parta-mayya-nikolaevna"
     },
     {
       "id": 127,
@@ -2447,7 +2571,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://partaonline.ru/prepodavateli/fizika/ilsur"
+      "url": "https://partaonline.ru/prepodavateli/fizika/ilsur",
+      "slug": "parta-ilsur-gazizov"
     },
     {
       "id": 128,
@@ -2462,7 +2587,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://partaonline.ru/prepodavateli/informatika/yana"
+      "url": "https://partaonline.ru/prepodavateli/informatika/yana",
+      "slug": "parta-yana-sabirova"
     },
     {
       "id": 129,
@@ -2477,7 +2603,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://partaonline.ru/prepodavateli/himiya/elena"
+      "url": "https://partaonline.ru/prepodavateli/himiya/elena",
+      "slug": "parta-elena-drugova"
     },
     {
       "id": 130,
@@ -2492,7 +2619,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://partaonline.ru/prepodavateli/biologiya/amina"
+      "url": "https://partaonline.ru/prepodavateli/biologiya/amina",
+      "slug": "parta-amina-ilaltdinova"
     },
     {
       "id": 131,
@@ -2507,7 +2635,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://partaonline.ru/prepodavateli/matematika/shamil"
+      "url": "https://partaonline.ru/prepodavateli/matematika/shamil",
+      "slug": "parta-shamil-gaynullin"
     },
     {
       "id": 132,
@@ -2522,7 +2651,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://partaonline.ru/prepodavateli/literatura/svetlana"
+      "url": "https://partaonline.ru/prepodavateli/literatura/svetlana",
+      "slug": "parta-svetlana-moreva"
     },
     {
       "id": 133,
@@ -2537,7 +2667,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://partaonline.ru/prepodavateli/obshestvoznaniye/yuliya"
+      "url": "https://partaonline.ru/prepodavateli/obshestvoznaniye/yuliya",
+      "slug": "parta-yuliya-goryankina"
     },
     {
       "id": 137,
@@ -2552,7 +2683,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://t.me/egenaprogib"
+      "url": "https://t.me/egenaprogib",
+      "slug": "shkolkovo-alipasha-babaev"
     },
     {
       "id": 138,
@@ -2567,7 +2699,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://t.me/AV_EGE"
+      "url": "https://t.me/AV_EGE",
+      "slug": "shkolkovo-artem-kondrashkin"
     },
     {
       "id": 139,
@@ -2582,7 +2715,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://t.me/histructor"
+      "url": "https://t.me/histructor",
+      "slug": "shkolkovo-ilya-khistraktorovich"
     },
     {
       "id": 140,
@@ -2597,7 +2731,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egenalegke.ru/"
+      "url": "https://egenalegke.ru/",
+      "slug": "egenalegke-albina-maratovna"
     },
     {
       "id": 167,
@@ -2612,7 +2747,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egenalegke.ru/"
+      "url": "https://egenalegke.ru/",
+      "slug": "egenalegke-albina-maratovna"
     },
     {
       "id": 143,
@@ -2627,7 +2763,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://egenalegke.ru/"
+      "url": "https://egenalegke.ru/",
+      "slug": "egenalegke-alina-kodanova"
     },
     {
       "id": 144,
@@ -2642,7 +2779,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://historyandcats.ru/"
+      "url": "https://historyandcats.ru/",
+      "slug": "studycats-mariya-seliverstova"
     },
     {
       "id": 145,
@@ -2657,7 +2795,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://studycats.ru/"
+      "url": "https://studycats.ru/",
+      "slug": "studycats-alina-gracheva"
     },
     {
       "id": 146,
@@ -2672,7 +2811,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://studycats.ru/"
+      "url": "https://studycats.ru/",
+      "slug": "studycats-karina-gorshkova"
     },
     {
       "id": 147,
@@ -2687,7 +2827,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://studycats.ru/"
+      "url": "https://studycats.ru/",
+      "slug": "studycats-mila-bozhenova"
     },
     {
       "id": 148,
@@ -2702,7 +2843,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://russianandcats.ru/"
+      "url": "https://russianandcats.ru/",
+      "slug": "studycats-liliya-bochkareva"
     },
     {
       "id": 149,
@@ -2717,7 +2859,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://studycats.ru/"
+      "url": "https://studycats.ru/",
+      "slug": "studycats-marina-pekeleu"
     },
     {
       "id": 150,
@@ -2732,7 +2875,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://studycats.ru/"
+      "url": "https://studycats.ru/",
+      "slug": "studycats-vlada-zhabinskaya"
     },
     {
       "id": 151,
@@ -2747,7 +2891,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://studycats.ru/"
+      "url": "https://studycats.ru/",
+      "slug": "studycats-tatyana-modina"
     },
     {
       "id": 152,
@@ -2762,7 +2907,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://studycats.ru/"
+      "url": "https://studycats.ru/",
+      "slug": "studycats-aleksey-melkozerov"
     },
     {
       "id": 153,
@@ -2777,7 +2923,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://neofamily.ru/shop/biologiya-god"
+      "url": "https://neofamily.ru/shop/biologiya-god",
+      "slug": "neofamily-andrey-fomin"
     },
     {
       "id": 154,
@@ -2792,7 +2939,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://neofamily.ru/shop/biologiya-god"
+      "url": "https://neofamily.ru/shop/biologiya-god",
+      "slug": "neofamily-nurlan-zhangaliev"
     },
     {
       "id": 155,
@@ -2807,7 +2955,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://neofamily.ru/shop/himiya-god"
+      "url": "https://neofamily.ru/shop/himiya-god",
+      "slug": "neofamily-yulian-ryzhov"
     },
     {
       "id": 156,
@@ -2822,7 +2971,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://neofamily.ru/shop/himiya-dima-god"
+      "url": "https://neofamily.ru/shop/himiya-dima-god",
+      "slug": "neofamily-dima-shcherbina"
     },
     {
       "id": 157,
@@ -2837,7 +2987,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://neofamily.ru/shop/russkiy-yazyk-god"
+      "url": "https://neofamily.ru/shop/russkiy-yazyk-god",
+      "slug": "neofamily-yan-ozhegov"
     },
     {
       "id": 158,
@@ -2852,7 +3003,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://school.morozilka.site/godovoy"
+      "url": "https://school.morozilka.site/godovoy",
+      "slug": "morozilka-dyadya-tosha"
     },
     {
       "id": 159,
@@ -2867,7 +3019,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://t.me/morozilka_math"
+      "url": "https://t.me/morozilka_math",
+      "slug": "morozilka-papa-danya"
     },
     {
       "id": 160,
@@ -2882,7 +3035,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://t.me/professorfos"
+      "url": "https://t.me/professorfos",
+      "slug": "morozilka-professor-den"
     },
     {
       "id": 161,
@@ -2897,7 +3051,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://school.morozilka.site/godovoy"
+      "url": "https://school.morozilka.site/godovoy",
+      "slug": "morozilka-graf-marat"
     },
     {
       "id": 162,
@@ -2912,7 +3067,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://insperia.ru/courses/russkii-yazik/11-klass"
+      "url": "https://insperia.ru/courses/russkii-yazik/11-klass",
+      "slug": "insperia-anna-soldaeva"
     },
     {
       "id": 163,
@@ -2927,7 +3083,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://insperia.ru/courses/profilnaya-matematika/11-klass"
+      "url": "https://insperia.ru/courses/profilnaya-matematika/11-klass",
+      "slug": "insperia-maksim-profmat"
     },
     {
       "id": 164,
@@ -2942,7 +3099,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://insperia.ru/courses/profilnaya-matematika/11-klass"
+      "url": "https://insperia.ru/courses/profilnaya-matematika/11-klass",
+      "slug": "insperia-alina-agureeva"
     },
     {
       "id": 165,
@@ -2957,7 +3115,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://insperia.ru/courses/obschestvoznanie/11-klass"
+      "url": "https://insperia.ru/courses/obschestvoznanie/11-klass",
+      "slug": "insperia-yuliya-syursina"
     },
     {
       "id": 166,
@@ -2972,7 +3131,8 @@
       "verifiedReviewCount": 0,
       "isPreliminary": true,
       "criteria": {},
-      "url": "https://insperia.ru/courses/informatica/11-klass"
+      "url": "https://insperia.ru/courses/informatica/11-klass",
+      "slug": "insperia-natali-soldaeva"
     }
   ]
 }
