@@ -21,7 +21,7 @@ const dialog = $('#detail-dialog');
 const fromQuiz = new URLSearchParams(location.search).get('from') === 'quiz';
 const quizReturn = '<a class="quiz-return" href="index.html?resume=quiz">← Вернуться к подбору</a>';
 if(fromQuiz)document.querySelector('main').insertAdjacentHTML('afterbegin',quizReturn);
-let catalog, links = {bot: 'https://t.me/egeshka_rate_bot'}, subject = '', expanded = false;
+let catalog, links = {bot: 'https://t.me/egematch_bot'}, subject = '', expanded = false;
 const compareSelection = [];
 const filterState = {budget:'',lessons:'',curator:false,multiSubject:false};
 
