@@ -148,7 +148,7 @@ def build_page(school, teachers, others, header, footer):
 {footer}
 <dialog id="detail-dialog"><button class="close" aria-label="Закрыть">×</button><div id="dialog-content" tabindex="0" aria-label="Подробности"></div></dialog>
 <script src="/analytics-config.js?v=1"></script>
-<script src="/analytics.js?v=2"></script>
+<script src="/analytics.js?v=3"></script>
 <script src="/supabase-config.js?v=1"></script>
 <script type="module" src="/ratings.js?v=56"></script>
 </body>

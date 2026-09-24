@@ -1,7 +1,8 @@
 (function(){
   var OWN_HOSTS=['egematch.online','www.egematch.online','egematch.ru','www.egematch.ru','egeshka-project.vercel.app'];
   var SKIP_HOSTS=['t.me','telegram.me'];
-  var id=Number(window.EGE_METRIKA_ID)||0;
+  var isLocal=/^(localhost|127\.|192\.168\.|10\.)/.test(location.hostname);
+  var id=isLocal?0:Number(window.EGE_METRIKA_ID)||0;
 
   if(id){
     (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();
