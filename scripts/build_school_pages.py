@@ -12,10 +12,10 @@ WEB = ROOT / "web"
 SITE = "https://egematch.ru"
 BOT = "https://t.me/egematch_bot"
 CSS_VERSIONS = {
-    "styles.css": "33",
+    "styles.css": "34",
     "refinements.css": "35",
     "typography.css": "31",
-    "composition.css": "76",
+    "composition.css": "82",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -136,14 +136,17 @@ def build_page(school, teachers, others, header, footer):
 {header}
 <main class="school-page wrap">
   <nav class="breadcrumbs" aria-label="Навигация"><a href="/">Главная</a><span>›</span><a href="/ratings">Рейтинг школ</a><span>›</span><span aria-current="page">{escape(school["name"])}</span></nav>
-  <header class="sp-hero"><div><h1>{escape(school["name"])}</h1><p class="sp-lead">{escape(school["description"])}</p></div><div class="sp-score"><small>Оценка ЕГЭ Мэтча</small><strong>{num(school["score"])}</strong><span>из 10</span></div></header>
+  <section class="hero hero-centered school-hero">
+    <div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div class="hero-glow hero-glow-pink" aria-hidden="true"></div>
+    <div class="hero-copy"><h1>{escape(school["name"])}</h1><p class="lead">{escape(school["description"])}</p><div class="sp-score"><small>Оценка ЕГЭ Мэтча</small><strong>{num(school["score"])}</strong><span>из 10</span></div></div>
+  </section>
   <p class="sp-note">Оценка складывается из редакционной оценки по семи критериям и отзывов учеников: подтверждённые весят больше. Пока отзывов мало, она в основном редакционная. <a href="/methodology">Как считается оценка</a></p>
   <section class="sp-section"><h2>Оценка по критериям</h2><ul class="sp-criteria">{criteria_rows}</ul></section>
   <section class="sp-facts"><article><h2>Стоимость</h2><p>{escape(school["price"])}</p></article><article><h2>Формат обучения</h2><p>{escape(school["format"])}</p></article></section>
   <section class="sp-section"><h2>Предметы ({len(school["subjects"])})</h2><ul class="sp-chips">{subjects}</ul></section>
   <section class="sp-two"><article><h2>Почему выбирают</h2><p>{escape(school["strengths"])}</p></article><article><h2>Что проверить перед покупкой</h2><p>{escape(school["weaknesses"])}</p></article></section>
   {teachers_block}
-  <div class="sp-actions"><a class="button dark" href="{escape(school["url"])}" target="_blank" rel="noopener">Сайт школы <span>↗</span></a><a class="button blue" href="{compare_url}">Сравнить с другой школой <span>↗</span></a><a class="button outline" href="{review_url}" target="_blank" rel="noopener">Оставить отзыв <span>↗</span></a></div>
+  <div class="sp-actions"><a class="button dark" href="{escape(school["url"])}" target="_blank" rel="noopener">Сайт школы <span>↗</span></a><a class="button blue" href="{compare_url}">Сравнить с другой школой <span>→</span></a><a class="button outline" href="{review_url}" target="_blank" rel="noopener">Оставить отзыв <span>↗</span></a></div>
   <section class="sp-section"><h2>Другие школы</h2><nav class="sp-more" aria-label="Другие школы">{other_links}<a href="/ratings">Весь рейтинг →</a></nav></section>
 </main>
 {footer}
@@ -151,7 +154,7 @@ def build_page(school, teachers, others, header, footer):
 <script src="/analytics-config.js?v=1"></script>
 <script src="/analytics.js?v=3"></script>
 <script src="/supabase-config.js?v=1"></script>
-<script type="module" src="/ratings.js?v=57"></script>
+<script type="module" src="/ratings.js?v=58"></script>
 </body>
 </html>
 """
@@ -174,10 +177,8 @@ def update_ratings_links(schools):
     path = WEB / "ratings.html"
     text = path.read_text(encoding="utf-8")
     block = links_block(schools)
-    if LINKS_START in text:
-        text = re.sub(re.escape(LINKS_START) + ".*?" + re.escape(LINKS_END), lambda m: block, text, flags=re.S)
-    else:
-        text = text.replace('<section class="faq wrap"', block + '\n<section class="faq wrap"', 1)
+    text = re.sub(re.escape(LINKS_START) + ".*?" + re.escape(LINKS_END) + r"\n?", "", text, flags=re.S)
+    text = text.replace("</main>", block + "\n</main>", 1)
     path.write_text(text, encoding="utf-8")
 
 
