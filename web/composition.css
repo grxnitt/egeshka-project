@@ -901,3 +901,13 @@ main>.rating-next{background:var(--blue);border-color:transparent;color:#fff;box
 .rating-next .button.pink,.rating-next .button.pink:hover{background:#fff;color:var(--ink)}
 .rating-next .button.pink:hover{background:var(--paper)}
 .rating-next .button.pink span{color:var(--ink)}
+
+/* Section headings stay still on hover; how-it-works cards get a soft lift. */
+.section-heading h2,.section-heading:hover h2{letter-spacing:-.05em!important;transition:none!important;transform:none!important}
+.how-card{transition:transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s,border-color .28s}
+.how-number{transition:transform .28s cubic-bezier(.2,.7,.2,1)}
+@media(hover:hover){
+  .how-card:hover{transform:translateY(-4px);border-color:#dedcff;box-shadow:0 16px 36px rgb(52 75 216/.10)}
+  .how-card:hover .how-number{transform:translateX(3px)}
+}
+@media(prefers-reduced-motion:reduce){.how-card,.how-number{transition:none}.how-card:hover,.how-card:hover .how-number{transform:none}}

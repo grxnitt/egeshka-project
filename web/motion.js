@@ -1,16 +1,20 @@
 // Animate visible surfaces once; keep content available without JavaScript.
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-const surfaces = '.comparison-box,.school-card,.compare-price-card,.about-grid article,.detail-card,.quiz-match,.reviews,.channel-section,.rating-next';
+const surfaces = '.comparison-box,.school-card,.compare-price-card,.about-grid article,.detail-card,.quiz-match,.reviews,.channel-section,.rating-next,.how-card';
 const seen = new WeakSet();
 const observer = new IntersectionObserver(entries => {
   for (const {target, isIntersecting} of entries) {
     target.classList.toggle('motion-visible', isIntersecting);
     if (isIntersecting && !seen.has(target) && target.matches(surfaces)) {
       seen.add(target);
-      if (!reduced.matches) target.animate([
-        {opacity: .65, transform: 'translateY(12px)'},
-        {opacity: 1, transform: 'translateY(0)'}
-      ], {duration: 440, easing: 'cubic-bezier(.2,.7,.2,1)'});
+      if (!reduced.matches) {
+        const card = target.matches('.how-card');
+        const delay = card ? [...target.parentNode.children].indexOf(target) * 90 : 0;
+        target.animate([
+          {opacity: card ? 0 : .65, transform: `translateY(${card ? 22 : 12}px)`},
+          {opacity: 1, transform: 'translateY(0)'}
+        ], {duration: card ? 560 : 440, delay, fill: 'backwards', easing: 'cubic-bezier(.2,.7,.2,1)'});
+      }
     }
   }
 }, {threshold: .05});
