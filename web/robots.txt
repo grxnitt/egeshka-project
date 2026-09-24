@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://egematch.online/sitemap.xml
+Sitemap: https://egematch.ru/sitemap.xml

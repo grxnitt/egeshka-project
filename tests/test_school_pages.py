@@ -11,7 +11,7 @@ def test_every_school_has_a_static_page_in_sitemap():
     for school in catalog["schools"]:
         slug = school["reviewSlug"]
         page = (WEB / "schools" / f"{slug}.html").read_text(encoding="utf-8")
-        url = f"https://egematch.online/schools/{slug}"
+        url = f"https://egematch.ru/schools/{slug}"
         assert f'<link rel="canonical" href="{url}">' in page
         assert f"<h1>{school['name']}</h1>" in page
         assert f"<loc>{url}</loc>" in sitemap

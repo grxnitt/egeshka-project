@@ -9,7 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 WEB = ROOT / "web"
-SITE = "https://egematch.online"
+SITE = "https://egematch.ru"
 BOT = "https://t.me/egematch_bot"
 CSS_VERSIONS = {
     "styles.css": "33",
@@ -84,7 +84,7 @@ def page_head(school, url):
   <link rel="canonical" href="{url}">
   <meta property="og:type" content="website"><meta property="og:site_name" content="ЕГЭ Мэтч">
   <meta property="og:title" content="{escape(title, quote=True)}"><meta property="og:description" content="{escape(description, quote=True)}">
-  <meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}/assets/og-cover.png?v=2">
+  <meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}/assets/og-cover.png?v=3">
   <meta name="twitter:card" content="summary_large_image">
   <title>{escape(title)}</title>
   <link rel="icon" href="/assets/egeshka-logo-icon.svg" type="image/svg+xml">

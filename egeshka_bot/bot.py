@@ -1163,7 +1163,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         consent_gate.pending.pop(call.from_user.id, None)
         await call.message.edit_text(
             "Понял. Без согласия я не могу подбирать школы и принимать отзывы. "
-            "Если передумаешь, нажми /start. Сайт egematch.online работает без регистрации."
+            "Если передумаешь, нажми /start. Сайт egematch.ru работает без регистрации."
         )
         await call.answer()
     async def track(telegram_id: int, event_name: str, metadata=None):
