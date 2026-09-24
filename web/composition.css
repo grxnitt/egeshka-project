@@ -948,13 +948,19 @@ main>.rating-next{background:var(--blue);border-color:transparent;color:#fff;box
 .sp-teachers span{color:var(--muted);font-size:13px}
 @media(prefers-reduced-motion:reduce){.sp-teachers button{transition:none}.sp-teachers button:hover{transform:none}}
 .sp-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:48px}
-.sp-more,.school-links div{display:flex;flex-wrap:wrap;gap:8px}
+.sp-more{display:flex;flex-wrap:wrap;gap:8px}
 .sp-more a,.school-links a{padding:8px 14px;border:1px solid var(--surface-line);border-radius:99px;background:#fff;font-size:14px}
 .sp-more a:hover,.school-links a:hover{border-color:var(--blue);color:var(--blue)}
 .school-page-body main.school-page{padding-bottom:var(--section-gap)}
-.school-links{margin-top:var(--section-gap)}
-.school-links h2{margin:0 0 14px;font-size:20px;letter-spacing:-.03em}
+.school-links{margin-top:var(--section-gap);border:1px solid var(--surface-line);border-radius:22px;background:#fff}
+.school-links summary{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 24px;cursor:pointer;list-style:none;font:700 16px/1.4 var(--font-ui)}
+.school-links summary::-webkit-details-marker{display:none}
+.school-links summary:focus-visible{outline:2px solid var(--blue);outline-offset:-2px;border-radius:22px}
+.school-links[open] .faq-icon:after{transform:rotate(0)}
+.school-links nav{display:flex;flex-wrap:wrap;gap:8px;padding:0 24px 22px}
 @media(max-width:800px){
+  .school-links summary{padding:16px 20px}
+  .school-links nav{padding:0 20px 18px}
   .sp-hero{align-items:flex-start;flex-direction:column;gap:20px}
   .sp-score{width:108px;height:108px}
   .sp-score strong{font-size:32px}

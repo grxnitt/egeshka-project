@@ -15,7 +15,7 @@ CSS_VERSIONS = {
     "styles.css": "30",
     "refinements.css": "35",
     "typography.css": "31",
-    "composition.css": "75",
+    "composition.css": "76",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -162,7 +162,11 @@ def links_block(schools):
         f'<a href="/schools/{s["reviewSlug"]}">{escape(s["name"])}</a>'
         for s in sorted(schools, key=lambda s: -s["score"])
     )
-    return f'{LINKS_START}<nav class="school-links wrap" aria-label="Страницы школ"><h2>Страницы школ</h2><div>{links}</div></nav>{LINKS_END}'
+    return (
+        f'{LINKS_START}<details class="school-links wrap"><summary>Страницы школ ({len(schools)})'
+        f'<span class="faq-icon" aria-hidden="true"></span></summary>'
+        f'<nav aria-label="Страницы школ">{links}</nav></details>{LINKS_END}'
+    )
 
 
 def update_ratings_links(schools):
