@@ -12,7 +12,7 @@ WEB = ROOT / "web"
 SITE = "https://egematch.online"
 BOT = "https://t.me/egematch_bot"
 CSS_VERSIONS = {
-    "styles.css": "32",
+    "styles.css": "33",
     "refinements.css": "35",
     "typography.css": "31",
     "composition.css": "76",
@@ -89,7 +89,7 @@ def page_head(school, url):
   <title>{escape(title)}</title>
   <link rel="icon" href="/assets/egeshka-logo-icon.svg" type="image/svg+xml">
   <link rel="manifest" href="/site.webmanifest">
-  <link rel="preload" href="/assets/fonts/onest-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/unbounded-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/onest-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/unbounded-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/onest-symbols-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 {css}
   <script type="application/ld+json">{json.dumps(breadcrumb, ensure_ascii=False)}</script>
 </head>"""
