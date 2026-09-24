@@ -70,7 +70,7 @@ def page_head(school, url):
         "@type": "BreadcrumbList",
         "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Главная", "item": f"{SITE}/"},
-            {"@type": "ListItem", "position": 2, "name": "Рейтинг школ", "item": f"{SITE}/ratings.html"},
+            {"@type": "ListItem", "position": 2, "name": "Рейтинг школ", "item": f"{SITE}/ratings"},
             {"@type": "ListItem", "position": 3, "name": school["name"], "item": url},
         ],
     }
@@ -100,7 +100,7 @@ def subject_label(subject):
 
 def build_page(school, teachers, others, header, footer):
     slug = school["reviewSlug"]
-    url = f"{SITE}/schools/{slug}.html"
+    url = f"{SITE}/schools/{slug}"
     criteria_rows = "".join(
         f'<li><span>{escape(label)}</span><i aria-hidden="true"><b style="width:{school["criteria"][key] * 10:.0f}%"></b></i>'
         f'<strong>{num(school["criteria"][key])}</strong></li>'
@@ -127,30 +127,30 @@ def build_page(school, teachers, others, header, footer):
             "выбирают на сайте школы.</p></section>"
         )
     other_links = "".join(
-        f'<a href="/schools/{o["reviewSlug"]}.html">{escape(o["name"])}</a>' for o in others
+        f'<a href="/schools/{o["reviewSlug"]}">{escape(o["name"])}</a>' for o in others
     )
-    compare_url = "/index.html?" + "compareLeft=" + re.sub(r"\s", "+", school["name"]) + "#compare"
+    compare_url = "/?" + "compareLeft=" + re.sub(r"\s", "+", school["name"]) + "#compare"
     review_url = f'{BOT}?start=review_{slug}'
     body = f"""<body class="school-page-body">
 {header}
 <main class="school-page wrap">
-  <nav class="breadcrumbs" aria-label="Навигация"><a href="/index.html">Главная</a><span>›</span><a href="/ratings.html">Рейтинг школ</a><span>›</span><span aria-current="page">{escape(school["name"])}</span></nav>
+  <nav class="breadcrumbs" aria-label="Навигация"><a href="/">Главная</a><span>›</span><a href="/ratings">Рейтинг школ</a><span>›</span><span aria-current="page">{escape(school["name"])}</span></nav>
   <header class="sp-hero"><div><h1>{escape(school["name"])}</h1><p class="sp-lead">{escape(school["description"])}</p></div><div class="sp-score"><small>Оценка ЕГЭ Мэтча</small><strong>{num(school["score"])}</strong><span>из 10</span></div></header>
-  <p class="sp-note">Оценка складывается из редакционной оценки по семи критериям и подтверждённых отзывов учеников. Пока отзывов мало, она в основном редакционная. <a href="/methodology.html">Как считается оценка</a></p>
+  <p class="sp-note">Оценка складывается из редакционной оценки по семи критериям и подтверждённых отзывов учеников. Пока отзывов мало, она в основном редакционная. <a href="/methodology">Как считается оценка</a></p>
   <section class="sp-section"><h2>Оценка по критериям</h2><ul class="sp-criteria">{criteria_rows}</ul></section>
   <section class="sp-facts"><article><h2>Стоимость</h2><p>{escape(school["price"])}</p></article><article><h2>Формат обучения</h2><p>{escape(school["format"])}</p></article></section>
   <section class="sp-section"><h2>Предметы ({len(school["subjects"])})</h2><ul class="sp-chips">{subjects}</ul></section>
   <section class="sp-two"><article><h2>Почему выбирают</h2><p>{escape(school["strengths"])}</p></article><article><h2>Что проверить перед покупкой</h2><p>{escape(school["weaknesses"])}</p></article></section>
   {teachers_block}
   <div class="sp-actions"><a class="button dark" href="{escape(school["url"])}" target="_blank" rel="noopener">Сайт школы <span>↗</span></a><a class="button blue" href="{compare_url}">Сравнить с другой школой <span>↗</span></a><a class="button outline" href="{review_url}" target="_blank" rel="noopener">Оставить отзыв <span>↗</span></a></div>
-  <section class="sp-section"><h2>Другие школы</h2><nav class="sp-more" aria-label="Другие школы">{other_links}<a href="/ratings.html">Весь рейтинг →</a></nav></section>
+  <section class="sp-section"><h2>Другие школы</h2><nav class="sp-more" aria-label="Другие школы">{other_links}<a href="/ratings">Весь рейтинг →</a></nav></section>
 </main>
 {footer}
 <dialog id="detail-dialog"><button class="close" aria-label="Закрыть">×</button><div id="dialog-content" tabindex="0" aria-label="Подробности"></div></dialog>
 <script src="/analytics-config.js?v=1"></script>
 <script src="/analytics.js?v=2"></script>
 <script src="/supabase-config.js?v=1"></script>
-<script type="module" src="/ratings.js?v=55"></script>
+<script type="module" src="/ratings.js?v=56"></script>
 </body>
 </html>
 """
@@ -159,7 +159,7 @@ def build_page(school, teachers, others, header, footer):
 
 def links_block(schools):
     links = "".join(
-        f'<a href="schools/{s["reviewSlug"]}.html">{escape(s["name"])}</a>'
+        f'<a href="/schools/{s["reviewSlug"]}">{escape(s["name"])}</a>'
         for s in sorted(schools, key=lambda s: -s["score"])
     )
     return f'{LINKS_START}<nav class="school-links wrap" aria-label="Страницы школ"><h2>Страницы школ</h2><div>{links}</div></nav>{LINKS_END}'
@@ -177,10 +177,10 @@ def update_ratings_links(schools):
 
 
 def write_sitemap(schools):
-    static = [("/", "1.0", "weekly"), ("/ratings.html", "0.9", "weekly"), ("/methodology.html", "0.6", "monthly")]
+    static = [("/", "1.0", "weekly"), ("/ratings", "0.9", "weekly"), ("/methodology", "0.6", "monthly")]
     rows = [f"  <url><loc>{SITE}{p}</loc><changefreq>{f}</changefreq><priority>{pr}</priority></url>" for p, pr, f in static]
     rows += [
-        f"  <url><loc>{SITE}/schools/{s['reviewSlug']}.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>"
+        f"  <url><loc>{SITE}/schools/{s['reviewSlug']}</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>"
         for s in sorted(schools, key=lambda s: s["reviewSlug"])
     ]
     xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(rows) + "\n</urlset>\n"

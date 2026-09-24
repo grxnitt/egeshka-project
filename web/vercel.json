@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/ratings", "destination": "/ratings.html" },
+    { "source": "/methodology", "destination": "/methodology.html" },
+    { "source": "/schools/:slug", "destination": "/schools/:slug.html" }
+  ]
+}

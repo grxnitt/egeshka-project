@@ -11,7 +11,7 @@ def test_every_school_has_a_static_page_in_sitemap():
     for school in catalog["schools"]:
         slug = school["reviewSlug"]
         page = (WEB / "schools" / f"{slug}.html").read_text(encoding="utf-8")
-        url = f"https://egematch.online/schools/{slug}.html"
+        url = f"https://egematch.online/schools/{slug}"
         assert f'<link rel="canonical" href="{url}">' in page
         assert f"<h1>{school['name']}</h1>" in page
         assert f"<loc>{url}</loc>" in sitemap
@@ -28,7 +28,7 @@ def test_school_pages_list_all_teachers_of_the_school():
 def test_ratings_page_links_to_every_school_page():
     catalog = json.loads((WEB / "catalog.json").read_text(encoding="utf-8"))
     ratings = (WEB / "ratings.html").read_text(encoding="utf-8")
-    linked = set(re.findall(r'href="schools/([a-z0-9]+)\.html"', ratings))
+    linked = set(re.findall(r'href="/schools/([a-z0-9]+)"', ratings))
     assert linked == {s["reviewSlug"] for s in catalog["schools"]}
 
 
