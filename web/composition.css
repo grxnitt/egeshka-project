@@ -985,7 +985,8 @@ main>.rating-next{background:var(--blue);border-color:transparent;color:#fff;box
 .school-links nav{padding:0 0 22px}
 main>.faq:has(+ .school-links){margin-bottom:32px}
 @media(max-width:800px){.school-links summary{padding:16px 0}.school-links nav{padding:0 0 18px}}
-.school-page{overflow-x:clip}
+.school-page{overflow-x:visible}
+.school-page-body{overflow-x:clip}
 .hero.hero-centered.school-hero{overflow:visible}
 .method-section-head>p{color:#b81f57}
 .method-school .method-section-head>p{color:#ffe0ec}
