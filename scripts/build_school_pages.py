@@ -15,7 +15,7 @@ CSS_VERSIONS = {
     "styles.css": "30",
     "refinements.css": "35",
     "typography.css": "31",
-    "composition.css": "74",
+    "composition.css": "75",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -50,6 +50,7 @@ def shared_chrome():
     header = re.search(r"<header.*?</header>", ratings, re.S).group(0)
     footer = re.search(r"<footer.*?</footer>", ratings, re.S).group(0)
     nav = re.search(r'<nav class="mobile-product-nav".*?</nav>', ratings, re.S).group(0)
+    footer = footer.replace('<a href="#">', '<a href="javascript:void(0)" onclick="window.scrollTo({top:0,behavior:\'smooth\'})">')
     return abs_href(header), abs_href(nav) + "\n" + abs_href(footer)
 
 
@@ -77,6 +78,7 @@ def page_head(school, url):
 <html lang="ru">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <base href="/">
   <meta name="theme-color" content="#FAF8F5">
   <meta name="description" content="{escape(description, quote=True)}">
   <link rel="canonical" href="{url}">
@@ -108,10 +110,14 @@ def build_page(school, teachers, others, header, footer):
     subjects = "".join(f"<li>{escape(subject_label(s))}</li>" for s in school["subjects"])
     if teachers:
         teacher_items = "".join(
-            f"<li><b>{escape(t['name'])}</b><span>{escape(', '.join(t['subjects']))}</span></li>" for t in teachers
+            f'<li><button type="button" data-open-teacher="{escape(t["name"], quote=True)}" '
+            f'data-school="{escape(school["name"], quote=True)}"><b>{escape(t["name"])}</b>'
+            f'<span>{escape(", ".join(t["subjects"]))}</span></button></li>'
+            for t in teachers
         )
         teachers_block = (
             f'<section class="sp-section"><h2>Преподаватели ({len(teachers)})</h2>'
+            f'<p class="sp-hint">Нажми на преподавателя, чтобы открыть карточку.</p>'
             f'<ul class="sp-teachers">{teacher_items}</ul></section>'
         )
     else:
@@ -140,8 +146,11 @@ def build_page(school, teachers, others, header, footer):
   <section class="sp-section"><h2>Другие школы</h2><nav class="sp-more" aria-label="Другие школы">{other_links}<a href="/ratings.html">Весь рейтинг →</a></nav></section>
 </main>
 {footer}
+<dialog id="detail-dialog"><button class="close" aria-label="Закрыть">×</button><div id="dialog-content" tabindex="0" aria-label="Подробности"></div></dialog>
 <script src="/analytics-config.js?v=1"></script>
 <script src="/analytics.js?v=2"></script>
+<script src="/supabase-config.js?v=1"></script>
+<script type="module" src="/ratings.js?v=55"></script>
 </body>
 </html>
 """

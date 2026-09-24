@@ -30,3 +30,13 @@ def test_ratings_page_links_to_every_school_page():
     ratings = (WEB / "ratings.html").read_text(encoding="utf-8")
     linked = set(re.findall(r'href="schools/([a-z0-9]+)\.html"', ratings))
     assert linked == {s["reviewSlug"] for s in catalog["schools"]}
+
+
+def test_school_pages_open_teacher_dialogs():
+    catalog = json.loads((WEB / "catalog.json").read_text(encoding="utf-8"))
+    teachers = [t for t in catalog["teachers"] if t["school"] == "Умскул"]
+    page = (WEB / "schools" / "umskul.html").read_text(encoding="utf-8")
+    assert page.count("data-open-teacher=") == len(teachers)
+    assert '<dialog id="detail-dialog">' in page
+    assert '<script type="module" src="/ratings.js' in page
+    assert '<base href="/">' in page

@@ -940,8 +940,13 @@ main>.rating-next{background:var(--blue);border-color:transparent;color:#fff;box
 .sp-chips{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
 .sp-chips li{padding:8px 14px;border-radius:99px;background:#f0f0f5;font-size:14px}
 .sp-teachers{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin:0;padding:0;list-style:none}
-.sp-teachers li{display:flex;flex-direction:column;gap:2px;padding:12px 16px;border:1px solid var(--surface-line);border-radius:14px;background:#fff}
+.sp-hint{margin:-6px 0 14px;color:var(--muted);font-size:13px}
+.sp-teachers li{display:flex}
+.sp-teachers button{display:flex;width:100%;flex-direction:column;gap:2px;padding:12px 16px;border:1px solid var(--surface-line);border-radius:14px;background:#fff;color:var(--ink);font:inherit;text-align:left;cursor:pointer;transition:border-color .2s,transform .2s,box-shadow .2s}
+.sp-teachers button:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:0 10px 24px rgb(52 75 216/.09)}
+.sp-teachers button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 .sp-teachers span{color:var(--muted);font-size:13px}
+@media(prefers-reduced-motion:reduce){.sp-teachers button{transition:none}.sp-teachers button:hover{transform:none}}
 .sp-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:48px}
 .sp-more,.school-links div{display:flex;flex-wrap:wrap;gap:8px}
 .sp-more a,.school-links a{padding:8px 14px;border:1px solid var(--surface-line);border-radius:99px;background:#fff;font-size:14px}
