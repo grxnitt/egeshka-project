@@ -1,4 +1,4 @@
-from aiogram import Bot, Dispatcher, F
+from aiogram import BaseMiddleware, Bot, Dispatcher, F
 from aiogram.enums import ParseMode
 from aiogram.filters import Command, CommandStart
 from aiogram.exceptions import TelegramBadRequest
@@ -14,7 +14,7 @@ from sqlalchemy import func, select
 
 from .config import Settings
 from .db import SCHOOL_REVIEW_SLUGS, delete_user_data, get_or_create_user
-from .models import Course, Event, Review, ReviewCriterionScore, School, Teacher
+from .models import Course, Event, Review, ReviewCriterionScore, School, Teacher, User
 from .scoring import QuizProfile, school_score
 
 
@@ -147,6 +147,82 @@ def score_bar(value, width=5):
 
 def school_professional_score(school):
     return sum(float(getattr(school, field, 0)) * weight for field, _, weight in CRITERIA)
+
+
+CONSENT_VERSION = "2026-09-24"
+
+
+def consent_text(settings) -> str:
+    operator = escape(settings.operator_name or "владелец сервиса ЕГЭ Мэтч")
+    contact = escape(settings.operator_contact or settings.channel_url)
+    return (
+        "🔐 <b>Согласие на обработку данных</b>\n\n"
+        "Чтобы подобрать школу и сохранить отзыв, ЕГЭ Мэтч обрабатывает твои данные:\n"
+        "• Telegram ID и имя пользователя (если есть)\n"
+        "• ответы в подборе: предмет, бюджет, уровень, цель и другие\n"
+        "• оценки и тексты твоих отзывов\n"
+        "• какие разделы бота ты открывал\n\n"
+        "<b>Зачем:</b> подобрать школы, опубликовать отзыв, посчитать рейтинг и улучшить сервис.\n"
+        "<b>Как:</b> данные хранятся, пока ты пользуешься сервисом или пока не удалишь их. "
+        "Отзывы публикуются без твоего имени и Telegram ID. Файл подтверждения виден только модератору и удаляется после проверки.\n"
+        f"<b>Оператор:</b> {operator}. Связь: {contact}\n\n"
+        "Согласие можно отозвать в любой момент командой /delete_data: мы удалим твои данные. "
+        "Если тебе нет 18 лет, убедись, что родители или законные представители не против.\n\n"
+        "Нажимая «Согласен», ты даёшь согласие на обработку этих данных."
+    )
+
+
+def consent_keyboard():
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="✅ Согласен", callback_data="consent:yes")],
+        [InlineKeyboardButton(text="Не согласен", callback_data="consent:no")],
+    ])
+
+
+def consent_exempt(text=None, callback_data=None) -> bool:
+    """Updates that must work before consent: the consent buttons and data deletion."""
+    if callback_data is not None:
+        return callback_data.startswith(("consent:", "delete_data"))
+    text = (text or "").strip()
+    return text.startswith("/delete_data") or text.startswith("/start delete_data")
+
+
+async def user_has_consent(session_factory, telegram_id: int) -> bool:
+    async with session_factory() as session:
+        version = (await session.execute(
+            select(User.consent_version).where(User.telegram_id == telegram_id)
+        )).scalar_one_or_none()
+    return version == CONSENT_VERSION
+
+
+class ConsentMiddleware(BaseMiddleware):
+    """Ask for consent before the bot stores or uses anything about a user."""
+
+    def __init__(self, session_factory, settings):
+        self.session_factory = session_factory
+        self.settings = settings
+        self.agreed = set()
+        self.pending = {}
+
+    async def __call__(self, handler, event, data):
+        user = data.get("event_from_user")
+        if user is None or user.is_bot or user.id in self.settings.admin_id_set or user.id in self.agreed:
+            return await handler(event, data)
+        if isinstance(event, CallbackQuery):
+            exempt = consent_exempt(callback_data=event.data or "")
+        else:
+            exempt = consent_exempt(text=getattr(event, "text", None))
+        if exempt:
+            return await handler(event, data)
+        if await user_has_consent(self.session_factory, user.id):
+            self.agreed.add(user.id)
+            return await handler(event, data)
+        update = data.get("event_update")
+        if update is not None:
+            self.pending[user.id] = update
+        target = event.message if isinstance(event, CallbackQuery) else event
+        await target.answer(consent_text(self.settings), reply_markup=consent_keyboard(), parse_mode=ParseMode.HTML)
+        return None
 
 
 VERIFIED_REVIEW_WEIGHT = 1.0
@@ -1062,6 +1138,34 @@ async def approved_teacher_criteria_stats(session, school_id, teacher_id):
 
 
 async def setup(dp: Dispatcher, session_factory, settings: Settings):
+    consent_gate = ConsentMiddleware(session_factory, settings)
+    dp.message.outer_middleware(consent_gate)
+    dp.callback_query.outer_middleware(consent_gate)
+
+    @dp.callback_query(F.data == "consent:yes")
+    async def consent_yes(call: CallbackQuery):
+        async with session_factory() as session:
+            user = await get_or_create_user(session, call.from_user.id)
+            user.consent_at = datetime.utcnow()
+            user.consent_version = CONSENT_VERSION
+            await session.commit()
+        consent_gate.agreed.add(call.from_user.id)
+        await call.message.edit_text("Спасибо, согласие сохранено. Его можно отозвать командой /delete_data.")
+        await call.answer()
+        pending = consent_gate.pending.pop(call.from_user.id, None)
+        if pending is not None:
+            await dp.feed_update(call.bot, pending)
+        else:
+            await call.message.answer("Нажми /start, чтобы открыть меню.")
+
+    @dp.callback_query(F.data == "consent:no")
+    async def consent_no(call: CallbackQuery):
+        consent_gate.pending.pop(call.from_user.id, None)
+        await call.message.edit_text(
+            "Понял. Без согласия я не могу подбирать школы и принимать отзывы. "
+            "Если передумаешь, нажми /start. Сайт egematch.online работает без регистрации."
+        )
+        await call.answer()
     async def track(telegram_id: int, event_name: str, metadata=None):
         async with session_factory() as session:
             session.add(Event(
@@ -1245,8 +1349,10 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         await state.clear()
         async with session_factory() as session:
             result = await delete_user_data(session, call.from_user.id)
+        consent_gate.agreed.discard(call.from_user.id)
+        consent_gate.pending.pop(call.from_user.id, None)
         if result["users"] or result["reviews"] or result["events"]:
-            text_value = "Данные удалены. Профиль, отзывы, оценки, ссылки на подтверждения и история действий больше не хранятся в базе ЕГЭ Мэтча."
+            text_value = "Данные удалены, согласие отозвано. Профиль, отзывы, оценки, ссылки на подтверждения и история действий больше не хранятся в базе ЕГЭ Мэтча."
         else:
             text_value = "В базе ЕГЭ Мэтча уже нет данных, связанных с твоим Telegram-профилем."
         await call.message.edit_text(

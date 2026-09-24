@@ -1141,6 +1141,22 @@ async def _ensure_school_columns(engine):
             await conn.execute(text(f"ALTER TABLE schools ADD COLUMN {column_name} {NEW_SCHOOL_COLUMNS[column_name]}"))
 
 
+NEW_USER_COLUMNS = {
+    "consent_at": "DATETIME",
+    "consent_version": "VARCHAR(30)",
+}
+
+
+async def _ensure_user_columns(engine):
+    async with engine.begin() as conn:
+        def missing_columns(sync_conn):
+            columns = {column["name"] for column in inspect(sync_conn).get_columns("users")}
+            return [name for name in NEW_USER_COLUMNS if name not in columns]
+
+        for column_name in await conn.run_sync(missing_columns):
+            await conn.execute(text(f"ALTER TABLE users ADD COLUMN {column_name} {NEW_USER_COLUMNS[column_name]}"))
+
+
 async def _ensure_review_columns(engine):
     async with engine.begin() as conn:
         def missing_columns(sync_conn):
@@ -1313,6 +1329,7 @@ async def init_db(url: str, manage_schema: Optional[bool] = None):
             await conn.run_sync(Base.metadata.create_all)
         await _ensure_school_columns(engine)
         await _ensure_review_columns(engine)
+        await _ensure_user_columns(engine)
     session_factory = async_sessionmaker(engine, expire_on_commit=False)
     if not manage_schema:
         async with session_factory() as session:

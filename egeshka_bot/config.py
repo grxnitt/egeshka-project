@@ -6,6 +6,8 @@ class Settings(BaseSettings):
     database_url: str = "sqlite+aiosqlite:///./egeshka.db"
     admin_ids: str = ""
     channel_url: str = "https://t.me/EgeMatch_blog"
+    operator_name: str = "владелец сервиса ЕГЭ Мэтч"
+    operator_contact: str = ""
     model_config = SettingsConfigDict(env_file=".env", env_prefix="", extra="ignore")
 
     @property

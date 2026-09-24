@@ -82,6 +82,8 @@ class User(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     telegram_id: Mapped[int] = mapped_column(Integer, unique=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    consent_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    consent_version: Mapped[Optional[str]] = mapped_column(String(30), nullable=True)
 
 
 class Review(Base):
