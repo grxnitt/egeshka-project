@@ -1127,6 +1127,7 @@ NEW_REVIEW_COLUMNS = {
     "proof_file_type": "VARCHAR(30)",
     "proof_delete_after": "DATETIME",
     "proof_consent": "BOOLEAN DEFAULT 0",
+    "proof_admin_messages": "TEXT",
 }
 
 

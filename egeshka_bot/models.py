@@ -101,6 +101,7 @@ class Review(Base):
     proof_file_type: Mapped[Optional[str]] = mapped_column(String(30), nullable=True)
     proof_delete_after: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
     proof_consent: Mapped[bool] = mapped_column(Boolean, default=False)
+    proof_admin_messages: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
 

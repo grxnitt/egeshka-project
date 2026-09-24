@@ -898,6 +898,38 @@ async def build_quiz_result(session_factory, profile: QuizProfile):
     return text, keyboard
 
 
+def _proof_admin_copies(review) -> list:
+    try:
+        copies = json.loads(review.proof_admin_messages or "[]")
+    except (TypeError, json.JSONDecodeError):
+        return []
+    return [tuple(item) for item in copies if isinstance(item, (list, tuple)) and len(item) == 2]
+
+
+async def erase_review_proof(bot, review) -> int:
+    """Forget the proof file and delete its copies in admin chats.
+
+    Returns how many admin copies could not be deleted (Telegram only lets a bot
+    delete its own messages younger than 48 hours). Only the ``verified`` flag stays.
+    """
+    failed = 0
+    for chat_id, message_id in _proof_admin_copies(review):
+        try:
+            await bot.delete_message(chat_id, message_id)
+        except Exception:
+            failed += 1
+    review.proof_file_id = None
+    review.proof_file_type = None
+    review.proof_delete_after = None
+    review.proof_admin_messages = None
+    return failed
+
+
+PROOF_MANUAL_DELETE_NOTE = (
+    "\n\nКопию файла в этом чате бот удалить не смог (прошло больше 48 часов). Удали сообщение с файлом вручную."
+)
+
+
 async def approved_reviews_text(session, school_id, teacher_id=None, criterion=None):
     query = select(Review).where(Review.school_id == school_id, Review.moderation_status == "approved")
     if teacher_id is None:
@@ -910,7 +942,7 @@ async def approved_reviews_text(session, school_id, teacher_id=None, criterion=N
         return ""
     lines = ["\n\n💬 Отзывы пользователей"]
     for review in reviews:
-        parts = [f"⭐ {review.score:.1f}/10"]
+        parts = [f"⭐ {review.score:.1f}/10 · {'✅ подтверждённый' if review.verified else 'без подтверждения'}"]
         if review.text_positive:
             parts.append(f"Плюсы: {escape(review.text_positive)}")
         if review.text_negative:
@@ -1039,8 +1071,10 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                 f"{REVIEW_CRITERIA_BY_KEY.get(key, key)}: {float(value):g}/10" for key, value in criteria.items()
             ) + "\n\n"
         delete_note = ""
-        if review.proof_delete_after:
-            delete_note = f"\nСсылка на файл в базе удалится: {review.proof_delete_after.strftime('%d.%m.%Y')}"
+        if review.proof_file_id:
+            delete_note = "\nФайл удалится сразу после решения (одобрить, подтвердить или отклонить)."
+            if review.proof_delete_after:
+                delete_note += f" Если решения не будет, не позже {review.proof_delete_after.strftime('%d.%m.%Y')}."
         text = (
             f"Новый отзыв №{review.id} о {target}. Оценка: {review.score:.1f}/10\n\n"
             f"{criteria_text}"
@@ -1052,14 +1086,22 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         )
         if review.proof_file_id:
             text += f"\nПодтвердить обучение: /verify_review {review.id}"
+        proof_copies = []
         for admin_id in settings.admin_id_set:
             await bot.send_message(admin_id, text)
             if review.proof_file_id:
                 caption = f"Файл подтверждения для отзыва №{review.id}"
                 if review.proof_file_type == "photo":
-                    await bot.send_photo(admin_id, review.proof_file_id, caption=caption)
+                    sent = await bot.send_photo(admin_id, review.proof_file_id, caption=caption)
                 else:
-                    await bot.send_document(admin_id, review.proof_file_id, caption=caption)
+                    sent = await bot.send_document(admin_id, review.proof_file_id, caption=caption)
+                proof_copies.append([admin_id, sent.message_id])
+        if proof_copies:
+            async with session_factory() as session:
+                stored = await session.get(Review, review_id)
+                if stored:
+                    stored.proof_admin_messages = json.dumps(proof_copies)
+                    await session.commit()
 
     @dp.message(CommandStart())
     async def start(message: Message, state: FSMContext):
@@ -1410,7 +1452,8 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         await track(message.from_user.id, "review_submitted", {"review_id": review_id})
         await message.answer(
             "Отзыв сохранён.\n\n"
-            "Хочешь подтвердить, что действительно учился в этой школе? Это необязательно, но помогает модерации. "
+            "Можно подтвердить, что ты действительно учился в этой школе. Это необязательно. "
+            "Подтверждённые отзывы влияют на оценку, отзывы без подтверждения публикуются с пометкой и в оценку не входят.\n\n"
             "После выбора «прикрепить» или «пропустить» отзыв попадёт в очередь.",
             reply_markup=review_verification_keyboard(),
         )
@@ -1420,16 +1463,22 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         data = await state.get_data()
         await notify_review_for_moderation(call.bot, int(data["review_id"]))
         await state.clear()
-        await call.message.edit_text("Хорошо, отзыв останется без подтверждения.", reply_markup=menu())
+        await call.message.edit_text("Хорошо, отзыв отправлен без подтверждения. После проверки он появится с пометкой и не повлияет на оценку.", reply_markup=menu())
         await call.answer()
 
     @dp.callback_query(ReviewForm.verification, F.data == "review_proof:yes")
     async def review_proof_start(call: CallbackQuery, state: FSMContext):
         await call.message.edit_text(
-            "Пришли одним сообщением фото или файл подтверждения.\n\n"
-            "Подойдут скриншот личного кабинета, чек, договор или другое подтверждение обучения. "
-            "Перед отправкой закрой ФИО, телефон, адрес, номер заказа и другие лишние личные данные.\n\n"
-            "Файл не публикуется: его увидят только модераторы. Ссылку на файл ЕГЭ Мэтч удалит из базы через 30 дней.",
+            "Пришли одним сообщением скриншот или фото, на котором видно только название школы или курса и дату. "
+            "Подойдёт личный кабинет, чек или договор.\n\n"
+            "⚠️ Перед отправкой закрой:\n"
+            "• ФИО и фото профиля\n"
+            "• e-mail и телефон\n"
+            "• адрес\n"
+            "• номер договора, заказа и банковской карты\n"
+            "• любые другие личные данные\n\n"
+            "Файл не публикуется, его увидит только модератор. После проверки мы сразу удалим файл, "
+            "в базе останется только отметка «подтверждён». Своё сообщение с файлом в этом чате можешь удалить сам.",
             reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                 [InlineKeyboardButton(text="Пропустить", callback_data="review_proof:no")],
                 [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
@@ -1453,13 +1502,13 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             review.proof_file_id = file_id
             review.proof_file_type = file_type
             review.proof_consent = True
-            review.proof_delete_after = datetime.utcnow() + timedelta(days=30)
+            review.proof_delete_after = datetime.utcnow() + timedelta(days=7)
             await session.commit()
             school = await session.get(School, review.school_id)
             teacher = await session.get(Teacher, review.teacher_id) if review.teacher_id else None
         await notify_review_for_moderation(message.bot, review.id)
         await state.clear()
-        await message.answer("Подтверждение получено и отправлено на проверку.", reply_markup=menu())
+        await message.answer("Подтверждение получено. Отзыв на проверке, файл удалим сразу после решения.", reply_markup=menu())
 
     @dp.message(ReviewForm.verification, F.photo)
     async def review_proof_photo(message: Message, state: FSMContext):
@@ -1487,8 +1536,9 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                 await message.answer("Отзыв не найден.")
                 return
             review.moderation_status = "approved"
+            failed = await erase_review_proof(message.bot, review)
             await session.commit()
-        await message.answer("Отзыв опубликован.")
+        await message.answer("Отзыв опубликован." + (PROOF_MANUAL_DELETE_NOTE if failed else ""))
 
     @dp.message(Command("verify_review"))
     async def verify_review(message: Message):
@@ -1507,8 +1557,12 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                 await message.answer("У этого отзыва нет приложенного подтверждения.")
                 return
             review.verified = True
+            failed = await erase_review_proof(message.bot, review)
             await session.commit()
-        await message.answer("Обучение подтверждено. Теперь можно опубликовать отзыв командой /approve_review ID")
+        await message.answer(
+            "Обучение подтверждено, файл удалён. Теперь можно опубликовать отзыв командой /approve_review ID"
+            + (PROOF_MANUAL_DELETE_NOTE if failed else "")
+        )
 
     @dp.message(Command("review"))
     async def read_review(message: Message):
@@ -1584,8 +1638,9 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                 await message.answer("Отзыв не найден.")
                 return
             review.moderation_status = "rejected"
+            failed = await erase_review_proof(message.bot, review)
             await session.commit()
-        await message.answer("Отзыв отклонён.")
+        await message.answer("Отзыв отклонён." + (PROOF_MANUAL_DELETE_NOTE if failed else ""))
 
     @dp.callback_query(F.data == "quiz")
     async def quiz_start(call: CallbackQuery, state: FSMContext):
