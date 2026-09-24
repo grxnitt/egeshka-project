@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://egeshka-project.vercel.app/sitemap.xml
+Sitemap: https://egematch.online/sitemap.xml
