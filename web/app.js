@@ -18,7 +18,7 @@ const methodologyCriteria = () => criterionDetails.map(([weight, title, descript
 const teacherCriteria = {explanation:'Объяснение материала',practice:'Практика и разбор ошибок',atmosphere:'Атмосфера и вовлечённость',structure:'Структура и темп занятий',exam_value:'Польза для экзамена'};
 import { labels, quizSubjectKeys, teacherSubjects } from './subjects.js?v=1';
 const dialog = $('#detail-dialog');
-let catalog, links = {bot:'https://t.me/egematch_bot', channel:'https://t.me/EgeshkaBlog'}, subject = '', expanded = false, mode = 'schools';
+let catalog, links = {bot:'https://t.me/egematch_bot', channel:'https://t.me/EgeMatch_blog'}, subject = '', expanded = false, mode = 'schools';
 function showDialog(html){ $('#dialog-content').innerHTML = html; dialog.showModal();document.querySelector("#dialog-content").scrollTop=0; }
 $('.close').onclick = () => dialog.close();
 dialog.addEventListener('click', e => { if(e.target === dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();} });
