@@ -137,7 +137,7 @@ def build_page(school, teachers, others, header, footer):
 <main class="school-page wrap">
   <nav class="breadcrumbs" aria-label="Навигация"><a href="/">Главная</a><span>›</span><a href="/ratings">Рейтинг школ</a><span>›</span><span aria-current="page">{escape(school["name"])}</span></nav>
   <header class="sp-hero"><div><h1>{escape(school["name"])}</h1><p class="sp-lead">{escape(school["description"])}</p></div><div class="sp-score"><small>Оценка ЕГЭ Мэтча</small><strong>{num(school["score"])}</strong><span>из 10</span></div></header>
-  <p class="sp-note">Оценка складывается из редакционной оценки по семи критериям и подтверждённых отзывов учеников. Пока отзывов мало, она в основном редакционная. <a href="/methodology">Как считается оценка</a></p>
+  <p class="sp-note">Оценка складывается из редакционной оценки по семи критериям и отзывов учеников: подтверждённые весят больше. Пока отзывов мало, она в основном редакционная. <a href="/methodology">Как считается оценка</a></p>
   <section class="sp-section"><h2>Оценка по критериям</h2><ul class="sp-criteria">{criteria_rows}</ul></section>
   <section class="sp-facts"><article><h2>Стоимость</h2><p>{escape(school["price"])}</p></article><article><h2>Формат обучения</h2><p>{escape(school["format"])}</p></article></section>
   <section class="sp-section"><h2>Предметы ({len(school["subjects"])})</h2><ul class="sp-chips">{subjects}</ul></section>
@@ -151,7 +151,7 @@ def build_page(school, teachers, others, header, footer):
 <script src="/analytics-config.js?v=1"></script>
 <script src="/analytics.js?v=3"></script>
 <script src="/supabase-config.js?v=1"></script>
-<script type="module" src="/ratings.js?v=56"></script>
+<script type="module" src="/ratings.js?v=57"></script>
 </body>
 </html>
 """

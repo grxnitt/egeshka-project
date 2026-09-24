@@ -149,9 +149,54 @@ def school_professional_score(school):
     return sum(float(getattr(school, field, 0)) * weight for field, _, weight in CRITERIA)
 
 
+VERIFIED_REVIEW_WEIGHT = 1.0
+UNVERIFIED_REVIEW_WEIGHT = 0.4
+
+
+class ReviewCount(float):
+    """Effective review weight; behaves like a float, keeps raw counts for display."""
+
+    def __new__(cls, effective=0.0, verified=0, unverified=0):
+        obj = super().__new__(cls, effective)
+        obj.verified = int(verified)
+        obj.unverified = int(unverified)
+        return obj
+
+    @property
+    def total(self):
+        return self.verified + self.unverified
+
+
+def weighted_review_stats(items):
+    """Average of (score, verified) pairs where verified reviews weigh more.
+
+    Unverified reviews count with UNVERIFIED_REVIEW_WEIGHT, but their total weight
+    is capped at verified_count + 1 so a pile of unverified reviews cannot outvote
+    confirmed students. Returns (average or None, ReviewCount).
+    """
+    verified = [float(score) for score, ok in items if ok]
+    unverified = [float(score) for score, ok in items if not ok]
+    if not verified and not unverified:
+        return None, ReviewCount(0.0, 0, 0)
+    unverified_weight = min(UNVERIFIED_REVIEW_WEIGHT * len(unverified), len(verified) * VERIFIED_REVIEW_WEIGHT + 1.0)
+    per_unverified = unverified_weight / len(unverified) if unverified else 0.0
+    total_weight = len(verified) * VERIFIED_REVIEW_WEIGHT + unverified_weight
+    average = (sum(verified) * VERIFIED_REVIEW_WEIGHT + sum(unverified) * per_unverified) / total_weight
+    return average, ReviewCount(total_weight, len(verified), len(unverified))
+
+
+def review_count_label(count):
+    verified = getattr(count, "verified", int(count))
+    unverified = getattr(count, "unverified", 0)
+    if unverified:
+        return f"{verified + unverified} отзывов, из них подтверждённых {verified}"
+    return f"{verified} подтверждённых отзывов"
+
+
 def blend_rating(editorial, user_average=None, user_count=0):
-    """Blend an editorial 0–10 score with a 0–10 average of confirmed student
-    reviews. Below 3 reviews the editorial score stands alone (preliminary).
+    """Blend an editorial 0–10 score with a 0–10 weighted average of student
+    reviews (verified ones weigh more, see weighted_review_stats). Below an
+    effective weight of 3 the editorial score stands alone (preliminary).
     From 3 reviews the student average is blended in with a weight that
     grows with review_count, so it becomes noticeable after a handful of
     reviews rather than only after several dozen; the result still counts
@@ -569,15 +614,17 @@ def comparison_keyboard(left_id, right_id):
 def rating_methodology_text():
     return (
         "ℹ️ Как считается рейтинг\n\n"
-        "<b>Школы:</b> сначала редакционная оценка по семи критериям — шкала 0–10. С трёх подтверждённых отзывов "
-        "в неё подмешивается оценка учеников: её вес растёт с числом отзывов и становится заметным уже после "
-        "5–10 отзывов, а не только после нескольких десятков — это специально сделано так, чтобы у небольших школ "
-        "тоже был реальный шанс повлиять на свою оценку отзывами.\n\n"
-        "<b>Преподаватели:</b> оценку ставят только подтверждённые ученики по пяти критериям — от 1 до 10 каждый: "
+        "<b>Школы:</b> сначала редакционная оценка по семи критериям — шкала 0–10. Когда набирается достаточно "
+        "отзывов (примерно три подтверждённых), в неё подмешивается оценка учеников: её вес растёт с числом отзывов "
+        "и становится заметным уже после 5–10 отзывов, а не только после нескольких десятков — это специально "
+        "сделано так, чтобы у небольших школ тоже был реальный шанс повлиять на свою оценку отзывами.\n\n"
+        "<b>Подтверждённые и нет:</b> отзыв со скриншотом (подтверждённый) весит в оценке полностью, отзыв без подтверждения — "
+        "примерно 40% от него. Неподтверждённые отзывы не могут перевесить подтверждённых: их суммарный вес ограничен.\n\n"
+        "<b>Преподаватели:</b> оценку ставят ученики по пяти критериям — от 1 до 10 каждый: "
         "понятность объяснений, практика и разбор ошибок, атмосфера, структура и темп, польза для ЕГЭ. "
         "Итог до 10 — среднее этих пяти оценок.\n\n"
-        "Оценка появляется после трёх подтверждённых отзывов и помечается как предварительная (*), пока их меньше десяти. "
-        "Неподтверждённые отзывы можно читать после модерации, но они не меняют рейтинг."
+        "Оценка появляется, когда набирается вес трёх подтверждённых отзывов, и помечается как предварительная (*), "
+        "пока их меньше десяти."
     )
 
 
@@ -645,18 +692,18 @@ def review_teacher_buttons(rows):
 def teacher_rating_from_criteria(stats):
     """Return the student-only /10 rating and number of verified reviews."""
     values = [float(average) for average, count in stats.values() if average is not None and count]
-    counts = [int(count) for _average, count in stats.values() if count]
+    counts = [count for _average, count in stats.values() if count]
     if len(values) != len(TEACHER_CRITERIA) or not counts:
         return None, 0
-    return round(sum(values) / len(values), 1), min(counts)
+    return round(sum(values) / len(values), 1), min(counts, key=float)
 
 
 def teacher_rating_text(stats):
     average, count = teacher_rating_from_criteria(stats)
     if average is None or count < 3:
-        return "Оценка учеников: пока не сформирована\nНужно минимум 3 подтверждённых отзыва"
+        return "Оценка учеников: пока не сформирована\nНужно больше отзывов (подтверждённые весят больше неподтверждённых)"
     marker = "*" if count < 10 else ""
-    return f"Оценка учеников: {average:.1f}/10{marker}\nПодтверждённых отзывов: {count}".replace(".", ",")
+    return f"Оценка учеников: {average:.1f}/10{marker}\nОтзывов: {review_count_label(count)}".replace(".", ",")
 
 
 def teacher_compare_text(
@@ -698,20 +745,20 @@ def hybrid_rating(editorial_out_of_10, user_average=None, user_count=0):
     editorial = max(0.0, min(10.0, float(editorial_out_of_10)))
     if user_average is None or user_count < 3:
         user_line = (
-            f"Пользовательская оценка: {float(user_average):.1f}/10 ({user_count} отзывов)"
+            f"Пользовательская оценка: {float(user_average):.1f}/10 ({review_count_label(user_count)})"
             if user_average is not None
             else "Пользовательская оценка: нет данных"
         )
         return (
             f"Редакционная оценка: {editorial:.1f}/10\n"
             f"{user_line}\n"
-            f"Итог: {editorial:.1f}/10* — нужно 3 подтверждённых отзыва"
+            f"Итог: {editorial:.1f}/10* — пока мало отзывов (подтверждённые весят больше)"
         )
     blended, preliminary = blend_rating(editorial, user_average, user_count)
     marker = "*" if preliminary else ""
     return (
         f"Редакционная оценка: {editorial:.1f}/10\n"
-        f"Пользовательская оценка: {max(0.0, min(10.0, float(user_average))):.1f}/10 ({user_count} отзывов)\n"
+        f"Пользовательская оценка: {max(0.0, min(10.0, float(user_average))):.1f}/10 ({review_count_label(user_count)})\n"
         f"Итог: {blended:.1f}/10{marker}"
     )
 
@@ -725,7 +772,7 @@ def rating_entry(position, school, user_average, user_count):
         return f"{value:.1f}".replace(".", ",")
 
     total_score, preliminary = school_total_score(school, user_average, user_count)
-    score_suffix = f" · {user_count} подтверждённых отзывов" if user_count else ""
+    score_suffix = f" · {review_count_label(user_count)}" if user_count else ""
     if preliminary:
         score_suffix += "*"
     score_text = n(total_score)
@@ -952,18 +999,17 @@ async def approved_reviews_text(session, school_id, teacher_id=None, criterion=N
 
 
 async def approved_review_stats(session, school_id, teacher_id=None, criterion=None):
-    query = select(func.avg(Review.score), func.count(Review.id)).where(
+    query = select(Review.score, Review.verified).where(
         Review.school_id == school_id,
         Review.moderation_status == "approved",
-        Review.verified == True,
     )
     if teacher_id is None:
         query = query.where(Review.teacher_id.is_(None))
     else:
         query = query.where(Review.teacher_id == teacher_id)
     query = query.where(Review.criterion == criterion)
-    average, count = (await session.execute(query)).one()
-    return (float(average) if average is not None else None, int(count or 0))
+    rows = (await session.execute(query)).all()
+    return weighted_review_stats([(score, bool(verified)) for score, verified in rows])
 
 
 async def approved_school_criteria_stats(session, school_id):
@@ -973,18 +1019,16 @@ async def approved_school_criteria_stats(session, school_id):
         Review.teacher_id.is_(None),
         Review.criterion.is_not(None),
         Review.moderation_status == "approved",
-        Review.verified == True,
     ))).scalars().all()
     for review in dedicated:
         criterion = LEGACY_CRITERIA_KEYS.get(review.criterion, review.criterion)
         if criterion in values:
-            values[criterion].append(review.score)
+            values[criterion].append((review.score, bool(review.verified)))
     overall = (await session.execute(select(Review).where(
         Review.school_id == school_id,
         Review.teacher_id.is_(None),
         Review.criterion.is_(None),
         Review.moderation_status == "approved",
-        Review.verified == True,
     ))).scalars().all()
     for review in overall:
         try:
@@ -994,8 +1038,8 @@ async def approved_school_criteria_stats(session, school_id):
         for field, score in scores.items():
             field = LEGACY_CRITERIA_KEYS.get(field, field)
             if field in values:
-                values[field].append(float(score))
-    return {field: (sum(items) / len(items) if items else None, len(items)) for field, items in values.items()}
+                values[field].append((float(score), bool(review.verified)))
+    return {field: weighted_review_stats(items) for field, items in values.items()}
 
 
 async def approved_teacher_criteria_stats(session, school_id, teacher_id):
@@ -1005,7 +1049,6 @@ async def approved_teacher_criteria_stats(session, school_id, teacher_id):
         Review.teacher_id == teacher_id,
         Review.criterion.is_(None),
         Review.moderation_status == "approved",
-        Review.verified == True,
     ))).scalars().all()
     for review in reviews:
         try:
@@ -1014,8 +1057,8 @@ async def approved_teacher_criteria_stats(session, school_id, teacher_id):
             scores = {}
         for field, score in scores.items():
             if field in values:
-                values[field].append(float(score))
-    return {field: (sum(items) / len(items) if items else None, len(items)) for field, items in values.items()}
+                values[field].append((float(score), bool(review.verified)))
+    return {field: weighted_review_stats(items) for field, items in values.items()}
 
 
 async def setup(dp: Dispatcher, session_factory, settings: Settings):
@@ -2285,13 +2328,13 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             )
         await call.message.edit_text(
             "🏆 <b>Рейтинг школ</b>\n"
-            "Первые три места отмечены медалями. Пока у школы меньше трёх подтверждённых отзывов, её балл отмечен звёздочкой как предварительный.\n\n"
+            "Первые три места отмечены медалями. Пока у школы мало отзывов, её балл отмечен звёздочкой как предварительный.\n\n"
             + "\n────────────\n".join(
                 rating_entry(index, item, stats[item.id][0], stats[item.id][1])
                 for index, item in enumerate(rows, 1)
             )
             + "\n\n<i>Профессиональная часть — аналитика ЕГЭ Мэтча по открытым данным.\n"
-            "Пользовательская часть учитывает только одобренные и подтверждённые отзывы в боте.</i>",
+            "Пользовательская часть учитывает одобренные отзывы в боте: подтверждённые весят больше.</i>",
             reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                 [InlineKeyboardButton(text="ℹ️ Как считается рейтинг", callback_data="rating_methodology:rating")],
                 [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
