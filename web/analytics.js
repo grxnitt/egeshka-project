@@ -80,55 +80,24 @@
     if(target.closest('#quiz-start'))goal('quiz_start');
   }
 
-  /* ---- Articles: where readers go and how far they read ---- */
+  /* ---- Articles: how far people read and whether they go to Telegram or the rating ---- */
   var articleRoot=document.querySelector('.article-page');
-  var listRoot=document.querySelector('.articles-page');
   var articleSlug=((location.pathname.match(/^\/articles\/([a-z0-9-]+)/)||[])[1])||'';
-  if(articleSlug==='index')articleSlug='';
-
-  function slugOf(url){return ((url.pathname.match(/^\/articles\/([a-z0-9-]+)/)||[])[1])||''}
-
-  function articlePlace(el){
-    var map=[['.art-tldr','tldr'],['.art-callout','callout'],['.article-cta','cta'],['.article-sources','sources'],
-      ['.article-more','related'],['.article-body','body'],['.article-card.is-featured','list_featured'],['.article-card','list'],
-      ['.breadcrumbs','nav'],['.back-row','nav'],['.header','header'],['.mobile-product-nav','nav'],['.footer','footer']];
-    for(var i=0;i<map.length;i++){if(el.closest(map[i][0]))return map[i][1]}
-    return 'other';
-  }
-
-  function articleTarget(url){
-    var host=url.hostname.toLowerCase(),path=url.pathname.toLowerCase().replace(/\.html$/,'').replace(/\/index$/,'/');
-    if(host==='t.me'||host==='telegram.me'){
-      return path.indexOf('/egematch_bot')===0?'bot':path.indexOf('/egematch_blog')===0?'channel':'telegram_other';
-    }
-    if(host!==location.hostname.toLowerCase()&&OWN_HOSTS.indexOf(host)<0)return 'source';
-    if(url.hash==='#compare'||url.search.indexOf('compareLeft')>-1)return 'compare';
-    if(url.search.indexOf('start=quiz')>-1)return 'quiz';
-    if(path.indexOf('/ratings')===0)return 'ratings';
-    if(path.indexOf('/schools/')===0)return 'school';
-    if(path.indexOf('/teachers/')===0)return 'teacher';
-    if(path==='/articles'||path==='/articles/')return 'articles_list';
-    if(path.indexOf('/articles/')===0)return 'article';
-    if(path.indexOf('/methodology')===0)return 'methodology';
-    if(path==='/'||path==='')return 'home';
-    return 'site';
-  }
 
   function trackArticleClick(a){
-    if(!articleRoot&&!listRoot)return;
+    if(!articleRoot||!articleSlug)return;
     var url;
     try{url=new URL(a.href,location.href)}catch(e){return}
-    if(url.protocol!=='http:'&&url.protocol!=='https:')return;
-    var target=articleTarget(url),place=articlePlace(a);
-    if(target==='article'){
-      var to=slugOf(url);
-      goal('article_open',{slug:to,from:place,source_slug:articleSlug||'list'});
-      visit(['Статьи','Открытия',to]);
+    var host=url.hostname.toLowerCase(),path=url.pathname.toLowerCase().replace(/\.html$/,'');
+    var target=null;
+    if(host==='t.me'||host==='telegram.me'){
+      if(path.indexOf('/egematch_blog')===0||path.indexOf('/egematch_bot')===0)target='telegram';
+    }else if((host===location.hostname.toLowerCase()||OWN_HOSTS.indexOf(host)>-1)&&path.indexOf('/ratings')===0){
+      target='ratings';
     }
-    if(articleRoot&&articleSlug){
-      goal('article_click',{target:target,place:place,slug:articleSlug});
-      visit(['Статьи',articleSlug,'Клик: '+target]);
-    }
+    if(!target)return;
+    goal('article_to_'+target,{slug:articleSlug,place:a.closest('.article-cta')?'card':'text'});
+    visit(['Статьи',articleSlug,target==='telegram'?'Клик: Telegram':'Клик: Рейтинг']);
   }
 
   function trackArticleReading(){

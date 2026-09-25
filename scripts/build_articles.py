@@ -209,8 +209,8 @@ def load_article(path):
     tldr_html = "".join(f"<li>{inline(item)}</li>" for item in meta["tldr"])
     words = word_count(body_html) + word_count(tldr_html)
     minutes = max(1, round(words / READING_SPEED))
-    if not re.fullmatch(r"[a-z0-9-]{1,56}", path.stem):
-        raise ValueError(f"{path.name}: use 1-56 latin letters, digits and dashes in the file name")
+    if not re.fullmatch(r"[a-z0-9-]{1,80}", path.stem):
+        raise ValueError(f"{path.name}: use latin letters, digits and dashes (up to 80) in the file name")
     return Article(
         slug=path.stem, title=meta["title"], description=meta["description"], published=published,
         cover=cover, tg=meta["tg"], tldr=meta["tldr"], sources=sources, body_html=body_html, minutes=minutes,
@@ -263,25 +263,16 @@ def card(article, featured=False):
     )
 
 
-def cta_block(slug, full=True):
-    """One card = one action. Article pages get four cards, the list page only channel and bot."""
-    bot = f"{site.BOT}?start=art_{slug}"
-    cards = [
-        f'<div class="art-cta-card art-cta-channel"><h2>Разборы — в Telegram</h2><p>Изменения ЕГЭ и новости онлайн-школ. Коротко и по делу.</p><a class="button" href="{CHANNEL}" target="_blank" rel="noopener" data-source="article_cta">Открыть Telegram-канал <span>↗</span></a></div>',
-        f'<div class="art-cta-card art-cta-bot"><h2>Подберём школу в боте</h2><p>Ответь на несколько вопросов, и бот предложит подходящие школы.</p><a class="button dark" href="{bot}" target="_blank" rel="noopener" data-source="article_cta">Открыть бота <span>↗</span></a></div>',
-    ]
-    if full:
-        cards += [
-            '<div class="art-cta-card art-cta-rating"><h2>Выбираешь школу?</h2><p>Сравни школы по семи критериям и отзывам учеников.</p><a class="button dark" href="/ratings">Рейтинг школ <span>→</span></a></div>',
-            '<div class="art-cta-card art-cta-compare"><h2>Сравни две школы</h2><p>Выбери два варианта и посмотри, чем они отличаются.</p><a class="button blue" href="/#compare">Сравнить <span>→</span></a></div>',
-        ]
-    return f'<aside class="article-cta" aria-label="Что дальше">{"".join(cards)}</aside>'
+CTA_BLOCK = f"""<aside class="article-cta" aria-label="Что дальше">
+  <div class="art-cta-card art-cta-channel"><h2>Такие разборы — в Telegram</h2><p>Изменения ЕГЭ, новости онлайн-школ и честные разборы. Коротко и по делу.</p><a class="button" href="{CHANNEL}" target="_blank" rel="noopener" data-source="article_cta">Открыть Telegram-канал <span>↗</span></a></div>
+  <div class="art-cta-card art-cta-rating"><h2>Выбираешь школу?</h2><p>Сравни школы по семи критериям и отзывам учеников.</p><a class="button dark" href="/ratings">Рейтинг школ <span>→</span></a></div>
+</aside>"""
 
 
 GLOWS = '<div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div class="hero-glow hero-glow-pink" aria-hidden="true"></div>'
 RSS_LINK = f'\n  <link rel="alternate" type="application/rss+xml" title="ЕГЭ Мэтч — статьи" href="/articles/feed.xml">'
 SCRIPTS = f"""<script src="/analytics-config.js?v=1"></script>
-<script src="/analytics.js?v=8"></script>
+<script src="/analytics.js?v=9"></script>
 {site.NAV_SCRIPT}"""
 
 
@@ -358,7 +349,7 @@ def build_article_page(article, others, header, footer):
       {article.body_html}
     </div>
     {sources}
-    {cta_block(article.slug)}
+    {CTA_BLOCK}
   </article>
   {related}
 </main>
@@ -393,7 +384,7 @@ def build_index_page(articles, header, footer):
   <section class="article-list" aria-label="Список статей">
     {cards}
   </section>
-  {cta_block('list', full=False)}
+  {CTA_BLOCK}
   <p class="article-all article-rss"><a href="/articles/feed.xml">RSS-лента статей</a></p>
 </main>
 {footer}

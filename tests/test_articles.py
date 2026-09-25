@@ -146,27 +146,15 @@ def test_mobile_bottom_navigation_links_to_articles():
     assert '<a class="active" href="/articles">Статьи</a>' in nav
 
 
-def test_article_cta_links_are_measurable_and_reach_the_bot_with_the_article_slug():
+def test_article_pages_end_with_exactly_two_cards_telegram_and_rating():
     for article in articles():
         page = (WEB / "articles" / f"{article.slug}.html").read_text(encoding="utf-8")
-        assert f'href="https://t.me/egematch_bot?start=art_{article.slug}"' in page
-        assert 'data-source="article_cta"' in page
-        assert 'href="/#compare"' in page
-        assert '<script src="/analytics.js?v=8"></script>' in page
-
-
-def test_article_start_payload_is_parsed_by_the_bot():
-    from egeshka_bot.bot import article_slug_from_payload
-
-    assert article_slug_from_payload("art_ege-2027-chto-izmenitsya") == "ege-2027-chto-izmenitsya"
-    assert article_slug_from_payload("art_list") == "list"
-    for bad in ("", "art_", "school_umskul", "art_" + "a" * 60, "art_Bad Slug", "q_1_2_3"):
-        assert article_slug_from_payload(bad) is None
-
-
-def test_telegram_start_payload_fits_the_64_char_limit():
-    for path in CONTENT.glob("*.md"):
-        assert len("art_" + path.stem) <= 64, path.name
+        cta = re.search(r'<aside class="article-cta".*?</aside>', page, re.S).group(0)
+        assert cta.count('class="art-cta-card') == 2
+        assert 'href="https://t.me/EgeMatch_blog"' in cta
+        assert 'href="/ratings"' in cta
+        assert "egematch_bot" not in cta and "#compare" not in cta
+        assert '<script src="/analytics.js?v=9"></script>' in page
 
 
 def test_feed_carries_full_text_and_cover_for_syndication():
