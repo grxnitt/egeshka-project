@@ -1033,3 +1033,4 @@ main>.faq:has(+ .school-links){margin-bottom:32px}
 .sp-more-all{margin:14px 0 0}
 .sp-more-all a{display:inline-flex;min-height:44px;align-items:center;color:var(--blue);font-weight:700;text-decoration:underline;text-underline-offset:4px}
 .sp-more-all a:hover{color:var(--ink)}
+@media(max-width:800px){.sp-filter{margin-right:-18px;padding:3px 18px 8px 0;-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 46px),rgb(0 0 0/0) 100%);mask-image:linear-gradient(to right,#000 calc(100% - 46px),rgb(0 0 0/0) 100%)}}
