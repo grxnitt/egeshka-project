@@ -144,3 +144,61 @@ def test_mobile_bottom_navigation_links_to_articles():
         assert 'href="/articles"' in nav, path
     nav = re.search(r'<nav class="mobile-product-nav".*?</nav>', (WEB / "articles/index.html").read_text(encoding="utf-8"), re.S).group(0)
     assert '<a class="active" href="/articles">Статьи</a>' in nav
+
+
+def test_article_cta_links_are_measurable_and_reach_the_bot_with_the_article_slug():
+    for article in articles():
+        page = (WEB / "articles" / f"{article.slug}.html").read_text(encoding="utf-8")
+        assert f'href="https://t.me/egematch_bot?start=art_{article.slug}"' in page
+        assert 'data-source="article_cta"' in page
+        assert 'href="/#compare"' in page
+        assert '<script src="/analytics.js?v=8"></script>' in page
+
+
+def test_article_start_payload_is_parsed_by_the_bot():
+    from egeshka_bot.bot import article_slug_from_payload
+
+    assert article_slug_from_payload("art_ege-2027-chto-izmenitsya") == "ege-2027-chto-izmenitsya"
+    assert article_slug_from_payload("art_list") == "list"
+    for bad in ("", "art_", "school_umskul", "art_" + "a" * 60, "art_Bad Slug", "q_1_2_3"):
+        assert article_slug_from_payload(bad) is None
+
+
+def test_telegram_start_payload_fits_the_64_char_limit():
+    for path in CONTENT.glob("*.md"):
+        assert len("art_" + path.stem) <= 64, path.name
+
+
+def test_feed_carries_full_text_and_cover_for_syndication():
+    ns = {"c": "http://purl.org/rss/1.0/modules/content/"}
+    feed = ET.fromstring((WEB / "articles" / "feed.xml").read_text(encoding="utf-8"))
+    for item in feed.findall("./channel/item"):
+        assert item.find("enclosure").attrib["url"].endswith(".png")
+        assert len(item.find("c:encoded", ns).text) > 500
+        assert 'href="/' not in item.find("c:encoded", ns).text
+
+
+def test_article_structured_data_has_reading_time_and_yandex_gets_clean_param():
+    for article in articles():
+        page = (WEB / "articles" / f"{article.slug}.html").read_text(encoding="utf-8")
+        data = next(
+            json.loads(b) for b in re.findall(r'<script type="application/ld\+json">(.*?)</script>', page, re.S)
+            if '"@type": "Article"' in b
+        )
+        assert data["wordCount"] == article.words and data["timeRequired"] == f"PT{article.minutes}M"
+    robots = (WEB / "robots.txt").read_text(encoding="utf-8")
+    assert "Clean-param: utm_source&utm_medium&utm_campaign" in robots
+    assert "Sitemap: https://egematch.ru/sitemap.xml" in robots
+    assert "Allow: /" in robots.split("User-agent: Yandex")[1]
+
+
+def test_indexnow_key_file_is_published_and_matches_the_script():
+    import indexnow
+
+    key_file = WEB / f"{indexnow.KEY}.txt"
+    assert key_file.read_text(encoding="utf-8").strip() == indexnow.KEY
+    urls = indexnow.default_urls()
+    assert "https://egematch.ru/articles" in urls
+    assert all(url.startswith("https://egematch.ru/") for url in urls)
+    body = indexnow.payload(urls)
+    assert body["keyLocation"] == f"https://egematch.ru/{indexnow.KEY}.txt"

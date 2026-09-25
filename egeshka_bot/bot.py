@@ -8,6 +8,7 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message
 import asyncio
 import json
+import re
 from datetime import datetime, timedelta
 from html import escape
 from sqlalchemy import func, select
@@ -103,6 +104,15 @@ class ReviewForm(StatesGroup):
 
 def money(value: int) -> str:
     return f"{value:,}".replace(",", " ")
+
+
+ARTICLE_PAYLOAD = re.compile(r"art_([a-z0-9-]{1,56})")
+
+
+def article_slug_from_payload(payload: str):
+    """Slug of the site article that sent the user to the bot (`/start art_<slug>`), or None."""
+    match = ARTICLE_PAYLOAD.fullmatch(payload or "")
+    return match.group(1) if match else None
 
 
 def profile_from_payload(payload: str):
@@ -1268,6 +1278,9 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             )
             return
         await track(message.from_user.id, "start")
+        article_slug = article_slug_from_payload(payload)
+        if article_slug:
+            await track(message.from_user.id, "start_from_article", {"slug": article_slug})
         async with session_factory() as session:
             await get_or_create_user(session, message.from_user.id)
         if payload.startswith("review_"):
@@ -1787,10 +1800,26 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             "school_opened": "Открыли карточку школы",
             "school_comparison_completed": "Завершили сравнение школ",
             "channel_cta_clicked": "Нажали на канал",
+            "start_from_article": "Пришли из статей на сайте",
         }
         lines = ["Воронка за последние 30 дней", ""]
         for event_name, events_count, users_count in rows:
             lines.append(f"{labels.get(event_name, event_name)}: {users_count} пользователей · {events_count} действий")
+        async with session_factory() as session:
+            article_rows = (await session.execute(
+                select(Event.telegram_id, Event.metadata_json)
+                .where(Event.created_at >= since, Event.event_name == "start_from_article")
+            )).all()
+        per_article = {}
+        for telegram_id, metadata in article_rows:
+            try:
+                slug = json.loads(metadata or "{}").get("slug") or "?"
+            except ValueError:
+                slug = "?"
+            per_article.setdefault(slug, set()).add(telegram_id)
+        if per_article:
+            lines += ["", "Из каких статей пришли в бота:"]
+            lines += [f"• {slug}: {len(users)}" for slug, users in sorted(per_article.items(), key=lambda kv: -len(kv[1]))]
         await message.answer("\n".join(lines) if rows else "За последние 30 дней событий нет.")
 
     @dp.message(Command("reject_review"))

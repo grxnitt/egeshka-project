@@ -45,6 +45,8 @@ class Article:
     sources: list
     body_html: str
     minutes: int
+    words: int = 0
+    tldr_html: str = ""
     extra: dict = field(default_factory=dict)
 
     @property
@@ -205,10 +207,14 @@ def load_article(path):
         sources.append((label, url))
     body_html = render_lines(body.splitlines())
     tldr_html = "".join(f"<li>{inline(item)}</li>" for item in meta["tldr"])
-    minutes = max(1, round((word_count(body_html) + word_count(tldr_html)) / READING_SPEED))
+    words = word_count(body_html) + word_count(tldr_html)
+    minutes = max(1, round(words / READING_SPEED))
+    if not re.fullmatch(r"[a-z0-9-]{1,56}", path.stem):
+        raise ValueError(f"{path.name}: use 1-56 latin letters, digits and dashes in the file name")
     return Article(
         slug=path.stem, title=meta["title"], description=meta["description"], published=published,
         cover=cover, tg=meta["tg"], tldr=meta["tldr"], sources=sources, body_html=body_html, minutes=minutes,
+        words=words, tldr_html=tldr_html,
     )
 
 
@@ -257,15 +263,18 @@ def card(article, featured=False):
     )
 
 
-CTA_BLOCK = f"""<aside class="article-cta" aria-label="Что дальше">
-  <div class="art-cta-card art-cta-channel"><h2>Такие разборы — в Telegram</h2><p>Изменения ЕГЭ, новости онлайн-школ и честные разборы. Коротко и по делу.</p><a class="button" href="{CHANNEL}" target="_blank" rel="noopener" data-source="article_channel">Открыть Telegram-канал <span>↗</span></a></div>
-  <div class="art-cta-card art-cta-rating"><h2>Выбираешь школу?</h2><p>Сравни школы по семи критериям и отзывам учеников.</p><a class="button dark" href="/ratings">Рейтинг школ <span>→</span></a></div>
+def cta_block(slug):
+    bot = f"{site.BOT}?start=art_{slug}"
+    return f"""<aside class="article-cta" aria-label="Что дальше">
+  <div class="art-cta-card art-cta-channel"><h2>Такие разборы — в Telegram</h2><p>Изменения ЕГЭ, новости онлайн-школ и честные разборы. Коротко и по делу.</p><a class="button" href="{CHANNEL}" target="_blank" rel="noopener" data-source="article_cta">Открыть Telegram-канал <span>↗</span></a><a class="art-cta-link" href="{bot}" target="_blank" rel="noopener" data-source="article_cta">Или подобрать школу в боте →</a></div>
+  <div class="art-cta-card art-cta-rating"><h2>Выбираешь школу?</h2><p>Сравни школы по семи критериям и отзывам учеников.</p><a class="button dark" href="/ratings">Рейтинг школ <span>→</span></a><a class="art-cta-link" href="/#compare">Сравнить две школы →</a></div>
 </aside>"""
+
 
 GLOWS = '<div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div class="hero-glow hero-glow-pink" aria-hidden="true"></div>'
 RSS_LINK = f'\n  <link rel="alternate" type="application/rss+xml" title="ЕГЭ Мэтч — статьи" href="/articles/feed.xml">'
 SCRIPTS = f"""<script src="/analytics-config.js?v=1"></script>
-<script src="/analytics.js?v=5"></script>
+<script src="/analytics.js?v=8"></script>
 {site.NAV_SCRIPT}"""
 
 
@@ -280,6 +289,9 @@ def article_extra_head(article):
         "datePublished": published,
         "dateModified": published,
         "inLanguage": "ru",
+        "wordCount": article.words,
+        "timeRequired": f"PT{article.minutes}M",
+        "isAccessibleForFree": True,
         "author": {"@type": "Organization", "name": AUTHOR, "url": f"{SITE}/"},
         "publisher": {
             "@type": "Organization",
@@ -289,7 +301,8 @@ def article_extra_head(article):
         "mainEntityOfPage": article.url,
     }
     return (
-        f'\n  <meta property="article:published_time" content="{published}">'
+        f'\n  <meta name="robots" content="max-image-preview:large,max-snippet:-1">'
+        f'<meta property="article:published_time" content="{published}">'
         f'<meta property="article:author" content="{AUTHOR}">'
         f'<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'
         f"{RSS_LINK}\n"
@@ -338,7 +351,7 @@ def build_article_page(article, others, header, footer):
       {article.body_html}
     </div>
     {sources}
-    {CTA_BLOCK}
+    {cta_block(article.slug)}
   </article>
   {related}
 </main>
@@ -373,7 +386,7 @@ def build_index_page(articles, header, footer):
   <section class="article-list" aria-label="Список статей">
     {cards}
   </section>
-  {CTA_BLOCK}
+  {cta_block('list')}
   <p class="article-all article-rss"><a href="/articles/feed.xml">RSS-лента статей</a></p>
 </main>
 {footer}
@@ -384,24 +397,35 @@ def build_index_page(articles, header, footer):
     return head + "\n" + body
 
 
+def absolute_links(html):
+    return re.sub(r'(href|src)="/(?!/)', lambda m: f'{m.group(1)}="{SITE}/', html)
+
+
 def build_feed(articles):
-    items = "".join(
-        f"<item><title>{escape(a.title)}</title><link>{a.url}</link>"
-        f'<guid isPermaLink="true">{a.url}</guid><pubDate>{format_datetime(a.published)}</pubDate>'
-        f"<description>{escape(a.description)}</description></item>\n"
-        for a in articles
-    )
+    items = []
+    for a in articles:
+        full = absolute_links(f"<ul>{a.tldr_html}</ul>\n{a.body_html}").replace("]]>", "]]&gt;")
+        size = (WEB / "assets" / "articles" / f"{a.cover}.png").stat().st_size
+        items.append(
+            f"<item><title>{escape(a.title)}</title><link>{a.url}</link>"
+            f'<guid isPermaLink="true">{a.url}</guid><pubDate>{format_datetime(a.published)}</pubDate>'
+            f"<author>noreply@egematch.ru ({AUTHOR})</author>"
+            f"<description>{escape(a.description)}</description>"
+            f'<enclosure url="{cover_png(a)}" length="{size}" type="image/png"/>'
+            f"<content:encoded><![CDATA[{full}]]></content:encoded></item>\n"
+        )
     updated = format_datetime(articles[0].published) if articles else format_datetime(datetime.now(MSK))
     return (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
-        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel>\n'
+        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" '
+        'xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel>\n'
         "<title>ЕГЭ Мэтч — статьи</title>"
         f"<link>{SITE}/articles</link>"
         "<description>Коротко о ЕГЭ, онлайн-школах и рынке образования.</description>"
         "<language>ru</language>"
         f"<lastBuildDate>{updated}</lastBuildDate>"
         f'<atom:link href="{SITE}/articles/feed.xml" rel="self" type="application/rss+xml"/>\n'
-        f"{items}</channel></rss>\n"
+        f"{''.join(items)}</channel></rss>\n"
     )
 
 
