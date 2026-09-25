@@ -1127,20 +1127,18 @@ main>.method-cta{padding:56px 64px;border-radius:28px;background:var(--blue);box
 }
 
 /* School / teacher criteria: same segmented meter as the home comparison */
-.sp-criteria{max-width:760px;gap:0;border-top:1px solid #e6e7f0}
-.sp-criteria li,.sp-criteria li.sp-empty{display:grid;grid-template-columns:minmax(150px,230px) minmax(0,1fr);align-items:center;gap:8px 32px;padding:18px 0;border-bottom:1px solid #e6e7f0;font-size:16px}
-.sp-crit-meter{display:grid;gap:10px}
-.sp-criteria .meter-value{color:var(--blue);font:650 20px/1 var(--font-ui);font-variant-numeric:tabular-nums}
-.sp-criteria .meter-segments{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;height:8px;color:var(--blue)}
-.sp-criteria .meter-segments i{position:relative;height:8px;overflow:hidden;border-radius:4px;background:#dfe1ed}
+.sp-criteria{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:56px;max-width:860px;gap:0 56px;border-top:1px solid #e6e7f0}
+.sp-criteria li,.sp-criteria li.sp-empty{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:8px 16px;padding:13px 0;border-bottom:1px solid #e6e7f0;font-size:15px}
+.sp-crit-meter{display:contents}
+.sp-criteria .sp-crit-name{grid-column:1;grid-row:1}
+.sp-criteria .meter-value{grid-column:2;grid-row:1;color:var(--blue);font:650 17px/1 var(--font-ui);font-variant-numeric:tabular-nums}
+.sp-criteria .meter-segments{display:grid;grid-column:1/-1;grid-row:2;grid-template-columns:repeat(10,1fr);gap:3px;height:6px;color:var(--blue)}
+.sp-criteria .meter-segments i{position:relative;height:6px;overflow:hidden;border-radius:3px;background:#dfe1ed}
 .sp-criteria .meter-segments i:after{content:'';position:absolute;inset:0 auto 0 0;width:var(--fill);border-radius:inherit;background:currentColor;transform-origin:left;animation:segment-fill .45s var(--ui-ease,ease) both}
 .sp-criteria .meter-segments i:nth-child(2):after{animation-delay:.03s}.sp-criteria .meter-segments i:nth-child(3):after{animation-delay:.06s}.sp-criteria .meter-segments i:nth-child(4):after{animation-delay:.09s}.sp-criteria .meter-segments i:nth-child(5):after{animation-delay:.12s}.sp-criteria .meter-segments i:nth-child(6):after{animation-delay:.15s}.sp-criteria .meter-segments i:nth-child(7):after{animation-delay:.18s}.sp-criteria .meter-segments i:nth-child(8):after{animation-delay:.21s}.sp-criteria .meter-segments i:nth-child(9):after{animation-delay:.24s}.sp-criteria .meter-segments i:nth-child(10):after{animation-delay:.27s}
-.sp-criteria .sp-empty em{color:#737481;font-size:14px}
+.sp-criteria .sp-empty em{grid-column:2;grid-row:1;color:#737481;font-size:14px;font-style:normal}
 @media(prefers-reduced-motion:reduce){.sp-criteria .meter-segments i:after{animation:none}}
-@media(max-width:700px){
-  .sp-criteria li,.sp-criteria li.sp-empty{grid-template-columns:minmax(0,1fr) auto;gap:10px 16px;padding:14px 0;font-size:15px}
-  .sp-crit-meter{display:contents}
-  .sp-criteria .meter-value{grid-column:2;grid-row:1;font-size:18px}
-  .sp-criteria .sp-crit-name{grid-column:1;grid-row:1}
-  .sp-criteria .meter-segments{grid-column:1/-1;grid-row:2}
+@media(max-width:800px){
+  .sp-criteria{grid-template-columns:1fr;max-width:none}
+  .sp-criteria li,.sp-criteria li.sp-empty{padding:12px 0}
 }
