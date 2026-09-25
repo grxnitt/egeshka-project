@@ -1034,3 +1034,51 @@ main>.faq:has(+ .school-links){margin-bottom:32px}
 .sp-more-all a{display:inline-flex;min-height:44px;align-items:center;color:var(--blue);font-weight:700;text-decoration:underline;text-underline-offset:4px}
 .sp-more-all a:hover{color:var(--ink)}
 @media(max-width:800px){.sp-filter{margin-right:-18px;padding:3px 18px 8px 0;-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 46px),rgb(0 0 0/0) 100%);mask-image:linear-gradient(to right,#000 calc(100% - 46px),rgb(0 0 0/0) 100%)}}
+
+/* Methodology page: same visual language as the rest of the site
+   (inset rounded cards, shared section rhythm and heading scale). */
+.method-school,.method-teacher{background:none}
+.method-section{padding-top:0;padding-bottom:0;overflow:visible}
+main>.method-section,main>.method-school,main>.method-teacher,main>.method-cta{margin-top:var(--section-gap)}
+main>.method-cta{margin-bottom:var(--section-gap)}
+.method-school>.method-section{padding:56px;border-radius:34px;background:var(--blue);box-shadow:0 24px 70px rgb(52 75 216/.16)}
+.method-teacher>.method-section{padding:56px;border:1px solid #dedcff;border-radius:34px;background:#f4f0ff;box-shadow:0 22px 65px rgb(52 75 216/.08)}
+.method-section-head{display:block;margin-bottom:32px}
+.method-section-head>p{margin:0 0 14px;font:700 22px/1 var(--font-display);letter-spacing:-.5px;color:#e0367a}
+.method-school .method-section-head>p{color:#ffd0e2}
+.method-section-head h2{max-width:none;font-size:clamp(30px,3.6vw,46px);line-height:1.1;letter-spacing:-.05em}
+.method-section-head div>p{max-width:64ch;margin:16px 0 0;font-size:16px}
+.method-equation{gap:16px}
+.method-equation article{min-height:190px;padding:24px;border-radius:22px}
+.method-equation strong{margin:20px 0 12px;font-size:48px;letter-spacing:-2px}
+.method-copy-grid{gap:16px;margin-top:28px}
+.method-school .method-copy-grid>div{padding:24px 0 0;border-top:1px solid rgb(255 255 255/.28)}
+.method-trust .method-copy-grid>div{padding:24px;border:1px solid var(--surface-line);border-radius:20px;background:#fff}
+.method-copy-grid h3{margin-top:0}
+.criteria-weight-list{grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;border-top:0}
+.criteria-weight-list article,.criteria-weight-list article:nth-child(odd){display:flex;flex-direction:column;gap:14px;padding:24px;border:1px solid var(--surface-line);border-radius:20px;background:#fff}
+.criteria-weight-list b{font:700 32px/1 var(--font-display);letter-spacing:-1px;color:#e0367a}
+.criteria-weight-list article:nth-child(even) b{color:var(--blue)}
+.criteria-weight-list h3{margin:0}
+.teacher-method-grid{gap:16px}
+.teacher-method-grid li{border:1px solid var(--surface-line);background:#fff}
+.teacher-method-grid li:before{color:#b81f57;font-size:12px}
+.method-updated{margin-top:28px}
+main>.method-cta{padding:56px 64px;border-radius:28px;background:var(--blue);box-shadow:0 24px 70px rgb(52 75 216/.18)}
+.method-cta h2{font-size:clamp(28px,3.6vw,46px);line-height:1.1;letter-spacing:-.05em}
+.method-cta .button.pink,.method-cta .button.pink:hover{background:#fff;color:var(--ink)}
+.method-cta .button.pink span{color:var(--ink)}
+@media(max-width:800px){
+  main>.method-section,main>.method-school,main>.method-teacher,main>.method-cta{margin-top:var(--section-gap)}
+  .method-school>.method-section,.method-teacher>.method-section{padding:32px 22px;border-radius:28px}
+  .method-section-head{margin-bottom:24px}
+  .method-section-head h2{font-size:clamp(28px,8vw,36px);letter-spacing:-.045em}
+  .method-equation strong{font-size:40px}
+  main>.method-cta{padding:32px 24px;border-radius:24px}
+  .criteria-weight-list article,.criteria-weight-list article:nth-child(odd){padding:20px;grid-template-columns:none}
+}
+.criteria-weight-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+.criteria-weight-list article:first-child{grid-column:span 2}
+@media(min-width:1000px){.criteria-weight-list{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:700px){.criteria-weight-list{grid-template-columns:1fr}.criteria-weight-list article:first-child{grid-column:auto}}
+@media(max-width:700px){.hero-centered:not(:has(.hero-actions)) .hero-glow-blue{top:36px}}
