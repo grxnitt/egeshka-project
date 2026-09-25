@@ -15,7 +15,7 @@ CSS_VERSIONS = {
     "styles.css": "34",
     "refinements.css": "35",
     "typography.css": "31",
-    "composition.css": "97",
+    "composition.css": "98",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -178,12 +178,21 @@ def teacher_card(person, index=0):
     )
 
 
+def criterion_row(label, value):
+    score = max(0.0, min(10.0, float(value)))
+    segments = "".join(f'<i style="--fill:{max(0.0, min(1.0, score - i)) * 100:.0f}%"></i>' for i in range(10))
+    return (
+        f'<li><span class="sp-crit-name">{escape(label)}</span>'
+        f'<div class="sp-crit-meter"><span class="meter-value">{num(score)}</span>'
+        f'<span class="meter meter-segments" aria-hidden="true">{segments}</span></div></li>'
+    )
+
+
 def build_page(school, people, others, header, footer, teacher_slugs):
     slug = school["reviewSlug"]
     url = f"{SITE}/schools/{slug}"
     criteria_rows = "".join(
-        f'<li><span>{escape(label)}</span><i aria-hidden="true"><b style="width:{school["criteria"][key] * 10:.0f}%"></b></i>'
-        f'<strong>{num(school["criteria"][key])}</strong></li>'
+        criterion_row(label, school["criteria"][key])
         for key, label in CRITERIA.items()
         if key in school["criteria"]
     )
@@ -257,9 +266,9 @@ def build_teacher_page(person, school, colleagues, header, footer):
     has_criteria = any(v is not None for v in criteria.values())
     rows = "".join(
         (
-            f'<li><span>{escape(label)}</span><i aria-hidden="true"><b style="width:{criteria[key] * 10:.0f}%"></b></i><strong>{num(criteria[key])}</strong></li>'
+            criterion_row(label, criteria[key])
             if criteria.get(key) is not None
-            else f'<li class="sp-empty"><span>{escape(label)}</span><em>Пока нет оценки</em></li>'
+            else f'<li class="sp-empty"><span class="sp-crit-name">{escape(label)}</span><em>Пока нет оценки</em></li>'
         )
         for key, label in TEACHER_CRITERIA.items()
     )
