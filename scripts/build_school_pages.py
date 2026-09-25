@@ -234,9 +234,8 @@ def build_page(school, people, others, header, footer, teacher_slugs):
   </section>
   <p class="sp-note">Оценка складывается из редакционной оценки по семи критериям и отзывов учеников: подтверждённые весят больше. Пока отзывов мало, она в основном редакционная. <a href="/methodology">Как считается оценка</a></p>
   <section class="sp-section"><h2>Оценка по критериям</h2><ul class="sp-criteria">{criteria_rows}</ul></section>
-  <section class="sp-facts"><article><h2>Стоимость</h2><p>{escape(school["price"])}</p><p class="sp-inline-link"><a href="{escape(school["url"])}" target="_blank" rel="noopener">Проверить актуальные цены на сайте школы ↗</a></p></article><article><h2>Формат обучения</h2><p>{escape(school["format"])}</p></article></section>
   <section class="sp-section"><h2>Предметы ({len(school["subjects"])})</h2><ul class="sp-chips">{subjects}</ul></section>
-  <section class="sp-two"><article><h2>Почему выбирают</h2><p>{escape(school["strengths"])}</p></article><article><h2>Что проверить перед покупкой</h2><p>{escape(school["weaknesses"])}</p></article></section>
+  <section class="sp-facts"><article><h2>Стоимость</h2><p>{escape(school["price"])}</p><p class="sp-inline-link"><a href="{escape(school["url"])}" target="_blank" rel="noopener">Проверить актуальные цены на сайте школы ↗</a></p></article><article><h2>Формат обучения</h2><p>{escape(school["format"])}</p></article><article><h2>Почему выбирают</h2><p>{escape(school["strengths"])}</p></article><article><h2>Что проверить перед покупкой</h2><p>{escape(school["weaknesses"])}</p></article></section>
   {teachers_block}
   <div class="sp-actions"><a class="button dark" href="{card_url}" target="_blank" rel="noopener" data-source="school_page">Курсы и отзывы в боте <span>↗</span></a><a class="button blue" href="{compare_url}">Сравнить с другой школой <span>→</span></a><a class="button outline" href="{review_url}" target="_blank" rel="noopener">Оставить отзыв <span>↗</span></a></div>
   <p class="sp-site-link">В боте: тарифы, преподаватели и отзывы учеников. Условия и цены школа публикует на <a href="{escape(school["url"])}" target="_blank" rel="noopener">официальном сайте ↗</a></p>
