@@ -263,12 +263,19 @@ def card(article, featured=False):
     )
 
 
-def cta_block(slug):
+def cta_block(slug, full=True):
+    """One card = one action. Article pages get four cards, the list page only channel and bot."""
     bot = f"{site.BOT}?start=art_{slug}"
-    return f"""<aside class="article-cta" aria-label="Что дальше">
-  <div class="art-cta-card art-cta-channel"><h2>Такие разборы — в Telegram</h2><p>Изменения ЕГЭ, новости онлайн-школ и честные разборы. Коротко и по делу.</p><a class="button" href="{CHANNEL}" target="_blank" rel="noopener" data-source="article_cta">Открыть Telegram-канал <span>↗</span></a><a class="art-cta-link" href="{bot}" target="_blank" rel="noopener" data-source="article_cta">Или подобрать школу в боте →</a></div>
-  <div class="art-cta-card art-cta-rating"><h2>Выбираешь школу?</h2><p>Сравни школы по семи критериям и отзывам учеников.</p><a class="button dark" href="/ratings">Рейтинг школ <span>→</span></a><a class="art-cta-link" href="/#compare">Сравнить две школы →</a></div>
-</aside>"""
+    cards = [
+        f'<div class="art-cta-card art-cta-channel"><h2>Разборы — в Telegram</h2><p>Изменения ЕГЭ и новости онлайн-школ. Коротко и по делу.</p><a class="button" href="{CHANNEL}" target="_blank" rel="noopener" data-source="article_cta">Открыть Telegram-канал <span>↗</span></a></div>',
+        f'<div class="art-cta-card art-cta-bot"><h2>Подберём школу в боте</h2><p>Ответь на несколько вопросов, и бот предложит подходящие школы.</p><a class="button dark" href="{bot}" target="_blank" rel="noopener" data-source="article_cta">Открыть бота <span>↗</span></a></div>',
+    ]
+    if full:
+        cards += [
+            '<div class="art-cta-card art-cta-rating"><h2>Выбираешь школу?</h2><p>Сравни школы по семи критериям и отзывам учеников.</p><a class="button dark" href="/ratings">Рейтинг школ <span>→</span></a></div>',
+            '<div class="art-cta-card art-cta-compare"><h2>Сравни две школы</h2><p>Выбери два варианта и посмотри, чем они отличаются.</p><a class="button blue" href="/#compare">Сравнить <span>→</span></a></div>',
+        ]
+    return f'<aside class="article-cta" aria-label="Что дальше">{"".join(cards)}</aside>'
 
 
 GLOWS = '<div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div class="hero-glow hero-glow-pink" aria-hidden="true"></div>'
@@ -386,7 +393,7 @@ def build_index_page(articles, header, footer):
   <section class="article-list" aria-label="Список статей">
     {cards}
   </section>
-  {cta_block('list')}
+  {cta_block('list', full=False)}
   <p class="article-all article-rss"><a href="/articles/feed.xml">RSS-лента статей</a></p>
 </main>
 {footer}

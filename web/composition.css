@@ -1278,7 +1278,8 @@ main>.method-cta{padding:56px 64px;border-radius:28px;background:var(--blue);box
 .article-cover,.article-body,.article-sources,.article-cta,.article-more,.article-list,.article-all{position:relative;z-index:1}
 
 @media(max-width:700px){.mobile-product-nav{grid-template-columns:repeat(4,1fr)}}
-.art-cta-link{margin-top:16px;font-size:15px;font-weight:650;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:4px}
-.art-cta-channel .art-cta-link{color:#fff}
-.art-cta-rating .art-cta-link{color:var(--blue)}
-.art-cta-card .art-cta-link{min-height:44px;display:inline-flex;align-items:center}
+@media(min-width:701px){.article-cta{gap:20px}}
+.art-cta-bot{border:1px solid #f4cfde;background:#fdf0f5}
+.art-cta-compare{border:1px solid var(--surface-line);background:#fff}
+.art-cta-card{gap:0}
+@media(max-width:700px){.article-cta{gap:12px}.art-cta-card{padding:24px 22px;border-radius:26px}.art-cta-card h2{font-size:20px}.art-cta-card p{margin-bottom:18px;font-size:15px}}
