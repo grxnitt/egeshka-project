@@ -1289,6 +1289,26 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                         ]),
                     )
                     return
+        if payload.startswith("school_"):
+            school_name = SCHOOL_BY_REVIEW_SLUG.get(payload.removeprefix("school_"))
+            if school_name:
+                async with session_factory() as session:
+                    school = (await session.execute(select(School).where(
+                        School.name == school_name,
+                        School.is_active.is_(True),
+                    ))).scalar_one_or_none()
+                    if school:
+                        user_reviews = await approved_reviews_text(session, school.id)
+                        user_average, user_count = await approved_review_stats(session, school.id)
+                if school:
+                    await state.clear()
+                    await track(message.from_user.id, "school_opened", {"school_id": school.id, "source": "site"})
+                    await message.answer(
+                        school_overview(school, user_average, user_count) + user_reviews,
+                        reply_markup=card_keyboard(school.id),
+                        parse_mode=ParseMode.HTML,
+                    )
+                    return
         if payload.startswith("q_"):
             profile = profile_from_payload(payload)
             if profile:

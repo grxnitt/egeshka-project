@@ -40,7 +40,7 @@
     var host=url.hostname.toLowerCase();
     if(host!=='t.me'&&host!=='telegram.me')return false;
     if(isTelegramPath(url,'egematch_bot')){
-      var source=a.id==='review-link'?'review_button':(a.closest&&a.closest('.quiz-result')?'quiz_result':'other');
+      var source=a.getAttribute('data-source')||(a.id==='review-link'?'review_button':(a.closest&&a.closest('.quiz-result')?'quiz_result':'other'));
       goal('bot_open',{source:source});
       if(a.id==='review-link')goal('review_click');
       return true;
