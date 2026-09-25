@@ -1144,9 +1144,6 @@ main>.method-cta{padding:56px 64px;border-radius:28px;background:var(--blue);box
 }
 
 /* Home hero: secondary button, livelier glows, bottom nav appears after the hero buttons */
-.hero-centered .hero-compare-link{border:1.5px solid rgb(24 25 35/.85);background:transparent;color:var(--ink)}
-.hero-centered .hero-compare-link:hover{background:var(--ink);color:#fff}
-.hero-centered .hero-compare-link:after{display:none}
 @media(max-width:700px){
   .hero-centered .hero-glow{width:380px;height:380px;opacity:.95;filter:none}
   .hero-centered .hero-glow-pink{right:-150px;top:10px;bottom:auto;background:radial-gradient(circle,#ffb3d1 0%,#ffd0e2b3 36%,transparent 68%)}
