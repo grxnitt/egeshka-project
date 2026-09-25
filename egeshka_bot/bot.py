@@ -1622,7 +1622,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         await message.answer(
             "Отзыв сохранён.\n\n"
             "Можно подтвердить, что ты действительно учился в этой школе. Это необязательно. "
-            "Подтверждённые отзывы влияют на оценку, отзывы без подтверждения публикуются с пометкой и в оценку не входят.\n\n"
+            "Подтверждённый отзыв весит в оценке полностью, отзыв без подтверждения — примерно 40%, и публикуется с пометкой.\n\n"
             "После выбора «прикрепить» или «пропустить» отзыв попадёт в очередь.",
             reply_markup=review_verification_keyboard(),
         )
@@ -1632,7 +1632,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         data = await state.get_data()
         await notify_review_for_moderation(call.bot, int(data["review_id"]))
         await state.clear()
-        await call.message.edit_text("Хорошо, отзыв отправлен без подтверждения. После проверки он появится с пометкой и не повлияет на оценку.", reply_markup=menu())
+        await call.message.edit_text("Хорошо, отзыв отправлен без подтверждения. После проверки он появится с пометкой и будет учитываться в оценке с меньшим весом.", reply_markup=menu())
         await call.answer()
 
     @dp.callback_query(ReviewForm.verification, F.data == "review_proof:yes")

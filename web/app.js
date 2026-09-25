@@ -75,7 +75,7 @@ if(mode==='schools'){html+=row('Общая оценка',`<strong>${number(left.
  html+='<div class="criteria-title"><strong>По оценкам учеников</strong><span>Отдельные критерии · шкала 1–10</span></div>';
  const teacherMetric=(teacher,key)=>teacherMeter(teacher.criteria?.[key]);
  html+=Object.entries(teacherCriteria).map(([key,label])=>row(label,teacherMetric(left,key),teacherMetric(right,key),'teacher-metric')).join('');
- html+='<p class="fine">Оценка появляется после трёх подтверждённых отзывов и считается как среднее пяти критериев.</p>';
+ html+='<p class="fine">Оценка появляется, когда набирается вес трёх подтверждённых отзывов (без подтверждения отзыв весит меньше), и считается как среднее пяти критериев.</p>';
 }
 if(mode==='schools'){
  const priceCard=school=>{
