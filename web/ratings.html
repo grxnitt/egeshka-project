@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="styles.css?v=34">
   <link rel="stylesheet" href="refinements.css?v=35">
   <link rel="stylesheet" href="typography.css?v=31">
-  <link rel="stylesheet" href="composition.css?v=93">
+  <link rel="stylesheet" href="composition.css?v=96">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ЕГЭ Мэтч","item":"https://egematch.ru/"},{"@type":"ListItem","position":2,"name":"Рейтинг онлайн-школ","item":"https://egematch.ru/ratings"}]}</script>
 </head>
 <body class="ratings-page">
@@ -30,15 +30,14 @@
     <div class="wrap section">
       <div class="rating-filter-head"><div><h2>Какой предмет сдаёшь?</h2></div></div>
       <div class="subjects rating-subjects" id="subject-list"></div>
-      <div class="catalog-filters" aria-label="Дополнительные фильтры">
+      <div class="catalog-filters" role="group" aria-label="Дополнительные фильтры">
         <label><span>Цена до</span><select id="filter-budget"><option value="">Любая</option><option value="3000">До 3 000 ₽</option><option value="5000">До 5 000 ₽</option><option value="8000">До 8 000 ₽</option><option value="12000">До 12 000 ₽</option></select></label>
-        <label><span>Занятия</span><select id="filter-lessons"><option value="">Любые</option><option value="live">В прямом эфире</option><option value="recorded">В записи</option><option value="individual">Индивидуально</option></select></label>
+        <label><span>Формат занятий</span><select id="filter-lessons"><option value="">Любые</option><option value="live">В прямом эфире</option><option value="recorded">В записи</option><option value="individual">Индивидуально</option></select></label>
         <label class="filter-check"><input id="filter-curator" type="checkbox"><span>Куратор доступен</span></label>
-        <label class="filter-check"><input id="filter-multisubject" type="checkbox"><span>5+ предметов в одном месте</span></label>
-        <button id="reset-filters" type="button" hidden>Сбросить</button>
+        <label class="filter-check"><input id="filter-multisubject" type="checkbox"><span>5+ предметов<span class="chip-extra"> в одном месте</span></span></label>
       </div>
       <p class="filter-note">Цена сравнивается по значению «от» в карточке: за месяц, урок или стартовый блок. Возможности могут зависеть от тарифа.</p>
-      <div class="catalog-toolbar"><p id="catalog-label" aria-live="polite">Все предметы</p><label><span>Порядок</span><select id="sort"><option value="rating">По оценке</option><option value="name">По названию</option></select></label></div>
+      <div class="catalog-toolbar"><div class="catalog-toolbar-main"><p id="catalog-label" aria-live="polite">Все предметы</p><button id="reset-filters" type="button" hidden>Сбросить фильтры</button></div><label><span>Сортировка</span><select id="sort"><option value="rating">По оценке</option><option value="name">По названию</option></select></label></div>
       <p class="rating-scope-note" id="scope-note">Показаны все школы. Баллы — общая оценка школы, а не отдельного курса.</p>
       <div class="school-grid" id="school-list"></div>
       <button class="button outline more" id="show-more">Показать все школы <span>↓</span></button>
@@ -55,6 +54,6 @@
 <script src="analytics-config.js?v=1"></script>
 <script src="analytics.js?v=5"></script>
 <script src="supabase-config.js?v=1"></script>
-<script type="module" src="ratings.js?v=59"></script>
+<script type="module" src="ratings.js?v=60"></script>
 <script type="module" src="motion.js?v=30"></script>
 </body></html>
