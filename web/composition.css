@@ -1247,7 +1247,7 @@ main>.method-cta{padding:56px 64px;border-radius:28px;background:var(--blue);box
 .article-card-more i{display:inline-block;margin-left:4px;font-style:normal;transition:transform .2s}
 .article-card:hover .article-card-more i{transform:translateX(4px)}
 .article-card.is-featured{flex-direction:row;margin-bottom:24px}
-.article-card.is-featured .article-card-cover{flex:0 0 54%}
+.article-card.is-featured .article-card-cover{flex:0 0 58%}
 .article-card.is-featured .article-card-cover img{height:100%;aspect-ratio:auto}
 .article-card.is-featured .article-card-body{justify-content:center;padding:36px 40px}
 .article-card.is-featured .article-card-title{font-size:clamp(24px,2.8vw,34px)}

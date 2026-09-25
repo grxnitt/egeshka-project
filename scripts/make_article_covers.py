@@ -191,7 +191,75 @@ def cover_scores():
     return c
 
 
-COVERS = {"exam": cover_exam, "market": cover_market, "ai": cover_ai, "scores": cover_scores}
+def cover_admission():
+    c = Canvas("#f8dce8")
+    c.circle(930, 130, 90, PINK)
+    c.ring(1085, 545, 80, 36, BLUE)
+    c.circle(730, 590, 16, WHITE)
+    c.sparkle(800, 92, 32, BLUE)
+    dx = 60
+    c.poly([(150 + dx, 262), (400 + dx, 120), (650 + dx, 262)], BLUE)
+    c.rect(170 + dx, 262, 460, 30, 8, BLUE)
+    c.circle(400 + dx, 208, 28, WHITE)
+    for x in (206, 306, 406, 506):
+        c.rect(x + dx, 304, 62, 184, 12, WHITE)
+    c.rect(150 + dx, 488, 500, 34, 10, BLUE)
+    c.rect(122 + dx, 522, 556, 30, 10, INK)
+    for i, (color, w) in enumerate(((BLUE, 210), (PINK, 170), (INK, 130))):
+        y = 290 + i * 84
+        c.rect(760, y, 260, 60, 30, WHITE)
+        c.circle(792, y + 30, 18, color)
+        c.tick(792, y + 30, WHITE, 0.8, 4)
+        c.rect(826, y + 22, w - 60, 16, 8, "#e7e3f4")
+    return c
+
+
+def shield_points(cx, top, bottom, half, steps=14):
+    """Outline of a shield: straight sides, curved sides towards the bottom point."""
+    mid = top + (bottom - top) * 0.42
+    points = [(cx - half, top), (cx + half, top), (cx + half, mid)]
+    for i in range(1, steps + 1):
+        t = i / steps
+        x = (1 - t) ** 2 * (cx + half) + 2 * (1 - t) * t * (cx + half) + t ** 2 * cx
+        y = (1 - t) ** 2 * mid + 2 * (1 - t) * t * (bottom - (bottom - mid) * 0.25) + t ** 2 * bottom
+        points.append((x, y))
+    for i in range(1, steps + 1):
+        t = i / steps
+        x = (1 - t) ** 2 * cx + 2 * (1 - t) * t * (cx - half) + t ** 2 * (cx - half)
+        y = (1 - t) ** 2 * bottom + 2 * (1 - t) * t * (bottom - (bottom - mid) * 0.25) + t ** 2 * mid
+        points.append((x, y))
+    return points
+
+
+def cover_safety():
+    c = Canvas(INK)
+    c.ring(1080, 560, 130, 44, "#262839")
+    c.rect(110, 120, 400, 380, 44, WHITE)
+    c.rect(150, 168, 190, 22, 11, "#dcdce6")
+    c.rect(150, 214, 310, 18, 9, "#dcdce6")
+    c.rect(150, 250, 250, 18, 9, "#dcdce6")
+    c.rect(150, 340, 310, 62, 31, BLUE)
+    c.rect(150, 424, 310, 34, 17, "#dcdce6")
+    c.circle(470, 140, 44, PINK)
+    c.rect(464, 116, 12, 30, 6, WHITE)
+    c.circle(470, 160, 7, WHITE)
+    c.poly(shield_points(790, 100, 540, 190), BLUE)
+    c.poly(shield_points(790, 150, 490, 138), "#4a60e2")
+    c.circle(790, 300, 80, PINK)
+    c.tick(790, 300, WHITE, 2.4, 14)
+    c.sparkle(1050, 170, 40, "#8b9bf0")
+    c.sparkle(600, 560, 22, PINK)
+    return c
+
+
+COVERS = {
+    "exam": cover_exam,
+    "market": cover_market,
+    "ai": cover_ai,
+    "scores": cover_scores,
+    "admission": cover_admission,
+    "safety": cover_safety,
+}
 
 
 def main():
