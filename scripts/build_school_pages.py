@@ -15,7 +15,7 @@ CSS_VERSIONS = {
     "styles.css": "34",
     "refinements.css": "35",
     "typography.css": "31",
-    "composition.css": "104",
+    "composition.css": "109",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -116,7 +116,7 @@ FILTER_SCRIPT = """<script>
 </script>"""
 
 
-def make_head(title, description, url, crumbs, noindex=False):
+def make_head(title, description, url, crumbs, noindex=False, og_type="website", image=None, extra=""):
     css = "\n".join(
         f'  <link rel="stylesheet" href="/{name}?v={version}">' for name, version in CSS_VERSIONS.items()
     )
@@ -129,6 +129,8 @@ def make_head(title, description, url, crumbs, noindex=False):
         ],
     }
     robots = '\n  <meta name="robots" content="noindex,follow">' if noindex else ""
+    twitter_image = f'<meta name="twitter:image" content="{image}">' if image else ""
+    image = image or f"{SITE}/assets/og-cover.png?v=3"
     return f"""<!doctype html>
 <html lang="ru">
 <head>
@@ -137,16 +139,16 @@ def make_head(title, description, url, crumbs, noindex=False):
   <meta name="theme-color" content="#FAF8F5">
   <meta name="description" content="{escape(description, quote=True)}">
   <link rel="canonical" href="{url}">
-  <meta property="og:type" content="website"><meta property="og:site_name" content="ЕГЭ Мэтч">
+  <meta property="og:type" content="{og_type}"><meta property="og:site_name" content="ЕГЭ Мэтч">
   <meta property="og:title" content="{escape(title, quote=True)}"><meta property="og:description" content="{escape(description, quote=True)}">
-  <meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}/assets/og-cover.png?v=3">
-  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:url" content="{url}"><meta property="og:image" content="{image}">
+  <meta name="twitter:card" content="summary_large_image">{twitter_image}
   <title>{escape(title)}</title>
   <link rel="icon" href="/assets/egeshka-logo-icon.svg" type="image/svg+xml">
   <link rel="manifest" href="/site.webmanifest">
   <link rel="preload" href="/assets/fonts/onest-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/unbounded-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/onest-symbols-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 {css}
-  <script type="application/ld+json">{json.dumps(breadcrumb, ensure_ascii=False)}</script>
+  <script type="application/ld+json">{json.dumps(breadcrumb, ensure_ascii=False)}</script>{extra}
 </head>"""
 
 
@@ -335,12 +337,25 @@ def update_ratings_links(schools):
     path.write_text(text, encoding="utf-8")
 
 
+def article_index():
+    path = ROOT / "content" / "articles.json"
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else []
+
+
 def write_sitemap(schools):
     static = [("/", "1.0", "weekly"), ("/ratings", "0.9", "weekly"), ("/methodology", "0.6", "monthly")]
+    articles = article_index()
+    if articles:
+        static.append(("/articles", "0.7", "weekly"))
     rows = [f"  <url><loc>{SITE}{p}</loc><changefreq>{f}</changefreq><priority>{pr}</priority></url>" for p, pr, f in static]
     rows += [
         f"  <url><loc>{SITE}/schools/{s['reviewSlug']}</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>"
         for s in sorted(schools, key=lambda s: s["reviewSlug"])
+    ]
+    rows += [
+        f"  <url><loc>{SITE}/articles/{a['slug']}</loc><lastmod>{a['date'][:10]}</lastmod>"
+        f"<changefreq>monthly</changefreq><priority>0.7</priority></url>"
+        for a in articles
     ]
     xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(rows) + "\n</urlset>\n"
     (WEB / "sitemap.xml").write_text(xml, encoding="utf-8")
@@ -382,6 +397,9 @@ def main():
     update_ratings_links(schools)
     write_sitemap(schools)
     print(f"Generated {len(schools)} school pages and {len(people)} teacher pages")
+    import build_articles
+
+    build_articles.main()
 
 
 if __name__ == "__main__":

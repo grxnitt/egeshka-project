@@ -3,6 +3,7 @@
   <url><loc>https://egematch.ru/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
   <url><loc>https://egematch.ru/ratings</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://egematch.ru/methodology</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://egematch.ru/articles</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://egematch.ru/schools/100ballov</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://egematch.ru/schools/99ballov</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://egematch.ru/schools/egeland</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
@@ -20,4 +21,8 @@
   <url><loc>https://egematch.ru/schools/turbo</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://egematch.ru/schools/umskul</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://egematch.ru/schools/webium</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://egematch.ru/articles/ege-2027-chto-izmenitsya</loc><lastmod>2026-09-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://egematch.ru/articles/rynok-onlayn-obrazovaniya-2026</loc><lastmod>2026-09-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://egematch.ru/articles/yandex-ai-repetitor-ege</loc><lastmod>2026-09-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://egematch.ru/articles/itogi-ege-2026-v-tsifrakh</loc><lastmod>2026-09-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>
