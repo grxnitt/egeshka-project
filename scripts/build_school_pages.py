@@ -15,7 +15,7 @@ CSS_VERSIONS = {
     "styles.css": "34",
     "refinements.css": "35",
     "typography.css": "31",
-    "composition.css": "87",
+    "composition.css": "88",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -229,7 +229,7 @@ def build_page(school, people, others, header, footer, teacher_slugs):
   <section class="sp-section"><h2>Предметы ({len(school["subjects"])})</h2><ul class="sp-chips">{subjects}</ul></section>
   <section class="sp-two"><article><h2>Почему выбирают</h2><p>{escape(school["strengths"])}</p></article><article><h2>Что проверить перед покупкой</h2><p>{escape(school["weaknesses"])}</p></article></section>
   {teachers_block}
-  <div class="sp-actions"><a class="button pink" href="{card_url}" target="_blank" rel="noopener" data-source="school_page">Курсы и отзывы в боте <span>↗</span></a><a class="button blue" href="{compare_url}">Сравнить с другой школой <span>→</span></a><a class="button outline" href="{review_url}" target="_blank" rel="noopener">Оставить отзыв <span>↗</span></a></div>
+  <div class="sp-actions"><a class="button dark" href="{card_url}" target="_blank" rel="noopener" data-source="school_page">Курсы и отзывы в боте <span>↗</span></a><a class="button blue" href="{compare_url}">Сравнить с другой школой <span>→</span></a><a class="button outline" href="{review_url}" target="_blank" rel="noopener">Оставить отзыв <span>↗</span></a></div>
   <p class="sp-site-link">В боте: тарифы, преподаватели и отзывы учеников. Условия и цены школа публикует на <a href="{escape(school["url"])}" target="_blank" rel="noopener">официальном сайте ↗</a></p>
   <section class="sp-section"><h2>Другие школы</h2><nav class="sp-more" aria-label="Другие школы">{other_links}<a href="/ratings">Весь рейтинг →</a></nav></section>
 </main>
@@ -292,7 +292,7 @@ def build_teacher_page(person, school, colleagues, header, footer):
   </section>
   <section class="sp-section"><h2>О преподавателе</h2><p class="sp-body">{escape(person.get("description") or "")}</p></section>
   <section class="sp-section"><h2>Оценки учеников</h2><p class="sp-hint">{escape(reviews_hint)}</p><ul class="sp-criteria">{rows}</ul></section>
-  <div class="sp-actions"><a class="button pink" href="{card_url}" target="_blank" rel="noopener" data-source="teacher_page">Курсы школы и отзывы в боте <span>↗</span></a><a class="button blue" href="{school_url}">О школе <span>→</span></a><a class="button outline" href="{review_url}" target="_blank" rel="noopener">Оставить отзыв <span>↗</span></a></div>
+  <div class="sp-actions"><a class="button dark" href="{card_url}" target="_blank" rel="noopener" data-source="teacher_page">Курсы школы и отзывы в боте <span>↗</span></a><a class="button blue" href="{school_url}">О школе <span>→</span></a><a class="button outline" href="{review_url}" target="_blank" rel="noopener">Оставить отзыв <span>↗</span></a></div>
   <p class="sp-site-link">Профиль на сайте школы: <a href="{escape(person["url"])}" target="_blank" rel="noopener">{escape(person["name"])} ↗</a></p>
   <section class="sp-section"><h2>Другие преподаватели школы</h2><nav class="sp-more" aria-label="Другие преподаватели школы">{other_links}<a href="{school_url}#teachers">Все преподаватели →</a></nav></section>
 </main>
