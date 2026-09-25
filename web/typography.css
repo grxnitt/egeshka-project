@@ -2,7 +2,7 @@
 body,button,input,select,textarea{font-family:var(--font-ui)}
 h1,h2,.logo,.channel-stamp{font-family:var(--font-display)}
 h3,.eyebrow,.ribbon div,.criteria-title strong,.teacher-compare-card h3{font-family:var(--font-ui)}
-.logo{font-weight:800}
+.logo{font-weight:700}
 .logo img{display:block;width:auto;height:36px}
 h1{font-weight:700}
 /* One heading treatment across the hero preview, sections and dialogs. */

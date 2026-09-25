@@ -87,7 +87,7 @@ def anchor(text):
 def render_directive(kind, title, lines):
     if kind == "callout":
         return (
-            f'<aside class="art-callout"><p class="art-callout-title">{inline(title)}</p>'
+            f'<aside class="art-callout"><p class="art-callout-title t-h3">{inline(title)}</p>'
             f"{render_lines(lines)}</aside>"
         )
     if kind == "stats":
@@ -140,7 +140,7 @@ def render_lines(lines):
             i += 1
         elif stripped.startswith("## "):
             flush()
-            out.append(f'<h2 id="{anchor(stripped[3:])}">{inline(stripped[3:])}</h2>')
+            out.append(f'<h2 id="{anchor(stripped[3:])}" class="t-h3">{inline(stripped[3:])}</h2>')
             i += 1
         elif stripped.startswith("- "):
             flush()
@@ -264,8 +264,8 @@ def card(article, featured=False):
 
 
 CTA_BLOCK = f"""<aside class="article-cta" aria-label="Что дальше">
-  <div class="art-cta-card art-cta-channel"><h2>Такие разборы — в Telegram</h2><p>Изменения ЕГЭ, новости онлайн-школ и честные разборы. Коротко и по делу.</p><a class="button" href="{CHANNEL}" target="_blank" rel="noopener" data-source="article_cta">Открыть Telegram-канал <span>↗</span></a></div>
-  <div class="art-cta-card art-cta-rating"><h2>Выбираешь школу?</h2><p>Сравни школы по семи критериям и отзывам учеников.</p><a class="button dark" href="/ratings">Рейтинг школ <span>→</span></a></div>
+  <div class="art-cta-card art-cta-channel"><h2 class="t-h3">Такие разборы — в Telegram</h2><p>Изменения ЕГЭ, новости онлайн-школ и честные разборы. Коротко и по делу.</p><a class="button" href="{CHANNEL}" target="_blank" rel="noopener" data-source="article_cta">Открыть Telegram-канал <span>↗</span></a></div>
+  <div class="art-cta-card art-cta-rating"><h2 class="t-h3">Выбираешь школу?</h2><p>Сравни школы по семи критериям и отзывам учеников.</p><a class="button dark" href="/ratings">Рейтинг школ <span>→</span></a></div>
 </aside>"""
 
 
@@ -317,13 +317,13 @@ def build_article_page(article, others, header, footer):
             for label, url in article.sources
         )
         sources = (
-            '<section class="article-sources"><h2>Источники</h2><ol>' + items + "</ol>"
+            '<section class="article-sources"><h2 class="t-title">Источники</h2><ol>' + items + "</ol>"
             "<p>Цифры и факты взяты из перечисленных материалов. Выводы и советы — мнение редакции.</p></section>"
         )
     related = ""
     if others:
         related = (
-            '<section class="article-more"><h2>Читайте также</h2><div class="article-grid">'
+            '<section class="article-more"><h2 class="t-h2">Читайте также</h2><div class="article-grid">'
             + "".join(card(o) for o in others[:2])
             + '</div><p class="article-all"><a href="/articles">Все статьи →</a></p></section>'
         )

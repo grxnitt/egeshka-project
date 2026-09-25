@@ -12,10 +12,10 @@ WEB = ROOT / "web"
 SITE = "https://egematch.ru"
 BOT = "https://t.me/egematch_bot"
 CSS_VERSIONS = {
-    "styles.css": "34",
-    "refinements.css": "35",
+    "styles.css": "35",
+    "refinements.css": "36",
     "typography.css": "31",
-    "composition.css": "118",
+    "composition.css": "123",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -209,12 +209,12 @@ def build_page(school, people, others, header, footer, teacher_slugs):
             )
             filter_html = f'<div class="sp-filter" role="group" aria-label="Фильтр преподавателей по предмету">{chips}</div><p class="sp-hint" id="sp-count" aria-live="polite"></p>'
         teachers_block = (
-            f'<section class="sp-section" id="teachers"><h2>Преподаватели ({len(people)})</h2>'
+            f'<section class="sp-section" id="teachers"><h2 class="t-h3">Преподаватели ({len(people)})</h2>'
             f'{filter_html}<ul class="sp-teachers">{"".join(teacher_card(p, n) for n, p in enumerate(people))}</ul></section>'
         )
     else:
         teachers_block = (
-            '<section class="sp-section" id="teachers"><h2>Преподаватели</h2>'
+            '<section class="sp-section" id="teachers"><h2 class="t-h3">Преподаватели</h2>'
             "<p>Школа работает по модели репетиторского сервиса: конкретного преподавателя "
             "выбирают на сайте школы.</p></section>"
         )
@@ -235,13 +235,13 @@ def build_page(school, people, others, header, footer, teacher_slugs):
     <div class="hero-copy"><h1>{escape(school["name"])}</h1><p class="lead">{escape(school["description"])}</p><div class="sp-score"><small>Оценка ЕГЭ Мэтча</small><strong>{num(school["score"])}</strong><span>из 10</span></div></div>
   </section>
   <p class="sp-note">Оценка складывается из редакционной оценки по семи критериям и отзывов учеников: подтверждённые весят больше. Пока отзывов мало, она в основном редакционная. <a href="/methodology">Как считается оценка</a></p>
-  <section class="sp-section"><h2>Оценка по критериям</h2><ul class="sp-criteria">{criteria_rows}</ul></section>
-  <section class="sp-section"><h2>Предметы ({len(school["subjects"])})</h2><ul class="sp-chips">{subjects}</ul></section>
-  <section class="sp-facts"><article><h2>Стоимость</h2><p>{escape(school["price"])}</p><p class="sp-inline-link"><a href="{escape(school["url"])}" target="_blank" rel="noopener">Проверить актуальные цены на сайте школы ↗</a></p></article><article><h2>Формат обучения</h2><p>{escape(school["format"])}</p></article><article><h2>Почему выбирают</h2><p>{escape(school["strengths"])}</p></article><article><h2>Что проверить перед покупкой</h2><p>{escape(school["weaknesses"])}</p></article></section>
+  <section class="sp-section"><h2 class="t-h3">Оценка по критериям</h2><ul class="sp-criteria">{criteria_rows}</ul></section>
+  <section class="sp-section"><h2 class="t-h3">Предметы ({len(school["subjects"])})</h2><ul class="sp-chips">{subjects}</ul></section>
+  <section class="sp-facts"><article><h2 class="t-title">Стоимость</h2><p>{escape(school["price"])}</p><p class="sp-inline-link"><a href="{escape(school["url"])}" target="_blank" rel="noopener">Проверить актуальные цены на сайте школы ↗</a></p></article><article><h2 class="t-title">Формат обучения</h2><p>{escape(school["format"])}</p></article><article><h2 class="t-title">Почему выбирают</h2><p>{escape(school["strengths"])}</p></article><article><h2 class="t-title">Что проверить перед покупкой</h2><p>{escape(school["weaknesses"])}</p></article></section>
   {teachers_block}
   <div class="sp-actions"><a class="button dark" href="{card_url}" target="_blank" rel="noopener" data-source="school_page">Курсы и отзывы в боте <span>↗</span></a><a class="button blue" href="{compare_url}">Сравнить с другой школой <span>→</span></a><a class="button outline" href="{review_url}" target="_blank" rel="noopener">Оставить отзыв <span>↗</span></a></div>
   <p class="sp-site-link">В боте: тарифы, преподаватели и отзывы учеников. Условия и цены школа публикует на <a href="{escape(school["url"])}" target="_blank" rel="noopener">официальном сайте ↗</a></p>
-  <section class="sp-section"><h2>Другие школы</h2><nav class="sp-more" aria-label="Другие школы">{other_links}</nav><p class="sp-more-all"><a href="/ratings">Весь рейтинг →</a></p></section>
+  <section class="sp-section"><h2 class="t-h3">Другие школы</h2><nav class="sp-more" aria-label="Другие школы">{other_links}</nav><p class="sp-more-all"><a href="/ratings">Весь рейтинг →</a></p></section>
 </main>
 {footer}
 <script>window.TEACHER_SLUGS={slug_map};</script>
@@ -278,11 +278,19 @@ def build_teacher_page(person, school, colleagues, header, footer):
         if has_criteria
         else "Появятся, когда наберётся вес трёх подтверждённых отзывов."
     )
+    review_url = f"{BOT}?start=review_{school_slug}"
+    card_url = f"{BOT}?start=school_{school_slug}"
+    if has_criteria:
+        reviews_intro = f'<p class="sp-hint">{escape(reviews_hint)}</p>'
+    else:
+        reviews_intro = (
+            '<div class="sp-empty-card"><p class="sp-empty-title">Станьте первым, кто оставит отзыв</p>'
+            "<p>Оценка появится, когда наберётся вес трёх подтверждённых отзывов.</p>"
+            f'<a class="button dark" href="{review_url}" target="_blank" rel="noopener" data-source="teacher_empty">Оставить отзыв <span>↗</span></a></div>'
+        )
     same_subject = [c for c in colleagues if set(c["subjects"]) & set(person["subjects"])]
     others = (same_subject + [c for c in colleagues if c not in same_subject])[:16]
     other_links = "".join(f'<a href="/teachers/{c["slug"]}">{escape(c["name"])}</a>' for c in others)
-    review_url = f"{BOT}?start=review_{school_slug}"
-    card_url = f"{BOT}?start=school_{school_slug}"
     title = f"{person['name']} — {subjects}, {school['name']} | ЕГЭ Мэтч"
     description = f"{person['name']}, преподаватель {school['name']}: {subjects}. Описание, оценки учеников и как оставить отзыв."
     crumbs = [
@@ -300,11 +308,11 @@ def build_teacher_page(person, school, colleagues, header, footer):
     <div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div class="hero-glow hero-glow-pink" aria-hidden="true"></div>
     <div class="hero-copy"><p class="teacher-kicker"><a href="{school_url}">{escape(school["name"])}</a></p><h1>{escape(person["name"])}</h1><p class="lead">{escape(subjects)}</p><div class="sp-score"><small>Оценка учеников</small><strong>{score_text}</strong><span>{score_note}</span></div></div>
   </section>
-  <section class="sp-section"><h2>О преподавателе</h2><p class="sp-body">{escape(person.get("description") or "")}</p></section>
-  <section class="sp-section"><h2>Оценки учеников</h2><p class="sp-hint">{escape(reviews_hint)}</p><ul class="sp-criteria">{rows}</ul></section>
+  <section class="sp-section"><h2 class="t-h3">О преподавателе</h2><p class="sp-body">{escape(person.get("description") or "")}</p></section>
+  <section class="sp-section"><h2 class="t-h3">Оценки учеников</h2>{reviews_intro}<ul class="sp-criteria">{rows}</ul></section>
   <div class="sp-actions"><a class="button dark" href="{card_url}" target="_blank" rel="noopener" data-source="teacher_page">Курсы школы и отзывы в боте <span>↗</span></a><a class="button blue" href="{school_url}">О школе <span>→</span></a><a class="button outline" href="{review_url}" target="_blank" rel="noopener">Оставить отзыв <span>↗</span></a></div>
   <p class="sp-site-link">Профиль на сайте школы: <a href="{escape(person["url"])}" target="_blank" rel="noopener">{escape(person["name"])} ↗</a></p>
-  <section class="sp-section"><h2>Другие преподаватели школы</h2><nav class="sp-more" aria-label="Другие преподаватели школы">{other_links}</nav><p class="sp-more-all"><a href="{school_url}#teachers">Все преподаватели школы →</a></p></section>
+  <section class="sp-section"><h2 class="t-h3">Другие преподаватели школы</h2><nav class="sp-more" aria-label="Другие преподаватели школы">{other_links}</nav><p class="sp-more-all"><a href="{school_url}#teachers">Все преподаватели школы →</a></p></section>
 </main>
 {footer}
 <script src="/analytics-config.js?v=1"></script>

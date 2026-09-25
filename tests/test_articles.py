@@ -111,12 +111,12 @@ def test_markdown_blocks_lists_callout_and_stats():
             ":::",
         ]
     )
-    assert '<h2 id="zagolovok-razdela">Заголовок раздела</h2>' in html
+    assert '<h2 id="zagolovok-razdela" class="t-h3">Заголовок раздела</h2>' in html
     assert "<ul><li>один</li><li><strong>два</strong></li></ul>" in html
     assert "<ol><li>первый</li><li>второй</li></ol>" in html
     assert '<b>154<small>млрд ₽</small></b>' in html
     assert "<b>+12%</b>" in html
-    assert '<aside class="art-callout"><p class="art-callout-title">Совет</p><ul><li>делай так</li></ul></aside>' in html
+    assert '<aside class="art-callout"><p class="art-callout-title t-h3">Совет</p><ul><li>делай так</li></ul></aside>' in html
 
 
 def test_unknown_block_is_an_error():
