@@ -226,6 +226,10 @@ def chrome(active_articles=True):
         header = header.replace('<a class="active" href="/ratings">', '<a href="/ratings">')
         header = header.replace('<a href="/articles">Статьи</a>', '<a class="active" href="/articles">Статьи</a>')
         footer = footer.replace(' class="active"', "")
+        footer = re.sub(
+            r'(<nav class="mobile-product-nav".*?)<a href="/articles">Статьи</a>',
+            r'\1<a class="active" href="/articles">Статьи</a>', footer, count=1, flags=re.S,
+        )
     return header, footer
 
 

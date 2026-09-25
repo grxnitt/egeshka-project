@@ -135,3 +135,12 @@ def test_draft_articles_are_not_published(tmp_path, monkeypatch):
     )
     monkeypatch.setattr(build_articles, "CONTENT", tmp_path)
     assert build_articles.load_articles() == []
+
+
+def test_mobile_bottom_navigation_links_to_articles():
+    for path in ("index.html", "ratings.html", "articles/index.html", "schools/neofamily.html"):
+        page = (WEB / path).read_text(encoding="utf-8")
+        nav = re.search(r'<nav class="mobile-product-nav".*?</nav>', page, re.S).group(0)
+        assert 'href="/articles"' in nav, path
+    nav = re.search(r'<nav class="mobile-product-nav".*?</nav>', (WEB / "articles/index.html").read_text(encoding="utf-8"), re.S).group(0)
+    assert '<a class="active" href="/articles">Статьи</a>' in nav

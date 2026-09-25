@@ -1276,3 +1276,5 @@ main>.method-cta{padding:56px 64px;border-radius:28px;background:var(--blue);box
   .article-more{margin-top:64px}
 }
 .article-cover,.article-body,.article-sources,.article-cta,.article-more,.article-list,.article-all{position:relative;z-index:1}
+
+@media(max-width:700px){.mobile-product-nav{grid-template-columns:repeat(4,1fr)}}
