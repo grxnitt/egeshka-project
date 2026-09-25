@@ -15,7 +15,7 @@ CSS_VERSIONS = {
     "styles.css": "34",
     "refinements.css": "35",
     "typography.css": "31",
-    "composition.css": "85",
+    "composition.css": "86",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -109,7 +109,7 @@ FILTER_SCRIPT = """<script>
   buttons.forEach(function(button){button.addEventListener('click',function(){
     var value=button.getAttribute('data-filter'),shown=0;
     buttons.forEach(function(b){var on=b===button;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));});
-    items.forEach(function(li){var ok=!value||li.getAttribute('data-subjects').split('|').indexOf(value)>-1;li.hidden=!ok;if(ok)shown++;});
+    items.forEach(function(li){var ok=!value||li.getAttribute('data-subjects').split('|').indexOf(value)>-1;li.hidden=!ok;if(ok){li.classList.toggle('tone-b',shown%2===1);shown++;}});
     if(out)out.textContent=value?value+' \\u00b7 '+shown+' '+word(shown):'';
   });});
 })();
@@ -165,12 +165,13 @@ def subject_label(subject):
     return subject[:1].upper() + subject[1:]
 
 
-def teacher_card(person):
+def teacher_card(person, index=0):
     subjects = ", ".join(person["subjects"])
     initial = escape(person["name"].strip()[:1])
     description = escape(person.get("description") or "")
+    tone = ' class="tone-b"' if index % 2 else ""
     return (
-        f'<li data-subjects="{escape("|".join(person["subjects"]), quote=True)}">'
+        f'<li{tone} data-subjects="{escape("|".join(person["subjects"]), quote=True)}">'
         f'<a class="sp-teacher" href="/teachers/{person["slug"]}"><span class="sp-monogram" aria-hidden="true">{initial}</span>'
         f'<span class="sp-teacher-main"><b>{escape(person["name"])}</b><small>{escape(subjects)}</small>'
         f'<span class="sp-desc">{description}</span></span><i aria-hidden="true">→</i></a></li>'
@@ -198,7 +199,7 @@ def build_page(school, people, others, header, footer, teacher_slugs):
             filter_html = f'<div class="sp-filter" role="group" aria-label="Фильтр преподавателей по предмету">{chips}</div><p class="sp-hint" id="sp-count" aria-live="polite"></p>'
         teachers_block = (
             f'<section class="sp-section" id="teachers"><h2>Преподаватели ({len(people)})</h2>'
-            f'{filter_html}<ul class="sp-teachers">{"".join(teacher_card(p) for p in people)}</ul></section>'
+            f'{filter_html}<ul class="sp-teachers">{"".join(teacher_card(p, n) for n, p in enumerate(people))}</ul></section>'
         )
     else:
         teachers_block = (

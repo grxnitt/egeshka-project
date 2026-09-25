@@ -1024,3 +1024,4 @@ main>.faq:has(+ .school-links){margin-bottom:32px}
 @media(prefers-reduced-motion:reduce){.sp-teacher{transition:none}.sp-teacher:hover{transform:none}}
 @media(max-width:800px){.sp-criteria .sp-empty{grid-template-columns:120px 1fr}}
 @media(max-width:800px){.sp-filter{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}.sp-filter::-webkit-scrollbar{display:none}.sp-filter button{flex:none}}
+.sp-teachers li.tone-b .sp-monogram{background:var(--blush);color:#8a3155}
