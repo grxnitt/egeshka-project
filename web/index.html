@@ -16,16 +16,16 @@
   <link rel="stylesheet" href="styles.css?v=34">
   <link rel="stylesheet" href="refinements.css?v=35">
   <link rel="stylesheet" href="typography.css?v=31">
-  <link rel="stylesheet" href="composition.css?v=100">
+  <link rel="stylesheet" href="composition.css?v=102">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"ЕГЭ Мэтч","url":"https://egematch.ru/","logo":"https://egematch.ru/assets/egeshka-logo-icon.svg","sameAs":["https://t.me/EgeMatch_blog"]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"ЕГЭ Мэтч","url":"https://egematch.ru/","inLanguage":"ru","description":"Сравнение онлайн-школ и преподавателей для подготовки к ЕГЭ."}</script>
 </head>
-<body>
+<body class="at-hero">
 <header class="header wrap"><a class="logo" href="#" aria-label="ЕГЭ Мэтч, главная">ЕГЭ Мэтч<span>.</span></a><nav aria-label="Главная навигация"><a href="/ratings">Рейтинг школ</a><a href="#compare">Сравнение</a><a href="#reviews">Отзывы</a></nav><a class="header-action" href="#compare">Сравнить <span>↓</span></a></header>
 <main>
 <section class="hero hero-centered wrap">
   <div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div class="hero-glow hero-glow-pink" aria-hidden="true"></div>
-  <div class="hero-copy"><h1><span class="hero-title-line">Подготовка под тебя.</span> <span class="hero-title-line">Выбор за <span class="brand-dot">тобой</span></span></h1><p class="lead">Школы, преподаватели и честное сравнение.<br> Найди тех, с кем тебе будет по пути.</p><div class="hero-actions"><button class="button pink" id="quiz-start">Подобрать подготовку <span aria-hidden="true">→</span></button><a class="hero-compare-link" href="#compare">Сравнить школы <span aria-hidden="true">↓</span></a></div></div>
+  <div class="hero-copy"><h1><span class="hero-title-line">Подготовка под тебя.</span> <span class="hero-title-line">Выбор за <span class="brand-dot">тобой</span></span></h1><p class="lead">Школы, преподаватели и честное сравнение.<br> Найди тех, с кем тебе будет по пути.</p><div class="hero-actions"><button class="button pink" id="quiz-start">Подобрать подготовку <span aria-hidden="true">→</span></button><a class="hero-compare-link" href="/ratings">Рейтинг школ <span aria-hidden="true">→</span></a></div></div>
 </section>
 <section class="how-it-works wrap" id="how"><div class="section-heading"><div><h2>Как это работает?</h2></div><a class="text-link" href="/methodology">Узнать больше <span aria-hidden="true">→</span></a></div><div class="how-grid">
   <article class="how-card"><span class="how-number">01</span><h3>Выбираешь предмет</h3><p>Отмечаешь, что сдаёшь — дальше видишь только то, что подходит.</p></article>
@@ -40,6 +40,7 @@
 <nav class="mobile-product-nav" aria-label="Разделы сервиса"><a href="?start=quiz">Подобрать</a><a href="/ratings">Рейтинг</a><a href="#compare">Сравнить</a></nav>
 <footer class="wrap footer"><a class="logo" href="#" aria-label="ЕГЭ Мэтч, главная">ЕГЭ Мэтч<span>.</span></a><p>Выбирай осознанно.<br>Готовься по-своему.</p><div class="footer-links"><a href="/methodology">Методология рейтинга</a><a href="https://t.me/egematch_bot?start=delete_data" target="_blank" rel="noopener">Удалить данные</a><a href="#">Наверх ↑</a></div><span>© ЕГЭ Мэтч, 2026</span></footer>
 <dialog id="detail-dialog"><button class="close" aria-label="Закрыть">×</button><div id="dialog-content" tabindex="0" aria-label="Подробности"></div></dialog>
+<script>(function(){var a=document.querySelector(".hero-actions");if(!a||!("IntersectionObserver" in window))return;new IntersectionObserver(function(e){document.body.classList.toggle("at-hero",e[0].isIntersecting)}).observe(a)})()</script>
 <script src="analytics-config.js?v=1"></script>
 <script src="analytics.js?v=5"></script>
 <script src="supabase-config.js?v=1"></script>
