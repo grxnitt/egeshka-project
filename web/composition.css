@@ -1081,7 +1081,6 @@ main>.method-cta{padding:56px 64px;border-radius:28px;background:var(--blue);box
 .criteria-weight-list article:first-child{grid-column:span 2}
 @media(min-width:1000px){.criteria-weight-list{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:700px){.criteria-weight-list{grid-template-columns:1fr}.criteria-weight-list article:first-child{grid-column:auto}}
-@media(max-width:700px){.hero-centered:not(:has(.hero-actions)) .hero-glow-blue{top:36px}}
 
 /* Catalog filters: same pill language as the subject chips */
 .rating-catalog .catalog-filters{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px;margin:26px 0 0;padding-top:26px;border-top:1px solid rgb(24 25 35/.08)}
@@ -1279,3 +1278,12 @@ main>.method-cta{padding:56px 64px;border-radius:28px;background:var(--blue);box
 
 @media(max-width:700px){.mobile-product-nav{grid-template-columns:repeat(4,1fr)}}
 .rating-scope-note a{color:var(--blue);font-weight:600;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px;white-space:nowrap}
+
+/* Mobile hero glows never taller than their hero, so the fade ends inside it instead of being cut off */
+@media(max-width:700px){
+  .hero-centered .hero-glow{width:auto;height:min(100%,380px);aspect-ratio:1}
+  .hero-centered .hero-glow-blue{top:auto;bottom:0}
+  .hero-centered .hero-glow-pink{top:0;bottom:auto}
+  .hero-centered:not(:has(.hero-actions)) .hero-glow-blue{left:-110px}
+  .hero-centered:not(:has(.hero-actions)) .hero-glow-pink{right:-100px}
+}
