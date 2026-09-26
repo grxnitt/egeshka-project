@@ -1333,3 +1333,22 @@ main>.method-cta{padding:56px 64px;border-radius:var(--r-xl);background:var(--bl
 .article-meta{gap:14px}
 .article-card-meta{display:inline-flex;gap:12px}
 .art-tldr-title{font-size:13px}
+
+/* ---- Compare page ---- */
+/* Clip instead of hide so the column heads can stick to the viewport; the header keeps scrolling away like on other pages. */
+body.compare-page{overflow-x:clip}
+.compare-page .header{position:relative}
+.compare-hero .hero-title-line.brand-dot{display:inline-block}
+.compare-tool{margin-top:0}
+.compare-tool .comparison-box{margin:0}
+.compare-tool .comparison-table{position:relative}
+.compare-tool .column-heads{top:0;z-index:5;background:#fff;border-bottom:0;box-shadow:0 1px 0 #cbd0e1;border-radius:0}
+.compare-tool .column-heads p{font-size:14px;line-height:1.3}
+.compare-loading,.compare-error{margin:0;padding:32px 12px;color:var(--muted);font-size:14px}
+.compare-tool .method-link{display:inline-flex;align-items:center;margin-top:8px}
+@media(max-width:700px){
+  .compare-hero .lead br{display:none}
+  .compare-tool .column-heads{top:0}
+  .compare-tool .column-heads p{font-size:12px}
+}
+.compare-page main>.rating-next{margin-bottom:var(--section-gap)}

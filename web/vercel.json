@@ -9,6 +9,10 @@
       "destination": "/ratings.html"
     },
     {
+      "source": "/compare",
+      "destination": "/compare.html"
+    },
+    {
       "source": "/methodology",
       "destination": "/methodology.html"
     },

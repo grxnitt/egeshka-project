@@ -15,7 +15,7 @@ CSS_VERSIONS = {
     "styles.css": "35",
     "refinements.css": "37",
     "typography.css": "31",
-    "composition.css": "124",
+    "composition.css": "127",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -221,7 +221,7 @@ def build_page(school, people, others, header, footer, teacher_slugs):
     other_links = "".join(
         f'<a href="/schools/{o["reviewSlug"]}">{escape(o["name"])}</a>' for o in others
     )
-    compare_url = "/?" + "compareLeft=" + re.sub(r"\s", "+", school["name"]) + "#compare"
+    compare_url = "/compare?compareLeft=" + re.sub(r"\s", "+", school["name"])
     review_url = f'{BOT}?start=review_{slug}'
     card_url = f'{BOT}?start=school_{slug}'
     slug_map = json.dumps({p["name"]: p["slug"] for p in people}, ensure_ascii=False)
@@ -351,7 +351,7 @@ def article_index():
 
 
 def write_sitemap(schools):
-    static = [("/", "1.0", "weekly"), ("/ratings", "0.9", "weekly"), ("/methodology", "0.6", "monthly")]
+    static = [("/", "1.0", "weekly"), ("/ratings", "0.9", "weekly"), ("/compare", "0.8", "weekly"), ("/methodology", "0.6", "monthly")]
     articles = article_index()
     if articles:
         static.append(("/articles", "0.7", "weekly"))
