@@ -52,7 +52,7 @@ def first_sentence(text):
 
 def abs_href(fragment):
     return re.sub(
-        r'href="(?!https?:|#|/|mailto:)([^"]+)"', lambda m: f'href="/{m.group(1)}"', fragment
+        r'href="(?!https?:|javascript:|#|/|mailto:)([^"]+)"', lambda m: f'href="/{m.group(1)}"', fragment
     )
 
 

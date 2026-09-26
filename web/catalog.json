@@ -568,6 +568,92 @@
         "organization_score": 8.6
       },
       "score": 8.6
+    },
+    {
+      "id": 18,
+      "name": "ЕГЭХАБ",
+      "description": "Онлайн-школа подготовки к ЕГЭ и ОГЭ с годовыми курсами, вебинарами, домашними заданиями и собственной платформой с аналитикой прогресса.",
+      "subjects": [
+        "русский",
+        "математика профильная",
+        "обществознание",
+        "физика",
+        "химия",
+        "биология",
+        "информатика",
+        "история"
+      ],
+      "price": "Курсы ЕГЭ-2027 для 11 класса в открытом каталоге — от 3 450 руб./мес за один предмет. Например, курс включает 12 онлайн-занятий в месяц в течение 10 месяцев; пакетные условия отличаются.",
+      "monthlyPriceFrom": 3450,
+      "strengths": "Широкий выбор предметов, 12 занятий в месяц на курсах 11 класса, единая платформа с аналитикой, домашними заданиями и пробниками.",
+      "weaknesses": "Куратор не включён во все тарифы; цена и состав зависят от предмета и пакета. Показатели результатов на сайте школы не прошли независимый аудит.",
+      "format": "В каталоге ЕГЭ-2027 для 11 класса указаны годовые курсы с 12 онлайн-занятиями в месяц, домашними заданиями и пробниками. Записи, задания и аналитика прогресса доступны через личный кабинет.",
+      "url": "https://ege-hub.ru/",
+      "reviewSlug": "egehub",
+      "criteria": {
+        "teachers_score": 8.6,
+        "practice_score": 8.7,
+        "feedback_score": 8.2,
+        "curator_score": 8.3,
+        "platform_score": 8.8,
+        "workload_score": 8.2,
+        "organization_score": 8.6
+      },
+      "score": 8.5
+    },
+    {
+      "id": 19,
+      "name": "Школа Пифагора",
+      "description": "Предметная онлайн-школа Евгения Пифагора по подготовке к профильному ЕГЭ по математике.",
+      "subjects": [
+        "математика профильная"
+      ],
+      "price": "Актуальная цена годовой программы профильной математики публично не подтверждена. Перед покупкой запроси стоимость и полные условия у школы.",
+      "monthlyPriceFrom": 0,
+      "strengths": "Чёткая специализация на профильной математике, авторские варианты и разборы, заметная личная роль преподавателя.",
+      "weaknesses": "Основной сайт содержит мало сведений о программе, тарифах и сопровождении; сравнить годовую нагрузку и полную стоимость без уточнения у школы нельзя.",
+      "format": "Публично представлены авторские материалы и варианты профильного ЕГЭ с решениями, а обучение организовано через личный кабинет. Частоту занятий, длительность курса, обратную связь и состав тарифа нужно уточнить у школы.",
+      "url": "https://shkolapifagora.ru/",
+      "reviewSlug": "shkolapifagora",
+      "criteria": {
+        "teachers_score": 8.2,
+        "practice_score": 8.4,
+        "feedback_score": 7.2,
+        "curator_score": 7.4,
+        "platform_score": 7.2,
+        "workload_score": 7.8,
+        "organization_score": 7.3
+      },
+      "score": 7.7
+    },
+    {
+      "id": 20,
+      "name": "НОО",
+      "description": "Онлайн-школа подготовки к ЕГЭ с сильной специализацией на химии: годовой курс сочетает теорию, практику, вебинары и проверку заданий.",
+      "subjects": [
+        "химия",
+        "биология",
+        "русский",
+        "математика профильная",
+        "физика"
+      ],
+      "price": "В официальном Telegram-канале НОО 24 сентября опубликована цена курса ЕГЭ по одному предмету — 5 690 руб./мес при обычной цене 6 390 руб. Это актуальная на дату поста акция; проверь срок перед оплатой.",
+      "monthlyPriceFrom": 5690,
+      "strengths": "Выраженная специализация на химии, сочетание теории и практических вебинаров, регулярные задания и ручная проверка куратора.",
+      "weaknesses": "Перед покупкой уточни расписание, еженедельную нагрузку и уровень обратной связи. Показатели результатов и отзывы на витрине школы не являются независимым аудитом.",
+      "format": "На химии теория изучается по записанным видеоурокам, а на онлайн-вебинарах разбирают практику. Платформа объединяет конспекты, тесты, рабочие тетради и записи; годовой курс рассчитан примерно на десять месяцев.",
+      "url": "https://www.no-os.ru/god-stream",
+      "reviewSlug": "noo",
+      "criteria": {
+        "teachers_score": 8.6,
+        "practice_score": 8.9,
+        "feedback_score": 8.5,
+        "curator_score": 8.5,
+        "platform_score": 8.2,
+        "workload_score": 7.9,
+        "organization_score": 8.4
+      },
+      "score": 8.5
     }
   ],
   "teachers": [
@@ -668,7 +754,7 @@
       "slug": "100ballov-katya-stroganova"
     },
     {
-      "id": 89,
+      "id": 7,
       "school": "Сотка",
       "name": "Дарья Устинова",
       "subject": "Русский язык",
@@ -684,7 +770,7 @@
       "slug": "sotka-darya-ustinova"
     },
     {
-      "id": 7,
+      "id": 8,
       "school": "Сотка",
       "name": "Айзиля Мусина",
       "subject": "Английский язык",
@@ -700,7 +786,7 @@
       "slug": "sotka-ayzilya-musina"
     },
     {
-      "id": 8,
+      "id": 9,
       "school": "Сотка",
       "name": "Паша Англичанин",
       "subject": "Английский язык",
@@ -716,7 +802,7 @@
       "slug": "sotka-pasha-anglichanin"
     },
     {
-      "id": 95,
+      "id": 10,
       "school": "Сотка",
       "name": "Алексей Кулагин",
       "subject": "Обществознание",
@@ -732,7 +818,7 @@
       "slug": "sotka-aleksey-kulagin"
     },
     {
-      "id": 96,
+      "id": 11,
       "school": "Сотка",
       "name": "Ксения Рерих",
       "subject": "Обществознание",
@@ -748,7 +834,7 @@
       "slug": "sotka-kseniya-rerikh"
     },
     {
-      "id": 97,
+      "id": 12,
       "school": "Сотка",
       "name": "Никита Петяшин",
       "subject": "Обществознание",
@@ -764,7 +850,7 @@
       "slug": "sotka-nikita-petyashin"
     },
     {
-      "id": 9,
+      "id": 13,
       "school": "Фоксфорд",
       "name": "Борис Трушин",
       "subject": "Математика профильная",
@@ -780,7 +866,7 @@
       "slug": "foxford-boris-trushin"
     },
     {
-      "id": 10,
+      "id": 14,
       "school": "Фоксфорд",
       "name": "Дарья Ильичева",
       "subject": "Русский язык",
@@ -796,7 +882,7 @@
       "slug": "foxford-darya-ilicheva"
     },
     {
-      "id": 11,
+      "id": 15,
       "school": "Фоксфорд",
       "name": "Александр Чорбу",
       "subject": "Химия",
@@ -812,7 +898,7 @@
       "slug": "foxford-aleksandr-chorbu"
     },
     {
-      "id": 90,
+      "id": 16,
       "school": "Фоксфорд",
       "name": "Михаил Пенкин",
       "subject": "Физика",
@@ -828,7 +914,7 @@
       "slug": "foxford-mikhail-penkin"
     },
     {
-      "id": 91,
+      "id": 17,
       "school": "Фоксфорд",
       "name": "Сергей Горбачёв",
       "subject": "Информатика",
@@ -844,7 +930,7 @@
       "slug": "foxford-sergey-gorbachev"
     },
     {
-      "id": 92,
+      "id": 18,
       "school": "Фоксфорд",
       "name": "Полина Кузнецова",
       "subject": "Обществознание",
@@ -860,7 +946,7 @@
       "slug": "foxford-polina-kuznetsova"
     },
     {
-      "id": 93,
+      "id": 19,
       "school": "Фоксфорд",
       "name": "Нина Максимова",
       "subject": "Математика профильная / Математика базовая",
@@ -877,7 +963,7 @@
       "slug": "foxford-nina-maksimova"
     },
     {
-      "id": 98,
+      "id": 20,
       "school": "Фоксфорд",
       "name": "Вероника Авраменко",
       "subject": "Русский язык",
@@ -893,7 +979,7 @@
       "slug": "foxford-veronika-avramenko"
     },
     {
-      "id": 99,
+      "id": 21,
       "school": "Фоксфорд",
       "name": "Виктория Симакова",
       "subject": "Английский язык",
@@ -909,7 +995,7 @@
       "slug": "foxford-viktoriya-simakova"
     },
     {
-      "id": 100,
+      "id": 22,
       "school": "Фоксфорд",
       "name": "Лера Луканцева",
       "subject": "Биология",
@@ -925,7 +1011,7 @@
       "slug": "foxford-lera-lukantseva"
     },
     {
-      "id": 101,
+      "id": 23,
       "school": "Фоксфорд",
       "name": "Василиса Кравченко",
       "subject": "Литература",
@@ -941,7 +1027,7 @@
       "slug": "foxford-vasilisa-kravchenko"
     },
     {
-      "id": 102,
+      "id": 24,
       "school": "Фоксфорд",
       "name": "Елизавета Куликова",
       "subject": "История",
@@ -957,7 +1043,7 @@
       "slug": "foxford-elizaveta-kulikova"
     },
     {
-      "id": 12,
+      "id": 25,
       "school": "Вебиум",
       "name": "Вероника Вавилова",
       "subject": "Биология",
@@ -973,7 +1059,7 @@
       "slug": "webium-veronika-vavilova"
     },
     {
-      "id": 13,
+      "id": 26,
       "school": "Вебиум",
       "name": "Кристина Спенсер",
       "subject": "Английский язык",
@@ -989,7 +1075,7 @@
       "slug": "webium-kristina-spenser"
     },
     {
-      "id": 14,
+      "id": 27,
       "school": "Вебиум",
       "name": "Валерия Энгельс",
       "subject": "Обществознание",
@@ -1005,7 +1091,7 @@
       "slug": "webium-valeriya-engels"
     },
     {
-      "id": 15,
+      "id": 28,
       "school": "99 Баллов",
       "name": "Мурад Гарлыев",
       "subject": "Информатика",
@@ -1021,7 +1107,7 @@
       "slug": "99ballov-murad-garlyev"
     },
     {
-      "id": 94,
+      "id": 29,
       "school": "99 Баллов",
       "name": "Ляйсан Хайбуллина",
       "subject": "Биология",
@@ -1037,7 +1123,7 @@
       "slug": "99ballov-lyaysan-khaybullina"
     },
     {
-      "id": 17,
+      "id": 30,
       "school": "Турбо ЕГЭ",
       "name": "Виолетта",
       "subject": "Русский язык",
@@ -1053,7 +1139,7 @@
       "slug": "turbo-violetta"
     },
     {
-      "id": 18,
+      "id": 31,
       "school": "Турбо ЕГЭ",
       "name": "Илья",
       "subject": "Обществознание",
@@ -1069,7 +1155,7 @@
       "slug": "turbo-ilya"
     },
     {
-      "id": 19,
+      "id": 32,
       "school": "Турбо ЕГЭ",
       "name": "Ира",
       "subject": "Английский язык",
@@ -1085,7 +1171,7 @@
       "slug": "turbo-ira"
     },
     {
-      "id": 20,
+      "id": 33,
       "school": "Умскул",
       "name": "Артур Шарафиев",
       "subject": "Математика профильная",
@@ -1101,7 +1187,7 @@
       "slug": "umskul-artur-sharafiev"
     },
     {
-      "id": 21,
+      "id": 34,
       "school": "Умскул",
       "name": "Татьяна Граева",
       "subject": "Химия",
@@ -1117,7 +1203,7 @@
       "slug": "umskul-tatyana-graeva"
     },
     {
-      "id": 22,
+      "id": 35,
       "school": "Умскул",
       "name": "Вероника Соколовская",
       "subject": "География",
@@ -1133,7 +1219,7 @@
       "slug": "umskul-veronika-sokolovskaya"
     },
     {
-      "id": 23,
+      "id": 36,
       "school": "Умскул",
       "name": "Дарья Королёва",
       "subject": "Литература",
@@ -1149,7 +1235,7 @@
       "slug": "umskul-darya-koroleva"
     },
     {
-      "id": 24,
+      "id": 37,
       "school": "Умскул",
       "name": "Данир Баев",
       "subject": "Математика ОГЭ",
@@ -1165,7 +1251,7 @@
       "slug": "umskul-danir-baev"
     },
     {
-      "id": 25,
+      "id": 38,
       "school": "Умскул",
       "name": "Максим Глухов",
       "subject": "Физика",
@@ -1181,7 +1267,7 @@
       "slug": "umskul-maksim-glukhov"
     },
     {
-      "id": 26,
+      "id": 39,
       "school": "Умскул",
       "name": "Равиль Кандинский",
       "subject": "Обществознание",
@@ -1197,7 +1283,7 @@
       "slug": "umskul-ravil-kandinskiy"
     },
     {
-      "id": 27,
+      "id": 40,
       "school": "Умскул",
       "name": "Алина Максимова",
       "subject": "Английский язык",
@@ -1213,7 +1299,7 @@
       "slug": "umskul-alina-maksimova"
     },
     {
-      "id": 28,
+      "id": 41,
       "school": "Умскул",
       "name": "Аля Виноградова",
       "subject": "История",
@@ -1229,7 +1315,7 @@
       "slug": "umskul-alya-vinogradova"
     },
     {
-      "id": 29,
+      "id": 42,
       "school": "Умскул",
       "name": "Жанна Казанская",
       "subject": "Биология",
@@ -1245,7 +1331,7 @@
       "slug": "umskul-zhanna-kazanskaya"
     },
     {
-      "id": 30,
+      "id": 43,
       "school": "Умскул",
       "name": "Виктория Ланская",
       "subject": "Информатика",
@@ -1261,7 +1347,7 @@
       "slug": "umskul-viktoriya-lanskaya"
     },
     {
-      "id": 31,
+      "id": 44,
       "school": "Умскул",
       "name": "Богдан Чагин",
       "subject": "Химия",
@@ -1277,7 +1363,7 @@
       "slug": "umskul-bogdan-chagin"
     },
     {
-      "id": 82,
+      "id": 45,
       "school": "Умскул",
       "name": "Макс Тесла",
       "subject": "Физика",
@@ -1293,7 +1379,7 @@
       "slug": "umskul-maks-tesla"
     },
     {
-      "id": 83,
+      "id": 46,
       "school": "Умскул",
       "name": "Шерин Келли",
       "subject": "Английский язык",
@@ -1309,7 +1395,7 @@
       "slug": "umskul-sherin-kelli"
     },
     {
-      "id": 84,
+      "id": 47,
       "school": "Умскул",
       "name": "Кристина Мельникова",
       "subject": "Биология",
@@ -1325,7 +1411,7 @@
       "slug": "umskul-kristina-melnikova"
     },
     {
-      "id": 85,
+      "id": 48,
       "school": "Умскул",
       "name": "Никита Равич",
       "subject": "История",
@@ -1341,7 +1427,7 @@
       "slug": "umskul-nikita-ravich"
     },
     {
-      "id": 86,
+      "id": 49,
       "school": "Умскул",
       "name": "Мария Вельф",
       "subject": "Русский язык",
@@ -1357,7 +1443,7 @@
       "slug": "umskul-mariya-velf"
     },
     {
-      "id": 87,
+      "id": 50,
       "school": "Умскул",
       "name": "Никита Сахаров",
       "subject": "Физика",
@@ -1373,7 +1459,7 @@
       "slug": "umskul-nikita-sakharov"
     },
     {
-      "id": 32,
+      "id": 51,
       "school": "100балльный репетитор",
       "name": "МатемАня",
       "subject": "Математика профильная / Математика базовая",
@@ -1390,7 +1476,7 @@
       "slug": "100ballov-matemanya"
     },
     {
-      "id": 33,
+      "id": 52,
       "school": "100балльный репетитор",
       "name": "Саня Эбонит",
       "subject": "Физика",
@@ -1406,7 +1492,7 @@
       "slug": "100ballov-sanya-ebonit"
     },
     {
-      "id": 34,
+      "id": 53,
       "school": "100балльный репетитор",
       "name": "Валентиныч",
       "subject": "Обществознание",
@@ -1422,7 +1508,7 @@
       "slug": "100ballov-valentinych"
     },
     {
-      "id": 35,
+      "id": 54,
       "school": "100балльный репетитор",
       "name": "Ксения Напольская",
       "subject": "Биология",
@@ -1438,7 +1524,7 @@
       "slug": "100ballov-kseniya-napolskaya"
     },
     {
-      "id": 80,
+      "id": 55,
       "school": "100балльный репетитор",
       "name": "Марк Ламарк",
       "subject": "Биология",
@@ -1454,7 +1540,7 @@
       "slug": "100ballov-mark-lamark"
     },
     {
-      "id": 36,
+      "id": 56,
       "school": "100балльный репетитор",
       "name": "Марина Медведева",
       "subject": "Биология",
@@ -1470,7 +1556,7 @@
       "slug": "100ballov-marina-medvedeva"
     },
     {
-      "id": 37,
+      "id": 57,
       "school": "100балльный репетитор",
       "name": "Артём Имаев",
       "subject": "Информатика",
@@ -1486,7 +1572,7 @@
       "slug": "100ballov-artem-imaev"
     },
     {
-      "id": 38,
+      "id": 58,
       "school": "100балльный репетитор",
       "name": "Топ-репетитор",
       "subject": "История",
@@ -1502,7 +1588,7 @@
       "slug": "100ballov-top-repetitor"
     },
     {
-      "id": 39,
+      "id": 59,
       "school": "100балльный репетитор",
       "name": "Таня Шибитова",
       "subject": "Английский язык",
@@ -1518,7 +1604,7 @@
       "slug": "100ballov-tanya-shibitova"
     },
     {
-      "id": 40,
+      "id": 60,
       "school": "100балльный репетитор",
       "name": "Маша Коршунова",
       "subject": "Литература",
@@ -1534,7 +1620,7 @@
       "slug": "100ballov-masha-korshunova"
     },
     {
-      "id": 41,
+      "id": 61,
       "school": "100балльный репетитор",
       "name": "Полина Белова",
       "subject": "География",
@@ -1550,7 +1636,7 @@
       "slug": "100ballov-polina-belova"
     },
     {
-      "id": 42,
+      "id": 62,
       "school": "100балльный репетитор",
       "name": "Настя Коржева",
       "subject": "Обществознание",
@@ -1566,7 +1652,7 @@
       "slug": "100ballov-nastya-korzheva"
     },
     {
-      "id": 43,
+      "id": 63,
       "school": "100балльный репетитор",
       "name": "Даня Васильев",
       "subject": "Обществознание",
@@ -1582,7 +1668,7 @@
       "slug": "100ballov-danya-vasilev"
     },
     {
-      "id": 44,
+      "id": 64,
       "school": "100балльный репетитор",
       "name": "Оля Степанова",
       "subject": "Химия",
@@ -1598,7 +1684,7 @@
       "slug": "100ballov-olya-stepanova"
     },
     {
-      "id": 45,
+      "id": 65,
       "school": "100балльный репетитор",
       "name": "Настя Калиганова",
       "subject": "Английский язык",
@@ -1614,7 +1700,7 @@
       "slug": "100ballov-nastya-kaliganova"
     },
     {
-      "id": 46,
+      "id": 66,
       "school": "100балльный репетитор",
       "name": "Артём Кармаз",
       "subject": "История",
@@ -1630,7 +1716,7 @@
       "slug": "100ballov-artem-karmaz"
     },
     {
-      "id": 47,
+      "id": 67,
       "school": "99 Баллов",
       "name": "Мария Федотова",
       "subject": "Русский язык",
@@ -1646,7 +1732,7 @@
       "slug": "99ballov-mariya-fedotova"
     },
     {
-      "id": 48,
+      "id": 68,
       "school": "99 Баллов",
       "name": "Елена Казакова",
       "subject": "Обществознание",
@@ -1662,7 +1748,7 @@
       "slug": "99ballov-elena-kazakova"
     },
     {
-      "id": 49,
+      "id": 69,
       "school": "99 Баллов",
       "name": "Айнур Мурзаханов",
       "subject": "Английский язык",
@@ -1678,7 +1764,7 @@
       "slug": "99ballov-aynur-murzakhanov"
     },
     {
-      "id": 50,
+      "id": 70,
       "school": "99 Баллов",
       "name": "Клим Корнеевец",
       "subject": "Химия",
@@ -1694,7 +1780,7 @@
       "slug": "99ballov-klim-korneevets"
     },
     {
-      "id": 51,
+      "id": 71,
       "school": "Сотка",
       "name": "Альбина Амирова",
       "subject": "Биология",
@@ -1710,7 +1796,7 @@
       "slug": "sotka-albina-amirova"
     },
     {
-      "id": 52,
+      "id": 72,
       "school": "Сотка",
       "name": "Гриша Грин",
       "subject": "Биология",
@@ -1726,7 +1812,7 @@
       "slug": "sotka-grisha-grin"
     },
     {
-      "id": 53,
+      "id": 73,
       "school": "Сотка",
       "name": "Тимур Нейман",
       "subject": "Физика",
@@ -1742,7 +1828,7 @@
       "slug": "sotka-timur-neyman"
     },
     {
-      "id": 54,
+      "id": 74,
       "school": "Сотка",
       "name": "Юлия Вишневская",
       "subject": "Химия",
@@ -1758,7 +1844,7 @@
       "slug": "sotka-yuliya-vishnevskaya"
     },
     {
-      "id": 103,
+      "id": 75,
       "school": "Сотка",
       "name": "Мотя Кодиков",
       "subject": "Химия",
@@ -1774,7 +1860,7 @@
       "slug": "sotka-motya-kodikov"
     },
     {
-      "id": 104,
+      "id": 76,
       "school": "Сотка",
       "name": "Лера Пантюхина",
       "subject": "Химия",
@@ -1790,7 +1876,7 @@
       "slug": "sotka-lera-pantyukhina"
     },
     {
-      "id": 55,
+      "id": 77,
       "school": "Вебиум",
       "name": "Мира Леви",
       "subject": "Биология",
@@ -1806,7 +1892,7 @@
       "slug": "webium-mira-levi"
     },
     {
-      "id": 56,
+      "id": 78,
       "school": "Вебиум",
       "name": "Настя Назарова",
       "subject": "Химия",
@@ -1822,7 +1908,7 @@
       "slug": "webium-nastya-nazarova"
     },
     {
-      "id": 57,
+      "id": 79,
       "school": "Вебиум",
       "name": "Эйджей Гаусс",
       "subject": "Математика профильная / Математика базовая",
@@ -1839,7 +1925,7 @@
       "slug": "webium-eydzhey-gauss"
     },
     {
-      "id": 58,
+      "id": 80,
       "school": "Вебиум",
       "name": "Коля Касперский",
       "subject": "Информатика",
@@ -1855,7 +1941,7 @@
       "slug": "webium-kolya-kasperskiy"
     },
     {
-      "id": 59,
+      "id": 81,
       "school": "Вебиум",
       "name": "Снежана Планк",
       "subject": "Физика",
@@ -1871,7 +1957,7 @@
       "slug": "webium-snezhana-plank"
     },
     {
-      "id": 60,
+      "id": 82,
       "school": "Вебиум",
       "name": "Агния Розенталь",
       "subject": "Русский язык",
@@ -1887,7 +1973,7 @@
       "slug": "webium-agniya-rozental"
     },
     {
-      "id": 61,
+      "id": 83,
       "school": "Вебиум",
       "name": "Ира Годунова",
       "subject": "История",
@@ -1903,7 +1989,7 @@
       "slug": "webium-ira-godunova"
     },
     {
-      "id": 62,
+      "id": 84,
       "school": "Вебиум",
       "name": "Фил Сахаров",
       "subject": "История",
@@ -1919,7 +2005,7 @@
       "slug": "webium-fil-sakharov"
     },
     {
-      "id": 88,
+      "id": 85,
       "school": "Вебиум",
       "name": "Даня Грэм",
       "subject": "Математика профильная",
@@ -1935,7 +2021,7 @@
       "slug": "webium-danya-grem"
     },
     {
-      "id": 63,
+      "id": 86,
       "school": "Турбо ЕГЭ",
       "name": "Софья",
       "subject": "Русский язык",
@@ -1951,7 +2037,7 @@
       "slug": "turbo-sofya"
     },
     {
-      "id": 64,
+      "id": 87,
       "school": "Турбо ЕГЭ",
       "name": "Инна",
       "subject": "Обществознание",
@@ -1967,7 +2053,7 @@
       "slug": "turbo-inna"
     },
     {
-      "id": 65,
+      "id": 88,
       "school": "Турбо ЕГЭ",
       "name": "Влад",
       "subject": "Математика профильная",
@@ -1983,7 +2069,7 @@
       "slug": "turbo-vlad"
     },
     {
-      "id": 66,
+      "id": 89,
       "school": "Турбо ЕГЭ",
       "name": "Катя",
       "subject": "Математика базовая",
@@ -1999,7 +2085,7 @@
       "slug": "turbo-katya"
     },
     {
-      "id": 67,
+      "id": 90,
       "school": "Турбо ЕГЭ",
       "name": "Саша",
       "subject": "Математика базовая",
@@ -2015,7 +2101,7 @@
       "slug": "turbo-sasha"
     },
     {
-      "id": 68,
+      "id": 91,
       "school": "Турбо ЕГЭ",
       "name": "Таня",
       "subject": "Биология",
@@ -2031,7 +2117,7 @@
       "slug": "turbo-tanya"
     },
     {
-      "id": 69,
+      "id": 92,
       "school": "Турбо ЕГЭ",
       "name": "Соня",
       "subject": "Биология",
@@ -2047,7 +2133,7 @@
       "slug": "turbo-sonya"
     },
     {
-      "id": 70,
+      "id": 93,
       "school": "Турбо ЕГЭ",
       "name": "Костя",
       "subject": "Химия",
@@ -2063,7 +2149,7 @@
       "slug": "turbo-kostya"
     },
     {
-      "id": 71,
+      "id": 94,
       "school": "Турбо ЕГЭ",
       "name": "Лёша",
       "subject": "Химия",
@@ -2079,7 +2165,7 @@
       "slug": "turbo-lesha"
     },
     {
-      "id": 72,
+      "id": 95,
       "school": "Турбо ЕГЭ",
       "name": "Слава",
       "subject": "Литература",
@@ -2095,7 +2181,7 @@
       "slug": "turbo-slava"
     },
     {
-      "id": 73,
+      "id": 96,
       "school": "Турбо ЕГЭ",
       "name": "Алина",
       "subject": "Литература",
@@ -2111,7 +2197,7 @@
       "slug": "turbo-alina"
     },
     {
-      "id": 74,
+      "id": 97,
       "school": "Турбо ЕГЭ",
       "name": "Арсений",
       "subject": "Информатика",
@@ -2127,7 +2213,7 @@
       "slug": "turbo-arseniy"
     },
     {
-      "id": 75,
+      "id": 98,
       "school": "Турбо ЕГЭ",
       "name": "Вероника",
       "subject": "Информатика",
@@ -2143,7 +2229,7 @@
       "slug": "turbo-veronika"
     },
     {
-      "id": 76,
+      "id": 99,
       "school": "Турбо ЕГЭ",
       "name": "Саша",
       "subject": "История",
@@ -2159,7 +2245,7 @@
       "slug": "turbo-sasha"
     },
     {
-      "id": 77,
+      "id": 100,
       "school": "Турбо ЕГЭ",
       "name": "Алина",
       "subject": "Английский язык",
@@ -2175,7 +2261,7 @@
       "slug": "turbo-alina"
     },
     {
-      "id": 78,
+      "id": 101,
       "school": "Турбо ЕГЭ",
       "name": "Игорь",
       "subject": "Физика",
@@ -2191,7 +2277,7 @@
       "slug": "turbo-igor"
     },
     {
-      "id": 79,
+      "id": 102,
       "school": "Турбо ЕГЭ",
       "name": "Лёня",
       "subject": "Физика",
@@ -2207,7 +2293,7 @@
       "slug": "turbo-lenya"
     },
     {
-      "id": 105,
+      "id": 103,
       "school": "ЕГЭLand",
       "name": "Саша Обществознайка",
       "subject": "Обществознание",
@@ -2223,7 +2309,7 @@
       "slug": "egeland-sasha-obshchestvoznayka"
     },
     {
-      "id": 106,
+      "id": 104,
       "school": "ЕГЭLand",
       "name": "Ася Русичка",
       "subject": "Русский язык",
@@ -2239,7 +2325,7 @@
       "slug": "egeland-asya-rusichka"
     },
     {
-      "id": 107,
+      "id": 105,
       "school": "ЕГЭLand",
       "name": "Ильяс Зморка",
       "subject": "Математика профильная",
@@ -2255,7 +2341,7 @@
       "slug": "egeland-ilyas-zmorka"
     },
     {
-      "id": 108,
+      "id": 106,
       "school": "ЕГЭLand",
       "name": "Маша Математичка",
       "subject": "Математика профильная",
@@ -2271,7 +2357,7 @@
       "slug": "egeland-masha-matematichka"
     },
     {
-      "id": 109,
+      "id": 107,
       "school": "ЕГЭLand",
       "name": "Вова Информатик",
       "subject": "Информатика",
@@ -2287,7 +2373,7 @@
       "slug": "egeland-vova-informatik"
     },
     {
-      "id": 110,
+      "id": 108,
       "school": "ЕГЭLand",
       "name": "Даня Физик",
       "subject": "Физика",
@@ -2303,7 +2389,7 @@
       "slug": "egeland-danya-fizik"
     },
     {
-      "id": 111,
+      "id": 109,
       "school": "ЕГЭLand",
       "name": "Настя Кико",
       "subject": "Английский язык",
@@ -2319,7 +2405,7 @@
       "slug": "egeland-nastya-kiko"
     },
     {
-      "id": 112,
+      "id": 110,
       "school": "ЕГЭLand",
       "name": "Юля Литра",
       "subject": "Литература",
@@ -2335,7 +2421,7 @@
       "slug": "egeland-yulya-litra"
     },
     {
-      "id": 113,
+      "id": 111,
       "school": "ЕГЭLand",
       "name": "Оля Исторяшка",
       "subject": "История",
@@ -2351,7 +2437,7 @@
       "slug": "egeland-olya-istoryashka"
     },
     {
-      "id": 114,
+      "id": 112,
       "school": "ЕГЭLand",
       "name": "Женя Химичка",
       "subject": "Химия",
@@ -2367,7 +2453,7 @@
       "slug": "egeland-zhenya-khimichka"
     },
     {
-      "id": 115,
+      "id": 113,
       "school": "ЕГЭLand",
       "name": "Глеб Мендель",
       "subject": "Биология",
@@ -2383,7 +2469,7 @@
       "slug": "egeland-gleb-mendel"
     },
     {
-      "id": 116,
+      "id": 114,
       "school": "СМИТАП",
       "name": "Эля Смит",
       "subject": "История",
@@ -2399,7 +2485,7 @@
       "slug": "smitap-elya-smit"
     },
     {
-      "id": 117,
+      "id": 115,
       "school": "СМИТАП",
       "name": "Неля Лотман",
       "subject": "Русский язык",
@@ -2415,7 +2501,7 @@
       "slug": "smitap-nelya-lotman"
     },
     {
-      "id": 118,
+      "id": 116,
       "school": "СМИТАП",
       "name": "Оля Вебер",
       "subject": "Обществознание",
@@ -2431,7 +2517,7 @@
       "slug": "smitap-olya-veber"
     },
     {
-      "id": 119,
+      "id": 117,
       "school": "СМИТАП",
       "name": "Регина Брайт",
       "subject": "Английский язык",
@@ -2447,7 +2533,7 @@
       "slug": "smitap-regina-brayt"
     },
     {
-      "id": 120,
+      "id": 118,
       "school": "СМИТАП",
       "name": "Виля Брик",
       "subject": "Литература",
@@ -2463,7 +2549,7 @@
       "slug": "smitap-vilya-brik"
     },
     {
-      "id": 121,
+      "id": 119,
       "school": "СМИТАП",
       "name": "Миша Гис",
       "subject": "Биология",
@@ -2479,7 +2565,7 @@
       "slug": "smitap-misha-gis"
     },
     {
-      "id": 122,
+      "id": 120,
       "school": "СМИТАП",
       "name": "Лана Сильвер",
       "subject": "Химия",
@@ -2495,7 +2581,7 @@
       "slug": "smitap-lana-silver"
     },
     {
-      "id": 123,
+      "id": 121,
       "school": "СМИТАП",
       "name": "Кирилл Нэш",
       "subject": "Математика профильная",
@@ -2511,7 +2597,7 @@
       "slug": "smitap-kirill-nesh"
     },
     {
-      "id": 124,
+      "id": 122,
       "school": "СМИТАП",
       "name": "Артём Вольт",
       "subject": "Физика",
@@ -2527,7 +2613,7 @@
       "slug": "smitap-artem-volt"
     },
     {
-      "id": 125,
+      "id": 123,
       "school": "СМИТАП",
       "name": "Даня Байт",
       "subject": "Информатика",
@@ -2543,7 +2629,7 @@
       "slug": "smitap-danya-bayt"
     },
     {
-      "id": 126,
+      "id": 124,
       "school": "PARTA",
       "name": "Майя Николаевна",
       "subject": "Русский язык",
@@ -2559,7 +2645,7 @@
       "slug": "parta-mayya-nikolaevna"
     },
     {
-      "id": 127,
+      "id": 125,
       "school": "PARTA",
       "name": "Ильсур Газизов",
       "subject": "Физика",
@@ -2575,7 +2661,7 @@
       "slug": "parta-ilsur-gazizov"
     },
     {
-      "id": 128,
+      "id": 126,
       "school": "PARTA",
       "name": "Яна Сабирова",
       "subject": "Информатика",
@@ -2591,7 +2677,7 @@
       "slug": "parta-yana-sabirova"
     },
     {
-      "id": 129,
+      "id": 127,
       "school": "PARTA",
       "name": "Елена Другова",
       "subject": "Химия",
@@ -2607,7 +2693,7 @@
       "slug": "parta-elena-drugova"
     },
     {
-      "id": 130,
+      "id": 128,
       "school": "PARTA",
       "name": "Амина Илалтдинова",
       "subject": "Биология",
@@ -2623,7 +2709,7 @@
       "slug": "parta-amina-ilaltdinova"
     },
     {
-      "id": 131,
+      "id": 129,
       "school": "PARTA",
       "name": "Шамиль Гайнуллин",
       "subject": "Математика профильная",
@@ -2639,7 +2725,7 @@
       "slug": "parta-shamil-gaynullin"
     },
     {
-      "id": 132,
+      "id": 130,
       "school": "PARTA",
       "name": "Светлана Морева",
       "subject": "Литература",
@@ -2655,7 +2741,7 @@
       "slug": "parta-svetlana-moreva"
     },
     {
-      "id": 133,
+      "id": 131,
       "school": "PARTA",
       "name": "Юлия Горянкина",
       "subject": "Обществознание",
@@ -2671,7 +2757,7 @@
       "slug": "parta-yuliya-goryankina"
     },
     {
-      "id": 137,
+      "id": 132,
       "school": "Школково",
       "name": "Алипаша Бабаев",
       "subject": "Математика профильная",
@@ -2687,7 +2773,7 @@
       "slug": "shkolkovo-alipasha-babaev"
     },
     {
-      "id": 138,
+      "id": 133,
       "school": "Школково",
       "name": "Артём Кондрашкин",
       "subject": "Физика",
@@ -2703,7 +2789,7 @@
       "slug": "shkolkovo-artem-kondrashkin"
     },
     {
-      "id": 139,
+      "id": 134,
       "school": "Школково",
       "name": "Илья Хистракторович",
       "subject": "История",
@@ -2719,7 +2805,7 @@
       "slug": "shkolkovo-ilya-khistraktorovich"
     },
     {
-      "id": 140,
+      "id": 135,
       "school": "ЕГЭ Налегке",
       "name": "Альбина Маратовна",
       "subject": "Обществознание",
@@ -2735,7 +2821,7 @@
       "slug": "egenalegke-albina-maratovna"
     },
     {
-      "id": 167,
+      "id": 136,
       "school": "ЕГЭ Налегке",
       "name": "Альбина Маратовна",
       "subject": "История",
@@ -2751,7 +2837,7 @@
       "slug": "egenalegke-albina-maratovna"
     },
     {
-      "id": 143,
+      "id": 137,
       "school": "ЕГЭ Налегке",
       "name": "Алина Коданова",
       "subject": "Обществознание",
@@ -2767,7 +2853,7 @@
       "slug": "egenalegke-alina-kodanova"
     },
     {
-      "id": 144,
+      "id": 138,
       "school": "StudyCats",
       "name": "Мария Селиверстова",
       "subject": "История",
@@ -2783,7 +2869,7 @@
       "slug": "studycats-mariya-seliverstova"
     },
     {
-      "id": 145,
+      "id": 139,
       "school": "StudyCats",
       "name": "Алина Грачёва",
       "subject": "Английский язык",
@@ -2799,7 +2885,7 @@
       "slug": "studycats-alina-gracheva"
     },
     {
-      "id": 146,
+      "id": 140,
       "school": "StudyCats",
       "name": "Карина Горшкова",
       "subject": "Обществознание",
@@ -2815,7 +2901,7 @@
       "slug": "studycats-karina-gorshkova"
     },
     {
-      "id": 147,
+      "id": 141,
       "school": "StudyCats",
       "name": "Мила Боженова",
       "subject": "Математика профильная",
@@ -2831,7 +2917,7 @@
       "slug": "studycats-mila-bozhenova"
     },
     {
-      "id": 148,
+      "id": 142,
       "school": "StudyCats",
       "name": "Лилия Бочкарева",
       "subject": "Русский язык",
@@ -2847,7 +2933,7 @@
       "slug": "studycats-liliya-bochkareva"
     },
     {
-      "id": 149,
+      "id": 143,
       "school": "StudyCats",
       "name": "Марина Пэкэлэу",
       "subject": "Литература",
@@ -2863,7 +2949,7 @@
       "slug": "studycats-marina-pekeleu"
     },
     {
-      "id": 150,
+      "id": 144,
       "school": "StudyCats",
       "name": "Влада Жабинская",
       "subject": "Химия",
@@ -2879,7 +2965,7 @@
       "slug": "studycats-vlada-zhabinskaya"
     },
     {
-      "id": 151,
+      "id": 145,
       "school": "StudyCats",
       "name": "Татьяна Модина",
       "subject": "Биология",
@@ -2895,7 +2981,7 @@
       "slug": "studycats-tatyana-modina"
     },
     {
-      "id": 152,
+      "id": 146,
       "school": "StudyCats",
       "name": "Алексей Мелкозеров",
       "subject": "Информатика",
@@ -2911,7 +2997,7 @@
       "slug": "studycats-aleksey-melkozerov"
     },
     {
-      "id": 153,
+      "id": 147,
       "school": "NeoFamily",
       "name": "Андрей Фомин",
       "subject": "Биология",
@@ -2927,7 +3013,7 @@
       "slug": "neofamily-andrey-fomin"
     },
     {
-      "id": 154,
+      "id": 148,
       "school": "NeoFamily",
       "name": "Нурлан Жангалиев",
       "subject": "Биология",
@@ -2943,7 +3029,7 @@
       "slug": "neofamily-nurlan-zhangaliev"
     },
     {
-      "id": 155,
+      "id": 149,
       "school": "NeoFamily",
       "name": "Юлиан Рыжов",
       "subject": "Химия",
@@ -2959,7 +3045,7 @@
       "slug": "neofamily-yulian-ryzhov"
     },
     {
-      "id": 156,
+      "id": 150,
       "school": "NeoFamily",
       "name": "Дима Щербина",
       "subject": "Химия",
@@ -2975,7 +3061,7 @@
       "slug": "neofamily-dima-shcherbina"
     },
     {
-      "id": 157,
+      "id": 151,
       "school": "NeoFamily",
       "name": "Ян Ожегов",
       "subject": "Русский язык",
@@ -2991,7 +3077,7 @@
       "slug": "neofamily-yan-ozhegov"
     },
     {
-      "id": 158,
+      "id": 152,
       "school": "Морозилка",
       "name": "Дядя Тоша",
       "subject": "Русский язык",
@@ -3007,7 +3093,7 @@
       "slug": "morozilka-dyadya-tosha"
     },
     {
-      "id": 159,
+      "id": 153,
       "school": "Морозилка",
       "name": "Папа Даня",
       "subject": "Математика профильная",
@@ -3023,7 +3109,7 @@
       "slug": "morozilka-papa-danya"
     },
     {
-      "id": 160,
+      "id": 154,
       "school": "Морозилка",
       "name": "Профессор Ден",
       "subject": "Физика",
@@ -3039,7 +3125,7 @@
       "slug": "morozilka-professor-den"
     },
     {
-      "id": 161,
+      "id": 155,
       "school": "Морозилка",
       "name": "Граф Марат",
       "subject": "Информатика",
@@ -3055,7 +3141,7 @@
       "slug": "morozilka-graf-marat"
     },
     {
-      "id": 162,
+      "id": 156,
       "school": "Инсперия",
       "name": "Анна Солдаева",
       "subject": "Русский язык",
@@ -3071,7 +3157,7 @@
       "slug": "insperia-anna-soldaeva"
     },
     {
-      "id": 163,
+      "id": 157,
       "school": "Инсперия",
       "name": "Максим Профмат",
       "subject": "Математика профильная",
@@ -3087,7 +3173,7 @@
       "slug": "insperia-maksim-profmat"
     },
     {
-      "id": 164,
+      "id": 158,
       "school": "Инсперия",
       "name": "Алина Агуреева",
       "subject": "Математика профильная",
@@ -3103,7 +3189,7 @@
       "slug": "insperia-alina-agureeva"
     },
     {
-      "id": 165,
+      "id": 159,
       "school": "Инсперия",
       "name": "Юлия Сюрсина",
       "subject": "Обществознание",
@@ -3119,7 +3205,7 @@
       "slug": "insperia-yuliya-syursina"
     },
     {
-      "id": 166,
+      "id": 160,
       "school": "Инсперия",
       "name": "Натали Солдаева",
       "subject": "Информатика",
@@ -3133,6 +3219,246 @@
       "criteria": {},
       "url": "https://insperia.ru/courses/informatica/11-klass",
       "slug": "insperia-natali-soldaeva"
+    },
+    {
+      "id": 161,
+      "school": "ЕГЭХАБ",
+      "name": "Артур Вайнберг",
+      "subject": "Биология",
+      "subjects": [
+        "Биология"
+      ],
+      "description": "Преподаёт биологию в годовом курсе ЕГЭ-2027 для 11 класса; школа описывает программу с вебинарами, домашними заданиями и пробниками.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://ege-hub.ru/courses-list/ege",
+      "slug": "egehub-artur-vaynberg"
+    },
+    {
+      "id": 162,
+      "school": "ЕГЭХАБ",
+      "name": "Лиза Вавилова",
+      "subject": "Биология",
+      "subjects": [
+        "Биология"
+      ],
+      "description": "Ведёт отдельный годовой курс ЕГЭ по биологии для 11 класса; курс включает онлайн-занятия, домашние задания и пробники.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://ege-hub.ru/courses-list/ege",
+      "slug": "egehub-liza-vavilova"
+    },
+    {
+      "id": 163,
+      "school": "ЕГЭХАБ",
+      "name": "Юлия Вюрц",
+      "subject": "Химия",
+      "subjects": [
+        "Химия"
+      ],
+      "description": "Ведёт годовой курс ЕГЭ по химии для 11 класса; в каталоге указаны 12 онлайн-занятий в месяц и пробники.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://ege-hub.ru/courses-list/ege",
+      "slug": "egehub-yuliya-vyurts"
+    },
+    {
+      "id": 164,
+      "school": "ЕГЭХАБ",
+      "name": "Дмитрий Даль",
+      "subject": "Русский язык",
+      "subjects": [
+        "Русский язык"
+      ],
+      "description": "Преподаёт русский язык на годовом курсе ЕГЭ-2027; в программе заявлены вебинары, домашние задания и пробники.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://ege-hub.ru/courses-list/ege",
+      "slug": "egehub-dmitriy-dal"
+    },
+    {
+      "id": 165,
+      "school": "ЕГЭХАБ",
+      "name": "Лиза Греф",
+      "subject": "Обществознание",
+      "subjects": [
+        "Обществознание"
+      ],
+      "description": "Ведёт годовой курс ЕГЭ по обществознанию для 11 класса с онлайн-занятиями, домашними заданиями и пробниками.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://ege-hub.ru/courses-list/ege",
+      "slug": "egehub-liza-gref"
+    },
+    {
+      "id": 166,
+      "school": "ЕГЭХАБ",
+      "name": "Евгения Рене",
+      "subject": "История",
+      "subjects": [
+        "История"
+      ],
+      "description": "Ведёт годовой курс ЕГЭ по истории для 11 класса; курс рассчитан на учебный год.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://ege-hub.ru/courses-list/ege",
+      "slug": "egehub-evgeniya-rene"
+    },
+    {
+      "id": 167,
+      "school": "ЕГЭХАБ",
+      "name": "Максим Васильевич",
+      "subject": "Математика профильная",
+      "subjects": [
+        "Математика профильная"
+      ],
+      "description": "Преподаёт профильную математику на годовом курсе ЕГЭ-2027 для 11 класса.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://ege-hub.ru/courses-list/ege",
+      "slug": "egehub-maksim-vasilevich"
+    },
+    {
+      "id": 168,
+      "school": "ЕГЭХАБ",
+      "name": "Антон Многочлен",
+      "subject": "Математика профильная",
+      "subjects": [
+        "Математика профильная"
+      ],
+      "description": "Ведёт отдельный годовой курс профильной математики для 11 класса.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://ege-hub.ru/courses-list/ege",
+      "slug": "egehub-anton-mnogochlen"
+    },
+    {
+      "id": 169,
+      "school": "ЕГЭХАБ",
+      "name": "Макс Физик",
+      "subject": "Физика",
+      "subjects": [
+        "Физика"
+      ],
+      "description": "Преподаёт физику на годовом курсе ЕГЭ-2027 для 11 класса.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://ege-hub.ru/courses-list/ege",
+      "slug": "egehub-maks-fizik"
+    },
+    {
+      "id": 170,
+      "school": "ЕГЭХАБ",
+      "name": "Владимир Андреевич",
+      "subject": "Информатика",
+      "subjects": [
+        "Информатика"
+      ],
+      "description": "Ведёт годовой курс ЕГЭ по информатике для 11 класса; программа включает онлайн-занятия и практику.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://ege-hub.ru/courses-list/ege",
+      "slug": "egehub-vladimir-andreevich"
+    },
+    {
+      "id": 171,
+      "school": "ЕГЭХАБ",
+      "name": "Тамерлан Харди",
+      "subject": "Биология",
+      "subjects": [
+        "Биология"
+      ],
+      "description": "Преподаватель биологии в команде ЕГЭХАБ; в текущем курсе и соцсетях школы публикуются совместные материалы с Артуром Вайнбергом и Рамисом Загировым.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://ege-hub.ru/",
+      "slug": "egehub-tamerlan-khardi"
+    },
+    {
+      "id": 172,
+      "school": "ЕГЭХАБ",
+      "name": "Кирилл Ващенко",
+      "subject": "Математика профильная",
+      "subjects": [
+        "Математика профильная"
+      ],
+      "description": "Преподаватель математики в команде ЕГЭХАБ; школу и преподавателя представляет официальная витрина курсов.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://ege-hub.ru/",
+      "slug": "egehub-kirill-vashchenko"
+    },
+    {
+      "id": 173,
+      "school": "ЕГЭХАБ",
+      "name": "Рамис Загиров",
+      "subject": "Биология",
+      "subjects": [
+        "Биология"
+      ],
+      "description": "Преподаватель биологии в команде ЕГЭХАБ, представлен в официальных материалах и предметных соцсетях школы.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://ege-hub.ru/",
+      "slug": "egehub-ramis-zagirov"
+    },
+    {
+      "id": 174,
+      "school": "Школа Пифагора",
+      "name": "Евгений Пифагор",
+      "subject": "Математика профильная",
+      "subjects": [
+        "Математика профильная"
+      ],
+      "description": "Автор и преподаватель профильной математики. Публикует авторские варианты ЕГЭ с решениями; сведения о собственном результате и достижениях учеников представлены им самим.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://shkolapifagora.ru/",
+      "slug": "shkolapifagora-evgeniy-pifagor"
+    },
+    {
+      "id": 175,
+      "school": "НОО",
+      "name": "Татьяна Криницына",
+      "subject": "Химия",
+      "subjects": [
+        "Химия"
+      ],
+      "description": "Преподаватель химии. 12 лет опыта, диплом химического факультета НГУ с отличием, опыт работы в лаборатории и авторские задания; эти данные опубликованы школой.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://www.no-os.ru/chemogegod-stream",
+      "slug": "noo-tatyana-krinitsyna"
     }
   ]
 }
