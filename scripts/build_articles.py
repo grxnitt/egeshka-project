@@ -256,7 +256,7 @@ def card(article, featured=False):
     return (
         f'<a class="{css}" href="/articles/{article.slug}">'
         f'<span class="article-card-cover"><img src="{cover_svg(article)}" alt="" width="1200" height="630" loading="lazy"></span>'
-        f'<span class="article-card-body"><span class="article-card-meta">{article.date_label} · {minutes_label(article.minutes)}</span>'
+        f'<span class="article-card-body"><span class="article-card-meta"><span>{article.date_label}</span><span>{minutes_label(article.minutes)}</span></span>'
         f'<h2 class="article-card-title">{escape(article.title)}</h2>'
         f'<span class="article-card-text">{escape(article.description)}</span>'
         f'<span class="article-card-more">Читать <i aria-hidden="true">→</i></span></span></a>'
@@ -341,7 +341,7 @@ def build_article_page(article, others, header, footer):
   <article class="article">
     <header class="hero hero-centered article-hero">
       {GLOWS}
-      <div class="hero-copy"><p class="article-meta"><time datetime="{article.published.isoformat()}">{article.date_label}</time><span aria-hidden="true">·</span><span>{minutes_label(article.minutes)}</span></p><h1>{escape(article.title)}</h1><p class="lead">{escape(article.description)}</p><p class="article-author">{AUTHOR}</p></div>
+      <div class="hero-copy"><p class="article-meta"><time datetime="{article.published.isoformat()}">{article.date_label}</time><span>{minutes_label(article.minutes)}</span></p><h1>{escape(article.title)}</h1><p class="lead">{escape(article.description)}</p><p class="article-author">{AUTHOR}</p></div>
     </header>
     <figure class="article-cover"><img src="{cover_svg(article)}" alt="" width="1200" height="630" fetchpriority="high"></figure>
     <div class="article-body">

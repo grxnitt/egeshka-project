@@ -13,9 +13,9 @@ SITE = "https://egematch.ru"
 BOT = "https://t.me/egematch_bot"
 CSS_VERSIONS = {
     "styles.css": "35",
-    "refinements.css": "36",
+    "refinements.css": "37",
     "typography.css": "31",
-    "composition.css": "123",
+    "composition.css": "124",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -259,7 +259,7 @@ def build_teacher_page(person, school, colleagues, header, footer):
     school_slug = school["reviewSlug"]
     school_url = f"/schools/{school_slug}"
     url = f"{SITE}/teachers/{person['slug']}"
-    subjects = " · ".join(person["subjects"])
+    subjects = ", ".join(person["subjects"])
     score = person.get("studentScore")
     score_text = "—" if score is None else num(score)
     score_note = "Нужно 3 отзыва" if score is None else "из 10" + ("*" if person.get("isPreliminary") else "")

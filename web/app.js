@@ -27,7 +27,7 @@ $('#compare-method').onclick = methodology;
 function renderSchools(){
   let rows = catalog.schools.filter(s => !subject || s.subjects.includes(subject));
   rows.sort($('#sort').value === 'name' ? (a,b)=>a.name.localeCompare(b.name,'ru') : (a,b)=>b.score-a.score);
-  $('#catalog-label').textContent = `${subject ? labels[subject] : 'Все предметы'} · ${rows.length} ${rows.length===1?"школа":rows.length<5?"школы":"школ"}`;
+  $('#catalog-label').textContent = `${subject ? labels[subject] : 'Все предметы'}: ${rows.length} ${rows.length===1?"школа":rows.length<5?"школы":"школ"}`;
   $('#show-more').hidden = expanded || rows.length<=3;
   $('#school-list').innerHTML = rows.slice(0,expanded?rows.length:3).map((s,i)=>`<article class="school-card"><div class="school-card-top"><span class="school-mark ${i%2?'pink-mark':'blue-mark'}">${s.name.startsWith('100')?'100':escape(s.name.slice(0,1))}</span><span class="rank">${$('#sort').value==='rating'?`${i+1} в этом списке`:'Онлайн-школа'}</span></div><h3>${escape(s.name)}</h3>${decisionFields(s)}<div class="card-score"><span>Оценка ЕГЭ Мэтча</span><strong>${number(s.score)}<small>/10${ratingMark(s)}</small></strong></div><button class="card-open" data-school="${escape(s.name)}">Подробнее о школе <span>→</span></button></article>`).join('');
   document.querySelectorAll('[data-school]').forEach(b=>b.onclick=()=>schoolDetails(b.dataset.school));
@@ -62,7 +62,7 @@ $('#quiz-start').onclick=()=>{siteQuiz.step=0;siteQuiz.answers={};renderSiteQuiz
 const alphabetically=(a,b)=>a.name.localeCompare(b.name,'ru',{numeric:true,sensitivity:'base'});
 function candidates(){const rows=mode==='schools'?[...catalog.schools]:catalog.teachers.filter(t=>teacherSubjects(t).includes($('#teacher-subject').value));return rows.sort(alphabetically);}
 function defaultComparePair(){return [...catalog.schools].sort((a,b)=>b.score-a.score).slice(0,2).map(s=>s.name);}
-function populateComparison(usePreset=false){const rows=candidates();const params=new URLSearchParams(location.search);let preset=usePreset&&mode==='schools'?[params.get('compareLeft'),params.get('compareRight')]:[];if(mode==='schools'&&!preset[0]&&!preset[1])preset=defaultComparePair();['left','right'].forEach((side,i)=>{$(`#${side}-select`).innerHTML=rows.map((r,j)=>`<option value="${j}">${escape(r.name)}${mode==='teachers'?` · ${escape(r.school)}`:''}</option>`).join('');const presetIndex=rows.findIndex(row=>row.name===preset[i]);$(`#${side}-select`).value=String(presetIndex>=0?presetIndex:Math.min(i,rows.length-1));});renderComparison();}
+function populateComparison(usePreset=false){const rows=candidates();const params=new URLSearchParams(location.search);let preset=usePreset&&mode==='schools'?[params.get('compareLeft'),params.get('compareRight')]:[];if(mode==='schools'&&!preset[0]&&!preset[1])preset=defaultComparePair();['left','right'].forEach((side,i)=>{$(`#${side}-select`).innerHTML=rows.map((r,j)=>`<option value="${j}">${escape(r.name)}${mode==='teachers'?`, ${escape(r.school)}`:''}</option>`).join('');const presetIndex=rows.findIndex(row=>row.name===preset[i]);$(`#${side}-select`).value=String(presetIndex>=0?presetIndex:Math.min(i,rows.length-1));});renderComparison();}
 function renderComparison(changed){const rows=candidates(),l=$('#left-select'),r=$('#right-select');if(l.value===r.value&&rows.length>1){const other=changed==='right'?l:r;other.value=String((Number(other.value)+1)%rows.length);}const left=rows[Number(l.value)],right=rows[Number(r.value)];if(!left||!right){$('#comparison-result').textContent='Для сравнения нужны два преподавателя по этому предмету.';return;}
 document.querySelectorAll('#left-select option').forEach(o=>o.disabled=o.value===r.value);document.querySelectorAll('#right-select option').forEach(o=>o.disabled=o.value===l.value);
 const row=(title,a,b,cls='')=>`<div class="comparison-row ${cls}"><span>${title}</span><p>${a}</p><p>${b}</p></div>`;
@@ -72,7 +72,7 @@ let html=row('',escape(left.name),escape(right.name),'column-heads');
 if(mode==='schools'){html+=row('Общая оценка',`<strong>${number(left.score)}/10</strong>`,`<strong>${number(right.score)}/10</strong>`);html+=Object.entries(criteria).map(([key,label])=>row(label,meter(left.criteria[key]),meter(right.criteria[key]))).join('');html+=catalog.schools.some(school=>school.isPreliminary)?'<p class="fine">* Предварительно: подтверждённых отзывов пока недостаточно.</p>':'';}else{
  html+=row('Оценка учеников',`<strong>${escape(teacherRatingLabel(left))}</strong>`,`<strong>${escape(teacherRatingLabel(right))}</strong>`);
  html+=row('Школа',escape(left.school),escape(right.school));
- html+='<div class="criteria-title"><strong>По оценкам учеников</strong><span>Отдельные критерии · шкала 1–10</span></div>';
+ html+='<div class="criteria-title"><strong>По оценкам учеников</strong><span>Отдельные критерии, шкала 1–10</span></div>';
  const teacherMetric=(teacher,key)=>teacherMeter(teacher.criteria?.[key]);
  html+=Object.entries(teacherCriteria).map(([key,label])=>row(label,teacherMetric(left,key),teacherMetric(right,key),'teacher-metric')).join('');
  html+='<p class="fine">Оценка появляется, когда набирается вес трёх подтверждённых отзывов (без подтверждения отзыв весит меньше), и считается как среднее пяти критериев.</p>';
