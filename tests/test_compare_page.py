@@ -84,3 +84,12 @@ def test_header_action_is_the_quiz_on_every_content_page():
     for name in ("index.html", "ratings.html", "methodology.html", "compare.html", "articles/index.html", "schools/neofamily.html"):
         header = re.search(r"<header.*?</header>", read(name), re.S).group(0)
         assert re.search(r'class="header-action" href="/\?start=quiz"[^>]*>Подобрать ', header), name
+
+
+def test_quiz_shows_a_calculation_screen_before_the_result_and_waits_for_a_slow_catalog():
+    app = read("app.js")
+    assert "function runQuizCalculation()" in app and "Считаем совпадения" in app
+    assert "renderSiteQuiz({instant:true})" in app  # coming back from a school page skips the animation
+    assert "await Promise.race([catalogReady" in app  # slow network: keep the screen, do not fail
+    css = read("composition.css")
+    assert ".quiz-calc-orbit" in css and "prefers-reduced-motion" in css.split(".quiz-calc-sr")[1]
