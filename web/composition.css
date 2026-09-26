@@ -1375,3 +1375,19 @@ body.compare-page{overflow-x:clip}
   .how-card p{margin-bottom:14px}
   .how-link{padding-top:12px}
 }
+
+/* ---- Home: latest articles ---- */
+.home-articles{margin-top:var(--section-gap)}
+.home-articles .section-heading{margin-bottom:28px}
+.home-article-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.home-article-grid .article-card-body{padding:20px 22px 22px}
+.home-article-grid .article-card-text{font-size:14px}
+@media(max-width:900px){
+  .home-article-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .home-article-grid .article-card:nth-child(3){display:none}
+}
+@media(max-width:700px){
+  .home-articles .section-heading{display:block}
+  .home-articles .section-heading .text-link{margin-top:14px}
+  .home-article-grid{grid-template-columns:1fr}
+}

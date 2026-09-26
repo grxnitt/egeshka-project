@@ -251,13 +251,13 @@ def minutes_label(minutes):
     return f"{minutes} мин чтения"
 
 
-def card(article, featured=False):
+def card(article, featured=False, heading="h2"):
     css = "article-card is-featured" if featured else "article-card"
     return (
         f'<a class="{css}" href="/articles/{article.slug}">'
         f'<span class="article-card-cover"><img src="{cover_svg(article)}" alt="" width="1200" height="630" loading="lazy"></span>'
         f'<span class="article-card-body"><span class="article-card-meta"><span>{article.date_label}</span><span>{minutes_label(article.minutes)}</span></span>'
-        f'<h2 class="article-card-title">{escape(article.title)}</h2>'
+        f'<{heading} class="article-card-title">{escape(article.title)}</{heading}>'
         f'<span class="article-card-text">{escape(article.description)}</span>'
         f'<span class="article-card-more">Читать <i aria-hidden="true">→</i></span></span></a>'
     )
@@ -432,6 +432,22 @@ def telegram_post(article):
     return f"{article.tg}\n\nЧитать на сайте: {link}\n"
 
 
+HOME_ARTICLES = 3
+
+
+def update_home(articles):
+    """Fill the "Свежие статьи" block of the home page with the newest articles."""
+    page = WEB / "index.html"
+    html = page.read_text(encoding="utf-8")
+    start, end = "<!-- home-articles:start -->", "<!-- home-articles:end -->"
+    if start not in html or end not in html:
+        return
+    cards = "".join(card(a, heading="h3") for a in articles[:HOME_ARTICLES])
+    block = f'{start}<div class="article-grid home-article-grid">{cards}</div>{end}' if cards else f"{start}{end}"
+    head, rest = html.split(start, 1)
+    page.write_text(head + block + rest.split(end, 1)[1], encoding="utf-8")
+
+
 def main():
     articles = load_articles()
     header, footer = chrome()
@@ -447,6 +463,7 @@ def main():
         (TELEGRAM_OUT / f"{article.slug}.txt").write_text(telegram_post(article), encoding="utf-8")
     (OUT / "index.html").write_text(build_index_page(articles, header, footer), encoding="utf-8")
     (OUT / "feed.xml").write_text(build_feed(articles), encoding="utf-8")
+    update_home(articles)
     index = [{"slug": a.slug, "date": a.published.isoformat(), "title": a.title} for a in articles]
     (ROOT / "content" / "articles.json").write_text(json.dumps(index, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     catalog = json.loads((WEB / "catalog.json").read_text(encoding="utf-8"))

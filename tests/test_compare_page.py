@@ -59,8 +59,28 @@ def test_school_page_and_ratings_tray_open_the_compare_page_with_the_pair():
 def test_every_how_it_works_step_opens_the_place_it_describes():
     home = read("index.html")
     cards = re.findall(r'<article class="how-card" data-step="(\d)">.*?<a class="how-link" href="([^"]+)"', home, re.S)
-    assert cards == [("1", "/ratings#choose-subject"), ("2", "/compare"), ("3", "/?start=quiz"), ("4", "https://t.me/egematch_bot")]
+    # the real path: guided pick (quiz) -> rating -> compare -> bot
+    assert cards == [("1", "/?start=quiz"), ("2", "/ratings#choose-subject"), ("3", "/compare"), ("4", "https://t.me/egematch_bot")]
     assert 'data-quiz-link' in home and 'data-bot-link data-source="how_step"' in home
     assert 'id="choose-subject"' in read("ratings.html")
     assert "querySelectorAll('[data-quiz-link]')" in read("app.js")
     assert "goal('how_step'" in read("analytics.js")
+
+
+def test_home_shows_the_newest_articles_with_a_link_to_all_of_them():
+    import sys
+    sys.path.insert(0, "scripts")
+    import build_articles
+
+    home = read("index.html")
+    block = re.search(r'<section class="home-articles.*?</section>', home, re.S).group(0)
+    assert 'href="/articles"' in block
+    linked = re.findall(r'class="article-card" href="/articles/([a-z0-9-]+)"', block)
+    assert linked == [a.slug for a in build_articles.load_articles()][:3]
+    assert "<h3 class=\"article-card-title\">" in block and "<h2" not in block.split("</h2>", 1)[1]
+
+
+def test_header_action_is_the_quiz_on_every_content_page():
+    for name in ("index.html", "ratings.html", "methodology.html", "compare.html", "articles/index.html", "schools/neofamily.html"):
+        header = re.search(r"<header.*?</header>", read(name), re.S).group(0)
+        assert re.search(r'class="header-action" href="/\?start=quiz"[^>]*>Подобрать ', header), name
