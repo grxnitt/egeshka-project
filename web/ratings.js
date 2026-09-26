@@ -1,4 +1,4 @@
-import { decisionFields, priceContext, schoolContent, schoolFilters } from './school-content.js?v=30';
+import { decisionFields, priceContext, schoolContent, schoolFilters } from './school-content.js?v=31';
 import { applyLiveRatings, ratingBreakdown, ratingMark, teacherRatingLabel } from './supabase-client.js?v=4';
 const $ = selector => document.querySelector(selector);
 const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
