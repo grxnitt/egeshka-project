@@ -252,6 +252,51 @@ def cover_safety():
     return c
 
 
+def cover_teacher():
+    c = Canvas("#e9edff")
+    c.circle(1010, 150, 84, PINK)
+    c.ring(1085, 520, 70, 30, BLUE)
+    c.sparkle(790, 92, 32, BLUE)
+    c.circle(120, 560, 16, PINK)
+    c.rect(140, 90, 580, 380, 40, INK)
+    for i, w in enumerate((400, 320, 360)):
+        c.rect(196, 148 + i * 58, w, 20, 10, "#c9cde6")
+    c.ring(590, 372, 44, 9, PINK)
+    c.tick(590, 372, PINK, 1.5, 9)
+    c.rect(196, 330, 250, 20, 10, "#4a60e2")
+    c.rect(196, 372, 190, 20, 10, "#4a60e2")
+    c.rect(120, 470, 620, 30, 15, BLUE)
+    for i, (color, w, x) in enumerate(((PINK, 300, 780), (WHITE, 250, 810), (BLUE, 210, 840))):
+        y = 396 - i * 66
+        c.rect(x, y, w, 56, 16, color)
+        c.rect(x + 22, y + 20, w - 90, 16, 8, "#ffffff" if color != WHITE else "#dfe2f7")
+    return c
+
+
+def cover_errors():
+    c = Canvas(PINK)
+    c.ring(1080, 90, 90, 44, "#ff85ad")
+    c.circle(90, 560, 70, BLUE)
+    c.sparkle(740, 520, 30, WHITE)
+    c.rect(150, 60, 430, 510, 38, WHITE)
+    c.rect(196, 108, 190, 28, 14, INK)
+    marked = {1, 3}
+    for i in range(6):
+        y = 176 + i * 62
+        if i in marked:
+            c.rect(190, y - 10, 344, 44, 14, "#ffe1ec")
+            c.circle(500, y + 12, 15, PINK)
+            c.line([(493, y + 5), (507, y + 19)], WHITE, 4)
+            c.line([(507, y + 5), (493, y + 19)], WHITE, 4)
+        c.rect(206, y + 4, 240 if i % 2 else 290, 16, 8, "#dfe2f7")
+    c.circle(840, 300, 132, WHITE)
+    for i, h in enumerate((90, 150, 210)):
+        c.bar(756 + i * 62, 396 - h, 44, h, 12, (BLUE, PINK, INK)[i])
+    c.ring(840, 300, 132, 30, BLUE)
+    c.line([(935, 395), (1050, 510)], INK, 40)
+    return c
+
+
 COVERS = {
     "exam": cover_exam,
     "market": cover_market,
@@ -259,6 +304,8 @@ COVERS = {
     "scores": cover_scores,
     "admission": cover_admission,
     "safety": cover_safety,
+    "teacher": cover_teacher,
+    "errors": cover_errors,
 }
 
 

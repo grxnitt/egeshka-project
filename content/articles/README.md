@@ -5,7 +5,7 @@
 ## Как добавить статью
 
 1. Создай файл `content/articles/<slug>.md` (латиница и дефисы) по образцу ниже.
-2. Выбери обложку в поле `cover` (`exam`, `market`, `ai`, `scores`) или нарисуй новую в `scripts/make_article_covers.py` и запусти этот скрипт.
+2. Выбери обложку в поле `cover` (`exam`, `market`, `ai`, `scores`, `admission`, `safety`, `teacher`, `errors`) или нарисуй новую в `scripts/make_article_covers.py` и запусти этот скрипт.
 3. Собери сайт: `python3 scripts/build_school_pages.py` (или только `python3 scripts/build_articles.py`).
 4. Готовый пост для Telegram лежит в `content/telegram/<slug>.txt`: скопируй его в канал.
 5. Проверь страницу локально и запушь изменения, Vercel выложит сайт сам.
