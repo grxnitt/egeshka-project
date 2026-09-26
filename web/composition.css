@@ -1352,3 +1352,26 @@ body.compare-page{overflow-x:clip}
   .compare-tool .column-heads p{font-size:12px}
 }
 .compare-page main>.rating-next{margin-bottom:var(--section-gap)}
+
+/* ---- How it works: each step opens the place it describes ---- */
+.how-card{position:relative;display:flex;flex-direction:column}
+.how-card p{margin-bottom:22px}
+.how-link{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:16px;border-top:1px solid var(--surface-line);color:var(--blue);font:600 14px/1.3 var(--font-ui);text-decoration:none}
+.how-link span{font-size:16px;transition:transform .25s cubic-bezier(.2,.7,.2,1)}
+.how-link:after{content:'';position:absolute;inset:0;border-radius:var(--r-lg)}
+.how-link:focus-visible{outline:none}
+.how-card:has(.how-link:focus-visible){outline:2px solid var(--blue);outline-offset:3px}
+@media(hover:hover){
+  .how-card:hover{background:#fff}
+  .how-card:hover .how-link span{transform:translateX(4px)}
+  .how-card:hover .how-link[target] span{transform:translate(3px,-3px)}
+}
+@media(prefers-reduced-motion:reduce){.how-link span{transition:none}.how-card:hover .how-link span{transform:none!important}}
+#choose-subject{scroll-margin-top:64px}
+@media(max-width:800px){
+  .how-card{display:grid;grid-template-columns:38px minmax(0,1fr);column-gap:10px;padding:20px 18px 18px}
+  .how-number{grid-row:1/4;margin:1px 0 0;font-size:20px}
+  .how-card h3{margin:0 0 6px}
+  .how-card p{margin-bottom:14px}
+  .how-link{padding-top:12px}
+}

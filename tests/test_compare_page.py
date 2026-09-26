@@ -54,3 +54,13 @@ def test_school_page_and_ratings_tray_open_the_compare_page_with_the_pair():
     assert re.search(r'href="/compare\?compareLeft=NeoFamily"', read("schools/neofamily.html"))
     assert "`/compare?${params.toString()}`" in read("ratings.js")
     assert "/compare?${new URLSearchParams({compareLeft" in read("app.js")
+
+
+def test_every_how_it_works_step_opens_the_place_it_describes():
+    home = read("index.html")
+    cards = re.findall(r'<article class="how-card" data-step="(\d)">.*?<a class="how-link" href="([^"]+)"', home, re.S)
+    assert cards == [("1", "/ratings#choose-subject"), ("2", "/compare"), ("3", "/?start=quiz"), ("4", "https://t.me/egematch_bot")]
+    assert 'data-quiz-link' in home and 'data-bot-link data-source="how_step"' in home
+    assert 'id="choose-subject"' in read("ratings.html")
+    assert "querySelectorAll('[data-quiz-link]')" in read("app.js")
+    assert "goal('how_step'" in read("analytics.js")

@@ -272,7 +272,7 @@ CTA_BLOCK = f"""<aside class="article-cta" aria-label="Что дальше">
 GLOWS = '<div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div class="hero-glow hero-glow-pink" aria-hidden="true"></div>'
 RSS_LINK = f'\n  <link rel="alternate" type="application/rss+xml" title="ЕГЭ Мэтч — статьи" href="/articles/feed.xml">'
 SCRIPTS = f"""<script src="/analytics-config.js?v=1"></script>
-<script src="/analytics.js?v=9"></script>
+<script src="/analytics.js?v=10"></script>
 {site.NAV_SCRIPT}"""
 
 

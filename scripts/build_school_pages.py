@@ -15,7 +15,7 @@ CSS_VERSIONS = {
     "styles.css": "35",
     "refinements.css": "37",
     "typography.css": "31",
-    "composition.css": "127",
+    "composition.css": "130",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -246,7 +246,7 @@ def build_page(school, people, others, header, footer, teacher_slugs):
 {footer}
 <script>window.TEACHER_SLUGS={slug_map};</script>
 <script src="/analytics-config.js?v=1"></script>
-<script src="/analytics.js?v=9"></script>
+<script src="/analytics.js?v=10"></script>
 {NAV_SCRIPT}
 {FILTER_SCRIPT}
 </body>
@@ -316,7 +316,7 @@ def build_teacher_page(person, school, colleagues, header, footer):
 </main>
 {footer}
 <script src="/analytics-config.js?v=1"></script>
-<script src="/analytics.js?v=9"></script>
+<script src="/analytics.js?v=10"></script>
 {NAV_SCRIPT}
 </body>
 </html>

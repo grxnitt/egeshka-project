@@ -65,12 +65,22 @@
     return true;
   }
 
+  // Home page "how it works": which of the four steps people open.
+  function trackHowStep(a){
+    var card=a.closest&&a.closest('.how-card');
+    if(!card)return;
+    var step=card.getAttribute('data-step')||'';
+    goal('how_step',{step:step});
+    visit(['Главная','Как это работает','Шаг '+step]);
+  }
+
   function onClick(event){
     var target=event.target&&event.target.closest?event.target:null;
     if(!target)return;
     var a=target.closest('a[href]');
     if(a){
       trackArticleClick(a);
+      trackHowStep(a);
       if(a.closest&&a.closest('.article-sources'))return;
       var host=tagOutbound(a);
       if(host)goal('outbound_school',{host:host});
