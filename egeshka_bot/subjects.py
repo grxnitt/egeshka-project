@@ -14,6 +14,7 @@ BASE_SCHOOL_SOURCES = {
     "PARTA": "https://onlineparta.ru/",
     "Skysmart": "https://skysmart.ru/courses/ege/matematika-bazovyj-uroven",
     "StudyCats": "https://studycats.ru/courses",
+    "ЕГЭХАБ": "https://ege-hub.ru/courses-list/ege",
 }
 
 def teacher_exam_subject(school, name, subject):

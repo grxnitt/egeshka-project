@@ -15,7 +15,7 @@ def test_compare_lives_on_its_own_page_not_on_the_home_page():
     page = read("compare.html")
     assert '<link rel="canonical" href="https://egematch.ru/compare">' in page
     assert 'id="left-select"' in page and 'id="right-select"' in page
-    assert '<script type="module" src="compare.js?v=1"></script>' in page
+    assert '<script type="module" src="compare.js?v=2"></script>' in page
     assert '<a class="active" href="/compare">Сравнение</a>' in page
 
 
