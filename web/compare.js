@@ -1,4 +1,4 @@
-import { priceContext } from './school-content.js?v=31';
+import { priceContext } from './school-content.js?v=32';
 import { priceDetails, relativeStrengths } from './comparison.js?v=26';
 import { applyLiveRatings, teacherRatingLabel } from './supabase-client.js?v=4';
 import { teacherSubjects } from './subjects.js?v=1';
@@ -55,7 +55,12 @@ function render(changed) {
   let table = row('', escape(left.name), escape(right.name), 'column-heads'), after = '';
   if (mode === 'schools') {
     table += row('Общая оценка', `<strong>${number(left.score)}/10</strong>`, `<strong>${number(right.score)}/10</strong>`);
-    table += Object.entries(criteria).map(([key, label]) => row(label, meter(left.criteria[key]), meter(right.criteria[key]))).join('');
+    const cell = (school, key) => {
+      const status = school.criteriaStatus?.[key];
+      if (status === 'none' || school.criteria[key] == null) return '<span class="no-score">Не предусмотрено</span>';
+      return meter(school.criteria[key]) + (status === 'tier' ? '<span class="tier-note">зависит от тарифа</span>' : '');
+    };
+    table += Object.entries(criteria).map(([key, label]) => row(label, cell(left, key), cell(right, key))).join('');
     if (catalog.schools.some(school => school.isPreliminary)) table += '<p class="fine">* Предварительно: подтверждённых отзывов пока недостаточно.</p>';
     const priceCard = school => {
       const price = priceDetails[school.name];
@@ -93,7 +98,7 @@ document.querySelectorAll('[data-mode]').forEach(button => button.onclick = () =
   populate();
 });
 try {
-  const response = await fetch('catalog.json');
+  const response = await fetch('catalog.json?v=4');
   if (!response.ok) throw new Error('catalog');
   catalog = await response.json();
   await applyLiveRatings(catalog);

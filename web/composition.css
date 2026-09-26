@@ -1418,3 +1418,9 @@ body.compare-page{overflow-x:clip}
 .quiz-calc-sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media(max-width:700px){.quiz-calc{min-height:380px}.quiz-calc-orbit{transform:scale(.86);margin-bottom:14px}}
 @media(prefers-reduced-motion:reduce){.quiz-calc-orbit i,.quiz-calc-list li.is-active:before{animation:none}.quiz-calc-orbit .a{transform:translateX(-18px)}.quiz-calc-orbit .b{transform:translateX(18px)}.quiz-calc-list li.is-active:before{border-top-color:var(--blue)}}
+
+/* ---- Criteria a school does not offer / offers on some tariffs only ---- */
+.sp-tier{margin-left:6px;padding:2px 8px;border-radius:var(--r-pill);background:#f1eefc;color:#6a4fc7;font-size:12px;font-weight:600;white-space:nowrap}
+.sp-note.sp-note-na{max-width:620px;margin:14px 0 0;text-align:left;color:#626777;font-size:13px;line-height:1.55}
+.comparison-row .no-score{display:inline-block;color:#737481;font-size:13px;line-height:1.3}
+.comparison-row .tier-note{display:block;margin-top:4px;color:#6a4fc7;font-size:11px;font-weight:600}

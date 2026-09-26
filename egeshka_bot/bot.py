@@ -15,7 +15,9 @@ from sqlalchemy import func, select
 from .config import Settings
 from .db import SCHOOL_REVIEW_SLUGS, delete_user_data, get_or_create_user
 from .models import Course, Event, Review, ReviewCriterionScore, School, Teacher, User
-from .scoring import QuizProfile, school_score
+from .scoring import (
+    STATUS_NONE, STATUS_TIER, QuizProfile, applicable_criteria, editorial_score, effective_weights, school_score, status_of,
+)
 
 
 from .subjects import SUBJECTS, MATH_BOTH, target_options, split_teacher_subjects, subject_token, subject_from_token
@@ -146,7 +148,14 @@ def score_bar(value, width=5):
 
 
 def school_professional_score(school):
-    return sum(float(getattr(school, field, 0)) * weight for field, _, weight in CRITERIA)
+    """Editorial 0-10 score over the criteria the school actually offers (see scoring.py)."""
+    return editorial_score(school)
+
+
+def school_criteria(school):
+    """The school's criteria as (field, label, weight) that it offers; weights are renormalised."""
+    weights = effective_weights(school)
+    return [(field, label, weights[field]) for field, label, _ in CRITERIA if field in weights]
 
 
 CONSENT_VERSION = "2026-09-24"
@@ -290,15 +299,21 @@ def blend_rating(editorial, user_average=None, user_count=0):
 def school_criteria_text(school, user_stats=None):
     user_stats = user_stats or {}
     lines = ["📊 Оценка по критериям", "Редакция + отзывы учеников · итоговая шкала 0–10"]
-    for field, label, weight in CRITERIA:
+    weights = effective_weights(school)
+    for field, label, _ in CRITERIA:
+        if field not in weights:
+            lines.append(f"— {label}: не предусмотрено в этой школе · в оценку не входит")
+            continue
+        weight = weights[field]
+        tier = " · зависит от тарифа" if status_of(school, field) == STATUS_TIER else ""
         value = float(getattr(school, field, 0))
         average, count = user_stats.get(field, (None, 0))
         blended, preliminary = blend_rating(value, average, count)
         if count:
             marker = "*" if preliminary else ""
-            lines.append(f"{score_bar(blended)} {label}: {blended:.1f}/10{marker} · вес {weight:.0%}")
+            lines.append(f"{score_bar(blended)} {label}: {blended:.1f}/10{marker} · вес {weight:.0%}{tier}")
         else:
-            lines.append(f"{score_bar(value)} {label}: {value:.1f}/10 · пока без отзывов · вес {weight:.0%}")
+            lines.append(f"{score_bar(value)} {label}: {value:.1f}/10 · пока без отзывов · вес {weight:.0%}{tier}")
     return "\n".join(lines)
 
 
@@ -310,10 +325,16 @@ def school_criteria_simple_text(school, user_stats=None):
 
     lines = ["📊 <b>Критерии школы</b>", "Итоговая оценка каждого критерия · шкала 0–10"]
     for field, label, _ in CRITERIA:
+        status = status_of(school, field)
+        if status == STATUS_NONE:
+            lines.append(f"—  {label} · не предусмотрено, в оценку не входит")
+            continue
         value = float(getattr(school, field, 0))
         average, count = user_stats.get(field, (None, 0))
         blended, preliminary = blend_rating(value, average, count)
         score_text = f"{number(blended)}/10" + (" · предварительно" if preliminary else "")
+        if status == STATUS_TIER:
+            score_text += " · зависит от тарифа"
         lines.append(f"{score_bar(blended)}  {label} · {score_text}")
     if not any(count for _, count in user_stats.values()):
         lines.append("\nОценка станет комбинированной, когда появятся одобренные отзывы учеников.")
@@ -643,14 +664,18 @@ def comparison_section_text(left, right, section, left_stats=None, right_stats=N
             "Шкала 0–10\n",
         ]
         has_preliminary = False
+        def cell(school, stats, field):
+            nonlocal has_preliminary
+            status = status_of(school, field)
+            if status == STATUS_NONE:
+                return "нет"
+            value, preliminary = criterion_total(getattr(school, field), stats, field)
+            has_preliminary = has_preliminary or preliminary
+            tier = " (на части тарифов)" if status == STATUS_TIER else ""
+            return f"{comma(value)}/10{'*' if preliminary else ''}{tier}"
+
         for field, label, _ in CRITERIA:
-            left_value, left_preliminary = criterion_total(getattr(left, field), left_stats, field)
-            right_value, right_preliminary = criterion_total(getattr(right, field), right_stats, field)
-            has_preliminary = has_preliminary or left_preliminary or right_preliminary
-            lines.append(
-                f"{escape(label)}\n{comma(left_value)}/10{'*' if left_preliminary else ''}  │  "
-                f"{comma(right_value)}/10{'*' if right_preliminary else ''}"
-            )
+            lines.append(f"{escape(label)}\n{cell(left, left_stats, field)}  │  {cell(right, right_stats, field)}")
         if has_preliminary:
             lines.append("\n* Предварительный балл: нет одобренных отзывов учеников.")
         return "\n\n".join(lines)
@@ -690,7 +715,8 @@ def comparison_keyboard(left_id, right_id):
 def rating_methodology_text():
     return (
         "ℹ️ Как считается рейтинг\n\n"
-        "<b>Школы:</b> сначала редакционная оценка по семи критериям — шкала 0–10. Когда набирается достаточно "
+        "<b>Школы:</b> сначала редакционная оценка по критериям школы (до семи) — шкала 0–10. Если чего-то в школе нет, "
+        "например куратора, этот критерий не оценивается и на балл не влияет. Когда набирается достаточно "
         "отзывов (примерно три подтверждённых), в неё подмешивается оценка учеников: её вес растёт с числом отзывов "
         "и становится заметным уже после 5–10 отзывов, а не только после нескольких десятков — это специально "
         "сделано так, чтобы у небольших школ тоже был реальный шанс повлиять на свою оценку отзывами.\n\n"
@@ -904,12 +930,13 @@ def review_score_keyboard():
     ])
 
 
-def criterion_score_keyboard():
+def criterion_score_keyboard(skippable=False):
     scores = range(1, 11)
+    skip = [[InlineKeyboardButton(text="Этого не было в моём тарифе", callback_data="criterion_skip")]] if skippable else []
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text=str(score), callback_data=f"criterion_score:{score}") for score in scores[index:index + 5]]
         for index in range(0, len(scores), 5)
-    ] + [[InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")]])
+    ] + skip + [[InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")]])
 
 
 def review_verification_keyboard():
@@ -920,11 +947,12 @@ def review_verification_keyboard():
     ])
 
 
-def criterion_buttons(school_id):
+def criterion_buttons(school_id, school=None):
+    criteria = school_criteria(school) if school is not None else CRITERIA
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [InlineKeyboardButton(text=label, callback_data=f"review_criterion_select:{school_id}:{field}")]
-            for field, label, _ in CRITERIA
+            for field, label, _ in criteria
         ] + [
             [InlineKeyboardButton(text="← Карточка школы", callback_data=f"school:{school_id}")],
             [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
@@ -1452,7 +1480,12 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
     @dp.callback_query(F.data.startswith("review_criteria:"))
     async def review_criteria(call: CallbackQuery):
         school_id = int(call.data.split(":")[1])
-        await call.message.edit_text("⭐ Оцени отдельный аспект школы:\n\nВыбери критерий:", reply_markup=criterion_buttons(school_id))
+        async with session_factory() as session:
+            school = await session.get(School, school_id)
+        await call.message.edit_text(
+            "⭐ Оцени отдельный аспект школы:\n\nВыбери критерий:",
+            reply_markup=criterion_buttons(school_id, school),
+        )
         await call.answer()
 
     @dp.callback_query(F.data.startswith("review_criterion_select:"))
@@ -1491,12 +1524,23 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             return
         await state.update_data(review_school_id=school_id, review_teacher_id=None, review_criterion=criterion, review_kind="school")
         if criterion is None:
-            await state.update_data(review_criteria_scores={}, review_criteria_index=0)
+            async with session_factory() as session:
+                school = await session.get(School, school_id)
+            # Only ask about what this school offers; criteria that exist on some tariffs only can be skipped.
+            offered = school_criteria(school)
+            keys = [field for field, _, _ in offered]
+            tiers = [field for field, _, _ in offered if status_of(school, field) == STATUS_TIER]
+            await state.update_data(
+                review_criteria_scores={}, review_criteria_index=0,
+                review_criteria_keys=keys, review_criteria_tiers=tiers,
+            )
             await state.set_state(ReviewForm.criterion_score)
+            first_field, first_label, _ = offered[0]
+            hint = "\nЕсли чего-то не было в твоём тарифе — нажми «Этого не было в моём тарифе»." if tiers else ""
             await call.message.edit_text(
-                "Сначала оцени критерии школы по очереди.\n\n"
-                "1/7 · Преподаватели\nВыбери оценку от 1 до 10:",
-                reply_markup=criterion_score_keyboard(),
+                f"Сначала оцени критерии школы по очереди.{hint}\n\n"
+                f"1/{len(offered)} · {first_label}\nВыбери оценку от 1 до 10:",
+                reply_markup=criterion_score_keyboard(skippable=first_field in tiers),
             )
         else:
             await state.set_state(ReviewForm.score)
@@ -1537,40 +1581,60 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         await call.message.edit_text("Что было полезно или понравилось? Напиши одним сообщением. Можно написать «пропустить».")
         await call.answer()
 
+    def review_flow_criteria(data):
+        """(field, label) pairs asked in the current review flow."""
+        if data.get("review_kind") == "teacher":
+            return [(field, label) for field, label in TEACHER_CRITERIA]
+        keys = data.get("review_criteria_keys") or [field for field, _, _ in CRITERIA]
+        return [(key, CRITERIA_BY_KEY[key]) for key in keys]
+
+    async def next_review_criterion(call: CallbackQuery, state: FSMContext, data, scores, index, criteria):
+        tiers = set(data.get("review_criteria_tiers") or [])
+        if index + 1 < len(criteria):
+            next_field, next_label = criteria[index + 1]
+            await state.update_data(review_criteria_scores=scores, review_criteria_index=index + 1)
+            await call.message.edit_text(
+                f"{index + 2}/{len(criteria)} · {next_label}\nВыбери оценку от 1 до 10:",
+                reply_markup=criterion_score_keyboard(skippable=next_field in tiers),
+            )
+        elif data.get("review_kind") == "teacher":
+            await state.update_data(
+                review_criteria_scores=scores,
+                review_score=sum(scores.values()) / len(scores),
+            )
+            await state.set_state(ReviewForm.positive)
+            await call.message.edit_text(
+                "Все пять критериев оценены. Итог посчитаем автоматически как их среднее.\n\n"
+                "Что было полезно или понравилось? Напиши одним сообщением. Можно написать «пропустить»."
+            )
+        else:
+            await state.update_data(review_criteria_scores=scores)
+            await state.set_state(ReviewForm.score)
+            await call.message.edit_text(
+                "Все критерии оценены.\n\nТеперь поставь общую оценку школе от 1 до 10:",
+                reply_markup=review_score_keyboard(),
+            )
+        await call.answer()
+
     @dp.callback_query(ReviewForm.criterion_score, F.data.startswith("criterion_score:"))
     async def review_criterion_score(call: CallbackQuery, state: FSMContext):
         data = await state.get_data()
         index = int(data.get("review_criteria_index", 0))
         scores = dict(data.get("review_criteria_scores", {}))
-        criteria = TEACHER_CRITERIA if data.get("review_kind") == "teacher" else CRITERIA
-        field, label, *_ = criteria[index]
-        scores[field] = float(call.data.split(":")[1])
-        if index + 1 < len(criteria):
-            next_field, next_label, *_ = criteria[index + 1]
-            await state.update_data(review_criteria_scores=scores, review_criteria_index=index + 1)
-            await call.message.edit_text(
-                f"{index + 2}/{len(criteria)} · {next_label}\nВыбери оценку от 1 до 10:",
-                reply_markup=criterion_score_keyboard(),
-            )
-        else:
-            if data.get("review_kind") == "teacher":
-                await state.update_data(
-                    review_criteria_scores=scores,
-                    review_score=sum(scores.values()) / len(scores),
-                )
-                await state.set_state(ReviewForm.positive)
-                await call.message.edit_text(
-                    "Все пять критериев оценены. Итог посчитаем автоматически как их среднее.\n\n"
-                    "Что было полезно или понравилось? Напиши одним сообщением. Можно написать «пропустить»."
-                )
-            else:
-                await state.update_data(review_criteria_scores=scores)
-                await state.set_state(ReviewForm.score)
-                await call.message.edit_text(
-                    "Все критерии оценены.\n\nТеперь поставь общую оценку школе от 1 до 10:",
-                    reply_markup=review_score_keyboard(),
-                )
-        await call.answer()
+        criteria = review_flow_criteria(data)
+        scores[criteria[index][0]] = float(call.data.split(":")[1])
+        await next_review_criterion(call, state, data, scores, index, criteria)
+
+    @dp.callback_query(ReviewForm.criterion_score, F.data == "criterion_skip")
+    async def review_criterion_skip(call: CallbackQuery, state: FSMContext):
+        data = await state.get_data()
+        index = int(data.get("review_criteria_index", 0))
+        criteria = review_flow_criteria(data)
+        if criteria[index][0] not in set(data.get("review_criteria_tiers") or []):
+            await call.answer("Этот критерий нужно оценить.", show_alert=True)
+            return
+        # A skipped criterion is not stored, so it counts neither in the average nor in the weight.
+        await next_review_criterion(call, state, data, dict(data.get("review_criteria_scores", {})), index, criteria)
 
     @dp.message(ReviewForm.positive)
     async def review_positive(message: Message, state: FSMContext):

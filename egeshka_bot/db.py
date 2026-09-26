@@ -921,6 +921,32 @@ TEACHERS = [
 ]
 
 
+# Which service criteria a school really offers ("yes" is the default and is not listed).
+#   tier - only on some tariffs (the student needs the senior tariff to get it)
+#   none - not offered at all: it is left out of the score, of student reviews and of the matching weights
+# Checked against the official tariff pages on 26 September 2026 (see research/2026-09-26-criteria-availability.md).
+CRITERIA_STATUS = {
+    "100балльный репетитор": {"curator_score": "tier", "feedback_score": "tier"},
+    "Фоксфорд": {"curator_score": "tier", "feedback_score": "tier"},
+    "99 Баллов": {"curator_score": "tier"},
+    "PARTA": {"curator_score": "tier", "feedback_score": "tier"},
+    "Skysmart": {"curator_score": "none"},
+    "Школково": {"curator_score": "tier", "feedback_score": "tier"},
+    "ЕГЭ Налегке": {"curator_score": "tier", "feedback_score": "tier"},
+    "StudyCats": {"curator_score": "tier"},
+    "Морозилка": {"curator_score": "tier", "feedback_score": "tier"},
+    "Инсперия": {"curator_score": "tier", "feedback_score": "tier"},
+    "ЕГЭХАБ": {"curator_score": "tier", "feedback_score": "tier"},
+    "Школа Пифагора": {"curator_score": "none", "feedback_score": "none"},
+}
+for _school in SEED:
+    _status = CRITERIA_STATUS.get(_school["name"], {})
+    _school["criteria_status"] = json.dumps(_status, ensure_ascii=False, sort_keys=True)
+    for _key, _value in _status.items():
+        if _value == "none":
+            _school[_key] = 0.0   # placeholder: ignored everywhere, 0 makes any leak obvious
+
+
 # Keep base and profile separate in every consumer of this catalogue.
 for school in SEED:
     subjects = ["математика профильная" if item == "математика" else item for item in school["subjects"].split(",")]
@@ -1253,6 +1279,7 @@ NEW_SCHOOL_COLUMNS = {
     "review_summary": "TEXT DEFAULT ''",
         "evidence_types": "VARCHAR(200) DEFAULT ''",
     "teachers_text": "TEXT DEFAULT ''",
+    "criteria_status": "TEXT DEFAULT '{}'",
 }
 
 NEW_REVIEW_COLUMNS = {

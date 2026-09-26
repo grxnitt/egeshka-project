@@ -15,7 +15,7 @@ CSS_VERSIONS = {
     "styles.css": "35",
     "refinements.css": "37",
     "typography.css": "31",
-    "composition.css": "132",
+    "composition.css": "134",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -180,11 +180,18 @@ def teacher_card(person, index=0):
     )
 
 
-def criterion_row(label, value):
+def criterion_row(label, value, status="yes"):
+    """One criterion of a school. status: yes | tier (only on some tariffs) | none (not offered, not scored)."""
+    if status == "none" or value is None:
+        return (
+            f'<li class="sp-empty"><span class="sp-crit-name">{escape(label)}</span>'
+            '<em>Не предусмотрено</em></li>'
+        )
+    tier = ' <small class="sp-tier">зависит от тарифа</small>' if status == "tier" else ""
     score = max(0.0, min(10.0, float(value)))
     segments = "".join(f'<i style="--fill:{max(0.0, min(1.0, score - i)) * 100:.0f}%"></i>' for i in range(10))
     return (
-        f'<li><span class="sp-crit-name">{escape(label)}</span>'
+        f'<li><span class="sp-crit-name">{escape(label)}{tier}</span>'
         f'<div class="sp-crit-meter"><span class="meter-value">{num(score)}</span>'
         f'<span class="meter meter-segments" aria-hidden="true">{segments}</span></div></li>'
     )
@@ -193,10 +200,17 @@ def criterion_row(label, value):
 def build_page(school, people, others, header, footer, teacher_slugs):
     slug = school["reviewSlug"]
     url = f"{SITE}/schools/{slug}"
+    status = school.get("criteriaStatus") or {}
     criteria_rows = "".join(
-        criterion_row(label, school["criteria"][key])
+        criterion_row(label, school["criteria"][key], status.get(key, "yes"))
         for key, label in CRITERIA.items()
         if key in school["criteria"]
+    )
+    missing = [label for key, label in CRITERIA.items() if status.get(key) == "none"]
+    missing_note = (
+        f'<p class="sp-note sp-note-na">В оценку не входит: {escape(", ".join(missing).lower())} — этого нет в школе. '
+        "Вес остальных критериев пересчитан, поэтому отсутствие не повышает и не понижает балл.</p>"
+        if missing else ""
     )
     subjects = "".join(f"<li>{escape(subject_label(s))}</li>" for s in school["subjects"])
     if people:
@@ -234,8 +248,8 @@ def build_page(school, people, others, header, footer, teacher_slugs):
     <div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div class="hero-glow hero-glow-pink" aria-hidden="true"></div>
     <div class="hero-copy"><h1>{escape(school["name"])}</h1><p class="lead">{escape(school["description"])}</p><div class="sp-score"><small>Оценка ЕГЭ Мэтча</small><strong>{num(school["score"])}</strong><span>из 10</span></div></div>
   </section>
-  <p class="sp-note">Оценка складывается из редакционной оценки по семи критериям и отзывов учеников: подтверждённые весят больше. Пока отзывов мало, она в основном редакционная. <a href="/methodology">Как считается оценка</a></p>
-  <section class="sp-section"><h2 class="t-h3">Оценка по критериям</h2><ul class="sp-criteria">{criteria_rows}</ul></section>
+  <p class="sp-note">Оценка складывается из редакционной оценки по критериям школы (до семи) и отзывов учеников: подтверждённые весят больше. Пока отзывов мало, она в основном редакционная. <a href="/methodology">Как считается оценка</a></p>
+  <section class="sp-section"><h2 class="t-h3">Оценка по критериям</h2><ul class="sp-criteria">{criteria_rows}</ul>{missing_note}</section>
   <section class="sp-section"><h2 class="t-h3">Предметы ({len(school["subjects"])})</h2><ul class="sp-chips">{subjects}</ul></section>
   <section class="sp-facts"><article><h2 class="t-title">Стоимость</h2><p>{escape(school["price"])}</p><p class="sp-inline-link"><a href="{escape(school["url"])}" target="_blank" rel="noopener">Проверить актуальные цены на сайте школы ↗</a></p></article><article><h2 class="t-title">Формат обучения</h2><p>{escape(school["format"])}</p></article><article><h2 class="t-title">Почему выбирают</h2><p>{escape(school["strengths"])}</p></article><article><h2 class="t-title">Что проверить перед покупкой</h2><p>{escape(school["weaknesses"])}</p></article></section>
   {teachers_block}

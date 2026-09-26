@@ -26,26 +26,26 @@ export const schoolContent={
 // `priceFrom` mirrors the minimum visible price in the card, regardless of whether
 // that price is stated per month, lesson or introductory block.
 export const schoolFilters={
- 'Умскул':{priceFrom:5490,lessons:['live','recorded'],curator:true},
- '100балльный репетитор':{priceFrom:990,lessons:['live','recorded'],curator:true},
- 'Сотка':{priceFrom:3990,lessons:['recorded'],curator:true},
- 'Фоксфорд':{priceFrom:4029,lessons:['live','recorded','individual'],curator:true},
- 'Вебиум':{priceFrom:3912,lessons:['recorded'],curator:true},
- '99 Баллов':{priceFrom:null,lessons:['live','recorded'],curator:true},
- 'Турбо ЕГЭ':{priceFrom:4333,lessons:['recorded'],curator:true},
- 'ЕГЭLand':{priceFrom:6165,lessons:['live','recorded'],curator:true},
- 'СМИТАП':{priceFrom:3590,lessons:['live','recorded'],curator:true},
- 'PARTA':{priceFrom:3900,lessons:['live','recorded'],curator:true},
- 'Skysmart':{priceFrom:1880,lessons:['live','individual'],curator:false},
- 'Школково':{priceFrom:null,lessons:['live','recorded'],curator:false},
- 'ЕГЭ Налегке':{priceFrom:2350,lessons:['live','recorded'],curator:true},
- 'StudyCats':{priceFrom:4890,lessons:['live','recorded'],curator:false},
- 'NeoFamily':{priceFrom:5490,lessons:['live','recorded'],curator:true},
- 'Морозилка':{priceFrom:4490,lessons:['live','recorded','individual'],curator:true},
- 'Инсперия':{priceFrom:5090,lessons:['live','recorded'],curator:true},
- 'ЕГЭХАБ':{priceFrom:3450,lessons:['live','recorded'],curator:true},
- 'Школа Пифагора':{priceFrom:null,lessons:['recorded'],curator:false},
- 'НОО':{priceFrom:5690,lessons:['live','recorded'],curator:true}
+ 'Умскул':{priceFrom:5490,lessons:['live','recorded']},
+ '100балльный репетитор':{priceFrom:990,lessons:['live','recorded']},
+ 'Сотка':{priceFrom:3990,lessons:['recorded']},
+ 'Фоксфорд':{priceFrom:4029,lessons:['live','recorded','individual']},
+ 'Вебиум':{priceFrom:3912,lessons:['recorded']},
+ '99 Баллов':{priceFrom:null,lessons:['live','recorded']},
+ 'Турбо ЕГЭ':{priceFrom:4333,lessons:['recorded']},
+ 'ЕГЭLand':{priceFrom:6165,lessons:['live','recorded']},
+ 'СМИТАП':{priceFrom:3590,lessons:['live','recorded']},
+ 'PARTA':{priceFrom:3900,lessons:['live','recorded']},
+ 'Skysmart':{priceFrom:1880,lessons:['live','individual']},
+ 'Школково':{priceFrom:null,lessons:['live','recorded']},
+ 'ЕГЭ Налегке':{priceFrom:2350,lessons:['live','recorded']},
+ 'StudyCats':{priceFrom:4890,lessons:['live','recorded']},
+ 'NeoFamily':{priceFrom:5490,lessons:['live','recorded']},
+ 'Морозилка':{priceFrom:4490,lessons:['live','recorded','individual']},
+ 'Инсперия':{priceFrom:5090,lessons:['live','recorded']},
+ 'ЕГЭХАБ':{priceFrom:3450,lessons:['live','recorded']},
+ 'Школа Пифагора':{priceFrom:null,lessons:['recorded']},
+ 'НОО':{priceFrom:5690,lessons:['live','recorded']}
 };
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function decisionFields(school){const c=schoolContent[school.name],p=priceDetails[school.name];if(!c)return `<p>${esc(school.description)}</p>`;const period=p?.period||school.price||'Уточнить у школы';return `<dl class="school-decision"><div><dt>Подойдёт, если</dt><dd>${esc(c.fit)}</dd></div><div><dt>Формат</dt><dd>${esc(c.format)}</dd></div><div><dt>Цена</dt><dd>${esc(period)}<small class="card-price-scope">${esc(c.scope)}</small></dd></div></dl>`;}
