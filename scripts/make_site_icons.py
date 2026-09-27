@@ -83,9 +83,13 @@ def main():
         render(size).save(OUT / f"icon-{size}.png")
     # iOS/link-preview icons expect an opaque background (iOS adds its own rounded mask).
     render(180, background=PAPER).convert("RGB").save(OUT / "apple-touch-icon.png")
-    favicons = [render(s, background=PAPER).convert("RGB") for s in (16, 32, 48)]
-    favicons[0].save(OUT.parent / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
-    print(f"Wrote icon-192.png, icon-512.png, apple-touch-icon.png and favicon.ico to {OUT}/ and {OUT.parent}/")
+    # Several explicit PNG sizes so the browser/OS picks a crisp match instead of stretching
+    # a single small favicon.ico up - that's what looked blocky when shown larger than 32px.
+    for size in (16, 32, 48, 96, 192, 512):
+        render(size, background=PAPER).convert("RGB").save(OUT / f"favicon-{size}.png")
+    favicons = [render(s, background=PAPER).convert("RGB") for s in (16, 32, 48, 64, 128, 256)]
+    favicons[0].save(OUT.parent / "favicon.ico", sizes=[(s, s) for s in (16, 32, 48, 64, 128, 256)])
+    print(f"Wrote icon-192/512.png, favicon-*.png, apple-touch-icon.png and favicon.ico to {OUT}/ and {OUT.parent}/")
 
 
 if __name__ == "__main__":
