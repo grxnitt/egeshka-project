@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="styles.css?v=35">
   <link rel="stylesheet" href="refinements.css?v=37">
   <link rel="stylesheet" href="typography.css?v=31">
-  <link rel="stylesheet" href="composition.css?v=137">
+  <link rel="stylesheet" href="composition.css?v=138">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ЕГЭ Мэтч","item":"https://egematch.ru/"},{"@type":"ListItem","position":2,"name":"Рейтинг онлайн-школ","item":"https://egematch.ru/ratings"}]}</script>
 </head>
 <body class="ratings-page">
@@ -40,8 +40,8 @@
         <label class="filter-check"><input id="filter-curator" type="checkbox"><span>Куратор доступен</span></label>
         <label class="filter-check"><input id="filter-multisubject" type="checkbox"><span>5+ предметов<span class="chip-extra"> в одном месте</span></span></label>
       </div>
-      <div class="filter-priority-group"><span class="filter-priority-label">Что для тебя особенно важно? <small>(до двух)</small></span><div class="subjects filter-priority-list" id="priority-list" role="group" aria-label="Важные критерии"></div></div>
-      <p class="filter-note">Цена сравнивается по значению «от» в карточке: за месяц, урок или стартовый блок. Возможности могут зависеть от тарифа. Приоритет показывает школы с оценкой критерия от 8,5 из 10 — так же квиз считает критерий «сильным».</p>
+      <div class="filter-priority-group"><span class="filter-priority-label">Что для тебя особенно важно? <small>(до двух, от 8,5 из 10)</small></span><div class="subjects filter-priority-list" id="priority-list" role="group" aria-label="Важные критерии"></div></div>
+      <p class="filter-note">Цена сравнивается по значению «от» в карточке: за месяц, урок или стартовый блок. Возможности могут зависеть от тарифа.</p>
       <div class="catalog-toolbar"><div class="catalog-toolbar-main"><p id="catalog-label" aria-live="polite">Все предметы</p><button id="reset-filters" type="button" hidden>Сбросить фильтры</button></div><label><span>Сортировка</span><select id="sort"><option value="rating">По оценке</option><option value="name">По названию</option></select></label></div>
       <p class="rating-scope-note"><span id="scope-note">Показаны все школы. Баллы — общая оценка школы, а не отдельного курса.</span> <a href="/methodology">Как считаем →</a></p>
       <div class="school-grid" id="school-list"></div>
@@ -59,6 +59,6 @@
 <script src="analytics-config.js?v=1"></script>
 <script src="analytics.js?v=10"></script>
 <script src="supabase-config.js?v=1"></script>
-<script type="module" src="ratings.js?v=72"></script>
+<script type="module" src="ratings.js?v=73"></script>
 <script type="module" src="motion.js?v=30"></script>
 </body></html>

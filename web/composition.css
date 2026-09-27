@@ -1437,13 +1437,12 @@ body.compare-page{overflow-x:clip}
 .filter-priority-label small{color:var(--muted);font-weight:400}
 .filter-priority-list{margin-bottom:0}
 .filter-priority-list .subject{font-size:13px}
-.school-card-priority{display:grid;gap:6px;margin:2px 0 12px;padding:10px 12px;border-radius:var(--r-sm);background:#f4f6ff}
-.school-card-priority li{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#3a4364;font-size:12px;font-weight:600}
-.school-card-priority li span:first-child{display:flex;align-items:center;gap:6px}
-.school-card-priority li span:first-child:before{content:'✓';color:var(--blue);font-weight:700}
+.school-card-priority{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px;padding:0;list-style:none}
+.school-card-priority li{display:flex;align-items:center;gap:5px;padding:6px 11px;border:1px solid #d9defa;border-radius:var(--r-pill);background:rgb(255 255 255/.75);backdrop-filter:blur(6px);color:#3a4364;font-size:11px;font-weight:700;white-space:nowrap}
+.school-card-priority li:before{content:'✓';color:var(--blue)}
 .school-card-priority b{color:var(--blue);font-variant-numeric:tabular-nums}
-.school-card-priority small{color:var(--muted);font-weight:400}
-@media(max-width:700px){.filter-priority-group{margin-top:16px}}
+.school-card-priority small{margin-left:1px;color:var(--muted);font-weight:400}
+@media(max-width:700px){.filter-priority-group{margin-top:16px}.school-card-priority{margin-bottom:12px}}
 
 /* ---- Quiz priority question: highlight the option that matches what was filtered for on
    the ratings page (see app.js startQuiz / ratings.js syncQuizLink) ---- */
