@@ -24,7 +24,7 @@ def test_app_js_reads_subject_and_budget_back_and_skips_those_questions():
     assert "function startQuiz(preset={})" in js
     assert "quizSubjectKeys.includes(preset.subject)" in js
     assert "siteQuiz.step=1" in js and "siteQuiz.step=2" in js
-    assert "startQuiz({subject:startParams.get('subject'),budget:startParams.get('budget')})" in js
+    assert "startQuiz({subject:startParams.get('subject'),budget:startParams.get('budget'),priority:startParams.get('priority')})" in js
 
 
 def test_quiz_result_recaps_the_answers_and_links_back_to_filtered_ratings():
