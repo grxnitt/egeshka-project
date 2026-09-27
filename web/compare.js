@@ -1,5 +1,5 @@
-import { priceContext } from './school-content.js?v=32';
-import { priceDetails, relativeStrengths } from './comparison.js?v=26';
+import { priceContext } from './school-content.js?v=33';
+import { priceDetails, relativeStrengths } from './comparison.js?v=27';
 import { applyLiveRatings, teacherRatingLabel } from './supabase-client.js?v=4';
 import { teacherSubjects } from './subjects.js?v=1';
 const $ = selector => document.querySelector(selector);

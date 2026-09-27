@@ -11,7 +11,9 @@ from test_scoring import profile
 
 
 def test_math_levels_are_independent_hard_filters():
-    school = SimpleNamespace(**{k:v for k,v in SEED[-1].items()})
+    # НОО offers profile math but not base math - a stable pick regardless of catalog order.
+    row = next(s for s in SEED if s['name'] == 'НОО')
+    school = SimpleNamespace(**{k: v for k, v in row.items()})
     assert school_score(school, profile('математика базовая'))[0] == -1
     assert school_score(school, profile('математика профильная'))[0] >= 0
     assert all('математика' not in s['subjects'].split(',') for s in SEED)
