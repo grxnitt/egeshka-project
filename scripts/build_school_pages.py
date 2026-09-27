@@ -145,6 +145,8 @@ def make_head(title, description, url, crumbs, noindex=False, og_type="website",
   <meta name="twitter:card" content="summary_large_image">{twitter_image}
   <title>{escape(title)}</title>
   <link rel="icon" href="/assets/egeshka-logo-icon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <link rel="preload" href="/assets/fonts/onest-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/unbounded-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/onest-symbols-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 {css}
