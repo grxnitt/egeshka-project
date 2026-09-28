@@ -71,10 +71,10 @@ def test_ratings_js_school_dialog_offers_choose_school_before_the_site_link():
     assert "data-source=\"teacher_dialog\"" in script
 
 
-def test_compare_price_card_offers_choose_school():
+def test_compare_verdict_card_offers_choose_school():
     script = read("compare.js")
     assert "chooseSchoolUrl" in script
-    assert 'data-source="compare_price"' in script
+    assert 'data-source="compare_verdict"' in script
     assert "Выбрать школу" in script
 
 

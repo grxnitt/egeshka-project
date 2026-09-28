@@ -70,10 +70,10 @@ function render(changed) {
     const summaryCard = (school, other) => {
       const strengths = relativeStrengths(school, other);
       const text = strengths.length ? `Выше оценки по критериям: ${strengths.map(key => criteria[key].toLowerCase()).join(' и ')}.` : 'В этой паре нет критериев с более высокой оценкой. Сравни конкретного преподавателя, тариф и формат занятий.';
-      return `<article><h4>${escape(school.name)}</h4><p>${escape(text)}</p></article>`;
+      const chooseButton = `<a class="button blue compare-choose-school" href="${escape(chooseSchoolUrl(school))}" target="_blank" rel="noopener" data-choose-school="${escape(school.name)}" data-source="compare_verdict">Выбрать школу <span>↗</span></a>`;
+      return `<article><h4>${escape(school.name)}</h4><p>${escape(text)}</p>${chooseButton}</article>`;
     };
-    const chooseButton = school => `<a class="button blue compare-choose-school" href="${escape(chooseSchoolUrl(school))}" target="_blank" rel="noopener" data-choose-school="${escape(school.name)}" data-source="compare_price">Выбрать школу <span>↗</span></a>`;
-    after = `<section class="compare-prices" aria-label="Стоимость подготовки"><h3>Сколько стоит подготовка</h3><p class="compare-price-context">Ориентиры из каталога: пакеты и сроки обучения отличаются.</p><div class="compare-price-grid">${priceCard(left)}${priceCard(right)}</div></section><section class="compare-verdict" aria-label="Краткий вывод"><h3>Что это значит для выбора</h3><div class="compare-verdict-grid">${summaryCard(left, right)}${summaryCard(right, left)}</div></section><section class="compare-choose-actions" aria-label="Выбрать школу"><div class="compare-choose-grid">${chooseButton(left)}${chooseButton(right)}</div></section>`;
+    after = `<section class="compare-prices" aria-label="Стоимость подготовки"><h3>Сколько стоит подготовка</h3><p class="compare-price-context">Ориентиры из каталога: пакеты и сроки обучения отличаются.</p><div class="compare-price-grid">${priceCard(left)}${priceCard(right)}</div></section><section class="compare-verdict" aria-label="Краткий вывод"><h3>Что это значит для выбора</h3><div class="compare-verdict-grid">${summaryCard(left, right)}${summaryCard(right, left)}</div></section>`;
   } else {
     table += row('Оценка учеников', `<strong>${escape(teacherRatingLabel(left))}</strong>`, `<strong>${escape(teacherRatingLabel(right))}</strong>`);
     table += row('Школа', escape(left.school), escape(right.school));
