@@ -353,6 +353,7 @@ body:has(dialog[open]){overflow:hidden}
 .compare-verdict-grid article h4{margin:0}
 .compare-verdict-grid .button{width:auto;justify-self:start;gap:10px;padding:12px 20px;border-radius:var(--r-md);font-size:13px}
 .compare-verdict-grid .button span{font-size:15px}
+.compare-verdict-grid article:nth-child(2) .button{background:var(--pink);color:var(--ink)}
 .compare-verdict-grid p{font-size:14px;line-height:1.65;margin:0}
 .compare-verdict>.fine{max-width:85ch;font-size:12px;line-height:1.6}
 @media(max-width:700px){.compare-price-grid,.compare-verdict-grid{grid-template-columns:1fr;gap:12px}.compare-price-card{padding:20px}.compare-prices h3,.compare-verdict h3{font-size:22px}.compare-verdict-grid article{padding:18px}.compare-price-card>strong{font-size:22px}.compare-verdict-grid .button{width:100%;justify-content:center}}
