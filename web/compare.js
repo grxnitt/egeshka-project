@@ -1,4 +1,4 @@
-import { chooseSchoolUrl, priceContext } from './school-content.js?v=35';
+import { chooseSchoolUrl, priceContext } from './school-content.js?v=36';
 import { priceDetails, relativeStrengths } from './comparison.js?v=28';
 import { applyLiveRatings, teacherRatingLabel } from './supabase-client.js?v=4';
 import { teacherSubjects } from './subjects.js?v=1';
