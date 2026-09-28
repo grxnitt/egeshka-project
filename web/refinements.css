@@ -350,12 +350,13 @@ body:has(dialog[open]){overflow:hidden}
 .compare-verdict-grid{margin:20px 0}
 .compare-verdict-grid article{padding:0 20px;border-left:3px solid #b8c4fc}
 .compare-verdict-grid article:nth-child(2){border-color:#ecc1d4}
-.compare-choose-actions{margin-top:28px}
+.compare-choose-actions{margin-top:24px;padding-top:24px;border-top:1px solid var(--line)}
 .compare-choose-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.compare-choose-grid .button{width:100%;justify-content:center}
+.compare-choose-grid .button{width:auto;justify-self:start;gap:10px;padding:12px 20px;border-radius:var(--r-md);font-size:13px}
+.compare-choose-grid .button span{font-size:15px}
 .compare-verdict-grid p{font-size:14px;line-height:1.65;margin:0}
 .compare-verdict>.fine{max-width:85ch;font-size:12px;line-height:1.6}
-@media(max-width:700px){.compare-price-grid,.compare-verdict-grid,.compare-choose-grid{grid-template-columns:1fr;gap:12px}.compare-price-card{padding:20px}.compare-prices h3,.compare-verdict h3{font-size:22px}.compare-verdict-grid article{padding:8px 16px}.compare-price-card>strong{font-size:22px}}
+@media(max-width:700px){.compare-price-grid,.compare-verdict-grid,.compare-choose-grid{grid-template-columns:1fr;gap:12px}.compare-price-card{padding:20px}.compare-prices h3,.compare-verdict h3{font-size:22px}.compare-verdict-grid article{padding:8px 16px}.compare-price-card>strong{font-size:22px}.compare-choose-grid .button{width:100%;justify-content:center}}
 
 /* Compact first screen, readable supporting copy, consistent detail panels. */
 .hero{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:36px;min-height:0;padding-top:48px;padding-bottom:48px}
