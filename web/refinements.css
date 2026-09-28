@@ -347,13 +347,15 @@ body:has(dialog[open]){overflow:hidden}
 .compare-price-card dt{font-size:12px;color:#666b7a;margin-bottom:5px}
 .compare-price-card dd{margin:0;font-size:14px;line-height:1.5}
 .compare-price-card>p{font-size:13px;line-height:1.6;color:#606575;margin:12px 0 20px}
-.compare-price-card>a{margin-top:auto;font-size:13px;font-weight:600;text-decoration:underline;text-underline-offset:4px}
 .compare-verdict-grid{margin:20px 0}
 .compare-verdict-grid article{padding:0 20px;border-left:3px solid #b8c4fc}
 .compare-verdict-grid article:nth-child(2){border-color:#ecc1d4}
+.compare-choose-actions{margin-top:28px}
+.compare-choose-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.compare-choose-grid .button{width:100%;justify-content:center}
 .compare-verdict-grid p{font-size:14px;line-height:1.65;margin:0}
 .compare-verdict>.fine{max-width:85ch;font-size:12px;line-height:1.6}
-@media(max-width:700px){.compare-price-grid,.compare-verdict-grid{grid-template-columns:1fr;gap:12px}.compare-price-card{padding:20px}.compare-prices h3,.compare-verdict h3{font-size:22px}.compare-verdict-grid article{padding:8px 16px}.compare-price-card>strong{font-size:22px}}
+@media(max-width:700px){.compare-price-grid,.compare-verdict-grid,.compare-choose-grid{grid-template-columns:1fr;gap:12px}.compare-price-card{padding:20px}.compare-prices h3,.compare-verdict h3{font-size:22px}.compare-verdict-grid article{padding:8px 16px}.compare-price-card>strong{font-size:22px}}
 
 /* Compact first screen, readable supporting copy, consistent detail panels. */
 .hero{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:36px;min-height:0;padding-top:48px;padding-bottom:48px}
@@ -371,9 +373,7 @@ body:has(dialog[open]){overflow:hidden}
 .price-provenance{padding-top:12px;margin-top:16px;border-top:1px solid rgb(24 25 35/.12)}
 .price-provenance p{font-size:12px!important;line-height:1.5!important;margin:0 0 7px!important;color:#616777!important}
 .price-provenance a{font-size:13px;text-decoration:underline;text-underline-offset:3px}
-.compare-price-card>.price-provenance{margin-bottom:16px}
-.compare-price-card .button{margin-top:auto;padding:12px 16px;gap:14px;font-size:12px;text-decoration:none}
-.compare-price-card .button span{font-size:16px}
+.compare-price-card>.price-provenance{margin-bottom:0}
 .about-project{padding-top:56px;padding-bottom:64px}
 .about-project h2{font-size:32px;line-height:1.2}
 .about-lead{max-width:64ch;font-size:17px;color:#606575;margin:20px 0 32px}

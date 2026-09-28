@@ -14,7 +14,7 @@ SITE = "https://egematch.ru"
 BOT = "https://t.me/egematch_bot"
 CSS_VERSIONS = {
     "styles.css": "35",
-    "refinements.css": "38",
+    "refinements.css": "39",
     "typography.css": "31",
     "composition.css": "140",
 }
