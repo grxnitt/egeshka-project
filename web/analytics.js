@@ -82,7 +82,9 @@
       trackArticleClick(a);
       trackHowStep(a);
       if(a.closest&&a.closest('.article-sources'))return;
+      var chooseSchool=a.getAttribute('data-choose-school');
       var host=tagOutbound(a);
+      if(chooseSchool)goal('choose_school',{school:chooseSchool,source:a.getAttribute('data-source')||'other'});
       if(host)goal('outbound_school',{host:host});
       else trackTelegram(a);
       return;

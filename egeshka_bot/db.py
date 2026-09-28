@@ -984,6 +984,13 @@ CRITERIA_STATUS = {
     "Школа Пифагора": {"curator_score": "none", "feedback_score": "none"},
     "Тетрика": {"curator_score": "none"},
 }
+
+
+# Where the "Выбрать школу" button sends a lead once a school's sales team agrees to take
+# direct traffic from us (their own sales page, CRM form, phone/chat link — whatever they want).
+# Empty until a deal is negotiated; a school with no entry here falls back to its official_url
+# with UTM tags, so the button always has somewhere to go.
+LEAD_URLS = {}
 for _school in SEED:
     _status = CRITERIA_STATUS.get(_school["name"], {})
     _school["criteria_status"] = json.dumps(_status, ensure_ascii=False, sort_keys=True)

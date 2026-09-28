@@ -1,4 +1,4 @@
-import { priceContext } from './school-content.js?v=33';
+import { chooseSchoolUrl, priceContext } from './school-content.js?v=34';
 import { priceDetails, relativeStrengths } from './comparison.js?v=27';
 import { applyLiveRatings, teacherRatingLabel } from './supabase-client.js?v=4';
 import { teacherSubjects } from './subjects.js?v=1';
@@ -63,9 +63,10 @@ function render(changed) {
     table += Object.entries(criteria).map(([key, label]) => row(label, cell(left, key), cell(right, key))).join('');
     if (catalog.schools.some(school => school.isPreliminary)) table += '<p class="fine">* Предварительно: подтверждённых отзывов пока недостаточно.</p>';
     const priceCard = school => {
+      const leadButton = `<a class="button blue compare-choose-school" href="${escape(chooseSchoolUrl(school))}" target="_blank" rel="noopener" data-choose-school="${escape(school.name)}" data-source="compare_price">Выбрать школу <span>↗</span></a>`;
       const price = priceDetails[school.name];
-      if (!price) return `<article class="compare-price-card"><h4>${escape(school.name)}</h4><p>${escape(school.price)}</p>${priceContext(school)}</article>`;
-      return `<article class="compare-price-card"><h4>${escape(school.name)}</h4><strong>${escape(price.period)}</strong><dl><div><dt>За весь курс</dt><dd>${escape(price.total)}</dd></div><div><dt>Рассрочка / оплата частями</dt><dd>${escape(price.installment)}</dd></div></dl><p>${escape(price.note)}</p>${priceContext(school)}<a href="${escape(school.url)}" target="_blank" rel="noopener">Проверить тариф на сайте ↗</a></article>`;
+      if (!price) return `<article class="compare-price-card"><h4>${escape(school.name)}</h4><p>${escape(school.price)}</p>${priceContext(school)}${leadButton}</article>`;
+      return `<article class="compare-price-card"><h4>${escape(school.name)}</h4><strong>${escape(price.period)}</strong><dl><div><dt>За весь курс</dt><dd>${escape(price.total)}</dd></div><div><dt>Рассрочка / оплата частями</dt><dd>${escape(price.installment)}</dd></div></dl><p>${escape(price.note)}</p>${priceContext(school)}${leadButton}</article>`;
     };
     const summaryCard = (school, other) => {
       const strengths = relativeStrengths(school, other);

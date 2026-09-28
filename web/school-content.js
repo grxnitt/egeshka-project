@@ -54,3 +54,16 @@ export const schoolFilters={
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function decisionFields(school){const c=schoolContent[school.name],p=priceDetails[school.name];if(!c)return `<p>${esc(school.description)}</p>`;const period=p?.period||school.price||'Уточнить у школы';return `<dl class="school-decision"><div><dt>Подойдёт, если</dt><dd>${esc(c.fit)}</dd></div><div><dt>Формат</dt><dd>${esc(c.format)}</dd></div><div><dt>Цена</dt><dd>${esc(period)}<small class="card-price-scope">${esc(c.scope)}</small></dd></div></dl>`;}
 export function priceContext(school){const c=schoolContent[school.name];return `<div class="price-provenance"><p>${esc(c?.scope||'Предмет и тариф не уточнены')}</p><p>${c?.checked?`Цена проверена ${esc(c.checked)}.`:'Дата проверки цены не зафиксирована.'}</p><a href="${esc(school.url)}" target="_blank" rel="noopener">Уточнить на официальном сайте ↗</a></div>`;}
+
+// Where the "Выбрать школу" button sends the lead: the school's own sales URL once agreed
+// with them, otherwise their official site tagged so the click is traceable as ours.
+export function chooseSchoolUrl(school){
+  if(school.leadUrl)return school.leadUrl;
+  try{
+    const url=new URL(school.url);
+    url.searchParams.set('utm_source','egematch');
+    url.searchParams.set('utm_medium','cta');
+    url.searchParams.set('utm_campaign','choose_school');
+    return url.toString();
+  }catch(e){return school.url;}
+}

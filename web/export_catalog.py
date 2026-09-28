@@ -7,7 +7,7 @@ import sys
 from sqlalchemy import select
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from egeshka_bot.db import SCHOOL_REVIEW_SLUGS, SEED, TEACHERS, init_db
+from egeshka_bot.db import LEAD_URLS, SCHOOL_REVIEW_SLUGS, SEED, TEACHERS, init_db
 from egeshka_bot.models import School, Teacher
 from egeshka_bot.scoring import BASE_WEIGHTS, applicable_criteria, criteria_status, editorial_score, is_rated
 from egeshka_bot.subjects import SUBJECTS
@@ -46,6 +46,7 @@ for fallback_school_id, row in enumerate(SEED, start=1):
         'monthlyPriceFrom': row['monthly_price_from'],
         'strengths': row['strengths'], 'weaknesses': row['weaknesses'],
         'format': row['format_text'], 'url': row['official_url'],
+        'leadUrl': LEAD_URLS.get(row['name']) or None,
         'reviewSlug': SCHOOL_REVIEW_SLUGS[row['name']],
         # A criterion the school does not offer is null and is left out of the score (weights are renormalised).
         'criteria': {key: (row[key] if key in offered else None) for key in BASE_WEIGHTS},

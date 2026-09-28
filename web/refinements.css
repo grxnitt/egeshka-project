@@ -372,7 +372,8 @@ body:has(dialog[open]){overflow:hidden}
 .price-provenance p{font-size:12px!important;line-height:1.5!important;margin:0 0 7px!important;color:#616777!important}
 .price-provenance a{font-size:13px;text-decoration:underline;text-underline-offset:3px}
 .compare-price-card>.price-provenance{margin-bottom:16px}
-.compare-price-card>.price-provenance+a{display:none}
+.compare-price-card .button{margin-top:auto;padding:12px 16px;gap:14px;font-size:12px;text-decoration:none}
+.compare-price-card .button span{font-size:16px}
 .about-project{padding-top:56px;padding-bottom:64px}
 .about-project h2{font-size:32px;line-height:1.2}
 .about-lead{max-width:64ch;font-size:17px;color:#606575;margin:20px 0 32px}

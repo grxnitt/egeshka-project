@@ -1452,3 +1452,10 @@ body.compare-page{overflow-x:clip}
 .quiz-options button:hover .quiz-option-arrow{transform:translateX(3px)}
 .quiz-options button.is-suggested{border-color:var(--blue);background:#f5f7ff}
 .quiz-option-label em{display:block;margin-top:3px;color:var(--blue);font-size:10px;font-weight:600;font-style:normal}
+
+/* "Выбрать школу" lead CTA: school-detail dialog, quiz-match cards. */
+.detail-lead-action{margin-top:18px;width:100%;justify-content:center}
+.quiz-match-links{display:flex;align-items:center;gap:16px;margin-top:11px}
+.quiz-choose-link{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--r-pill);background:var(--blue);color:#fff;font-size:11px;font-weight:700;transition:transform .2s,background .2s}
+.quiz-choose-link:hover{background:#2d43cd;transform:translateY(-1px)}
+.quiz-match-links .quiz-card-link{margin-top:0}
