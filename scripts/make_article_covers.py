@@ -297,6 +297,36 @@ def cover_errors():
     return c
 
 
+def cover_compare():
+    c = Canvas(LAVENDER)
+    c.rect(70, 70, 480, 490, 44, WHITE)
+    c.circle(180, 170, 54, BLUE)
+    c.tick(180, 170, WHITE, 1.6, 8)
+    c.rect(260, 148, 220, 26, 13, BLUE)
+    c.rect(260, 188, 170, 16, 8, LAVENDER)
+    for i, w in enumerate((360, 300, 340)):
+        y = 270 + i * 70
+        c.rect(110, y, 400, 40, 20, LAVENDER)
+        c.rect(110, y, w, 40, 20, BLUE)
+    c.rect(110, 480, 400, 50, 25, BLUE)
+
+    c.rect(650, 70, 480, 490, 44, WHITE)
+    c.circle(760, 170, 54, PINK)
+    c.tick(760, 170, INK, 1.6, 8)
+    c.rect(840, 148, 220, 26, 13, PINK)
+    c.rect(840, 188, 170, 16, 8, LAVENDER)
+    for i, w in enumerate((300, 360, 260)):
+        y = 270 + i * 70
+        c.rect(690, y, 400, 40, 20, LAVENDER)
+        c.rect(690, y, w, 40, 20, PINK)
+    c.rect(690, 480, 400, 50, 25, PINK)
+
+    c.circle(600, 315, 70, INK)
+    c.poly([(548, 273), (548, 357), (600, 315)], WHITE)
+    c.poly([(652, 273), (652, 357), (600, 315)], WHITE)
+    return c
+
+
 COVERS = {
     "exam": cover_exam,
     "market": cover_market,
@@ -306,6 +336,7 @@ COVERS = {
     "safety": cover_safety,
     "teacher": cover_teacher,
     "errors": cover_errors,
+    "compare": cover_compare,
 }
 
 
