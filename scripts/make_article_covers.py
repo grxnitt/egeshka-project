@@ -298,32 +298,35 @@ def cover_errors():
 
 
 def cover_compare():
+    # The featured-article slot crops this to a narrower ratio than the grid
+    # cards (roughly 72% of the width, centered), so keep every shape inside
+    # x=180..1020 — only the outer lavender margin is safe to lose.
     c = Canvas(LAVENDER)
-    c.rect(70, 70, 480, 490, 44, WHITE)
-    c.circle(180, 170, 54, BLUE)
-    c.tick(180, 170, WHITE, 1.6, 8)
-    c.rect(260, 148, 220, 26, 13, BLUE)
-    c.rect(260, 188, 170, 16, 8, LAVENDER)
-    for i, w in enumerate((360, 300, 340)):
-        y = 270 + i * 70
-        c.rect(110, y, 400, 40, 20, LAVENDER)
-        c.rect(110, y, w, 40, 20, BLUE)
-    c.rect(110, 480, 400, 50, 25, BLUE)
+    c.rect(190, 70, 380, 490, 40, WHITE)
+    c.circle(290, 168, 46, BLUE)
+    c.tick(290, 168, WHITE, 1.4, 7)
+    c.rect(354, 148, 176, 24, 12, BLUE)
+    c.rect(354, 184, 136, 14, 7, LAVENDER)
+    for i, w in enumerate((280, 230, 260)):
+        y = 264 + i * 66
+        c.rect(230, y, 300, 38, 19, LAVENDER)
+        c.rect(230, y, w, 38, 19, BLUE)
+    c.rect(230, 468, 300, 46, 23, BLUE)
 
-    c.rect(650, 70, 480, 490, 44, WHITE)
-    c.circle(760, 170, 54, PINK)
-    c.tick(760, 170, INK, 1.6, 8)
-    c.rect(840, 148, 220, 26, 13, PINK)
-    c.rect(840, 188, 170, 16, 8, LAVENDER)
-    for i, w in enumerate((300, 360, 260)):
-        y = 270 + i * 70
-        c.rect(690, y, 400, 40, 20, LAVENDER)
-        c.rect(690, y, w, 40, 20, PINK)
-    c.rect(690, 480, 400, 50, 25, PINK)
+    c.rect(630, 70, 380, 490, 40, WHITE)
+    c.circle(910, 168, 46, PINK)
+    c.tick(910, 168, INK, 1.4, 7)
+    c.rect(670, 148, 176, 24, 12, PINK)
+    c.rect(670, 184, 136, 14, 7, LAVENDER)
+    for i, w in enumerate((230, 280, 200)):
+        y = 264 + i * 66
+        c.rect(670, y, 300, 38, 19, LAVENDER)
+        c.rect(670, y, w, 38, 19, PINK)
+    c.rect(670, 468, 300, 46, 23, PINK)
 
-    c.circle(600, 315, 70, INK)
-    c.poly([(548, 273), (548, 357), (600, 315)], WHITE)
-    c.poly([(652, 273), (652, 357), (600, 315)], WHITE)
+    c.circle(600, 313, 64, INK)
+    c.poly([(552, 274), (552, 352), (600, 313)], WHITE)
+    c.poly([(648, 274), (648, 352), (600, 313)], WHITE)
     return c
 
 
