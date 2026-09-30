@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FAF8F5">
+  <meta name="description" content="Все отзывы учеников об онлайн-школах и преподавателях ЕГЭ: оценки по критериям и полный текст — что понравилось и что нет.">
+  <link rel="canonical" href="https://egematch.ru/reviews">
+  <meta property="og:type" content="website"><meta property="og:site_name" content="ЕГЭ Мэтч">
+  <meta property="og:title" content="Отзывы учеников — ЕГЭ Мэтч"><meta property="og:description" content="Оценки по критериям и полный текст отзывов о школах и преподавателях ЕГЭ.">
+  <meta property="og:url" content="https://egematch.ru/reviews"><meta property="og:image" content="https://egematch.ru/assets/og-cover.png?v=3"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Отзывы учеников — ЕГЭ Мэтч"><meta name="twitter:description" content="Оценки по критериям и полный текст отзывов о школах и преподавателях ЕГЭ."><meta name="twitter:image" content="https://egematch.ru/assets/og-cover.png?v=3">
+  <title>Отзывы учеников — ЕГЭ Мэтч</title>
+  <link rel="icon" href="assets/egeshka-logo-icon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/favicon-192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="preload" href="/assets/fonts/onest-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/unbounded-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/onest-symbols-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css?v=35">
+  <link rel="stylesheet" href="refinements.css?v=42">
+  <link rel="stylesheet" href="typography.css?v=31">
+  <link rel="stylesheet" href="composition.css?v=141">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ЕГЭ Мэтч","item":"https://egematch.ru/"},{"@type":"ListItem","position":2,"name":"Отзывы","item":"https://egematch.ru/reviews"}]}</script>
+</head>
+<body class="reviews-page">
+<header class="header wrap"><a class="logo" href="/" aria-label="ЕГЭ Мэтч, главная">ЕГЭ Мэтч<span>.</span></a><nav aria-label="Главная навигация"><a href="/ratings">Рейтинг школ</a><a href="/compare">Сравнение</a><a class="active" href="/reviews">Отзывы</a><a href="/articles">Статьи</a></nav><a class="header-action" href="/?start=quiz">Подобрать <span>→</span></a></header>
+<main>
+  <section class="hero hero-centered reviews-hero wrap">
+    <div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div class="hero-glow hero-glow-pink" aria-hidden="true"></div>
+    <div class="hero-copy"><h1><span class="hero-title-line">Что говорят</span> <span class="hero-title-line brand-dot">ученики</span></h1><p class="lead">Оценки по критериям и полный текст — без сокращений.<br>Без имён: у нас пока нет отдельной регистрации, только вход через Telegram.</p></div>
+  </section>
+  <section class="reviews-tool wrap" aria-label="Отзывы">
+    <div class="comparison-box reviews-box">
+      <div class="reviews-controls">
+        <div class="tabs" role="group" aria-label="Что смотрим"><button class="active" data-mode="schools" aria-pressed="true">Школы</button><button data-mode="teachers" aria-pressed="false">Преподаватели</button></div>
+        <label class="reviews-filter-label"><span>Фильтр</span><select id="review-filter"></select></label>
+      </div>
+      <p id="review-count" class="reviews-count" aria-live="polite">Загружаем отзывы…</p>
+      <div id="review-list" class="review-list"></div>
+      <button class="button outline more" id="review-more" hidden type="button">Показать ещё <span>↓</span></button>
+    </div>
+  </section>
+  <section class="rating-next wrap"><div><h2 class="t-h2">Учился в школе<br>или у преподавателя?</h2></div><a class="button pink" id="review-cta" target="_blank" rel="noopener" data-source="reviews_page">Оставить отзыв в боте <span>↗</span></a></section>
+</main>
+<footer class="wrap footer"><a class="logo" href="/" aria-label="ЕГЭ Мэтч, главная">ЕГЭ Мэтч<span>.</span></a><p>Выбирай осознанно.<br>Готовься по-своему.</p><div class="footer-links"><a href="/articles">Статьи</a><a href="/methodology">Методология рейтинга</a><a href="https://t.me/egematch_bot?start=delete_data" target="_blank" rel="noopener">Удалить данные</a><a href="#">Наверх ↑</a></div><span>© ЕГЭ Мэтч, 2026</span></footer>
+<script src="analytics-config.js?v=1"></script>
+<script src="analytics.js?v=11"></script>
+<script src="supabase-config.js?v=1"></script>
+<script type="module" src="reviews.js?v=1"></script>
+<script type="module" src="motion.js?v=30"></script>
+</body></html>

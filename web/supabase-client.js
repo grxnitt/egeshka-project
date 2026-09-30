@@ -58,6 +58,27 @@ export async function applyLiveRatings(catalog) {
   return catalog;
 }
 
+// Every approved review, individually — for the /reviews page. No personal data comes
+// back from public_reviews at all (see its migration), so there is nothing to strip here.
+export async function fetchPublicReviews() {
+  if (!config?.url || !config?.publishableKey) return [];
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+    const headers = {apikey: config.publishableKey};
+    const response = await fetch(
+      `${config.url}/rest/v1/public_reviews?select=id,school_id,teacher_id,criterion,criteria_json,score,text_positive,text_negative,verified,created_at&order=created_at.desc&limit=1000`,
+      {headers, signal: controller.signal},
+    );
+    clearTimeout(timeout);
+    if (!response.ok) throw new Error(`public reviews: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.warn('Не удалось загрузить отзывы:', error);
+    return [];
+  }
+}
+
 export const teacherRatingLabel = teacher => teacher.studentScore == null ? 'Оценка формируется' : `${Number(teacher.studentScore).toFixed(1).replace('.', ',')}/10${teacher.isPreliminary?'*':''}`;
 
 export const ratingMark = school => school.isPreliminary ? '*' : '';

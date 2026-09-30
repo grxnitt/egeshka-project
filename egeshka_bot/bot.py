@@ -236,6 +236,7 @@ class ConsentMiddleware(BaseMiddleware):
 
 VERIFIED_REVIEW_WEIGHT = 1.0
 UNVERIFIED_REVIEW_WEIGHT = 0.4
+SITE_URL = "https://egematch.ru"
 
 
 class ReviewCount(float):
@@ -1126,7 +1127,7 @@ PROOF_MANUAL_DELETE_NOTE = (
 )
 
 
-async def approved_reviews_text(session, school_id, teacher_id=None, criterion=None):
+async def approved_reviews_text(session, school_id, teacher_id=None, criterion=None, reviews_link=None):
     query = select(Review).where(Review.school_id == school_id, Review.moderation_status == "approved")
     if teacher_id is None:
         query = query.where(Review.teacher_id.is_(None))
@@ -1144,6 +1145,8 @@ async def approved_reviews_text(session, school_id, teacher_id=None, criterion=N
         if review.text_negative:
             parts.append(f"Минусы: {escape(review.text_negative)}")
         lines.append("\n".join(parts))
+    if reviews_link:
+        lines.append(f"📖 Все отзывы с оценками по критериям: {reviews_link}")
     return "\n\n".join(lines)
 
 
@@ -1363,7 +1366,8 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                     )
                     return
         if payload.startswith("school_"):
-            school_name = SCHOOL_BY_REVIEW_SLUG.get(payload.removeprefix("school_"))
+            school_slug = payload.removeprefix("school_")
+            school_name = SCHOOL_BY_REVIEW_SLUG.get(school_slug)
             if school_name:
                 async with session_factory() as session:
                     school = (await session.execute(select(School).where(
@@ -1371,7 +1375,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                         School.is_active.is_(True),
                     ))).scalar_one_or_none()
                     if school:
-                        user_reviews = await approved_reviews_text(session, school.id)
+                        user_reviews = await approved_reviews_text(session, school.id, reviews_link=f"{SITE_URL}/reviews?school={school_slug}")
                         user_average, user_count = await approved_review_stats(session, school.id)
                 if school:
                     await state.clear()
@@ -2286,7 +2290,8 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         await track(call.from_user.id, "school_opened", {"school_id": int(call.data.split(":")[1])})
         async with session_factory() as session:
             item = await session.get(School, int(call.data.split(":")[1]))
-            user_reviews = await approved_reviews_text(session, item.id)
+            reviews_link = f"{SITE_URL}/reviews?school={SCHOOL_REVIEW_SLUGS[item.name]}" if item.name in SCHOOL_REVIEW_SLUGS else None
+            user_reviews = await approved_reviews_text(session, item.id, reviews_link=reviews_link)
             user_average, user_count = await approved_review_stats(session, item.id)
             criteria_stats = await approved_school_criteria_stats(session, item.id)
         await call.message.edit_text(school_overview(item, user_average, user_count) + user_reviews, reply_markup=card_keyboard(item.id), parse_mode=ParseMode.HTML)
@@ -2414,7 +2419,8 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         async with session_factory() as session:
             item = await session.get(Teacher, teacher_id)
             school = await session.get(School, item.school_id)
-            user_reviews = await approved_reviews_text(session, school.id, item.id)
+            reviews_link = f"{SITE_URL}/reviews?teacher={item.id}" if school.name in SCHOOL_REVIEW_SLUGS else None
+            user_reviews = await approved_reviews_text(session, school.id, item.id, reviews_link=reviews_link)
             criteria_stats = await approved_teacher_criteria_stats(session, school.id, item.id)
         await call.message.edit_text(
             teacher_card(item, school, criteria_stats) + user_reviews,

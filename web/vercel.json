@@ -13,6 +13,10 @@
       "destination": "/compare.html"
     },
     {
+      "source": "/reviews",
+      "destination": "/reviews.html"
+    },
+    {
       "source": "/methodology",
       "destination": "/methodology.html"
     },

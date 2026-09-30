@@ -1459,3 +1459,29 @@ body.compare-page{overflow-x:clip}
 .quiz-choose-link{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--r-pill);background:var(--blue);color:#fff;font-size:11px;font-weight:700;transition:transform .2s,background .2s}
 .quiz-choose-link:hover{background:#2d43cd;transform:translateY(-1px)}
 .quiz-match-links .quiz-card-link{margin-top:0}
+
+/* /reviews — browse every approved review, no personal data. */
+.reviews-hero .lead{max-width:60ch;margin-inline:auto}
+.reviews-box{display:flex;flex-direction:column;gap:24px}
+.reviews-controls{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.reviews-filter-label{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted)}
+.reviews-filter-label select{border:1px solid var(--line);background:white;border-radius:var(--r-md);padding:10px 14px;font-size:13px;color:var(--ink);max-width:260px}
+.reviews-count{margin:0;font-size:13px;color:var(--muted)}
+.review-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.review-card{background:var(--paper);border-radius:var(--r-lg);padding:22px;display:flex;flex-direction:column;gap:10px}
+.review-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.review-card-head a{font-weight:700;font-size:15px;text-decoration:underline;text-underline-offset:3px}
+.review-card-head a span{font-weight:400;color:var(--muted);text-decoration:none}
+.review-score{flex-shrink:0;font-family:var(--font-ui);font-weight:700;font-size:20px;color:var(--blue)}
+.review-score small{font-weight:600;font-size:11px;color:var(--muted)}
+.review-card-meta{display:flex;gap:12px;font-size:11px;color:var(--muted)}
+.review-verified{color:#1c8a4b;font-weight:700}
+.review-unverified{color:var(--muted)}
+.review-criteria{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.review-criteria li{display:flex;align-items:center;gap:6px;background:white;border-radius:var(--r-pill);padding:6px 12px;font-size:11px}
+.review-criteria b{color:var(--blue)}
+.review-card p{margin:0;font-size:13px;line-height:1.55;color:#4f5567}
+.review-card p b{color:var(--ink)}
+.review-empty{color:var(--muted);font-style:italic}
+.review-empty-state{grid-column:1/-1;text-align:center;color:var(--muted);padding:30px 0}
+@media(max-width:700px){.review-list{grid-template-columns:1fr}.reviews-controls{flex-direction:column;align-items:stretch}.reviews-filter-label select{max-width:none}}
