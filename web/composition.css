@@ -1461,6 +1461,7 @@ body.compare-page{overflow-x:clip}
 .quiz-match-links .quiz-card-link{margin-top:0}
 
 /* /reviews — browse every approved review, no personal data. */
+.reviews-hero .hero-title-line.brand-dot{display:inline-block}
 .reviews-hero .lead{max-width:60ch;margin-inline:auto}
 .reviews-box{display:flex;flex-direction:column;gap:24px}
 .reviews-controls{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
