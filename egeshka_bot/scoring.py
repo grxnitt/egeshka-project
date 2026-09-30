@@ -129,11 +129,11 @@ def _personalized_weights(profile: QuizProfile, keys=None) -> dict:
         weights["feedback_score"] += 0.04
 
     if profile.current_level == "low":
-        weights["curator_score"] += 0.06
-        weights["feedback_score"] += 0.03
+        weights["curator_score"] += 0.09
+        weights["feedback_score"] += 0.05
     elif profile.current_level == "high":
-        weights["teachers_score"] += 0.04
-        weights["practice_score"] += 0.04
+        weights["teachers_score"] += 0.06
+        weights["practice_score"] += 0.06
 
     if profile.target >= 90:
         weights["teachers_score"] += 0.06
@@ -196,18 +196,36 @@ def _budget_fit(school, profile: QuizProfile) -> float:
     return -min(1.2 * amplify, over_ratio * 0.8 * amplify)
 
 
-def school_score(school, profile: QuizProfile) -> Tuple[float, list]:
+def school_score(school, profile: QuizProfile, subject_teacher_score: Optional[float] = None) -> Tuple[float, list]:
+    """subject_teacher_score: the best student-reviewed rating (0-10, needs 3+ reviews) among this
+    school's teachers for the requested subject, if any. It nudges the teachers_score used in the
+    match only — the school's own displayed rating is never touched."""
     if profile.subject.lower() not in _offered_subjects(school):
         return -1, ["не готовит по выбранному предмету"]
 
     keys = applicable_criteria(school)
     weights = _personalized_weights(profile, keys)
-    fit = sum(_value(school, key) * weight for key, weight in weights.items())
+    teachers_value = _value(school, "teachers_score")
+    teacher_reason = None
+    if subject_teacher_score is not None and "teachers_score" in weights:
+        blended = subject_teacher_score * 0.6 + teachers_value * 0.4
+        if subject_teacher_score >= teachers_value + 0.5:
+            teacher_reason = f"сильный препод именно по этому предмету ({subject_teacher_score:.1f})"
+        elif subject_teacher_score <= teachers_value - 1.0:
+            teacher_reason = f"по этому предмету отзывы ниже, чем в среднем по школе ({subject_teacher_score:.1f})"
+        teachers_value = blended
+
+    fit = sum(
+        (teachers_value if key == "teachers_score" else _value(school, key)) * weight
+        for key, weight in weights.items()
+    )
     need_delta, need_reasons = _need_penalty(school, profile)
     fit += _budget_fit(school, profile) + need_delta
     fit = max(0.0, min(10.0, fit))
 
     reasons = []
+    if teacher_reason:
+        reasons.append(teacher_reason)
     budget_delta = _budget_fit(school, profile)
     if budget_delta > 0:
         reasons.append("входит в бюджет")
@@ -223,8 +241,10 @@ def school_score(school, profile: QuizProfile) -> Tuple[float, list]:
         reverse=True,
     )
     for key in boosted:
+        if key == "teachers_score" and teacher_reason:
+            continue  # already covered by the subject-specific reason above
         label = CRITERION_LABELS[key]
-        value = _value(school, key)
+        value = teachers_value if key == "teachers_score" else _value(school, key)
         if value >= 8.5:
             reasons.append(f"сильные {label} ({value:.1f})")
         elif value <= 7.5:

@@ -967,17 +967,62 @@ async def active_schools(session_factory):
         ).scalars().all()
 
 
+async def best_subject_teacher_scores(session, school_ids, subject_name):
+    """Best student-reviewed rating (0-10, needs 3+ reviews) per school for one subject.
+
+    One batched query for all matching teachers and their reviews instead of one query per
+    teacher, since this now runs for every candidate school on every quiz submission, not just
+    the top 3 shown after ranking.
+    """
+    teachers = (await session.execute(select(Teacher).where(
+        Teacher.school_id.in_(school_ids),
+        Teacher.subject.in_(teacher_subject_variants(subject_name)),
+        Teacher.is_active == True,
+    ))).scalars().all()
+    if not teachers:
+        return {}
+    teacher_ids = [t.id for t in teachers]
+    reviews = (await session.execute(select(Review).where(
+        Review.teacher_id.in_(teacher_ids),
+        Review.criterion.is_(None),
+        Review.moderation_status == "approved",
+    ))).scalars().all()
+    values_by_teacher = {t.id: {field: [] for field, _ in TEACHER_CRITERIA} for t in teachers}
+    for review in reviews:
+        bucket = values_by_teacher.get(review.teacher_id)
+        if bucket is None:
+            continue
+        try:
+            scores = json.loads(review.criteria_json or "{}")
+        except json.JSONDecodeError:
+            continue
+        for field, score in scores.items():
+            if field in bucket:
+                bucket[field].append((float(score), bool(review.verified)))
+    best = {}
+    for teacher in teachers:
+        stats = {field: weighted_review_stats(items) for field, items in values_by_teacher[teacher.id].items()}
+        average, count = teacher_rating_from_criteria(stats)
+        if average is None or count < 3:
+            continue
+        if average > best.get(teacher.school_id, -1):
+            best[teacher.school_id] = average
+    return best
+
+
 async def build_quiz_result(session_factory, profile: QuizProfile):
     rows = await active_schools(session_factory)
+    subject_name = next((item for item in SUBJECTS if item.lower() == profile.subject), profile.subject.title())
+    async with session_factory() as session:
+        teacher_scores = await best_subject_teacher_scores(session, [school.id for school in rows], subject_name)
     ranked = [
         (score, reasons, school)
         for school in rows
-        for score, reasons in [school_score(school, profile)]
+        for score, reasons in [school_score(school, profile, teacher_scores.get(school.id))]
         if score >= 0
     ]
     ranked.sort(key=lambda item: item[0], reverse=True)
     top = ranked[:3]
-    subject_name = next((item for item in SUBJECTS if item.lower() == profile.subject), profile.subject.title())
     if not top:
         text = (
             f"🎯 <b>Подбор по предмету: {escape(subject_name)}</b>\n\n"
