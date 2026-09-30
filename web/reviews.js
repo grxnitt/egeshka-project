@@ -63,15 +63,70 @@ function filteredReviews() {
   });
 }
 
-function syncSelect() {
-  const select = $('#review-filter');
+function comboOptions() {
   if (mode === 'schools') {
-    select.innerHTML = `<option value="">Все школы</option>` + catalog.schools.slice().sort((a, b) => a.name.localeCompare(b.name, 'ru')).map(s => `<option value="${escape(s.reviewSlug)}">${escape(s.name)}</option>`).join('');
-    select.value = filterSchool;
-  } else {
-    select.innerHTML = `<option value="">Все преподаватели</option>` + catalog.teachers.slice().sort((a, b) => a.name.localeCompare(b.name, 'ru')).map(t => `<option value="${t.id}">${escape(t.name)} · ${escape(t.school)}</option>`).join('');
-    select.value = filterTeacher;
+    return catalog.schools.slice().sort((a, b) => a.name.localeCompare(b.name, 'ru')).map(s => ({value: s.reviewSlug, label: s.name, sub: ''}));
   }
+  return catalog.teachers.slice().sort((a, b) => a.name.localeCompare(b.name, 'ru')).map(t => ({value: String(t.id), label: t.name, sub: t.school}));
+}
+
+function currentComboLabel() {
+  if (mode === 'schools') {
+    const school = filterSchool ? schoolBySlug()[filterSchool] : null;
+    return school ? school.name : '';
+  }
+  const teacher = filterTeacher ? teacherById(filterTeacher) : null;
+  return teacher ? `${teacher.name} · ${teacher.school}` : '';
+}
+
+let comboMatches = [], comboActive = -1;
+
+function closeCombo() {
+  $('#review-filter-list').hidden = true;
+  $('#review-filter').setAttribute('aria-expanded', 'false');
+  comboActive = -1;
+}
+
+function renderCombo(query) {
+  const q = query.trim().toLowerCase();
+  comboMatches = comboOptions().filter(o => !q || `${o.label} ${o.sub}`.toLowerCase().includes(q));
+  comboActive = -1;
+  const list = $('#review-filter-list');
+  list.innerHTML = comboMatches.length
+    ? comboMatches.map((o, i) => `<li role="option" data-index="${i}">${escape(o.label)}${o.sub ? `<span>${escape(o.sub)}</span>` : ''}</li>`).join('')
+    : `<li class="review-combo-empty">Ничего не найдено</li>`;
+  list.hidden = false;
+  $('#review-filter').setAttribute('aria-expanded', 'true');
+}
+
+function highlightCombo() {
+  $('#review-filter-list').querySelectorAll('li[data-index]').forEach((li, i) => li.classList.toggle('active', i === comboActive));
+}
+
+function selectCombo(option) {
+  if (mode === 'schools') filterSchool = option.value; else filterTeacher = option.value;
+  $('#review-filter').value = option.label + (option.sub ? ` · ${option.sub}` : '');
+  $('#review-filter-clear').hidden = false;
+  closeCombo();
+  expanded = false;
+  render();
+}
+
+function clearCombo() {
+  if (mode === 'schools') filterSchool = ''; else filterTeacher = '';
+  $('#review-filter').value = '';
+  $('#review-filter-clear').hidden = true;
+  closeCombo();
+  expanded = false;
+  render();
+  $('#review-filter').focus();
+}
+
+function syncCombo() {
+  $('#review-filter').placeholder = mode === 'schools' ? 'Все школы' : 'Все преподаватели';
+  $('#review-filter').value = currentComboLabel();
+  $('#review-filter-clear').hidden = !currentComboLabel();
+  closeCombo();
 }
 
 function render() {
@@ -86,15 +141,52 @@ document.querySelectorAll('[data-mode]').forEach(button => button.onclick = () =
   mode = button.dataset.mode;
   filterSchool = ''; filterTeacher = ''; expanded = false;
   document.querySelectorAll('[data-mode]').forEach(b => { b.classList.toggle('active', b === button); b.setAttribute('aria-pressed', String(b === button)); });
-  syncSelect();
+  syncCombo();
   render();
 });
-$('#review-filter').onchange = event => {
-  if (mode === 'schools') filterSchool = event.target.value; else filterTeacher = event.target.value;
-  expanded = false;
-  render();
-};
 $('#review-more').onclick = () => { expanded = true; render(); };
+
+const comboInput = $('#review-filter');
+comboInput.addEventListener('input', () => renderCombo(comboInput.value));
+comboInput.addEventListener('focus', () => {
+  if (comboInput.value && comboInput.value === currentComboLabel()) { comboInput.select(); renderCombo(''); }
+  else renderCombo(comboInput.value);
+});
+comboInput.addEventListener('keydown', event => {
+  const list = $('#review-filter-list');
+  if (list.hidden) {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { renderCombo(comboInput.value); event.preventDefault(); }
+    return;
+  }
+  if (event.key === 'ArrowDown') {
+    event.preventDefault();
+    comboActive = Math.min(comboActive + 1, comboMatches.length - 1);
+    highlightCombo();
+    list.querySelector('li.active')?.scrollIntoView({block: 'nearest'});
+  } else if (event.key === 'ArrowUp') {
+    event.preventDefault();
+    comboActive = Math.max(comboActive - 1, 0);
+    highlightCombo();
+    list.querySelector('li.active')?.scrollIntoView({block: 'nearest'});
+  } else if (event.key === 'Enter') {
+    event.preventDefault();
+    const chosen = comboMatches[comboActive >= 0 ? comboActive : 0];
+    if (chosen) selectCombo(chosen);
+  } else if (event.key === 'Escape') {
+    comboInput.value = currentComboLabel();
+    closeCombo();
+  }
+});
+$('#review-filter-list').addEventListener('click', event => {
+  const li = event.target.closest('li[data-index]');
+  if (!li) return;
+  const option = comboMatches[Number(li.dataset.index)];
+  if (option) selectCombo(option);
+});
+$('#review-filter-clear').onclick = clearCombo;
+document.addEventListener('click', event => {
+  if (!$('#review-combo').contains(event.target)) closeCombo();
+});
 
 (async () => {
   try {
@@ -106,7 +198,7 @@ $('#review-more').onclick = () => { expanded = true; render(); };
     reviews = await fetchPublicReviews();
     if (filterTeacher) mode = 'teachers';
     document.querySelectorAll('[data-mode]').forEach(b => { const active = b.dataset.mode === mode; b.classList.toggle('active', active); b.setAttribute('aria-pressed', String(active)); });
-    syncSelect();
+    syncCombo();
     render();
   } catch (error) {
     $('#review-list').innerHTML = '<p>Не удалось загрузить отзывы. Обнови страницу, чтобы попробовать ещё раз.</p>';
