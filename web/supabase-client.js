@@ -79,6 +79,45 @@ export async function fetchPublicReviews() {
   }
 }
 
+// Bumps the view counter for an article and returns the new total. Falls back to
+// reading the current count (without incrementing) if the write itself fails, so a
+// transient error never shows a blank counter.
+export async function incrementArticleView(slug) {
+  if (!config?.url || !config?.publishableKey) return null;
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 4000);
+    const response = await fetch(`${config.url}/rest/v1/rpc/increment_article_view`, {
+      method: 'POST',
+      headers: {apikey: config.publishableKey, 'Content-Type': 'application/json'},
+      body: JSON.stringify({p_slug: slug}),
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+    if (!response.ok) throw new Error(`increment_article_view: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.warn('Не удалось обновить счётчик просмотров:', error);
+    return fetchArticleViews(slug);
+  }
+}
+
+// Read-only count, used when this browser already counted a view this session.
+export async function fetchArticleViews(slug) {
+  if (!config?.url || !config?.publishableKey) return null;
+  try {
+    const response = await fetch(
+      `${config.url}/rest/v1/article_views?slug=eq.${encodeURIComponent(slug)}&select=views`,
+      {headers: {apikey: config.publishableKey}},
+    );
+    if (!response.ok) return null;
+    const [row] = await response.json();
+    return row ? Number(row.views) : null;
+  } catch {
+    return null;
+  }
+}
+
 export const teacherRatingLabel = teacher => teacher.studentScore == null ? 'Оценка формируется' : `${Number(teacher.studentScore).toFixed(1).replace('.', ',')}/10${teacher.isPreliminary?'*':''}`;
 
 export const ratingMark = school => school.isPreliminary ? '*' : '';

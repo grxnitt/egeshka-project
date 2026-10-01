@@ -35,7 +35,7 @@
   <article class="article">
     <header class="hero hero-centered article-hero">
       <div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div class="hero-glow hero-glow-pink" aria-hidden="true"></div>
-      <div class="hero-copy"><p class="article-meta"><time datetime="2026-09-25T09:00:00+03:00">25 сентября 2026</time><span>3 мин чтения</span></p><h1>ЕГЭ-2026 в цифрах: что выросло и как это использовать при выборе подготовки</h1><p class="lead">Почти 750 тысяч участников, рост среднего балла по физике, профильной математике и биологии, около 9 тысяч стобалльников. Что показывают итоги и как сверять с ними рекламу школ.</p><p class="article-author">Редакция ЕГЭ Мэтч</p></div>
+      <div class="hero-copy"><p class="article-meta"><time datetime="2026-09-25T09:00:00+03:00">25 сентября 2026</time><span>3 мин чтения</span><span id="article-views" data-slug="itogi-ege-2026-v-tsifrakh" aria-live="polite"></span></p><h1>ЕГЭ-2026 в цифрах: что выросло и как это использовать при выборе подготовки</h1><p class="lead">Почти 750 тысяч участников, рост среднего балла по физике, профильной математике и биологии, около 9 тысяч стобалльников. Что показывают итоги и как сверять с ними рекламу школ.</p><p class="article-author">Редакция ЕГЭ Мэтч</p></div>
     </header>
     <figure class="article-cover"><img src="/assets/articles/scores.svg" alt="" width="1200" height="630" fetchpriority="high"></figure>
     <div class="article-body">
@@ -80,5 +80,7 @@
   if(map&&t&&map[t])location.replace('/teachers/'+map[t]);
 })();
 </script>
+<script src="/supabase-config.js?v=1"></script>
+<script type="module" src="/article-views.js?v=1"></script>
 </body>
 </html>

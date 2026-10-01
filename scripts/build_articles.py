@@ -341,7 +341,7 @@ def build_article_page(article, others, header, footer):
   <article class="article">
     <header class="hero hero-centered article-hero">
       {GLOWS}
-      <div class="hero-copy"><p class="article-meta"><time datetime="{article.published.isoformat()}">{article.date_label}</time><span>{minutes_label(article.minutes)}</span></p><h1>{escape(article.title)}</h1><p class="lead">{escape(article.description)}</p><p class="article-author">{AUTHOR}</p></div>
+      <div class="hero-copy"><p class="article-meta"><time datetime="{article.published.isoformat()}">{article.date_label}</time><span>{minutes_label(article.minutes)}</span><span id="article-views" data-slug="{article.slug}" aria-live="polite"></span></p><h1>{escape(article.title)}</h1><p class="lead">{escape(article.description)}</p><p class="article-author">{AUTHOR}</p></div>
     </header>
     <figure class="article-cover"><img src="{cover_svg(article)}" alt="" width="1200" height="630" fetchpriority="high"></figure>
     <div class="article-body">
@@ -355,6 +355,8 @@ def build_article_page(article, others, header, footer):
 </main>
 {footer}
 {SCRIPTS}
+<script src="/supabase-config.js?v=1"></script>
+<script type="module" src="/article-views.js?v=1"></script>
 </body>
 </html>
 """
