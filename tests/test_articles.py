@@ -137,13 +137,17 @@ def test_draft_articles_are_not_published(tmp_path, monkeypatch):
     assert build_articles.load_articles() == []
 
 
-def test_mobile_bottom_navigation_links_to_articles():
-    for path in ("index.html", "ratings.html", "articles/index.html", "schools/neofamily.html"):
+def test_mobile_bottom_navigation_has_the_four_core_destinations_not_articles():
+    # Статьи was dropped from the 5-item bottom bar (too cramped on a phone) — it's
+    # editorial content, not part of the core "find a school" loop, and stays reachable
+    # via the footer link instead.
+    for path in ("index.html", "ratings.html", "compare.html", "reviews.html", "articles/index.html", "schools/neofamily.html"):
         page = (WEB / path).read_text(encoding="utf-8")
         nav = re.search(r'<nav class="mobile-product-nav".*?</nav>', page, re.S).group(0)
-        assert 'href="/articles"' in nav, path
-    nav = re.search(r'<nav class="mobile-product-nav".*?</nav>', (WEB / "articles/index.html").read_text(encoding="utf-8"), re.S).group(0)
-    assert '<a class="active" href="/articles">Статьи</a>' in nav
+        assert 'href="/articles"' not in nav, path
+        for href in ('href="/ratings"', 'href="/compare"', 'href="/reviews"'):
+            assert href in nav, (path, href)
+        assert 'start=quiz' in nav, path
 
 
 def test_article_pages_end_with_exactly_two_cards_telegram_and_rating():

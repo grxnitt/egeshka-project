@@ -204,7 +204,7 @@ dialog:has(.school-detail){max-width:1000px;padding:0;overflow:auto}.school-deta
  body{padding-bottom:72px}
  .footer{margin-bottom:0}
  .mobile-product-nav{position:fixed;z-index:30;display:grid;grid-template-columns:repeat(3,1fr);left:10px;right:10px;bottom:max(10px,env(safe-area-inset-bottom));padding:6px;border:1px solid rgb(24 25 35/.08);border-radius:var(--r-lg);background:rgb(250 248 245/.92);box-shadow:0 14px 40px rgb(24 25 35/.2);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%)}
- .mobile-product-nav a{display:grid;min-height:43px;min-width:0;padding:5px 2px;place-items:center;border-radius:var(--r-md);color:#666978;font-size:10px;font-weight:700}
+ .mobile-product-nav a{display:grid;min-height:43px;min-width:0;padding:5px;place-items:center;border-radius:var(--r-md);color:#666978;font-size:10px;font-weight:700}
  .mobile-product-nav a.active,.mobile-product-nav a:active{background:var(--blue);color:white}
  .rating-scope-note{margin:-22px 0 22px;padding:12px 14px;font-size:10px}
  .quiz-result{padding:28px 14px 24px}
@@ -330,7 +330,7 @@ body:has(dialog[open]){overflow:hidden}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.reveal-ready{opacity:1;transform:none}}
 .rating-orbit{display:none}
 .subject{white-space:nowrap;flex-shrink:0}
-@media(max-width:700px){.mobile-product-nav a{font-size:10.5px}.catalog-toolbar select{background:#e5e9ff;color:var(--blue)}.catalog-toolbar label:after{color:var(--blue)}}
+@media(max-width:700px){.mobile-product-nav a{font-size:12px}.catalog-toolbar select{background:#e5e9ff;color:var(--blue)}.catalog-toolbar label:after{color:var(--blue)}}
 
 /* Visible pricing and a compact, data-derived comparison conclusion. */
 .compare-prices,.compare-verdict{margin-top:32px;padding-top:28px;border-top:1px solid var(--line)}
