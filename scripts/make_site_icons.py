@@ -87,8 +87,11 @@ def main():
     # a single small favicon.ico up - that's what looked blocky when shown larger than 32px.
     for size in (16, 32, 48, 96, 192, 512):
         render(size, background=PAPER).convert("RGB").save(OUT / f"favicon-{size}.png")
-    favicons = [render(s, background=PAPER).convert("RGB") for s in (16, 32, 48, 64, 128, 256)]
-    favicons[0].save(OUT.parent / "favicon.ico", sizes=[(s, s) for s in (16, 32, 48, 64, 128, 256)])
+    # PIL's ICO writer only ever downsamples from the source image, so the base image
+    # here must be the largest declared size — saving from the smallest silently drops
+    # every size above it instead of upscaling.
+    largest = render(256, background=PAPER).convert("RGB")
+    largest.save(OUT.parent / "favicon.ico", sizes=[(s, s) for s in (16, 32, 48, 64, 128, 256)])
     print(f"Wrote icon-192/512.png, favicon-*.png, apple-touch-icon.png and favicon.ico to {OUT}/ and {OUT.parent}/")
 
 

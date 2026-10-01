@@ -1276,7 +1276,7 @@ main>.method-cta{padding:56px 64px;border-radius:var(--r-xl);background:var(--bl
 }
 .article-cover,.article-body,.article-sources,.article-cta,.article-more,.article-list,.article-all{position:relative;z-index:1}
 
-@media(max-width:700px){.mobile-product-nav{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:700px){.mobile-product-nav{grid-template-columns:repeat(5,1fr)}}
 .rating-scope-note a{color:var(--blue);font-weight:600;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px;white-space:nowrap}
 
 /* Mobile hero glows never taller than their hero, so the fade ends inside it instead of being cut off */

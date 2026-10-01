@@ -14,9 +14,9 @@ SITE = "https://egematch.ru"
 BOT = "https://t.me/egematch_bot"
 CSS_VERSIONS = {
     "styles.css": "35",
-    "refinements.css": "42",
+    "refinements.css": "43",
     "typography.css": "31",
-    "composition.css": "143",
+    "composition.css": "144",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
