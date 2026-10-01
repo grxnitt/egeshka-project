@@ -1,4 +1,4 @@
-import { applyLiveRatings, fetchPublicReviews } from './supabase-client.js?v=6';
+import { applyLiveRatings, fetchPublicReviews } from './supabase-client.js?v=7';
 
 const $ = selector => document.querySelector(selector);
 const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

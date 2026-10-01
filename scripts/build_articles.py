@@ -256,7 +256,7 @@ def card(article, featured=False, heading="h2"):
     return (
         f'<a class="{css}" href="/articles/{article.slug}">'
         f'<span class="article-card-cover"><img src="{cover_svg(article)}" alt="" width="1200" height="630" loading="lazy"></span>'
-        f'<span class="article-card-body"><span class="article-card-meta"><span>{article.date_label}</span><span>{minutes_label(article.minutes)}</span></span>'
+        f'<span class="article-card-body"><span class="article-card-meta"><span>{article.date_label}</span><span>{minutes_label(article.minutes)}</span><span class="article-card-views" data-slug="{article.slug}"></span></span>'
         f'<{heading} class="article-card-title">{escape(article.title)}</{heading}>'
         f'<span class="article-card-text">{escape(article.description)}</span>'
         f'<span class="article-card-more">Читать <i aria-hidden="true">→</i></span></span></a>'
@@ -273,6 +273,8 @@ GLOWS = '<div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div cla
 RSS_LINK = f'\n  <link rel="alternate" type="application/rss+xml" title="ЕГЭ Мэтч — статьи" href="/articles/feed.xml">'
 SCRIPTS = f"""<script src="/analytics-config.js?v=1"></script>
 <script src="/analytics.js?v=10"></script>
+<script src="/supabase-config.js?v=1"></script>
+<script type="module" src="/article-views.js?v=2"></script>
 {site.NAV_SCRIPT}"""
 
 
@@ -355,8 +357,6 @@ def build_article_page(article, others, header, footer):
 </main>
 {footer}
 {SCRIPTS}
-<script src="/supabase-config.js?v=1"></script>
-<script type="module" src="/article-views.js?v=1"></script>
 </body>
 </html>
 """

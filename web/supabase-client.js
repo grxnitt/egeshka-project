@@ -118,6 +118,24 @@ export async function fetchArticleViews(slug) {
   }
 }
 
+// Read-only counts for several article cards at once — one request instead of
+// one per card. Returns {slug: views}; missing/never-viewed slugs are just absent.
+export async function fetchArticleViewsBatch(slugs) {
+  if (!config?.url || !config?.publishableKey || !slugs.length) return {};
+  try {
+    const list = slugs.map(encodeURIComponent).join(',');
+    const response = await fetch(
+      `${config.url}/rest/v1/article_views?slug=in.(${list})&select=slug,views`,
+      {headers: {apikey: config.publishableKey}},
+    );
+    if (!response.ok) return {};
+    const rows = await response.json();
+    return Object.fromEntries(rows.map(row => [row.slug, Number(row.views)]));
+  } catch {
+    return {};
+  }
+}
+
 export const teacherRatingLabel = teacher => teacher.studentScore == null ? 'Оценка формируется' : `${Number(teacher.studentScore).toFixed(1).replace('.', ',')}/10${teacher.isPreliminary?'*':''}`;
 
 export const ratingMark = school => school.isPreliminary ? '*' : '';
