@@ -21,6 +21,10 @@
       "destination": "/methodology.html"
     },
     {
+      "source": "/privacy",
+      "destination": "/privacy.html"
+    },
+    {
       "source": "/schools/:slug",
       "destination": "/schools/:slug.html"
     },

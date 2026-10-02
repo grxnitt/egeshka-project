@@ -385,7 +385,7 @@ def article_index():
 
 
 def write_sitemap(schools):
-    static = [("/", "1.0", "weekly"), ("/ratings", "0.9", "weekly"), ("/compare", "0.8", "weekly"), ("/reviews", "0.7", "daily"), ("/methodology", "0.6", "monthly")]
+    static = [("/", "1.0", "weekly"), ("/ratings", "0.9", "weekly"), ("/compare", "0.8", "weekly"), ("/reviews", "0.7", "daily"), ("/methodology", "0.6", "monthly"), ("/privacy", "0.3", "yearly")]
     articles = article_index()
     if articles:
         static.append(("/articles", "0.7", "weekly"))
