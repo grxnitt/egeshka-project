@@ -257,6 +257,10 @@ dialog:has(.teacher-directory){max-width:1080px;padding:0;overflow:auto}
 .rating-centered .hero-title-line.brand-dot{display:inline-block}
 .rating-centered .hero-actions>.button{min-width:280px}
 @media(max-width:700px){.rating-centered .lead br{display:none}.rating-centered .hero-actions>.button{min-width:0}}
+/* Privacy hero's last word can wrap onto two lines (hyphenation): an inline-block
+   brand-dot would stretch to the full available width and strand the dot far past
+   the actual last letter, so keep it a plain inline run instead. */
+.privacy-hero .hero-title-line.brand-dot{display:inline}
 
 /* A calm, continuous comparison rail between the hero and the product. */
 .ribbon{
