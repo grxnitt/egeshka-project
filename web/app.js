@@ -1,5 +1,5 @@
 import { applyLiveRatings } from './supabase-client.js?v=7';
-import { chooseSchoolUrl, schoolFilters } from './school-content.js?v=38';
+import { chooseSchoolUrl, schoolFilters } from './school-content.js?v=39';
 const $ = (selector) => document.querySelector(selector);
 const escape = (value) => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = n => Number(n).toFixed(1).replace('.', ',');
@@ -28,6 +28,7 @@ const quizSteps=[
 ];
 const QUIZ_TOTAL=quizSteps.filter(step=>step.questionNumber).length;
 const FORMAT_LABELS={live:'живые занятия',recorded:'занятия в записи',individual:'занятия один на один'};
+const FORMAT_MISSING={live:'живых занятий',recorded:'занятий в записи',individual:'занятий один на один'};
 
 // Mirrors egeshka_bot/scoring.py exactly (same weights, same thresholds) so
 // the site and the bot always recommend schools the same way.
@@ -48,7 +49,7 @@ function needPenalty(school,a){let delta=0;const reasons=[];for(const [key,neede
 function budgetFit(school,a){if(!a.budget||a.subject==='математика базовая')return 0;const price=Number(school.monthlyPriceFrom||0);if(price<=0)return 0;const amplify=[a.priority1,a.priority2].includes('price')?1.6:1;const budget=Number(a.budget);if(price<=budget)return .4*amplify;const overRatio=(price-budget)/Math.max(budget,1);return -Math.min(1.2*amplify,overRatio*.8*amplify);}
 // The format a student asked for is close to a deal-breaker: a school without it drops well down the list
 // (less so for recordings, which most schools add on top of live lessons anyway).
-function formatFit(school,a){const format=a.format;if(!format||format==='any')return {delta:0};const lessons=schoolFilters[school.name]?.lessons||[];if(lessons.includes(format))return {delta:.35,pro:`есть ${FORMAT_LABELS[format]}`};return {delta:format==='recorded'?-.8:-1.5,con:`нет ${FORMAT_LABELS[format]}`};}
+function formatFit(school,a){const format=a.format;if(!format||format==='any')return {delta:0};const lessons=schoolFilters[school.name]?.lessons||[],unsure=schoolFilters[school.name]?.unsure||[];if(lessons.includes(format))return {delta:.35,pro:`есть ${FORMAT_LABELS[format]}`};if(unsure.includes(format))return {delta:-.4,con:`${FORMAT_LABELS[format]} не подтверждены — уточни у школы`};return {delta:format==='recorded'?-.8:-1.5,con:`нет ${FORMAT_MISSING[format]}`};}
 function matchSchool(school,a){if(!school.subjects.includes(a.subject))return null;const keys=offeredKeys(school),w=personalizedWeights(a,keys);
  const subjectTeacher=subjectTeacherScore(school,a);let teachersValue=Number(school.criteria.teachers_score||0),teacherNoted=false;const pros=[],cons=[];
  if(subjectTeacher!=null&&w.teachers_score){const share=a.teacher==='3'?.8:.6;const blended=subjectTeacher*share+teachersValue*(1-share);if(subjectTeacher>=teachersValue+.5){pros.push(`сильный препод именно по этому предмету (${number(subjectTeacher)})`);teacherNoted=true;}else if(subjectTeacher<=teachersValue-1){cons.push(`по этому предмету отзывы ниже, чем в среднем по школе (${number(subjectTeacher)})`);teacherNoted=true;}teachersValue=blended;}

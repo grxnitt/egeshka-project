@@ -30,34 +30,35 @@ export const schoolContent={
 };
 
 // Product filters describe whether an option is available in at least one current tariff.
+// `unsure` lists formats the school's own materials don't confirm either way; the quiz says so instead of guessing.
 // `priceFrom` mirrors the minimum visible price in the card, regardless of whether
 // that price is stated per month, lesson or introductory block.
 export const schoolFilters={
  'Умскул':{priceFrom:5490,lessons:['live','recorded']},
  '100балльный репетитор':{priceFrom:990,lessons:['live','recorded']},
- 'Сотка':{priceFrom:3990,lessons:['recorded']},
+ 'Сотка':{priceFrom:3990,lessons:['recorded'],unsure:['live']},
  'Фоксфорд':{priceFrom:4029,lessons:['live','recorded','individual']},
- 'Вебиум':{priceFrom:3912,lessons:['recorded']},
+ 'Вебиум':{priceFrom:3912,lessons:['live','recorded']},
  '99 Баллов':{priceFrom:null,lessons:['live','recorded']},
- 'Турбо ЕГЭ':{priceFrom:4333,lessons:['recorded']},
+ 'Турбо ЕГЭ':{priceFrom:4333,lessons:['live','recorded']},
  'ЕГЭLand':{priceFrom:6165,lessons:['live','recorded']},
  'СМИТАП':{priceFrom:3590,lessons:['live','recorded']},
  'PARTA':{priceFrom:3900,lessons:['live','recorded']},
- 'Skysmart':{priceFrom:1880,lessons:['live','individual']},
+ 'Skysmart':{priceFrom:1880,lessons:['live','recorded','individual']},
  'Школково':{priceFrom:null,lessons:['live','recorded']},
  'ЕГЭ Налегке':{priceFrom:2350,lessons:['live','recorded']},
  'StudyCats':{priceFrom:4890,lessons:['live','recorded']},
  'NeoFamily':{priceFrom:5490,lessons:['live','recorded']},
  'Морозилка':{priceFrom:4490,lessons:['live','recorded','individual']},
- 'Инсперия':{priceFrom:5090,lessons:['live','recorded']},
+ 'Инсперия':{priceFrom:5090,lessons:['live','recorded','individual']},
  'ЕГЭХАБ':{priceFrom:3450,lessons:['live','recorded']},
  'Школа Пифагора':{priceFrom:null,lessons:['recorded']},
  'НОО':{priceFrom:5690,lessons:['live','recorded']},
  'Тетрика':{priceFrom:710,lessons:['individual']},
  'MAXIMUM Education':{priceFrom:8000,lessons:['live','individual']},
  'Годограф':{priceFrom:7900,lessons:['live','recorded']},
- 'Коалиция':{priceFrom:null,lessons:['live']},
- 'Lomonosov School':{priceFrom:3400,lessons:['live']},
+ 'Коалиция':{priceFrom:null,lessons:['live','recorded']},
+ 'Lomonosov School':{priceFrom:3400,lessons:[],unsure:['live','recorded']},
  'EXAMMY':{priceFrom:1990,lessons:['recorded']},
  'Лектариум':{priceFrom:3890,lessons:['live','recorded']}
 };
