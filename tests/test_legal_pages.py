@@ -33,3 +33,20 @@ def test_privacy_policy_names_every_third_party_the_browser_talks_to():
     for processor in ("Telegram", "Яндекс.Метрика", "Vercel", "Supabase"):
         assert processor in policy
     assert "482623207383" in policy and "482623207383" in read("terms.html")
+
+
+def test_metrika_loads_only_after_cookie_consent():
+    script = read("analytics.js")
+    assert script.count("mc.yandex.ru/metrika/tag.js") == 1
+    start = script.index("function startMetrika()")
+    assert script.index("mc.yandex.ru/metrika/tag.js") > start
+    assert "if(consent==='yes')startMetrika()" in script
+    assert "data-cookie=\"yes\"" in script and "data-cookie=\"no\"" in script
+    assert "webvisor:false" in script
+
+
+def test_policy_explains_the_cookie_choice_and_lets_it_be_changed():
+    policy = read("privacy.html")
+    assert '<h2 id="cookies">' in policy
+    assert "data-cookie-settings" in policy
+    assert "только после того, как посетитель нажимает «Принять»" in policy

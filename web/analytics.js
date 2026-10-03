@@ -2,14 +2,81 @@
   var OWN_HOSTS=['egematch.online','www.egematch.online','egematch.ru','www.egematch.ru','egeshka-project.vercel.app'];
   var SKIP_HOSTS=['t.me','telegram.me'];
   var isLocal=/^(localhost|127\.|192\.168\.|10\.)/.test(location.hostname);
-  var id=isLocal?0:Number(window.EGE_METRIKA_ID)||0;
+  var configured=Number(window.EGE_METRIKA_ID)||0;
+  var id=isLocal?0:configured;
 
-  if(id){
+  /* ---- Cookie consent: Metrica is loaded only after the visitor accepts ---- */
+  var CONSENT_KEY='egeCookieConsent';
+  function readConsent(){try{return localStorage.getItem(CONSENT_KEY)}catch(e){return null}}
+  function writeConsent(v){try{localStorage.setItem(CONSENT_KEY,v)}catch(e){}}
+
+  function startMetrika(){
+    if(!id||window.__egeMetrika)return;
+    window.__egeMetrika=1;
     (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();
     k=e.createElement(t);a=e.getElementsByTagName(t)[0];k.async=1;k.src=r;a.parentNode.insertBefore(k,a)})
     (window,document,'script','https://mc.yandex.ru/metrika/tag.js','ym');
     window.ym(id,'init',{clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:false});
   }
+
+  function clearMetrikaCookies(){
+    var host=location.hostname,parts=host.split('.'),domains=['',host,'.'+host];
+    if(parts.length>2)domains.push('.'+parts.slice(-2).join('.'));
+    document.cookie.split(';').forEach(function(c){
+      var name=c.split('=')[0].trim();
+      if(name.indexOf('_ym')!==0)return;
+      domains.forEach(function(d){document.cookie=name+'=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/'+(d?';domain='+d:'')});
+    });
+  }
+
+  function hideBanner(){var box=document.getElementById('cookie-banner');if(box)box.parentNode.removeChild(box)}
+
+  function choose(value){
+    var previous=readConsent();
+    writeConsent(value);
+    hideBanner();
+    if(value==='yes'){startMetrika();return}
+    clearMetrikaCookies();
+    if(previous==='yes')location.reload();
+  }
+
+  function showBanner(){
+    if(document.getElementById('cookie-banner'))return;
+    if(!document.getElementById('cookie-banner-style')){
+      var style=document.createElement('style');
+      style.id='cookie-banner-style';
+      style.textContent='#cookie-banner{position:fixed;z-index:60;left:16px;right:16px;bottom:16px;max-width:760px;margin:0 auto;display:flex;align-items:center;gap:20px;padding:16px 20px;background:#fff;color:#181923;border:1px solid #dededc;border-radius:20px;box-shadow:0 14px 40px rgb(24 25 35/.18);font:14px/1.5 Onest,Arial,sans-serif}'
+        +'#cookie-banner p{margin:0;flex:1}#cookie-banner a{color:#344bd8;text-decoration:underline;text-underline-offset:3px}'
+        +'#cookie-banner .cookie-actions{display:flex;gap:8px;flex:none}'
+        +'#cookie-banner button{min-height:44px;padding:0 22px;border:1.5px solid #181923;border-radius:999px;background:#fff;color:#181923;font:600 14px/1 Onest,Arial,sans-serif;cursor:pointer}'
+        +'#cookie-banner button:hover{background:#181923;color:#fff}'
+        +'#cookie-banner button:focus-visible,#cookie-banner a:focus-visible{outline:2px solid #344bd8;outline-offset:3px}'
+        +'@media(max-width:700px){#cookie-banner{flex-direction:column;align-items:stretch;gap:12px}#cookie-banner.cookie-above-nav{bottom:calc(88px + env(safe-area-inset-bottom))}#cookie-banner .cookie-actions button{flex:1}}';
+      document.head.appendChild(style);
+    }
+    var box=document.createElement('div');
+    box.id='cookie-banner';
+    box.setAttribute('role','region');
+    box.setAttribute('aria-label','Файлы cookie');
+    if(document.querySelector('.mobile-product-nav'))box.className='cookie-above-nav';
+    box.innerHTML='<p>Мы используем Яндекс.Метрику, чтобы понимать, как посетители пользуются сайтом: она сохраняет файлы cookie в вашем браузере. Подробнее — в <a href="/privacy#cookies">Политике конфиденциальности</a>.</p>'
+      +'<div class="cookie-actions"><button type="button" data-cookie="yes">Принять</button><button type="button" data-cookie="no">Отклонить</button></div>';
+    box.addEventListener('click',function(event){
+      var button=event.target.closest&&event.target.closest('[data-cookie]');
+      if(button)choose(button.getAttribute('data-cookie'));
+    });
+    document.body.appendChild(box);
+  }
+
+  document.addEventListener('click',function(event){
+    var link=event.target.closest&&event.target.closest('[data-cookie-settings]');
+    if(link){event.preventDefault();showBanner()}
+  });
+
+  var consent=readConsent();
+  if(consent==='yes')startMetrika();
+  else if(consent==='no')clearMetrikaCookies();
+  else if(configured)showBanner();
 
   var events=window.egeEvents=window.egeEvents||[];
   function log(kind,name,data){events.push({kind:kind,name:name,data:data||{}});if(events.length>300)events.shift()}
