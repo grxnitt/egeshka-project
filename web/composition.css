@@ -1509,3 +1509,6 @@ body.compare-page{overflow-x:clip}
 .hero-centered .hero-compare-link span{font-size:22px}
 /* Footer links: comfortable tap targets on phones. */
 @media(max-width:800px){.footer-links a{display:inline-flex;align-items:center;min-height:44px}}
+
+/* Score note now sits under the left-aligned criteria list. */
+.sp-section .sp-note{margin:16px 0 0;text-align:left}

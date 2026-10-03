@@ -16,7 +16,7 @@ CSS_VERSIONS = {
     "styles.css": "35",
     "refinements.css": "44",
     "typography.css": "31",
-    "composition.css": "149",
+    "composition.css": "150",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
