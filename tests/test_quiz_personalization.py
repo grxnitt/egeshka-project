@@ -12,7 +12,7 @@ def test_quiz_asks_format_support_and_teacher_importance():
 
 def test_format_is_close_to_a_deal_breaker_and_uses_school_lesson_data():
     assert "schoolFilters[school.name]?.lessons" in APP
-    assert "delta:format==='recorded'?-.8:-1.5" in APP
+    assert "format==='recorded'?PENALTY.recordedMissing:PENALTY.formatMissing" in APP
 
 
 def test_support_answer_feeds_both_old_fields_and_bot_payload_stays_nine_fields():
@@ -31,11 +31,12 @@ def test_level_and_target_come_from_one_goal_question():
     assert "const [level,target]=value.split('|');siteQuiz.answers.level=level;siteQuiz.answers.target=target;" in APP
 
 
-def test_percent_stretches_the_real_score_band_instead_of_dividing_by_ten():
-    assert "const matchPercent=fit=>" in APP and "(fit-FIT_FLOOR)/(FIT_CEIL-FIT_FLOOR)" in APP
-    assert "/10*1000)/10" not in APP  # the old score/10 mapping squeezed every school into 85-99%
-    assert "function priorityEdge(school,a,teachersValue)" in APP
-    assert "fit=fit+bf+need.delta+ff.delta+priorityEdge(school,a,teachersValue);" in APP
+def test_answers_multiply_weights_and_schools_are_ranked_against_each_other():
+    assert "const IMPORTANCE={" in APP and "function importanceOf(a)" in APP
+    assert "function percentile(key,value)" in APP
+    assert "const percent=quality*100+ff.points+bf.points-need.points;" in APP
+    for old in ("personalizedWeights", "matchPercent", "priorityEdge", "/10*1000)/10"):
+        assert old not in APP
 
 
 def test_caution_box_uses_brand_colors_not_an_off_palette_beige():

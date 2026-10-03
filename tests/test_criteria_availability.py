@@ -167,6 +167,6 @@ def test_site_shows_missing_criteria_and_mirrors_the_quiz_rules():
     assert "зависит от тарифа" in (WEB / "schools" / "studycats.html").read_text(encoding="utf-8")
     assert "Не предусмотрено" in (WEB / "compare.js").read_text(encoding="utf-8")
     app = (WEB / "app.js").read_text(encoding="utf-8")
-    assert "offeredKeys" in app and "delta-=status==='none'?.5:.2" in app
+    assert "offeredKeys" in app and "points+=status==='none'?PENALTY.needNone:PENALTY.needTier" in app
     method = (WEB / "methodology.html").read_text(encoding="utf-8")
     assert "Если чего-то нет в школе" in method and "не меньше пяти критериев из семи" in method

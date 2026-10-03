@@ -29,43 +29,65 @@ const QUIZ_TOTAL=quizSteps.filter(step=>step.questionNumber).length;
 const FORMAT_LABELS={live:'живые занятия',recorded:'занятия в записи',individual:'занятия один на один'};
 const FORMAT_MISSING={live:'живых занятий',recorded:'занятий в записи',individual:'занятий один на один'};
 
-// Mirrors egeshka_bot/scoring.py exactly (same weights, same thresholds) so
-// the site and the bot always recommend schools the same way.
+// ---- Quiz matching ----------------------------------------------------------------------------
+// 1. Each criterion starts at its methodology weight (BASE_WEIGHTS). Answers only multiply that weight
+//    by an importance factor (IMPORTANCE table below), so every answer's effect is one readable line.
+// 2. A school is judged on each criterion relative to the other schools (percentile 0..1), not on the raw
+//    7.5-9 score where everyone looks alike: "кураторы лучше 80% школ" is what actually separates them.
+// 3. Hard conditions (format, budget, a needed service that is missing) subtract fixed percentage points
+//    and are always shown under "Учти", instead of being blended into the weights.
 const BASE_WEIGHTS={teachers_score:.24,practice_score:.16,feedback_score:.14,curator_score:.14,platform_score:.10,workload_score:.08,organization_score:.14};
 const PRIORITY_TO_FIELD={teacher:'teachers_score',practice:'practice_score',curator:'curator_score',platform:'platform_score'};
-function personalizedWeights(a,keys){const w={...BASE_WEIGHTS};[a.priority1,a.priority2].forEach(p=>{const field=PRIORITY_TO_FIELD[p];if(field)w[field]+=.10;});const curatorNeed=Number(a.curator);if(curatorNeed>=3)w.curator_score+=.06;if(curatorNeed>=4)w.curator_score+=.04;const controlNeed=Number(a.control);if(controlNeed>=3){w.feedback_score+=.05;w.organization_score+=.03;}if(controlNeed>=4)w.feedback_score+=.04;if(a.level==='low'){w.curator_score+=.09;w.feedback_score+=.05;}else if(a.level==='high'){w.teachers_score+=.06;w.practice_score+=.06;}const target=Number(a.target);if(target>=90){w.teachers_score+=.06;w.practice_score+=.06;}else if(target>=85){w.teachers_score+=.03;w.practice_score+=.03;}const workload=Number(a.workload);if(workload===1||workload===4)w.workload_score+=.05;const teacherNeed=Number(a.teacher||0);if(teacherNeed===3)w.teachers_score+=.12;else if(teacherNeed===2)w.teachers_score+=.04;if(keys)Object.keys(w).forEach(key=>{if(!keys.includes(key))delete w[key];});const total=Object.values(w).reduce((sum,value)=>sum+value,0);Object.keys(w).forEach(key=>w[key]=w[key]/total);return w;}
-// Best student-reviewed rating (needs 3+ reviews) among this school's teachers for the quiz's
-// subject, if any — mirrors best_subject_teacher_scores() in egeshka_bot/bot.py.
-function subjectTeacherScore(school,a){const subjectLabel=labels[a.subject];if(!subjectLabel||!catalog?.teachers)return null;const rated=catalog.teachers.filter(t=>t.school===school.name&&teacherSubjects(t).includes(subjectLabel)&&t.studentScore!=null).map(t=>Number(t.studentScore));return rated.length?Math.max(...rated):null;}
-// A criterion the school does not offer ("none") is left out of the match and of its score; one offered only
-// on some tariffs ("tier") stays in. Needing something that is missing costs 0.5 ("none") or 0.2 ("tier").
-const offeredKeys=school=>Object.keys(BASE_WEIGHTS).filter(key=>school.criteriaStatus?.[key]!=='none');
-const baselineWeights=keys=>{const total=keys.reduce((sum,key)=>sum+BASE_WEIGHTS[key],0);return Object.fromEntries(keys.map(key=>[key,BASE_WEIGHTS[key]/total]));};
+// answer -> {criterion: multiplier}. Multipliers from several answers multiply, capped at x4.
+const IMPORTANCE={
+ support:{'1':{curator_score:.5},'3':{curator_score:2,feedback_score:2,organization_score:1.5},'4':{curator_score:3,feedback_score:3,organization_score:2}},
+ level:{low:{curator_score:1.5,feedback_score:1.5,platform_score:1.5},high:{teachers_score:1.5,practice_score:1.5}},
+ target:{'90':{teachers_score:1.5,practice_score:1.5},'5':{teachers_score:1.3,practice_score:1.3}},
+ workload:{'1':{workload_score:2},'4':{practice_score:1.5}},
+ teacher:{'1':{teachers_score:.7},'2':{teachers_score:1.5},'3':{teachers_score:3}},
+};
+const PRIORITY_MULTIPLIER=2;
+function importanceOf(a){const m=Object.fromEntries(Object.keys(BASE_WEIGHTS).map(key=>[key,1]));const apply=table=>Object.entries(table||{}).forEach(([key,f])=>{m[key]*=f;});
+ Object.entries(IMPORTANCE).forEach(([answer,table])=>apply(table[a[answer]]));
+ [a.priority1,a.priority2].forEach(p=>{if(PRIORITY_TO_FIELD[p])m[PRIORITY_TO_FIELD[p]]*=PRIORITY_MULTIPLIER;});
+ Object.keys(m).forEach(key=>{m[key]=Math.min(4,m[key]);});return m;}
+// Kept for ratings.js links and the bot payload: does the student need this service at all.
 const chosen=(a,name)=>[a.priority1,a.priority2].includes(name);
 const NEEDS={curator_score:a=>Number(a.curator)>=3||chosen(a,'curator'),feedback_score:a=>Number(a.control)>=3,platform_score:a=>chosen(a,'platform'),practice_score:a=>chosen(a,'practice')};
 const NEED_REASONS={curator_score:{none:'нет куратора, а он тебе нужен',tier:'куратор — только на старших тарифах'},feedback_score:{none:'нет проверки работ, а она тебе нужна',tier:'проверка работ — не на всех тарифах'},platform_score:{none:'нет платформы, а она тебе важна',tier:'платформа — не на всех тарифах'},practice_score:{none:'нет практики, а она тебе важна',tier:'практика — не на всех тарифах'}};
-function needPenalty(school,a){let delta=0;const reasons=[];for(const [key,needed] of Object.entries(NEEDS)){const status=school.criteriaStatus?.[key]||'yes';if(status!=='yes'&&needed(a)){delta-=status==='none'?.5:.2;reasons.push(NEED_REASONS[key][status]);}}return {delta,reasons};}
-function budgetFit(school,a){if(!a.budget||a.subject==='математика базовая')return 0;const price=Number(school.monthlyPriceFrom||0);if(price<=0)return 0;const amplify=[a.priority1,a.priority2].includes('price')?1.6:1;const budget=Number(a.budget);if(price<=budget)return .4*amplify;const overRatio=(price-budget)/Math.max(budget,1);return -Math.min(1.2*amplify,overRatio*.8*amplify);}
-// Every school's weighted score sits in a narrow 7.5-9 band, so dividing it by 10 made all matches look like
-// 85-99%. The percentage stretches the band that schools actually occupy: FIT_FLOOR is a clearly weak fit (0%),
-// FIT_CEIL is about the best a school can reach (100%); nothing is shown as a perfect 100 or as zero.
-const FIT_FLOOR=6.6,FIT_CEIL=9.9;
-const matchPercent=fit=>Math.round(Math.max(6,Math.min(98,(fit-FIT_FLOOR)/(FIT_CEIL-FIT_FLOOR)*100))*10)/10;
-// What the student said matters most is judged on its own, not just through a weight: being clearly
-// strong there is worth a bonus, being clearly weak costs more (0.5 per point away from 8.3, capped).
-function priorityEdge(school,a,teachersValue){const fields=new Set();[a.priority1,a.priority2].forEach(p=>{if(PRIORITY_TO_FIELD[p])fields.add(PRIORITY_TO_FIELD[p]);});if(a.teacher==='3')fields.add('teachers_score');if(Number(a.support)>=3){fields.add('curator_score');fields.add('feedback_score');}
- let edge=0;fields.forEach(key=>{if(school.criteriaStatus?.[key]==='none')return;const value=key==='teachers_score'?teachersValue:Number(school.criteria[key]||0);edge+=Math.max(-.4,Math.min(.3,(value-8.3)*.5));});return Math.max(-.8,Math.min(.6,edge));}
-// The format a student asked for is close to a deal-breaker: a school without it drops well down the list
-// (less so for recordings, which most schools add on top of live lessons anyway).
-function formatFit(school,a){const format=a.format;if(!format||format==='any')return {delta:0};const lessons=schoolFilters[school.name]?.lessons||[],unsure=schoolFilters[school.name]?.unsure||[];if(lessons.includes(format))return {delta:.35,pro:`есть ${FORMAT_LABELS[format]}`};if(unsure.includes(format))return {delta:-.4,con:`${FORMAT_LABELS[format]} не подтверждены — уточни у школы`};return {delta:format==='recorded'?-.8:-1.5,con:`нет ${FORMAT_MISSING[format]}`};}
-function matchSchool(school,a){if(!school.subjects.includes(a.subject))return null;const keys=offeredKeys(school),w=personalizedWeights(a,keys);
- const subjectTeacher=subjectTeacherScore(school,a);let teachersValue=Number(school.criteria.teachers_score||0),teacherNoted=false;const pros=[],cons=[];
- if(subjectTeacher!=null&&w.teachers_score){const share=a.teacher==='3'?.8:.6;const blended=subjectTeacher*share+teachersValue*(1-share);if(subjectTeacher>=teachersValue+.5){pros.push(`сильный препод именно по этому предмету (${number(subjectTeacher)})`);teacherNoted=true;}else if(subjectTeacher<=teachersValue-1){cons.push(`по этому предмету отзывы ниже, чем в среднем по школе (${number(subjectTeacher)})`);teacherNoted=true;}teachersValue=blended;}
- let fit=Object.entries(w).reduce((sum,[key,weight])=>sum+(key==='teachers_score'?teachersValue:Number(school.criteria[key]||0))*weight,0);const bf=budgetFit(school,a),need=needPenalty(school,a),ff=formatFit(school,a);fit=fit+bf+need.delta+ff.delta+priorityEdge(school,a,teachersValue);
- if(ff.pro)pros.push(ff.pro);if(ff.con)cons.push(ff.con);if(bf>0)pros.push('входит в бюджет');else if(bf<0)cons.push('может быть выше бюджета');cons.push(...need.reasons);
- const base=baselineWeights(keys);Object.keys(w).filter(key=>w[key]>base[key]+.01).sort((x,y)=>w[y]-w[x]).forEach(key=>{if(key==='teachers_score'&&teacherNoted)return;const value=key==='teachers_score'?teachersValue:Number(school.criteria[key]||0);if(value>=8.5)pros.push(`сильная сторона — ${criteria[key].toLowerCase()} (${number(value)})`);else if(value<=7.5)cons.push(`слабее — ${criteria[key].toLowerCase()} (${number(value)})`);});
+// Fixed costs in percentage points, so the trade-off is the same for every school.
+const PENALTY={formatMissing:25,recordedMissing:12,formatUnsure:6,needNone:15,needTier:5,overBudgetMax:40,priceUnknown:3};
+// Best student-reviewed rating (needs 3+ reviews) among this school's teachers for the quiz's
+// subject, if any — mirrors best_subject_teacher_scores() in egeshka_bot/bot.py.
+function subjectTeacherScore(school,a){const subjectLabel=labels[a.subject];if(!subjectLabel||!catalog?.teachers)return null;const rated=catalog.teachers.filter(t=>t.school===school.name&&teacherSubjects(t).includes(subjectLabel)&&t.studentScore!=null).map(t=>Number(t.studentScore));return rated.length?Math.max(...rated):null;}
+// A criterion the school does not offer ("none") is left out of its match entirely.
+const offeredKeys=school=>Object.keys(BASE_WEIGHTS).filter(key=>school.criteriaStatus?.[key]!=='none');
+// Share of catalog schools this value beats (ties count half), among schools that offer the criterion.
+let percentileCache=null;
+function percentile(key,value){if(!percentileCache||percentileCache.catalog!==catalog){percentileCache={catalog,values:{}};}
+ const values=percentileCache.values[key]||(percentileCache.values[key]=catalog.schools.filter(s=>s.criteriaStatus?.[key]!=='none'&&s.criteria[key]!=null).map(s=>Number(s.criteria[key])));
+ if(values.length<2)return .5;let below=0,equal=0;values.forEach(v=>{if(v<value-1e-9)below++;else if(Math.abs(v-value)<1e-9)equal++;});return (below+equal/2)/values.length;}
+function needPenalty(school,a){let points=0;const reasons=[];for(const [key,needed] of Object.entries(NEEDS)){const status=school.criteriaStatus?.[key]||'yes';if(status!=='yes'&&needed(a)){points+=status==='none'?PENALTY.needNone:PENALTY.needTier;reasons.push(NEED_REASONS[key][status]);}}return {points,reasons};}
+// Over budget costs up to 40 points (50 points per 100% over: 10% over = -5, 80% over = -40). "Цена" as a priority adds up to 8 points
+// for being clearly cheaper than the budget.
+function budgetFit(school,a){if(!a.budget||a.budget==='0'||a.subject==='математика базовая')return {points:0};const price=Number(school.monthlyPriceFrom||0);if(price<=0)return {points:-PENALTY.priceUnknown,con:'цена не опубликована — уточни у школы'};const budget=Number(a.budget);
+ if(price<=budget){const bonus=chosen(a,'price')?Math.round(8*(1-price/budget)*10)/10:0;return {points:bonus,pro:'входит в бюджет'};}
+ return {points:-Math.min(PENALTY.overBudgetMax,(price-budget)/budget*50),con:'может быть выше бюджета'};}
+// The format a student asked for is close to a deal-breaker (less so for recordings, which most schools
+// add on top of live lessons anyway). Unconfirmed formats cost a little and say so.
+function formatFit(school,a){const format=a.format;if(!format||format==='any')return {points:0};const lessons=schoolFilters[school.name]?.lessons||[],unsure=schoolFilters[school.name]?.unsure||[];if(lessons.includes(format))return {points:0,pro:`есть ${FORMAT_LABELS[format]}`};if(unsure.includes(format))return {points:-PENALTY.formatUnsure,con:`${FORMAT_LABELS[format]} не подтверждены — уточни у школы`};return {points:-(format==='recorded'?PENALTY.recordedMissing:PENALTY.formatMissing),con:`нет ${FORMAT_MISSING[format]}`};}
+function matchSchool(school,a){if(!school.subjects.includes(a.subject))return null;const keys=offeredKeys(school),importance=importanceOf(a);
+ const subjectTeacher=subjectTeacherScore(school,a);let teachersValue=Number(school.criteria.teachers_score||0);const pros=[],cons=[];
+ if(subjectTeacher!=null&&keys.includes('teachers_score')){const share=a.teacher==='3'?.8:.6;if(subjectTeacher>=teachersValue+.5)pros.push(`сильный препод именно по этому предмету (${number(subjectTeacher)})`);else if(subjectTeacher<=teachersValue-1)cons.push(`по этому предмету отзывы ниже, чем в среднем по школе (${number(subjectTeacher)})`);teachersValue=subjectTeacher*share+teachersValue*(1-share);}
+ let weightSum=0,quality=0;const ranked=[];
+ keys.forEach(key=>{const weight=BASE_WEIGHTS[key]*importance[key];const value=key==='teachers_score'?teachersValue:Number(school.criteria[key]||0);const p=percentile(key,value);weightSum+=weight;quality+=weight*p;if(importance[key]>=1.5)ranked.push({key,p,importance:importance[key]});});
+ quality=weightSum?quality/weightSum:0;
+ const ff=formatFit(school,a),bf=budgetFit(school,a),need=needPenalty(school,a);
+ if(ff.pro)pros.push(ff.pro);if(ff.con)cons.push(ff.con);if(bf.pro)pros.push(bf.pro);if(bf.con)cons.push(bf.con);cons.push(...need.reasons);
+ ranked.sort((x,y)=>y.importance-x.importance).forEach(({key,p})=>{const name=criteria[key].toLowerCase();if(p>=.7)pros.push(`${name} — лучше ${Math.round(p*100)}% школ`);else if(p<=.3)cons.push(`${name} — слабее большинства школ`);});
  if(!pros.length)pros.push('ровное совпадение по всем критериям');
- return {fit,score:matchPercent(fit),pros:pros.slice(0,3),cons:cons.slice(0,2),teachers:teachersValue,price:Number(school.monthlyPriceFrom||0)};}
+ const percent=quality*100+ff.points+bf.points-need.points;
+ return {score:Math.round(Math.max(5,Math.min(97,percent))*10)/10,pros:pros.slice(0,3),cons:cons.slice(0,2),teachers:teachersValue,price:Number(school.monthlyPriceFrom||0)};}
 // One label per card so three results read as three different choices, not three copies of "fits".
 function matchBadge(top,item,index){if(index===0)return 'Лучшее совпадение';const priced=top.filter(x=>x.match.price>0);const cheapest=priced.length?priced.reduce((x,y)=>y.match.price<x.match.price?y:x):null;if(cheapest===item&&cheapest.match.price<(top[0].match.price||Infinity))return 'Выгоднее по цене';const strongest=top.reduce((x,y)=>y.match.teachers>x.match.teachers?y:x);if(strongest===item&&item.match.teachers>top[0].match.teachers)return 'Сильнее преподаватели';return '';}
 const shortPrice=value=>value.length>118?`${value.slice(0,115).trim()}…`:value;
