@@ -39,27 +39,33 @@ def test_price_priority_uses_real_budget_not_organization_score():
     assert affordable_score > expensive_score
 
 
+def _school(**values):
+    row = dict(subjects="русский", monthly_price_from=0, teachers_score=8, practice_score=8, feedback_score=8,
+               curator_score=8, platform_score=8, workload_score=8, organization_score=8)
+    row.update(values)
+    return SimpleNamespace(**row)
+
+
 def test_beginner_level_favours_curator_and_feedback_over_teachers_and_practice():
-    # Same school, only current_level differs: a beginner should score a
-    # curator/feedback-heavy school higher than an advanced student would,
-    # and an advanced student should score a teachers/practice-heavy school higher.
-    supportive = SimpleNamespace(subjects="русский", monthly_price_from=0, teachers_score=7, practice_score=7, feedback_score=9, curator_score=9, platform_score=7, workload_score=7, organization_score=7)
+    # Same school, only current_level differs. Against peers it is strong on curator/feedback and weak on
+    # teachers/practice, so a beginner (curator/feedback x1.5) should match it better than an advanced student.
+    supportive = _school(teachers_score=7, practice_score=7, feedback_score=9, curator_score=9)
+    peers = [supportive, _school(), _school(teachers_score=9, practice_score=9, feedback_score=7, curator_score=7)]
     beginner = profile()
     beginner.current_level = "low"
     advanced = profile()
     advanced.current_level = "high"
-    low_score, _ = school_score(supportive, beginner)
-    high_score, _ = school_score(supportive, advanced)
-    assert low_score > high_score
+    assert school_score(supportive, beginner, peers=peers)[0] > school_score(supportive, advanced, peers=peers)[0]
 
 
 def test_subject_teacher_score_pulls_the_match_toward_that_teacher():
-    school = SimpleNamespace(subjects="русский", monthly_price_from=0, teachers_score=7.0, practice_score=8, feedback_score=8, curator_score=8, platform_score=8, workload_score=8, organization_score=8)
-    baseline, _ = school_score(school, profile())
-    with_strong_teacher, reasons_strong = school_score(school, profile(), subject_teacher_score=9.5)
-    with_weak_teacher, reasons_weak = school_score(school, profile(), subject_teacher_score=4.0)
+    school = _school(teachers_score=7.0)
+    peers = [school, _school(teachers_score=8.0)]
+    baseline, _ = school_score(school, profile(), peers=peers)
+    with_strong_teacher, reasons_strong = school_score(school, profile(), subject_teacher_score=9.5, peers=peers)
+    with_weak_teacher, reasons_weak = school_score(school, profile(), subject_teacher_score=4.0, peers=peers)
     assert with_strong_teacher > baseline > with_weak_teacher
-    assert any("по этому предмету" in r or "именно по этому предмету" in r for r in reasons_strong)
+    assert any("именно по этому предмету" in r for r in reasons_strong)
     assert any("по этому предмету" in r for r in reasons_weak)
 
 

@@ -15,10 +15,10 @@ def test_format_is_close_to_a_deal_breaker_and_uses_school_lesson_data():
     assert "format==='recorded'?PENALTY.recordedMissing:PENALTY.formatMissing" in APP
 
 
-def test_support_answer_feeds_both_old_fields_and_bot_payload_stays_nine_fields():
+def test_support_answer_feeds_both_old_fields_and_bot_payload_carries_format_and_teacher():
     assert "if(step.key==='support'){siteQuiz.answers.curator=value;siteQuiz.answers.control=value;}" in APP
     payload = APP[APP.index("function quizPayload"):].split("\n")[0]
-    assert payload.count("_${") == 9
+    assert payload.count("_${") == 10 and "_none_${a.control}_${a.format||'any'}_${a.teacher||'2'}" in payload
 
 
 def test_result_shows_pros_cons_and_a_distinguishing_badge():

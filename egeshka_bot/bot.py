@@ -16,11 +16,11 @@ from .config import Settings
 from .db import SCHOOL_REVIEW_SLUGS, delete_user_data, get_or_create_user
 from .models import Course, Event, Review, ReviewCriterionScore, School, Teacher, User
 from .scoring import (
-    STATUS_NONE, STATUS_TIER, QuizProfile, applicable_criteria, editorial_score, effective_weights, school_score, status_of,
+    STATUS_NONE, STATUS_TIER, QuizProfile, applicable_criteria, editorial_score, effective_weights, school_match, school_score, status_of,
 )
 
 
-from .subjects import SUBJECTS, MATH_BOTH, target_options, split_teacher_subjects, subject_token, subject_from_token
+from .subjects import SUBJECTS, MATH_BOTH, split_teacher_subjects, subject_token, subject_from_token
 
 
 PRIORITIES = {
@@ -68,15 +68,56 @@ SCHOOL_BY_REVIEW_SLUG = {slug: name for name, slug in SCHOOL_REVIEW_SLUGS.items(
 
 
 class Quiz(StatesGroup):
-    subject = State()
-    budget = State()
-    current_level = State()
-    target = State()
-    curator = State()
-    workload = State()
-    first_priority = State()
-    second_priority = State()
-    control = State()
+    step = State()
+
+
+# Same eight questions, order and values as the site quiz (web/app.js quizSteps).
+def _goal_options(data):
+    if data.get("subject") == "математика базовая":
+        return [("Начинаю почти с нуля — главное сдать на 3", "low|3"), ("Что-то знаю — хочу 4", "middle|4"), ("База хорошая — иду на 5", "high|5")]
+    return [("Начинаю почти с нуля — хочу уверенно сдать", "low|60"), ("Что-то знаю, нужна система — цель 70–80", "middle|70"),
+            ("База хорошая — хочу 80+", "high|80"), ("Иду на максимум — 90+", "high|90")]
+
+
+QUIZ_STEPS = [
+    ("subject", "Какой предмет сдаёшь?", lambda data: [(item, item.lower()) for item in SUBJECTS]),
+    ("budget", "Сколько готов тратить на подготовку в месяц?",
+     lambda data: [("До 3 000 ₽", "3000"), ("3 000–5 000 ₽", "5000"), ("5 000–8 000 ₽", "8000"), ("Больше 8 000 ₽", "12000"), ("Пока не определился", "0")]),
+    ("format", "Как тебе удобнее заниматься?",
+     lambda data: [("Вживую с преподавателем — эфиры и вопросы в чате", "live"), ("В записи, в своём темпе", "recorded"),
+                   ("Один на один с репетитором", "individual"), ("Не важно, главное — результат", "any")]),
+    ("goal", "Где ты сейчас и на какой результат идёшь?", _goal_options),
+    ("support", "Сколько сопровождения тебе нужно?",
+     lambda data: [("Справлюсь сам — главное материалы", "1"), ("Иногда хочу задать вопрос куратору", "2"),
+                   ("Нужны регулярные проверки и дедлайны", "3"), ("Без жёсткого контроля я всё откладываю", "4")]),
+    ("workload", "Какой темп подготовки тебе подходит?",
+     lambda data: [("Небольшая нагрузка, без перегруза", "1"), ("Умеренный темп", "2"), ("Готов заниматься много", "3"), ("Максимум практики ради результата", "4")]),
+    ("teacher", "Насколько важен сильный преподаватель именно по твоему предмету?",
+     lambda data: [("Решающий фактор — хочу лучшего", "3"), ("Важен, но не главное", "2"), ("Не принципиально, важнее система", "1")]),
+    ("priority", "Что ещё для тебя важнее всего?", lambda data: [(label, value) for value, label in PRIORITY_LABELS.items()]),
+]
+
+
+def quiz_question(index: int, data: dict):
+    key, title, choices = QUIZ_STEPS[index]
+    return f"Вопрос {index + 1} из {len(QUIZ_STEPS)} · {title}", options(choices(data), f"qz:{index}")
+
+
+def profile_from_answers(data: dict) -> QuizProfile:
+    level, target = data["goal"].split("|")
+    support = int(data["support"])
+    return QuizProfile(
+        subject=data["subject"],
+        budget=int(data["budget"]) or None,
+        current_level=level,
+        target=int(target),
+        curator_need=support,
+        workload=int(data["workload"]),
+        control_need=support,
+        priorities=(data["priority"],),
+        lesson_format=data["format"],
+        teacher_need=int(data["teacher"]),
+    )
 
 
 class Compare(StatesGroup):
@@ -109,15 +150,19 @@ def money(value: int) -> str:
 
 def profile_from_payload(payload: str):
     """Parse the deep-link payload produced by the site's quiz
-    (`q_<subjectIndex>_<budget>_<level>_<target>_<curator>_<workload>_<priority1>_<priority2>_<control>`)
-    into the same QuizProfile the bot's own /quiz builds, so a student who
-    finished the quiz on the site lands on a result computed by the exact
-    same formula instead of answering everything again.
+    (`q_<subjectIndex>_<budget>_<level>_<target>_<curator>_<workload>_<priority1>_<priority2>_<control>[_<format>_<teacher>]`)
+    into the same QuizProfile the bot's own quiz builds, so a student who finished the quiz on the site
+    lands on a result computed by the same formula. Links made before format/teacher existed still parse.
     """
     try:
-        _, subject_index, budget, level, target, curator, workload, priority1, priority2, control = payload.split("_")
+        parts = payload.split("_")
+        if len(parts) == 10:
+            parts += ["any", "2"]
+        _, subject_index, budget, level, target, curator, workload, priority1, priority2, control, lesson_format, teacher = parts
         site_subjects = [item.lower() for item in SUBJECTS]
         priorities = tuple(value for value in (priority1, priority2) if value != "none")
+        if lesson_format not in ("live", "recorded", "individual", "any"):
+            return None
         return QuizProfile(
             subject=site_subjects[int(subject_index)],
             budget=int(budget) or None,
@@ -127,6 +172,8 @@ def profile_from_payload(payload: str):
             workload=int(workload),
             control_need=int(control),
             priorities=priorities,
+            lesson_format=lesson_format,
+            teacher_need=int(teacher),
         )
     except (ValueError, IndexError):
         return None
@@ -536,18 +583,6 @@ def course_compare_section_text(left, right, left_school, right_school, section,
             "Перед оплатой проверь, кто ведёт именно выбранный набор: состав может меняться."
         )
     return "Раздел недоступен. Вернись к карточке курса."
-
-
-def priority_keyboard(first_priority=None):
-    rows = []
-    for value, label in PRIORITIES.items():
-        if value == first_priority:
-            continue
-        rows.append([InlineKeyboardButton(text=PRIORITY_LABELS[value], callback_data=f"priority:{value}")])
-    rows.append([InlineKeyboardButton(text="Пропустить второй приоритет", callback_data="priority:none")])
-    rows.append([InlineKeyboardButton(text="← Назад", callback_data="quiz_back")])
-    rows.append([InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")])
-    return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
 def school_card(school, user_average=None, user_count=0, criteria_stats=None):
@@ -1017,10 +1052,10 @@ async def build_quiz_result(session_factory, profile: QuizProfile):
     async with session_factory() as session:
         teacher_scores = await best_subject_teacher_scores(session, [school.id for school in rows], subject_name)
     ranked = [
-        (score, reasons, school)
+        (match["score"], match, school)
         for school in rows
-        for score, reasons in [school_score(school, profile, teacher_scores.get(school.id))]
-        if score >= 0
+        for match in [school_match(school, profile, teacher_scores.get(school.id), peers=rows)]
+        if match is not None
     ]
     ranked.sort(key=lambda item: item[0], reverse=True)
     top = ranked[:3]
@@ -1068,11 +1103,13 @@ async def build_quiz_result(session_factory, profile: QuizProfile):
                 teacher_lines[school_id] = f"👩‍🏫 {names} — оценки пока формируются"
     course_by_school = {course.school_id: course for course in subject_courses}
     lines = []
-    for index, (score, reasons, school) in enumerate(top, 1):
-        reason_text = ", ".join(reasons) if reasons else "хорошее совпадение по анкете"
+    for index, (score, match, school) in enumerate(top, 1):
         course = course_by_school.get(school.id)
         price = course.price_text if course else school.price_text
-        line = f"{index}. {school.name} — {score:.0f}% совпадение\nПочему: {reason_text}\n💸 {price}"
+        line = f"{index}. {school.name} — {score:.0f}% совпадение\nПочему: {', '.join(match['pros'])}"
+        if match["cons"]:
+            line += f"\n⚠️ Учти: {'; '.join(match['cons'])}"
+        line += f"\n💸 {price}"
         if teacher_lines.get(school.id):
             line += f"\n{teacher_lines[school.id]}"
         lines.append(line)
@@ -1478,35 +1515,15 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
 
     @dp.callback_query(F.data == "quiz_back")
     async def quiz_back(call: CallbackQuery, state: FSMContext):
-        current = await state.get_state()
         data = await state.get_data()
-        if current == "Quiz:subject" or current is None:
+        index = data.get("quiz_step", 0) - 1
+        if await state.get_state() != Quiz.step.state or index < 0:
             await state.clear()
             await call.message.edit_text("Главное меню", reply_markup=menu())
-        elif current == "Quiz:budget":
-            await state.set_state(Quiz.subject)
-            await call.message.edit_text("Вопрос 1 из 8 · Какой предмет сдаёшь?", reply_markup=options([(item, item.lower()) for item in SUBJECTS], "subject"))
-        elif current == "Quiz:current_level":
-            await state.set_state(Quiz.budget)
-            await call.message.edit_text("Вопрос 2 из 8 · Сколько готов тратить на подготовку в месяц?", reply_markup=options([("До 3 000 ₽", "3000"), ("3 000–5 000 ₽", "5000"), ("5 000–8 000 ₽", "8000"), ("Больше 8 000 ₽", "12000"), ("Пока не определился", "0")], "budget"))
-        elif current == "Quiz:target":
-            await state.set_state(Quiz.current_level)
-            await call.message.edit_text("Вопрос 3 из 8 · Как оцениваешь свои знания по предмету сейчас?", reply_markup=options([("Начинаю почти с нуля", "low"), ("Что-то знаю, нужна система", "middle"), ("База хорошая, хочу усилить результат", "high")], "level"))
-        elif current == "Quiz:curator":
-            await state.set_state(Quiz.target)
-            await call.message.edit_text("Вопрос 4 из 8 · На какой балл ЕГЭ ориентируешься?", reply_markup=options(target_options((await state.get_data()).get("subject")), "target"))
-        elif current == "Quiz:workload":
-            await state.set_state(Quiz.curator)
-            await call.message.edit_text("Вопрос 5 из 8 · Нужен ли тебе куратор, который следит за прогрессом?", reply_markup=options([("Справлюсь сам, куратор не нужен", "1"), ("Иногда хочу спросить куратора", "2"), ("Нужен регулярный контроль куратора", "3"), ("Без куратора я всё откладываю", "4")], "curator"))
-        elif current == "Quiz:first_priority":
-            await state.set_state(Quiz.workload)
-            await call.message.edit_text("Вопрос 6 из 8 · Какой темп подготовки тебе подходит?", reply_markup=options([("Небольшая нагрузка, без перегруза", "1"), ("Умеренный темп", "2"), ("Готов заниматься много", "3"), ("Максимум практики ради результата", "4")], "workload"))
-        elif current == "Quiz:second_priority":
-            await state.set_state(Quiz.first_priority)
-            await call.message.edit_text("Вопрос 7 из 8 · Что для тебя важнее всего? Выбери главный приоритет.", reply_markup=priority_keyboard())
-        elif current == "Quiz:control":
-            await state.set_state(Quiz.second_priority)
-            await call.message.edit_text("Дополнительный приоритет · Можно выбрать ещё один пункт.", reply_markup=priority_keyboard(data.get("first_priority")))
+        else:
+            await state.update_data(quiz_step=index)
+            text, keyboard = quiz_question(index, data)
+            await call.message.edit_text(text, reply_markup=keyboard)
         await call.answer()
 
     @dp.callback_query(F.data == "review_teacher_menu")
@@ -1927,153 +1944,30 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
     @dp.callback_query(F.data == "quiz")
     async def quiz_start(call: CallbackQuery, state: FSMContext):
         await track(call.from_user.id, "quiz_started")
-        await state.set_state(Quiz.subject)
-        await call.message.edit_text(
-            "Вопрос 1 из 8 · Какой предмет сдаёшь?",
-            reply_markup=options([(item, item.lower()) for item in SUBJECTS], "subject"),
-        )
+        await state.clear()
+        await state.set_state(Quiz.step)
+        await state.update_data(quiz_step=0)
+        text, keyboard = quiz_question(0, {})
+        await call.message.edit_text(text, reply_markup=keyboard)
         await call.answer()
 
-    @dp.callback_query(Quiz.subject, F.data.startswith("subject:"))
-    async def subject(call: CallbackQuery, state: FSMContext):
-        await state.update_data(subject=call.data.split(":", 1)[1])
-        await state.set_state(Quiz.budget)
-        await call.message.edit_text(
-            "Вопрос 2 из 8 · Сколько готов тратить на подготовку в месяц?",
-            reply_markup=options(
-                [
-                    ("До 3 000 ₽", "3000"),
-                    ("3 000–5 000 ₽", "5000"),
-                    ("5 000–8 000 ₽", "8000"),
-                    ("Больше 8 000 ₽", "12000"),
-                    ("Пока не определился", "0"),
-                ],
-                "budget",
-            ),
-        )
-        await call.answer()
-
-    @dp.callback_query(Quiz.budget, F.data.startswith("budget:"))
-    async def budget(call: CallbackQuery, state: FSMContext):
-        await state.update_data(budget=int(call.data.split(":")[1]) or None)
-        await state.set_state(Quiz.current_level)
-        await call.message.edit_text(
-            "Вопрос 3 из 8 · Как оцениваешь свои знания по предмету сейчас?",
-            reply_markup=options(
-                [
-                    ("Начинаю почти с нуля", "low"),
-                    ("Что-то знаю, нужна система", "middle"),
-                    ("База хорошая, хочу усилить результат", "high"),
-                ],
-                "level",
-            ),
-        )
-        await call.answer()
-
-    @dp.callback_query(Quiz.current_level, F.data.startswith("level:"))
-    async def current_level(call: CallbackQuery, state: FSMContext):
-        await state.update_data(current_level=call.data.split(":")[1])
-        await state.set_state(Quiz.target)
-        await call.message.edit_text(
-            "Вопрос 4 из 8 · На какой балл ЕГЭ ориентируешься?",
-            reply_markup=options(target_options((await state.get_data()).get("subject")), "target"),
-        )
-        await call.answer()
-
-    @dp.callback_query(Quiz.target, F.data.startswith("target:"))
-    async def target(call: CallbackQuery, state: FSMContext):
-        await state.update_data(target=int(call.data.split(":")[1].replace("+", "")))
-        await state.set_state(Quiz.curator)
-        await call.message.edit_text(
-            "Вопрос 5 из 8 · Нужен ли тебе куратор, который следит за прогрессом?",
-            reply_markup=options(
-                [
-                    ("Справлюсь сам, куратор не нужен", "1"),
-                    ("Иногда хочу спросить куратора", "2"),
-                    ("Нужен регулярный контроль куратора", "3"),
-                    ("Без куратора я всё откладываю", "4"),
-                ],
-                "curator",
-            ),
-        )
-        await call.answer()
-
-    @dp.callback_query(Quiz.curator, F.data.startswith("curator:"))
-    async def curator(call: CallbackQuery, state: FSMContext):
-        await state.update_data(curator=int(call.data.split(":")[1]))
-        await state.set_state(Quiz.workload)
-        await call.message.edit_text(
-            "Вопрос 6 из 8 · Какой темп подготовки тебе подходит?",
-            reply_markup=options(
-                [
-                    ("Небольшая нагрузка, без перегруза", "1"),
-                    ("Умеренный темп", "2"),
-                    ("Готов заниматься много", "3"),
-                    ("Максимум практики ради результата", "4"),
-                ],
-                "workload",
-            ),
-        )
-        await call.answer()
-
-    @dp.callback_query(Quiz.workload, F.data.startswith("workload:"))
-    async def workload(call: CallbackQuery, state: FSMContext):
-        await state.update_data(workload=int(call.data.split(":")[1]))
-        await state.set_state(Quiz.first_priority)
-        await call.message.edit_text(
-            "Вопрос 7 из 8 · Что для тебя важнее всего? Выбери главный приоритет.",
-            reply_markup=priority_keyboard(),
-        )
-        await call.answer()
-
-    @dp.callback_query(Quiz.first_priority, F.data.startswith("priority:"))
-    async def first_priority(call: CallbackQuery, state: FSMContext):
-        priority = call.data.split(":")[1]
-        await state.update_data(first_priority=priority)
-        await state.set_state(Quiz.second_priority)
-        await call.message.edit_text(
-            "Дополнительный приоритет · Можно выбрать ещё один пункт.",
-            reply_markup=priority_keyboard(priority),
-        )
-        await call.answer()
-
-    @dp.callback_query(Quiz.second_priority, F.data.startswith("priority:"))
-    async def second_priority(call: CallbackQuery, state: FSMContext):
-        priority = call.data.split(":")[1]
-        await state.update_data(second_priority=None if priority == "none" else priority)
-        await state.set_state(Quiz.control)
-        await call.message.edit_text(
-            "Вопрос 8 из 8 · Как у тебя с самодисциплиной в подготовке?",
-            reply_markup=options(
-                [
-                    ("Отлично — планирую и делаю сам", "1"),
-                    ("Хорошо, но нужны напоминания", "2"),
-                    ("Слабо — нужны проверки и дедлайны", "3"),
-                    ("Совсем никак без жёсткого контроля", "4"),
-                ],
-                "control",
-            ),
-        )
-        await call.answer()
-
-    @dp.callback_query(Quiz.control, F.data.startswith("control:"))
-    async def control(call: CallbackQuery, state: FSMContext):
+    @dp.callback_query(Quiz.step, F.data.startswith("qz:"))
+    async def quiz_answer(call: CallbackQuery, state: FSMContext):
+        _, raw_index, value = call.data.split(":", 2)
+        index = int(raw_index)
         data = await state.get_data()
-        priorities = tuple(
-            value
-            for value in (data.get("first_priority"), data.get("second_priority"))
-            if value
-        )
-        profile = QuizProfile(
-            subject=data["subject"],
-            budget=data["budget"],
-            current_level=data["current_level"],
-            target=data["target"],
-            curator_need=data["curator"],
-            workload=data["workload"],
-            control_need=int(call.data.split(":")[1]),
-            priorities=priorities,
-        )
+        if index != data.get("quiz_step", 0):  # a tap on an old message
+            await call.answer()
+            return
+        data[QUIZ_STEPS[index][0]] = value
+        if index + 1 < len(QUIZ_STEPS):
+            data["quiz_step"] = index + 1
+            await state.set_data(data)
+            text, keyboard = quiz_question(index + 1, data)
+            await call.message.edit_text(text, reply_markup=keyboard)
+            await call.answer()
+            return
+        profile = profile_from_answers(data)
         text, keyboard = await build_quiz_result(session_factory, profile)
         await state.clear()
         await track(call.from_user.id, "quiz_completed", {"subject": data.get("subject")})

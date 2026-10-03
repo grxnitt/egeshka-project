@@ -75,25 +75,26 @@ def test_a_school_needs_five_of_seven_criteria_including_teachers():
     assert not is_rated(school(status={"teachers_score": "none"}))
 
 
-def test_match_penalty_is_half_a_point_for_none_and_two_tenths_for_tier():
+def test_match_penalty_is_15_points_for_none_and_5_for_tier():
     needs_curator = profile(curator_need=4)
-    delta, reasons = _need_penalty(school(status={"curator_score": "none"}), needs_curator)
-    assert delta == -0.5 and reasons == ["нет куратора, а он тебе нужен"]
-    delta, reasons = _need_penalty(school(status={"curator_score": "tier"}), needs_curator)
-    assert delta == -0.2 and reasons == ["куратор — только на старших тарифах"]
+    points, reasons = _need_penalty(school(status={"curator_score": "none"}), needs_curator)
+    assert points == 15 and reasons == ["нет куратора, а он тебе нужен"]
+    points, reasons = _need_penalty(school(status={"curator_score": "tier"}), needs_curator)
+    assert points == 5 and reasons == ["куратор — только на старших тарифах"]
     # not needed (or offered everywhere): no penalty at all
     assert _need_penalty(school(status={"curator_score": "none"}), profile(curator_need=1)) == (0.0, [])
     assert _need_penalty(school(), needs_curator) == (0.0, [])
-    assert _need_penalty(school(status={"feedback_score": "none"}), profile(control_need=4))[0] == -0.5
+    assert _need_penalty(school(status={"feedback_score": "none"}), profile(control_need=4))[0] == 15
 
 
 def test_quiz_ignores_a_missing_criterion_when_it_is_not_needed():
     a = school(teachers_score=9, curator_score=0, status={"curator_score": "none"})
     b = school(teachers_score=9, curator_score=0)   # same numbers, but the zero is not marked as missing
+    peers = [a, b, school(8.0), school(8.5)]
     relaxed = profile(curator_need=1)
-    assert school_score(a, relaxed)[0] > school_score(b, relaxed)[0]
+    assert school_score(a, relaxed, peers=peers)[0] > school_score(b, relaxed, peers=peers)[0]
     needy = profile(curator_need=4)
-    assert "нет куратора, а он тебе нужен" in school_score(a, needy)[1]
+    assert "нет куратора, а он тебе нужен" in school_score(a, needy, peers=peers)[1]
 
 
 def test_bot_skips_missing_criteria_in_texts_and_review_keyboards():

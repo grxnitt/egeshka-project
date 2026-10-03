@@ -92,9 +92,9 @@ function matchSchool(school,a){if(!school.subjects.includes(a.subject))return nu
 function matchBadge(top,item,index){if(index===0)return 'Лучшее совпадение';const priced=top.filter(x=>x.match.price>0);const cheapest=priced.length?priced.reduce((x,y)=>y.match.price<x.match.price?y:x):null;if(cheapest===item&&cheapest.match.price<(top[0].match.price||Infinity))return 'Выгоднее по цене';const strongest=top.reduce((x,y)=>y.match.teachers>x.match.teachers?y:x);if(strongest===item&&item.match.teachers>top[0].match.teachers)return 'Сильнее преподаватели';return '';}
 const shortPrice=value=>value.length>118?`${value.slice(0,115).trim()}…`:value;
 const schoolCardUrl=name=>{const target=catalog.schools.find(item=>item.name===name);return target?`/schools/${target.reviewSlug}?from=quiz`:'/ratings';};
-// The bot still reads the original 9-field payload: "support" fills both curator and control,
-// and "teacher matters most" travels as a second priority.
-function quizPayload(a){const subjectIndex=quizSubjectKeys.indexOf(a.subject);const second=a.teacher==='3'&&a.priority1!=='teacher'?'teacher':'none';return `q_${subjectIndex}_${a.budget}_${a.level}_${a.target}_${a.curator}_${a.workload}_${a.priority1||'none'}_${second}_${a.control}`;}
+// Bot deep link: the original nine fields plus lesson format and teacher importance
+// (egeshka_bot/bot.py profile_from_payload still accepts old nine-field links).
+function quizPayload(a){const subjectIndex=quizSubjectKeys.indexOf(a.subject);return `q_${subjectIndex}_${a.budget}_${a.level}_${a.target}_${a.curator}_${a.workload}_${a.priority1||'none'}_none_${a.control}_${a.format||'any'}_${a.teacher||'2'}`;}
 let quizRun=0;
 // "Считаем совпадения": a short calculation screen before the result. It also covers a slow catalog:
 // if the data has not arrived when the animation ends, the screen waits for it (up to 20 s).

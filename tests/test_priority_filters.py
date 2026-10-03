@@ -66,7 +66,5 @@ def test_priority_field_keys_match_the_quiz_scoring_module_exactly():
     assert pairs == PRIORITY_TO_FIELD
 
 
-def test_strong_threshold_matches_the_bot_scoring_reason_cutoff():
-    scoring = Path("egeshka_bot/scoring.py").read_text(encoding="utf-8")
-    assert "value >= 8.5" in scoring  # school_score()'s own "сильные X" reason threshold
+def test_ratings_strong_threshold_is_declared_once():
     assert "const STRONG_THRESHOLD=8.5;" in (WEB / "ratings.js").read_text(encoding="utf-8")
