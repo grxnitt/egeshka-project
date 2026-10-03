@@ -16,7 +16,7 @@ CSS_VERSIONS = {
     "styles.css": "35",
     "refinements.css": "44",
     "typography.css": "31",
-    "composition.css": "148",
+    "composition.css": "149",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -265,7 +265,7 @@ def build_page(school, people, others, header, footer, teacher_slugs):
   <p class="back-row"><a class="back-link" href="/ratings" data-back="/ratings">← К рейтингу</a></p>
   <section class="hero hero-centered school-hero">
     <div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div class="hero-glow hero-glow-pink" aria-hidden="true"></div>
-    <div class="hero-copy"><h1>{escape(school["name"])}</h1><p class="lead">{escape(school["description"])}</p><div class="sp-score"><small>Оценка ЕГЭ Мэтча</small><strong>{num(school["score"])}</strong><span>из 10</span></div></div>
+    <div class="hero-copy"><h1>{escape(school["name"])}</h1><p class="lead">{escape(school["description"])}</p><div class="sp-score"><small>Оценка ЕГЭ Мэтча</small><strong>{num(school["score"])}</strong><span>из 10</span></div><a class="button blue sp-hero-cta" href="{lead_url}" target="_blank" rel="noopener" data-choose-school="{escape(school["name"])}" data-source="school_page_top">Выбрать школу <span>↗</span></a></div>
   </section>
   <p class="sp-note">Оценка складывается из редакционной оценки по критериям школы (до семи) и отзывов учеников: подтверждённые весят больше. Пока отзывов мало, она в основном редакционная. <a href="/methodology">Как считается оценка</a></p>
   <section class="sp-section"><h2 class="t-h3">Оценка по критериям</h2><ul class="sp-criteria">{criteria_rows}</ul>{missing_note}</section>

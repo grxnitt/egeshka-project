@@ -7,6 +7,8 @@ function pluralViews(n) {
   return 'просмотров';
 }
 
+// Tiny counts read as "nobody reads this", so they stay hidden until they mean something.
+const MIN_VISIBLE = 50;
 const label = views => `${Number(views).toLocaleString('ru-RU')} ${pluralViews(views)}`;
 
 // The article's own hero counter — increments once per browser tab session.
@@ -17,8 +19,9 @@ if (hero && heroSlug) {
   const already = (() => { try { return sessionStorage.getItem(key) === '1'; } catch { return false; } })();
   (already ? fetchArticleViews(heroSlug) : incrementArticleView(heroSlug)).then(views => {
     if (views == null) return;
-    hero.textContent = label(views);
     try { sessionStorage.setItem(key, '1'); } catch {}
+    if (views < MIN_VISIBLE) return;
+    hero.textContent = label(views);
   });
 }
 
@@ -30,7 +33,7 @@ if (cardEls.length) {
   fetchArticleViewsBatch(slugs).then(counts => {
     cardEls.forEach(el => {
       const views = counts[el.dataset.slug];
-      if (views == null) return;
+      if (views == null || views < MIN_VISIBLE) return;
       el.textContent = label(views);
     });
   });

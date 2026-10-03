@@ -270,7 +270,7 @@ RSS_LINK = f'\n  <link rel="alternate" type="application/rss+xml" title="ЕГЭ 
 SCRIPTS = f"""<script src="/analytics-config.js?v=1"></script>
 <script src="/analytics.js?v=12"></script>
 <script src="/supabase-config.js?v=1"></script>
-<script type="module" src="/article-views.js?v=2"></script>
+<script type="module" src="/article-views.js?v=3"></script>
 {site.NAV_SCRIPT}"""
 
 
