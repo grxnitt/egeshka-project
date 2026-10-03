@@ -29,3 +29,16 @@ def test_result_shows_pros_cons_and_a_distinguishing_badge():
 def test_level_and_target_come_from_one_goal_question():
     assert "key:'level'" not in APP and "key:'target'" not in APP
     assert "const [level,target]=value.split('|');siteQuiz.answers.level=level;siteQuiz.answers.target=target;" in APP
+
+
+def test_percent_stretches_the_real_score_band_instead_of_dividing_by_ten():
+    assert "const matchPercent=fit=>" in APP and "(fit-FIT_FLOOR)/(FIT_CEIL-FIT_FLOOR)" in APP
+    assert "/10*1000)/10" not in APP  # the old score/10 mapping squeezed every school into 85-99%
+    assert "function priorityEdge(school,a,teachersValue)" in APP
+    assert "fit=fit+bf+need.delta+ff.delta+priorityEdge(school,a,teachersValue);" in APP
+
+
+def test_caution_box_uses_brand_colors_not_an_off_palette_beige():
+    css = (Path("web") / "composition.css").read_text(encoding="utf-8")
+    rule = css[css.index(".quiz-match-cons{"):].split("}")[0]
+    assert "var(--blush)" in rule and "#fff4ec" not in rule
