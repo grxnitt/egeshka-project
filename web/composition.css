@@ -1512,3 +1512,9 @@ body.compare-page{overflow-x:clip}
 
 /* Score note now sits under the left-aligned criteria list. */
 .sp-section .sp-note{margin:16px 0 0;text-align:left}
+
+/* Quiz result: a label that tells the three matches apart, and an explicit "keep in mind" line. */
+.quiz-match-badge{display:inline-block;margin:0 0 10px;padding:4px 10px;border-radius:var(--r-pill);background:#edf0ff;color:var(--blue);font:700 12px/1.2 var(--font-ui)}
+.quiz-match:first-child .quiz-match-badge{background:var(--blue);color:#fff}
+.quiz-match-cons{margin:0 0 10px;padding:8px 11px;border-radius:var(--r-sm);background:#fff4ec;color:#7a3d12;font-size:12px;line-height:1.45}
+.quiz-match-cons b{font-weight:700}
