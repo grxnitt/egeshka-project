@@ -25,6 +25,10 @@
       "destination": "/privacy.html"
     },
     {
+      "source": "/terms",
+      "destination": "/terms.html"
+    },
+    {
       "source": "/schools/:slug",
       "destination": "/schools/:slug.html"
     },

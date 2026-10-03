@@ -257,10 +257,12 @@ dialog:has(.teacher-directory){max-width:1080px;padding:0;overflow:auto}
 .rating-centered .hero-title-line.brand-dot{display:inline-block}
 .rating-centered .hero-actions>.button{min-width:280px}
 @media(max-width:700px){.rating-centered .lead br{display:none}.rating-centered .hero-actions>.button{min-width:0}}
-/* Privacy hero's last word can wrap onto two lines (hyphenation): an inline-block
-   brand-dot would stretch to the full available width and strand the dot far past
-   the actual last letter, so keep it a plain inline run instead. */
-.privacy-hero .hero-title-line.brand-dot{display:inline}
+/* Legal-page heroes end in a long word that hyphenates onto two lines. The shared
+   brand-dot pins its dot with position:absolute to the span's box, which for a wrapped
+   span leaves the dot floating on its own line. Draw the dot as inline content instead,
+   so it always sits right after the last letter. */
+.privacy-hero .hero-title-line.brand-dot{display:inline;padding-right:0}
+.privacy-hero .hero-title-line.brand-dot:after{position:static;display:inline-block;right:auto;bottom:auto;width:.18em;height:.18em;margin-left:.06em;vertical-align:baseline}
 
 /* A calm, continuous comparison rail between the hero and the product. */
 .ribbon{

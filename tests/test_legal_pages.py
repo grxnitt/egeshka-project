@@ -1,0 +1,35 @@
+import json
+import re
+from pathlib import Path
+
+WEB = Path("web")
+
+
+def read(path):
+    return (WEB / path).read_text(encoding="utf-8")
+
+
+def test_legal_pages_are_routed_and_in_the_sitemap():
+    rewrites = {r["source"]: r["destination"] for r in json.loads(read("vercel.json"))["rewrites"]}
+    sitemap = read("sitemap.xml")
+    for route in ("privacy", "terms"):
+        assert rewrites[f"/{route}"] == f"/{route}.html"
+        assert f"<loc>https://egematch.ru/{route}</loc>" in sitemap
+        assert f'<link rel="canonical" href="https://egematch.ru/{route}">' in read(f"{route}.html")
+
+
+def test_every_page_footer_links_to_both_legal_pages():
+    pages = [*WEB.glob("*.html"), *WEB.glob("schools/*.html"), *WEB.glob("teachers/*.html"), *WEB.glob("articles/*.html")]
+    for page in pages:
+        text = page.read_text(encoding="utf-8")
+        footer = re.search(r"<footer.*?</footer>", text, re.S)
+        if not footer or page.name.startswith("yandex_"):
+            continue
+        assert 'href="/privacy"' in footer.group(0) and 'href="/terms"' in footer.group(0), page
+
+
+def test_privacy_policy_names_every_third_party_the_browser_talks_to():
+    policy = read("privacy.html")
+    for processor in ("Telegram", "Яндекс.Метрика", "Vercel", "Supabase"):
+        assert processor in policy
+    assert "482623207383" in policy and "482623207383" in read("terms.html")
