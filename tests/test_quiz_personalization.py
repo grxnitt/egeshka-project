@@ -4,7 +4,7 @@ APP = (Path("web") / "app.js").read_text(encoding="utf-8")
 
 
 def test_quiz_asks_format_support_and_teacher_importance():
-    for key in ("key:'format'", "key:'support'", "key:'teacher'"):
+    for key in ("key:'format'", "key:'goal'", "key:'support'", "key:'teacher'"):
         assert key in APP
     assert "const QUIZ_TOTAL=quizSteps.filter(step=>step.questionNumber).length;" in APP
     assert "`Вопрос ${step.questionNumber} из ${QUIZ_TOTAL}`" in APP
@@ -24,3 +24,8 @@ def test_support_answer_feeds_both_old_fields_and_bot_payload_stays_nine_fields(
 def test_result_shows_pros_cons_and_a_distinguishing_badge():
     assert "function matchBadge(top,item,index)" in APP
     assert 'class="quiz-match-cons"' in APP and 'class="quiz-match-badge"' in APP
+
+
+def test_level_and_target_come_from_one_goal_question():
+    assert "key:'level'" not in APP and "key:'target'" not in APP
+    assert "const [level,target]=value.split('|');siteQuiz.answers.level=level;siteQuiz.answers.target=target;" in APP
