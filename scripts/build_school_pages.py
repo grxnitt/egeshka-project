@@ -277,8 +277,8 @@ def build_page(school, people, others, header, footer, teacher_slugs):
 </main>
 {footer}
 <script>window.TEACHER_SLUGS={slug_map};</script>
-<script src="/analytics-config.js?v=1"></script>
-<script src="/analytics.js?v=12"></script>
+<script src="/analytics-config.js?v=2"></script>
+<script src="/analytics.js?v=13"></script>
 {NAV_SCRIPT}
 {FILTER_SCRIPT}
 </body>
@@ -348,8 +348,8 @@ def build_teacher_page(person, school, colleagues, header, footer):
   <section class="sp-section"><h2 class="t-h3">Другие преподаватели школы</h2><nav class="sp-more" aria-label="Другие преподаватели школы">{other_links}</nav><p class="sp-more-all"><a href="{school_url}#teachers">Все преподаватели школы →</a></p></section>
 </main>
 {footer}
-<script src="/analytics-config.js?v=1"></script>
-<script src="/analytics.js?v=12"></script>
+<script src="/analytics-config.js?v=2"></script>
+<script src="/analytics.js?v=13"></script>
 {NAV_SCRIPT}
 </body>
 </html>

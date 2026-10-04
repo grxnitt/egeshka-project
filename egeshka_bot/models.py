@@ -149,3 +149,41 @@ class Event(Base):
     event_name: Mapped[str] = mapped_column(String(80), index=True)
     metadata_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, index=True)
+
+
+class LeadSchool(Base):
+    """Per-school switch and delivery settings for site leads. A school only receives leads once it is
+    enabled here, which happens after a signed agreement - never before."""
+    __tablename__ = "lead_schools"
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id", ondelete="CASCADE"), primary_key=True)
+    enabled: Mapped[bool] = mapped_column(Boolean, default=False)
+    legal_name: Mapped[str] = mapped_column(String(200), default="")
+    inn: Mapped[str] = mapped_column(String(12), default="")
+    policy_url: Mapped[str] = mapped_column(String(500), default="")
+    contact_types: Mapped[str] = mapped_column(String(60), default="phone,telegram,vk")
+    delivery_email: Mapped[str] = mapped_column(String(200), default="")
+    webhook_url: Mapped[str] = mapped_column(String(500), default="")
+    tg_chat_id: Mapped[str] = mapped_column(String(40), default="")
+
+
+class Lead(Base):
+    """A student's request to a school: name, ONE contact the student chose, and the exam subject. Nothing else
+    about the student is stored (no IP, no user agent, no quiz answers)."""
+    __tablename__ = "leads"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id", ondelete="CASCADE"), index=True)
+    name: Mapped[str] = mapped_column(String(80))
+    contact_type: Mapped[str] = mapped_column(String(12))
+    contact: Mapped[str] = mapped_column(String(120))
+    contact_hash: Mapped[str] = mapped_column(String(64), index=True)
+    subject: Mapped[str] = mapped_column(String(60))
+    guardian: Mapped[bool] = mapped_column(Boolean, default=False)
+    consent_version: Mapped[str] = mapped_column(String(30))
+    consent_at: Mapped[datetime] = mapped_column(DateTime)
+    source: Mapped[str] = mapped_column(String(30), default="site")
+    status: Mapped[str] = mapped_column(String(16), default="new", index=True)
+    attempts: Mapped[int] = mapped_column(Integer, default=0)
+    last_error: Mapped[str] = mapped_column(String(300), default="")
+    sent_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    withdraw_hash: Mapped[str] = mapped_column(String(64), default="", index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, index=True)

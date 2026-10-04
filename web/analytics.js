@@ -222,6 +222,8 @@
   if(articleRoot)trackArticleReading();
 
   window.egeTrack=goal;
+  /* On-site lead window: only loaded once an API address is configured in analytics-config.js. */
+  if(window.EGE_LEADS_API){var leadScript=document.createElement('script');leadScript.src='/lead.js?v=1';leadScript.defer=true;document.head.appendChild(leadScript)}
   document.addEventListener('click',onClick,true);
   document.addEventListener('auxclick',onClick,true);
 })();
