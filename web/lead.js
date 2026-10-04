@@ -7,10 +7,10 @@
   if(!API)return;
   var SUBJECTS=['Русский','Математика профильная','Математика базовая','Обществознание','Физика','Химия','Биология','Информатика','Английский','История','Литература','География'];
   var TYPES={
-    phone:{chip:'Телефон',label:'Номер телефона',placeholder:'+7 900 123-45-67',hint:'Например, +7 900 123-45-67',type:'tel',mode:'tel',auto:'tel',via:'по телефону'},
-    telegram:{chip:'Telegram',label:'Ник в Telegram',placeholder:'@username',hint:'Ник начинается с @, например @ivan_petrov',type:'text',mode:'text',auto:'off',via:'в Telegram'},
-    vk:{chip:'VK',label:'Ссылка на профиль VK',placeholder:'https://vk.com/id123456',hint:'Вставьте ссылку на ваш профиль, не только имя',type:'url',mode:'url',auto:'off',via:'в VK'},
-    email:{chip:'Почта',label:'Электронная почта',placeholder:'name@mail.ru',hint:'Адрес, который вы читаете',type:'email',mode:'email',auto:'email',via:'на почту'}
+    phone:{chip:'Телефон',label:'Номер телефона',placeholder:'+7 900 123-45-67',hint:'Школа позвонит или напишет на этот номер',type:'tel',mode:'tel',auto:'tel',via:'по телефону'},
+    telegram:{chip:'Telegram',label:'Ник в Telegram',placeholder:'@username',hint:'Школа напишет вам в Telegram',type:'text',mode:'text',auto:'off',via:'в Telegram'},
+    vk:{chip:'VK',label:'Ссылка на профиль VK',placeholder:'https://vk.com/id123456',hint:'Скопируйте адрес своей страницы из браузера. Школа напишет вам в VK',type:'url',mode:'url',auto:'off',via:'в VK'},
+    email:{chip:'Почта',label:'Электронная почта',placeholder:'name@mail.ru',hint:'Школа напишет вам на этот адрес',type:'email',mode:'email',auto:'email',via:'на почту'}
   };
   var schools={};
   var dialog=null;
