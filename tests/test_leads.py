@@ -20,6 +20,13 @@ def test_contacts_are_normalised_and_bad_ones_rejected():
     assert leads.normalize_phone("12345") is None and leads.normalize_phone("+7 100 123 45 67") is None
     assert leads.normalize_telegram("https://t.me/ivan_petrov") == "@ivan_petrov" and leads.normalize_telegram("@ab") is None
     assert leads.normalize_vk("https://vk.com/id12345") == "https://vk.com/id12345" and leads.normalize_vk("vk.com/a b") is None
+    assert leads.normalize_vk("m.vk.com/ivan.petrov/") == "https://vk.com/ivan.petrov"
+    assert leads.normalize_vk("https://vk.com/profile.php?id=777") == "https://vk.com/id777"
+    for not_a_link in ("ivan", "id12345", "@ivan", "https://example.com/ivan", "https://vk.com/"):
+        assert leads.normalize_vk(not_a_link) is None  # a VK contact must be a profile link
+    assert leads.normalize_email(" Anya@Mail.RU ") == "anya@mail.ru"
+    for bad in ("anya", "anya@", "anya@mail", "a b@mail.ru", "a@@mail.ru"):
+        assert leads.normalize_email(bad) is None
 
 
 def cfg(**kw):
@@ -31,7 +38,7 @@ def cfg(**kw):
 
 def body(**kw):
     base = dict(name="Аня", contact_type="phone", contact="8 900 123 45 67", subject="Русский", consent=True,
-                consent_version=leads.CONSENT_VERSION, guardian=False, website="")
+                consent_version=leads.CONSENT_VERSION, applicant="adult", website="")
     base.update(kw)
     return base
 
@@ -39,14 +46,26 @@ def body(**kw):
 def test_request_needs_consent_a_valid_subject_and_an_accepted_contact_type():
     assert leads.clean_request(body(), cfg())["contact"] == "+79001234567"
     for bad in (body(consent=False), body(consent_version="old"), body(website="x"), body(name="A"),
-                body(contact_type="vk", contact="vk.com/ivan"), body(contact="123"), body(subject="Астрология")):
+                body(contact_type="vk", contact="vk.com/ivan"), body(contact="123"), body(subject="Астрология"),
+                body(applicant=""), body(applicant="child")):
         with pytest.raises(leads.LeadError):
             leads.clean_request(bad, cfg())
 
 
 def test_consent_text_names_the_school_and_what_is_passed():
     text = leads.consent_text("Школа", cfg())
-    assert "ООО «Школа»" in text and "ИНН 7700000000" in text and "имя" in text and "предмет" in text and "отозвать" in text
+    assert "ООО «Школа»" in text and "ИНН 7700000000" in text and "имени" in text and "предмет" in text and "отозвать" in text
+    operator = SimpleNamespace(operator_name="Иванов И. И., ИНН 123", operator_contact="help@example.ru")
+    full = leads.consent_text("Школа", cfg(policy_url="https://school.example/policy"), operator)
+    for required in ("Иванов И. И.", "help@example.ru", "https://school.example/policy", "https://egematch.ru/privacy", "365", "18 лет"):
+        assert required in full  # operator, withdrawal contact, both policies, retention and the age line (art. 9(4) of 152-FZ)
+
+
+def test_a_guardian_request_is_marked_and_a_vk_school_gets_the_link():
+    clean = leads.clean_request(body(applicant="guardian", contact_type="vk", contact="vk.com/ivan"), cfg(contact_types="vk,email"))
+    assert clean["guardian"] is True and clean["contact"] == "https://vk.com/ivan"
+    mail = leads.clean_request(body(contact_type="email", contact="A@B.ru"), cfg(contact_types="email"))
+    assert mail["contact"] == "a@b.ru" and mail["guardian"] is False
 
 
 def test_rate_limiter_blocks_the_sixth_request_in_an_hour_and_recovers():

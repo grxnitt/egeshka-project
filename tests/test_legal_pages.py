@@ -50,3 +50,10 @@ def test_policy_explains_the_cookie_choice_and_lets_it_be_changed():
     assert '<h2 id="cookies">' in policy
     assert "data-cookie-settings" in policy
     assert "только после того, как посетитель нажимает «Принять»" in policy
+
+
+def test_policy_describes_site_leads_and_the_age_gate():
+    policy = read("privacy.html")
+    for needed in ("3.4. Данные заявки в школу", "Передача заявки в школу", "365 дней", "самостоятельным оператором", "родитель (законный представитель)"):
+        assert needed in policy
+    assert "Выбрать школу" in policy and "Выбрать школу" in read("terms.html")

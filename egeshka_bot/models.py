@@ -160,7 +160,7 @@ class LeadSchool(Base):
     legal_name: Mapped[str] = mapped_column(String(200), default="")
     inn: Mapped[str] = mapped_column(String(12), default="")
     policy_url: Mapped[str] = mapped_column(String(500), default="")
-    contact_types: Mapped[str] = mapped_column(String(60), default="phone,telegram,vk")
+    contact_types: Mapped[str] = mapped_column(String(60), default="phone,telegram,vk,email")
     delivery_email: Mapped[str] = mapped_column(String(200), default="")
     webhook_url: Mapped[str] = mapped_column(String(500), default="")
     tg_chat_id: Mapped[str] = mapped_column(String(40), default="")

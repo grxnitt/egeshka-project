@@ -55,7 +55,7 @@ def create_app(settings: Settings, session_factory) -> web.Application:
             school, cfg = await leads.school_config(session, request.query.get("school", ""))
             if not school:
                 return reply({"error": "off"}, 404)
-            return reply({"text": leads.consent_text(school.name, cfg), "version": leads.CONSENT_VERSION})
+            return reply({"text": leads.consent_text(school.name, cfg, settings), "version": leads.CONSENT_VERSION})
 
     async def create_lead(request):
         if not settings.leads_enabled:
@@ -102,6 +102,8 @@ def create_app(settings: Settings, session_factory) -> web.Application:
 
 
 async def run(settings: Settings):
+    if settings.leads_enabled and (not settings.operator_contact or "владелец сервиса" in settings.operator_name):
+        raise SystemExit("LEADS_ENABLED needs OPERATOR_NAME and OPERATOR_CONTACT: the consent text must name the operator.")
     engine, session_factory = await init_db(settings.database_url)
     runner = web.AppRunner(create_app(settings, session_factory))
     await runner.setup()

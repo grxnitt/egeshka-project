@@ -25,7 +25,7 @@ from .models import Lead, LeadSchool, School
 from .subjects import SUBJECTS
 
 CONSENT_VERSION = "2026-10-05"
-CONTACT_TYPES = ("phone", "telegram", "vk")
+CONTACT_TYPES = ("phone", "telegram", "vk", "email")
 DUPLICATE_WINDOW_DAYS = 90
 RETENTION_DAYS = 365
 MAX_ATTEMPTS = 5
@@ -52,27 +52,48 @@ def normalize_telegram(raw: str) -> Optional[str]:
 
 
 def normalize_vk(raw: str) -> Optional[str]:
+    """A VK profile LINK is required: a bare name or number is rejected, because the school can't open it."""
     value = (raw or "").strip()
-    value = re.sub(r"^(https?://)?(m\.)?(vk\.com|vk\.ru)/", "", value, flags=re.I).strip("/")
-    return "https://vk.com/" + value if re.fullmatch(r"(id\d{1,12}|[A-Za-z0-9_.]{3,32})", value) else None
+    match = re.fullmatch(r"(?:https?://)?(?:m\.)?(?:vk\.com|vk\.ru)/(.+?)/?", value, flags=re.I)
+    if not match:
+        return None
+    path = match.group(1).split("?")[0].split("#")[0].strip("/")
+    profile_id = re.fullmatch(r"profile\.php", path, flags=re.I) and re.search(r"[?&]id=(\d{1,12})", value)
+    if profile_id:
+        path = "id" + profile_id.group(1)
+    return "https://vk.com/" + path if re.fullmatch(r"(id\d{1,12}|[A-Za-z0-9_.]{3,32})", path) else None
 
 
-NORMALIZERS = {"phone": normalize_phone, "telegram": normalize_telegram, "vk": normalize_vk}
-CONTACT_HINTS = {"phone": "телефон в формате +7 900 123-45-67", "telegram": "ник в Telegram, например @username", "vk": "ссылка на профиль VK"}
+def normalize_email(raw: str) -> Optional[str]:
+    value = (raw or "").strip().lower()
+    return value if len(value) <= 120 and re.fullmatch(r"[a-z0-9._%+\-]+@[a-z0-9\-]+(\.[a-z0-9\-]+)*\.[a-z]{2,}", value) else None
+
+
+NORMALIZERS = {"phone": normalize_phone, "telegram": normalize_telegram, "vk": normalize_vk, "email": normalize_email}
+CONTACT_HINTS = {"phone": "телефон в формате +7 900 123-45-67", "telegram": "ник в Telegram, например @username",
+                 "vk": "ссылка на профиль VK, например https://vk.com/id123456", "email": "адрес почты, например name@mail.ru"}
 
 
 def contact_hash(school_id: int, contact_type: str, contact: str) -> str:
     return hashlib.sha256(f"{school_id}|{contact_type}|{contact}".encode()).hexdigest()
 
 
-def consent_text(school_name: str, cfg: LeadSchool) -> str:
+def consent_text(school_name: str, cfg: LeadSchool, settings=None) -> str:
+    """The consent shown next to the checkbox. It follows art. 9(4) of 152-FZ: who processes, whose data, what for,
+    which data and actions, for how long, how to withdraw. Change it => change CONSENT_VERSION."""
     recipient = f"{cfg.legal_name or school_name}" + (f" (ИНН {cfg.inn})" if cfg.inn else "")
+    operator = getattr(settings, "operator_name", "") or "ЕГЭ Мэтч"
+    contact = getattr(settings, "operator_contact", "")
     return (
-        f"Я согласен(на) передать моё имя, выбранный мной контакт и предмет подготовки в {recipient}, чтобы школа связалась со мной "
-        f"по вопросам обучения. После передачи школа обрабатывает эти данные самостоятельно по своей политике"
-        + (f" ({cfg.policy_url})" if cfg.policy_url else "")
-        + ". Согласие можно отозвать в любой момент, это удалит заявку в ЕГЭ Мэтче и отправит школе просьбу удалить данные. "
-        "Если мне нет 18 лет, заявку оставляет мой родитель или законный представитель."
+        f"Я даю согласие оператору персональных данных — {operator} (сервис ЕГЭ Мэтч, egematch.ru) — на обработку моих данных: имени, выбранного мной "
+        f"контакта и предмета подготовки. Цель: передать мою заявку в {recipient}, чтобы школа связалась со мной по вопросам обучения. "
+        f"ЕГЭ Мэтч собирает, хранит, передаёт школе и удаляет эти данные; хранит не дольше {RETENTION_DAYS} дней или до отзыва согласия. "
+        f"Школа получает данные и дальше обрабатывает их самостоятельно как оператор"
+        + (f", по своей политике ({cfg.policy_url})" if cfg.policy_url else "")
+        + ". Согласие можно отозвать в любой момент: в окне после отправки заявки"
+        + (f" или письмом на {contact}" if contact else "")
+        + ". Тогда ЕГЭ Мэтч удалит заявку и сообщит школе, что данные нужно удалить. "
+        "Подробнее: https://egematch.ru/privacy. Мне есть 18 лет, либо я родитель или законный представитель ученика."
     )
 
 
@@ -97,8 +118,10 @@ def clean_request(data: dict, cfg: LeadSchool) -> dict:
     subject = str(data.get("subject") or "")
     if subject not in SUBJECTS:
         raise LeadError("Выберите предмет.")
+    if data.get("applicant") not in ("adult", "guardian"):
+        raise LeadError("Укажите, кто оставляет заявку: вам есть 18 лет или вы родитель ученика.")
     return {"name": name, "contact_type": contact_type, "contact": contact, "subject": subject,
-            "guardian": bool(data.get("guardian")), "source": str(data.get("source") or "site")[:30]}
+            "guardian": data["applicant"] == "guardian", "source": str(data.get("source") or "site")[:30]}
 
 
 class RateLimiter:
@@ -152,7 +175,7 @@ async def create_lead(session, school: School, clean: dict, now: Optional[dateti
 
 
 def lead_message(lead: Lead, school_name: str) -> str:
-    kind = {"phone": "Телефон", "telegram": "Telegram", "vk": "VK"}[lead.contact_type]
+    kind = {"phone": "Телефон", "telegram": "Telegram", "vk": "VK", "email": "Email"}[lead.contact_type]
     return (
         f"Новая заявка с ЕГЭ Мэтч №{lead.id} для школы «{school_name}»\n"
         f"Имя: {lead.name}\n{kind}: {lead.contact}\nПредмет: {lead.subject}\n"
@@ -253,10 +276,10 @@ async def withdraw(session, settings, token: str) -> bool:
         return False
     school = await session.get(School, lead.school_id)
     cfg = await session.get(LeadSchool, lead.school_id)
-    was_sent = lead.status == "sent"
+    reached_school = lead.status == "sent" or lead.attempts > 0  # a partly failed delivery may still have reached it
     lead.name, lead.contact, lead.contact_hash, lead.withdraw_hash, lead.status = "", "", "", "", "withdrawn"
     await session.commit()
-    if was_sent and school and cfg:
+    if reached_school and school and cfg:
         await deliver(settings, cfg, f"Отзыв заявки №{lead.id}", withdrawal_message(lead.id, school.name))
     return True
 
