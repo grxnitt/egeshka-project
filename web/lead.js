@@ -135,7 +135,7 @@
     var subjectSelect=el('select',{name:'subject',required:'required'},[el('option',{value:'',text:'Выберите предмет'})]);
     SUBJECTS.forEach(function(subject){subjectSelect.appendChild(el('option',{value:subject,text:subject}))});
     try{var saved=JSON.parse(sessionStorage.getItem('egeshka-quiz')||'{}');if(saved&&saved.subject)SUBJECTS.forEach(function(s,i){if(s.toLowerCase()===String(saved.subject).toLowerCase())subjectSelect.selectedIndex=i+1})}catch(e){}
-    var subjectField=field(subjectSelect,'Предмет, который готовит ученик','lead-subject');
+    var subjectField=field(subjectSelect,'Какой предмет ЕГЭ нужен','lead-subject');
 
     var nameInput=el('input',{type:'text',name:'name',autocomplete:'given-name',maxlength:'80'});
     var nameField=field(nameInput,'Как к вам обращаться','lead-name');
