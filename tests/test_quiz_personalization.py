@@ -23,7 +23,7 @@ def test_support_answer_feeds_both_old_fields_and_bot_payload_carries_format_and
 
 def test_result_shows_pros_cons_and_a_distinguishing_badge():
     assert "function matchBadge(top,item,index)" in APP
-    assert 'class="quiz-match-cons"' in APP and 'class="quiz-match-badge"' in APP
+    assert 'class="qr-warn"' in APP and 'qr-best' in APP and 'qr-tags' in APP
 
 
 def test_level_and_target_are_two_independent_rows_on_one_screen():

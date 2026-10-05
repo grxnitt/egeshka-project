@@ -1545,3 +1545,45 @@ body.compare-page{overflow-x:clip}
 .quiz-pair-next{justify-self:start;margin-top:4px}
 .quiz-pair-next[disabled]{opacity:.45;cursor:default;transform:none}
 .quiz-gap{margin:0 0 14px;padding:9px 12px;border-radius:var(--r-sm);background:#edf0ff;font-size:13px;line-height:1.45}
+/* Quiz result v2: one glance per school — name, %, up to three short tags, price and "Выбрать". */
+.qr{padding:28px 24px}
+.qr h2{margin:0 0 6px;font-size:32px}
+.qr-recap{margin:0 0 18px;color:var(--blue);font:700 13px/1.4 var(--font-ui)}
+.qr-note,.qr-empty{margin:0 0 14px;padding:10px 14px;border-radius:14px;background:#fff;font-size:13px;line-height:1.45}
+.qr-list{position:relative;z-index:1;display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.qr-card{position:relative;padding:16px 18px;border-radius:20px;background:#fff}
+.qr-card.is-first{box-shadow:0 0 0 2px var(--blue)}
+.qr-best{display:inline-block;margin-bottom:10px;padding:4px 10px;border-radius:999px;background:var(--blue);color:#fff;font:700 11px/1.2 var(--font-ui)}
+.qr-top{display:flex;align-items:center;gap:10px}
+.qr-place{display:grid;place-items:center;flex:0 0 26px;height:26px;border-radius:50%;background:#e4e9ff;color:var(--blue);font:700 12px/1 var(--font-ui)}
+.qr-name{flex:1;min-width:0;font:700 18px/1.2 var(--font-ui);letter-spacing:-.02em;color:var(--ink)}
+.qr-name:hover{color:var(--blue)}
+.qr-pct{color:var(--blue);font:800 22px/1 var(--font-ui);font-variant-numeric:tabular-nums}
+.qr-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.qr-tags span{padding:5px 10px;border-radius:999px;background:#eef1ff;color:#2b3a9e;font:600 12px/1.2 var(--font-ui)}
+.qr-tags span.is-accent{background:#ffe3ee;color:#a3174f}
+.qr-warn{margin:10px 0 0;font-size:12px;line-height:1.4;color:#a3174f}
+.qr-warn:before{content:'! ';font-weight:800}
+.qr-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid #eef0f6}
+.qr-price{font:600 14px/1.3 var(--font-ui);color:var(--ink)}
+.qr-choose{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;background:var(--blue);color:#fff;font:700 13px/1 var(--font-ui);white-space:nowrap}
+.qr-choose:hover{background:#2639b8}
+.qr-more{position:relative;z-index:1;margin-top:10px;border-radius:20px;background:#fff}
+.qr-more summary{cursor:pointer;padding:14px 18px;font:700 14px/1.2 var(--font-ui);list-style:none;color:var(--ink)}
+.qr-more summary::-webkit-details-marker{display:none}
+.qr-more summary:after{content:'+';float:right;color:var(--blue)}
+.qr-more[open] summary:after{content:'−'}
+.qr-more ul{margin:0;padding:0 18px 8px;list-style:none}
+.qr-more li a{display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid #eef0f6;font:600 14px/1.2 var(--font-ui)}
+.qr-more li b{color:var(--blue)}
+.qr-actions{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.qr-actions a,.qr-actions button{padding:10px 14px;border:1px solid #d5dbf5;border-radius:999px;background:transparent;color:var(--ink);font:600 13px/1 var(--font-ui)}
+.qr-actions a:hover,.qr-actions button:hover{border-color:var(--blue);color:var(--blue)}
+.qr-hint{position:relative;z-index:1;margin:14px 0 0;color:var(--muted);font-size:12px;line-height:1.4}
+.qr .quiz-feedback{position:relative;z-index:1;margin-top:10px}
+@media(max-width:700px){.qr{padding:24px 14px}.qr h2{font-size:28px}.qr-card{padding:14px}.qr-name{font-size:17px}.qr-pct{font-size:20px}.qr-actions a,.qr-actions button{flex:1 1 auto;text-align:center}}
+.qr-actions .quiz-edit{text-decoration:none;width:auto}
+@media(max-width:700px){.qr-actions{display:grid;grid-template-columns:1fr 1fr}.qr-actions a,.qr-actions button{padding:11px 8px;font-size:12px}}
+.qr.quiz-result{min-height:0}
+.qr-actions .quiz-edit{min-height:0;margin:0;line-height:1}
+.qr.quiz-result:after{display:none}

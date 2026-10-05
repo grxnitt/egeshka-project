@@ -82,7 +82,7 @@ def test_quiz_result_cards_offer_choose_school():
     script = read("app.js")
     assert "chooseSchoolUrl" in script
     assert 'data-source="quiz_result"' in script
-    assert "quiz-choose-link" in script
+    assert "qr-choose" in script
 
 
 def test_school_content_exports_choose_school_url_helper():

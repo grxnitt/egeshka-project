@@ -31,7 +31,7 @@ def test_quiz_result_recaps_the_answers_and_links_back_to_filtered_ratings():
     js = (WEB / "app.js").read_text(encoding="utf-8")
     assert "function ratingsUrl(a)" in js
     assert "NEEDS.curator_score(a)" in js  # reuses the same "does the student need a curator" rule as scoring
-    assert 'class="quiz-recap"' in js
-    assert 'class="text-link quiz-ratings-link"' in js
+    assert 'class="qr-recap"' in js
+    assert '<a href="${escape(ratingsUrl(a))}">Все в рейтинге</a>' in js
     css = (WEB / "composition.css").read_text(encoding="utf-8")
-    assert ".quiz-recap{" in css and ".quiz-ratings-link{" in css
+    assert ".qr-recap{" in css and ".qr-actions{" in css
