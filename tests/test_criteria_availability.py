@@ -142,7 +142,7 @@ def test_catalog_carries_statuses_null_criteria_and_renormalised_scores():
 
 
 def test_supabase_migration_uses_the_same_weights_and_statuses():
-    sql = (Path("supabase/migrations") / "011_criteria_availability.sql").read_text(encoding="utf-8")
+    sql = (Path("supabase/migrations") / "016_rating_weights.sql").read_text(encoding="utf-8")
     assert "criteria_status" in sql and "nullif(sum(weight), 0)" in sql
     weights = sorted(float(x) for x in re.findall(r"= 'none' then 0 else ([0-9.]+) end", sql))
     assert weights == sorted(BASE_WEIGHTS.values())

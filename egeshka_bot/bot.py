@@ -40,11 +40,11 @@ PRIORITY_LABELS = {
 }
 
 CRITERIA = (
-    ("teachers_score", "Преподаватели", 0.24),
+    ("teachers_score", "Преподаватели", 0.20),
     ("practice_score", "Практика и ДЗ", 0.16),
     ("feedback_score", "Проверка и обратная связь", 0.14),
     ("curator_score", "Кураторы", 0.14),
-    ("platform_score", "Платформа", 0.10),
+    ("platform_score", "Платформа", 0.14),
     ("workload_score", "Нагрузка и темп", 0.08),
     ("organization_score", "Организация обучения", 0.14),
 )

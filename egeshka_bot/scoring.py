@@ -4,11 +4,11 @@ from typing import Optional, Tuple
 
 
 BASE_WEIGHTS = {
-    "teachers_score": 0.24,
+    "teachers_score": 0.20,
     "practice_score": 0.16,
     "feedback_score": 0.14,
     "curator_score": 0.14,
-    "platform_score": 0.10,
+    "platform_score": 0.14,
     "workload_score": 0.08,
     "organization_score": 0.14,
 }

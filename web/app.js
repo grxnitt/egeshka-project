@@ -36,7 +36,7 @@ const FORMAT_MISSING={live:'живых занятий',recorded:'занятий 
 //    7.5-9 score where everyone looks alike: "кураторы лучше 80% школ" is what actually separates them.
 // 3. Hard conditions (format, budget, a needed service that is missing) subtract fixed percentage points
 //    and are always shown under "Учти", instead of being blended into the weights.
-const BASE_WEIGHTS={teachers_score:.24,practice_score:.16,feedback_score:.14,curator_score:.14,platform_score:.10,workload_score:.08,organization_score:.14};
+const BASE_WEIGHTS={teachers_score:.20,practice_score:.16,feedback_score:.14,curator_score:.14,platform_score:.14,workload_score:.08,organization_score:.14};
 const PRIORITY_TO_FIELD={teacher:'teachers_score',practice:'practice_score',curator:'curator_score',platform:'platform_score'};
 // answer -> {criterion: multiplier}. Multipliers from several answers multiply, capped at x4.
 const IMPORTANCE={
