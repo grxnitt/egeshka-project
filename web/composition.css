@@ -1587,3 +1587,16 @@ body.compare-page{overflow-x:clip}
 .qr.quiz-result{min-height:0}
 .qr-actions .quiz-edit{min-height:0;margin:0;line-height:1}
 .qr.quiz-result:after{display:none}
+/* Quiz result v2 — brand tokens only (blue, blush/#862b52 pair from .pink-mark, surface lines, max weight 700). */
+.qr .qr-pct{font-weight:700}
+.qr .qr-tags span{background:#edf0ff;color:var(--blue)}
+.qr .qr-tags span.is-accent{background:var(--blush);color:#862b52}
+.qr p.qr-warn{margin:10px 0 0;font-size:12px;line-height:1.4;color:#862b52}
+.qr p.qr-warn:before{color:var(--pink)}
+.qr .qr-choose,.qr .qr-best{font-weight:600}
+.qr .qr-choose{transition:transform .2s}
+.qr .qr-choose:hover{background:var(--blue);transform:translateY(-2px)}
+.qr .qr-bottom,.qr .qr-more li a{border-top-color:var(--surface-line)}
+.qr .qr-actions a,.qr .qr-actions button{border-color:var(--surface-line)}
+.qr .qr-place{background:#edf0ff}
+.qr p.qr-recap{color:var(--blue)}
