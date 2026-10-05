@@ -16,7 +16,7 @@ from .config import Settings
 from .db import SCHOOL_REVIEW_SLUGS, delete_user_data, get_or_create_user
 from .models import Course, Event, Review, ReviewCriterionScore, School, Teacher, User
 from .scoring import (
-    STATUS_NONE, STATUS_TIER, QuizProfile, applicable_criteria, editorial_score, effective_weights, school_match, school_score, status_of,
+    STATUS_NONE, STATUS_TIER, QuizProfile, applicable_criteria, editorial_score, effective_weights, months_to_exam, school_match, school_score, status_of,
 )
 
 
@@ -1109,7 +1109,13 @@ async def build_quiz_result(session_factory, profile: QuizProfile):
         line = f"{index}. {school.name} — {score:.0f}% совпадение\nПочему: {', '.join(match['pros'])}"
         if match["cons"]:
             line += f"\n⚠️ Учти: {'; '.join(match['cons'])}"
+        if match.get("factors"):
+            line += "\n📊 Что повлияло: " + " · ".join(f"{label} {'+' if value > 0 else '−'}{abs(value)}" for label, value in match["factors"])
         line += f"\n💸 {price}"
+        monthly = float(getattr(school, "monthly_price_from", 0) or 0)
+        if monthly > 0 and profile.subject != "математика базовая":
+            months = months_to_exam()
+            line += f"\n🗓 До экзамена: ≈ {round(monthly * months):,} ₽ за {months} мес. по самому доступному тарифу".replace(",", " ")
         if teacher_lines.get(school.id):
             line += f"\n{teacher_lines[school.id]}"
         lines.append(line)

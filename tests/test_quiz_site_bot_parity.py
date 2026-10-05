@@ -59,3 +59,21 @@ def test_bot_reads_new_and_old_site_links():
     assert new.lesson_format == "individual" and new.teacher_need == 3 and new.curator_need == 3
     old = profile_from_payload("q_0_8000_middle_70_3_2_practice_none_3")
     assert old.lesson_format == "any" and old.teacher_need == 2
+
+
+def test_subject_teacher_points_and_factor_labels_are_the_same():
+    js = _js_object("SUBJECT_TEACHER", APP)
+    assert f"perPoint:{scoring.SUBJECT_TEACHER['per_point']},min:{scoring.SUBJECT_TEACHER['min']},max:{scoring.SUBJECT_TEACHER['max']}" in js
+    assert "need:{'1':.5,'2':1,'3':1.5}" in js and scoring.SUBJECT_TEACHER["need"] == {1: 0.5, 2: 1, 3: 1.5}
+    labels = dict(re.findall(r"(\w+):'([^']+)'", _js_object("FACTOR_LABELS", APP)))
+    assert labels == scoring.FACTOR_LABELS
+
+
+def test_months_to_exam_counts_payments_until_may():
+    from datetime import date
+    assert scoring.months_to_exam(date(2026, 10, 5)) == 8
+    assert scoring.months_to_exam(date(2027, 1, 10)) == 5
+    assert scoring.months_to_exam(date(2027, 5, 20)) == 1
+    assert scoring.months_to_exam(date(2027, 6, 10)) == 1
+    assert scoring.months_to_exam(date(2027, 7, 1)) == 11
+    assert "examYear=m>=7?today.getFullYear()+1:today.getFullYear()" in APP

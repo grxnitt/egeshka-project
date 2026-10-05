@@ -1,3 +1,4 @@
+from datetime import date
 import json
 from dataclasses import dataclass
 from typing import Optional, Tuple
@@ -112,7 +113,7 @@ IMPORTANCE = {
 }
 PRIORITY_MULTIPLIER = 2
 MAX_IMPORTANCE = 4
-PENALTY = {"format_missing": 25, "recorded_missing": 12, "format_unsure": 6, "need_none": 15, "need_tier": 5,
+PENALTY = {"format_missing": 35, "recorded_missing": 12, "format_unsure": 6, "need_none": 15, "need_tier": 5,
            "over_budget_max": 40, "price_unknown": 3}
 FORMAT_LABELS = {"live": "живые занятия", "recorded": "занятия в записи", "individual": "занятия один на один"}
 FORMAT_MISSING = {"live": "живых занятий", "recorded": "занятий в записи", "individual": "занятий один на один"}
@@ -172,14 +173,49 @@ def importance_of(profile: QuizProfile) -> dict:
     return {key: min(MAX_IMPORTANCE, value) for key, value in multipliers.items()}
 
 
-def _percentile(key: str, value: float, peers) -> float:
-    """Share of peer schools this value beats (ties count half), among peers that offer the criterion."""
+def _position(key: str, value: float, peers):
+    """(percentile, score) of a value among peer schools that offer the criterion.
+    percentile: share of peers it beats (ties count half) - used for "лучше N% школ".
+    score: half percentile, half place on the min..max scale, so 8.7 vs 8.9 stays close
+    instead of looking like "worst" vs "best" when every school is between 8.5 and 9."""
     values = [_value(peer, key) for peer in peers if status_of(peer, key) != STATUS_NONE]
     if len(values) < 2:
-        return 0.5
+        return 0.5, 0.5
     below = sum(1 for v in values if v < value - 1e-9)
     equal = sum(1 for v in values if abs(v - value) < 1e-9)
-    return (below + equal / 2) / len(values)
+    percentile = (below + equal / 2) / len(values)
+    low, high = min(values), max(values)
+    scale = 0.5 if high - low < 1e-9 else min(1.0, max(0.0, (value - low) / (high - low)))
+    return percentile, (percentile + scale) / 2
+
+
+def _percentile(key: str, value: float, peers) -> float:
+    return _position(key, value, peers)[0]
+
+
+# A rated teacher for the chosen subject moves the match by a bounded number of points instead of
+# replacing the school's teacher score: 4 points per point of difference, from -6 to +8,
+# x0.5 / x1 / x1.5 for "не критично" / "важно" / "решающий".
+SUBJECT_TEACHER = {"per_point": 4, "min": -6, "max": 8, "need": {1: 0.5, 2: 1, 3: 1.5}}
+FACTOR_LABELS = {"teachers_score": "преподаватели", "practice_score": "практика", "feedback_score": "проверка работ",
+                 "curator_score": "кураторы", "platform_score": "платформа", "workload_score": "нагрузка",
+                 "organization_score": "организация", "subject_teacher": "препод по предмету", "format": "формат занятий",
+                 "budget": "бюджет", "needs": "нужные услуги"}
+
+
+def months_to_exam(today: Optional[date] = None) -> int:
+    """Months of payments left until the exam (ЕГЭ in late May / June), counting the current month."""
+    today = today or date.today()
+    exam_year = today.year + 1 if today.month >= 7 else today.year
+    return max(1, (exam_year - today.year) * 12 + 5 - today.month + 1)
+
+
+def _subject_teacher_points(subject_score, school_teachers: float, profile) -> float:
+    if subject_score is None:
+        return 0.0
+    raw = (subject_score - school_teachers) * SUBJECT_TEACHER["per_point"]
+    raw = max(SUBJECT_TEACHER["min"], min(SUBJECT_TEACHER["max"], raw))
+    return round(raw * SUBJECT_TEACHER["need"].get(profile.teacher_need, 1), 1)
 
 
 _NEEDS = {
@@ -239,38 +275,37 @@ def _format_fit(school, profile: QuizProfile):
 
 
 def school_match(school, profile: QuizProfile, subject_teacher_score: Optional[float] = None, peers=None):
-    """Match of one school for this student: {score, pros, cons}, or None if it doesn't teach the subject.
-    peers: all schools in the catalog (for percentiles); defaults to the school alone."""
+    """Match of one school for this student: {score, pros, cons, factors}, or None if it doesn't teach the subject.
+    score = 50 + the sum of factors (each in percentage points against an average school), kept within 5..97.
+    peers: all schools in the catalog; defaults to the school alone."""
     if profile.subject.lower() not in _offered_subjects(school):
         return None
     peers = list(peers) if peers else [school]
     keys = applicable_criteria(school)
     importance = importance_of(profile)
-    pros, cons = [], []
+    pros, cons, factors = [], [], {}
     teachers_value = _value(school, "teachers_score")
+    teacher_points = 0.0
     if subject_teacher_score is not None and "teachers_score" in keys:
-        share = 0.8 if profile.teacher_need == 3 else 0.6
         if subject_teacher_score >= teachers_value + 0.5:
             pros.append(f"сильный препод именно по этому предмету ({subject_teacher_score:.1f})")
         elif subject_teacher_score <= teachers_value - 1.0:
             cons.append(f"по этому предмету отзывы ниже, чем в среднем по школе ({subject_teacher_score:.1f})")
-        teachers_value = subject_teacher_score * share + teachers_value * (1 - share)
+        teacher_points = _subject_teacher_points(subject_teacher_score, teachers_value, profile)
 
-    weight_sum = quality = 0.0
+    weights = {key: BASE_WEIGHTS[key] * importance[key] for key in keys}
+    weight_sum = sum(weights.values())
     emphasised = []
     for key in keys:
-        weight = BASE_WEIGHTS[key] * importance[key]
-        value = teachers_value if key == "teachers_score" else _value(school, key)
-        p = _percentile(key, value, peers)
-        weight_sum += weight
-        quality += weight * p
+        percentile, position = _position(key, _value(school, key), peers)
+        factors[key] = weights[key] / weight_sum * (position - 0.5) * 100 if weight_sum else 0.0
         if importance[key] >= 1.5:
-            emphasised.append((importance[key], key, p))
-    quality = quality / weight_sum if weight_sum else 0.0
+            emphasised.append((importance[key], key, percentile))
 
     format_points, format_pro, format_con = _format_fit(school, profile)
     budget_points, budget_pro, budget_con = _budget_fit(school, profile)
     need_points, need_reasons = _need_penalty(school, profile)
+    factors.update({"subject_teacher": teacher_points, "format": format_points, "budget": budget_points, "needs": -need_points})
     pros += [item for item in (format_pro, budget_pro) if item]
     cons += [item for item in (format_con, budget_con) if item] + need_reasons
     for _, key, p in sorted(emphasised, key=lambda item: -item[0]):
@@ -281,8 +316,10 @@ def school_match(school, profile: QuizProfile, subject_teacher_score: Optional[f
             cons.append(f"{label} — слабее большинства школ")
     if not pros:
         pros.append("ровное совпадение по всем критериям")
-    percent = quality * 100 + format_points + budget_points - need_points
-    return {"score": round(max(5.0, min(97.0, percent)), 1), "pros": pros[:3], "cons": cons[:2]}
+    percent = 50 + sum(factors.values())
+    shown = sorted(((FACTOR_LABELS[key], round(value)) for key, value in factors.items() if abs(value) >= 1.5),
+                   key=lambda item: -abs(item[1]))[:3]
+    return {"score": round(max(5.0, min(97.0, percent)), 1), "pros": pros[:3], "cons": cons[:2], "factors": shown}
 
 
 def school_score(school, profile: QuizProfile, subject_teacher_score: Optional[float] = None, peers=None) -> Tuple[float, list]:

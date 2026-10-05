@@ -33,8 +33,8 @@ def test_level_and_target_come_from_one_goal_question():
 
 def test_answers_multiply_weights_and_schools_are_ranked_against_each_other():
     assert "const IMPORTANCE={" in APP and "function importanceOf(a)" in APP
-    assert "function percentile(key,value)" in APP
-    assert "const percent=quality*100+ff.points+bf.points-need.points;" in APP
+    assert "function position(key,value)" in APP
+    assert "const percent=50+Object.values(factors).reduce((x,y)=>x+y,0);" in APP
     for old in ("personalizedWeights", "matchPercent", "priorityEdge", "/10*1000)/10"):
         assert old not in APP
 
