@@ -51,7 +51,7 @@
         +'#cookie-banner button{min-height:44px;padding:0 22px;border:1.5px solid #181923;border-radius:999px;background:#fff;color:#181923;font:600 14px/1 Onest,Arial,sans-serif;cursor:pointer}'
         +'#cookie-banner button:hover{background:#181923;color:#fff}'
         +'#cookie-banner button:focus-visible,#cookie-banner a:focus-visible{outline:2px solid #344bd8;outline-offset:3px}'
-        +'@media(max-width:700px){#cookie-banner{flex-direction:column;align-items:stretch;gap:12px}#cookie-banner.cookie-above-nav{bottom:calc(88px + env(safe-area-inset-bottom))}#cookie-banner .cookie-actions button{flex:1}}';
+        +'@media(max-width:700px){#cookie-banner{flex-direction:column;align-items:stretch;gap:10px;padding:12px 14px;font-size:13px;line-height:1.4}#cookie-banner button{min-height:40px}#cookie-banner.cookie-above-nav{bottom:calc(88px + env(safe-area-inset-bottom))}#cookie-banner .cookie-actions button{flex:1}}';
       document.head.appendChild(style);
     }
     var box=document.createElement('div');
@@ -59,7 +59,7 @@
     box.setAttribute('role','region');
     box.setAttribute('aria-label','Файлы cookie');
     if(document.querySelector('.mobile-product-nav'))box.className='cookie-above-nav';
-    box.innerHTML='<p>Мы используем Яндекс.Метрику, чтобы понимать, как посетители пользуются сайтом: она сохраняет файлы cookie в вашем браузере. Подробнее — в <a href="/privacy#cookies">Политике конфиденциальности</a>.</p>'
+    box.innerHTML='<p>Используем cookie Яндекс.Метрики, чтобы понимать, как люди пользуются сайтом. <a href="/privacy#cookies">Подробнее</a></p>'
       +'<div class="cookie-actions"><button type="button" data-cookie="yes">Принять</button><button type="button" data-cookie="no">Отклонить</button></div>';
     box.addEventListener('click',function(event){
       var button=event.target.closest&&event.target.closest('[data-cookie]');

@@ -10,7 +10,16 @@ const teacherCriteria = {explanation:'Объяснение материала',p
 let catalog, mode = 'schools';
 const alphabetically = (a, b) => a.name.localeCompare(b.name, 'ru', {numeric: true, sensitivity: 'base'});
 const candidates = () => (mode === 'schools' ? [...catalog.schools] : catalog.teachers.filter(t => teacherSubjects(t).includes($('#teacher-subject').value))).sort(alphabetically);
-const defaultPair = () => [...catalog.schools].sort((a, b) => b.score - a.score).slice(0, 2).map(s => s.name);
+// Default pair: the two best-rated schools that teach most subjects, so they actually overlap.
+const defaultPair = () => [...catalog.schools].filter(s => s.subjects.length >= 8).sort((a, b) => b.score - a.score).slice(0, 2).map(s => s.name);
+const subjectTitle = key => key.charAt(0).toUpperCase() + key.slice(1);
+// Which exam subjects both schools teach; comparing schools with no subject in common says little.
+function sharedSubjects(left, right) {
+  const shared = left.subjects.filter(key => right.subjects.includes(key));
+  if (!shared.length) return `<p class="compare-shared is-none">У этих школ нет общих предметов: ${escape(left.name)} — ${escape(left.subjects.map(subjectTitle).join(', '))}; ${escape(right.name)} — ${escape(right.subjects.map(subjectTitle).join(', '))}. Сравнивать их для одного экзамена не получится.</p>`;
+  const list = shared.length === left.subjects.length && shared.length === right.subjects.length ? 'все предметы одинаковые' : shared.length <= 4 ? shared.map(subjectTitle).join(', ') : `${shared.length} общих предметов`;
+  return `<p class="compare-shared">Общие предметы: ${escape(list)}</p>`;
+}
 const track = () => { try { window.egeTrack && window.egeTrack('compare_used', {mode}); } catch {} };
 
 function populate(usePreset = false) {
@@ -53,6 +62,7 @@ function render(changed) {
     return `<span class="meter-value">${number(score)}</span><span class="meter meter-segments teacher-meter" aria-hidden="true">${segments(score)}</span>`;
   };
   let table = row('', escape(left.name), escape(right.name), 'column-heads'), after = '';
+  if (mode === 'schools') table += sharedSubjects(left, right);
   if (mode === 'schools') {
     table += row('Общая оценка', `<strong>${number(left.score)}/10</strong>`, `<strong>${number(right.score)}/10</strong>`);
     const cell = (school, key) => {

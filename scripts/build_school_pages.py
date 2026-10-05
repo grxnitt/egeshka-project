@@ -16,7 +16,7 @@ CSS_VERSIONS = {
     "styles.css": "35",
     "refinements.css": "44",
     "typography.css": "31",
-    "composition.css": "160",
+    "composition.css": "163",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -242,7 +242,8 @@ def build_page(school, people, others, header, footer, teacher_slugs):
             filter_html = f'<div class="sp-filter" role="group" aria-label="Фильтр преподавателей по предмету">{chips}</div><p class="sp-hint" id="sp-count" aria-live="polite"></p>'
         teachers_block = (
             f'<section class="sp-section" id="teachers"><h2 class="t-h3">Преподаватели ({len(people)})</h2>'
-            f'{filter_html}<ul class="sp-teachers">{"".join(teacher_card(p, n) for n, p in enumerate(people))}</ul></section>'
+            f'{filter_html}<ul class="sp-teachers">{"".join(teacher_card(p, n) for n, p in enumerate(people))}</ul>'
+            '<p class="sp-note">Число стобалльников и результатов 90+ публикуют сами школы и преподаватели; мы их не проверяем.</p></section>'
         )
     else:
         teachers_block = (
@@ -278,7 +279,7 @@ def build_page(school, people, others, header, footer, teacher_slugs):
 {footer}
 <script>window.TEACHER_SLUGS={slug_map};</script>
 <script src="/analytics-config.js?v=2"></script>
-<script src="/analytics.js?v=14"></script>
+<script src="/analytics.js?v=15"></script>
 {NAV_SCRIPT}
 {FILTER_SCRIPT}
 </body>
@@ -349,7 +350,7 @@ def build_teacher_page(person, school, colleagues, header, footer):
 </main>
 {footer}
 <script src="/analytics-config.js?v=2"></script>
-<script src="/analytics.js?v=14"></script>
+<script src="/analytics.js?v=15"></script>
 {NAV_SCRIPT}
 </body>
 </html>

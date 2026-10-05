@@ -188,6 +188,8 @@ const applyLinks=()=>{$('#channel-link').href=links.channel;$('#review-link').hr
 applyLinks();
 try{
  await catalogReady;
+ // Hero facts stay true as the catalog grows (the HTML holds the numbers at build time as a fallback).
+ if(catalog){const set=(key,value)=>{const el=document.querySelector(`[data-fact="${key}"]`);if(el)el.textContent=value;};set('schools',catalog.schools.length);set('teachers',`${Math.floor(catalog.teachers.length/10)*10}+`);}
  try{const fresh=await fetch('links.json');if(fresh.ok){links=await fresh.json();applyLinks();}}catch{}
  if(new URLSearchParams(location.search).get('resume')==='quiz'){
   let saved=null;try{saved=JSON.parse(sessionStorage.getItem('egeshka-quiz'));}catch{}
