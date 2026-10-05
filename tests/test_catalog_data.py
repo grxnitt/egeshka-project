@@ -29,7 +29,7 @@ def test_teacher_subjects_are_listed_by_their_school():
         (school, subject)
         for school, _name, subject, *_rest in TEACHERS
         for exam in subject.split(" / ")
-        if exam != "Математика ОГЭ" and exam.lower().replace(" язык", "") not in school_subjects[school]
+        if exam.lower().replace(" язык", "") not in school_subjects[school]
     }
     assert missing == set()
 
@@ -71,3 +71,7 @@ def test_teacher_directory_opens_full_profile_with_criteria_and_external_link():
         "Объяснение материала", "Практика и разбор ошибок",
         "Атмосфера и вовлечённость", "Структура и темп занятий", "Польза для экзамена",
     ))
+
+
+def test_catalog_has_only_ege_teachers():
+    assert not [t for t in TEACHERS if "ОГЭ" in t[2]]  # the site is about ЕГЭ; ОГЭ-only teachers go to REMOVED_TEACHERS

@@ -1650,3 +1650,18 @@ dialog:has(.qr) .qr h2{margin-top:0}
 @media(max-width:700px){.hero-facts{gap:6px;margin:-8px 0 20px;font-size:12px}.hero-facts span{padding:5px 10px}}
 /* Narrow-school line sits apart from the name, not glued to it. */
 .school-card p.card-narrow{margin:12px 0 18px;font-size:13px;line-height:1.45;color:var(--muted);font-weight:500}
+/* Loading skeletons: same size as the real content, so nothing jumps when data arrives. */
+.sk{display:block;border-radius:10px;background:linear-gradient(90deg,#e9ebf3 25%,#f4f5f9 50%,#e9ebf3 75%);background-size:200% 100%;animation:sk-shimmer 1.3s ease-in-out infinite}
+@keyframes sk-shimmer{from{background-position:100% 0}to{background-position:-100% 0}}
+@media(prefers-reduced-motion:reduce){.sk{animation:none}}
+.sk-chip{display:inline-block;width:120px;height:46px;border-radius:999px;flex:none}.sk-chip.is-wide{width:170px}
+.sk-card{gap:14px;min-height:560px}
+.sk-logo{width:50px;height:50px;border-radius:14px}
+.sk-title{width:60%;height:30px;margin:8px 0 10px}
+.sk-line{width:100%;height:14px}.sk-line.short{width:55%}
+.sk-btn{width:100%;height:48px;border-radius:16px;margin-top:auto}
+.sk-table{display:grid;gap:14px;padding:16px 0}
+.sk-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;align-items:center}
+.sk-label{height:14px;width:80%}.sk-bar{height:22px}
+.visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media(max-width:700px){.sk-card{min-height:520px}.sk-chip{height:44px;width:110px}.sk-chip.is-wide{width:150px}}

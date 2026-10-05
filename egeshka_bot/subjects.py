@@ -21,8 +21,6 @@ BASE_SCHOOL_SOURCES = {
 def teacher_exam_subject(school, name, subject):
     if subject not in ("Математика", "Математика профильная"):
         return subject
-    if (school, name) == ("Умскул", "Данир Баев"):
-        return "Математика ОГЭ"
     if (school, name) in {("Умскул", "Надежда Ковалевская"), ("Турбо ЕГЭ", "Катя"), ("Турбо ЕГЭ", "Саша")}:
         return "Математика базовая"
     if (school, name) in {("100балльный репетитор", "МатемАня"), ("Вебиум", "Эйджей Гаусс"), ("Фоксфорд", "Нина Максимова")}:

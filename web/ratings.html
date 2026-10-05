@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="styles.css?v=35">
   <link rel="stylesheet" href="refinements.css?v=44">
   <link rel="stylesheet" href="typography.css?v=31">
-  <link rel="stylesheet" href="composition.css?v=166">
+  <link rel="stylesheet" href="composition.css?v=167">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ЕГЭ Мэтч","item":"https://egematch.ru/"},{"@type":"ListItem","position":2,"name":"Рейтинг онлайн-школ","item":"https://egematch.ru/ratings"}]}</script>
 </head>
 <body class="ratings-page">
@@ -33,7 +33,7 @@
   <section class="rating-catalog">
     <div class="wrap section">
       <div class="rating-filter-head" id="choose-subject"><div><h2 class="t-h2">Какой предмет сдаёшь?</h2></div></div>
-      <div class="subjects rating-subjects" id="subject-list"></div>
+      <div class="subjects rating-subjects" id="subject-list"><span class="sk sk-chip is-wide" aria-hidden="true"></span><span class="sk sk-chip" aria-hidden="true"></span><span class="sk sk-chip is-wide" aria-hidden="true"></span><span class="sk sk-chip" aria-hidden="true"></span></div>
       <details class="filters-fold" id="filters-fold" open><summary>Фильтры <span>цена, формат, куратор, что важно</span></summary>
       <div class="catalog-filters" role="group" aria-label="Дополнительные фильтры">
         <label><span>Цена до</span><select id="filter-budget"><option value="">Любая</option><option value="3000">До 3 000 ₽</option><option value="5000">До 5 000 ₽</option><option value="8000">До 8 000 ₽</option><option value="12000">До 12 000 ₽</option></select></label>
@@ -46,8 +46,8 @@
       </details>
       <div class="catalog-toolbar"><div class="catalog-toolbar-main"><p id="catalog-label" aria-live="polite">Все предметы</p><button id="reset-filters" type="button" hidden>Сбросить фильтры</button></div><label><span>Сортировка</span><select id="sort"><option value="rating">По оценке</option><option value="name">По названию</option></select></label></div>
       <p class="rating-scope-note"><span id="scope-note">Показаны все школы. Баллы — общая оценка школы, а не отдельного курса.</span> <a href="/methodology">Как считаем →</a></p>
-      <div class="school-grid" id="school-list"></div>
-      <button class="button outline more" id="show-more">Показать все школы <span>↓</span></button>
+      <div class="school-grid" id="school-list" aria-busy="true"><div class="school-card sk-card" aria-hidden="true"><span class="sk sk-logo"></span><span class="sk sk-title"></span><span class="sk sk-line"></span><span class="sk sk-line"></span><span class="sk sk-line short"></span><span class="sk sk-line"></span><span class="sk sk-line short"></span><span class="sk sk-btn"></span><span class="sk sk-btn"></span></div><div class="school-card sk-card" aria-hidden="true"><span class="sk sk-logo"></span><span class="sk sk-title"></span><span class="sk sk-line"></span><span class="sk sk-line"></span><span class="sk sk-line short"></span><span class="sk sk-line"></span><span class="sk sk-line short"></span><span class="sk sk-btn"></span><span class="sk sk-btn"></span></div><div class="school-card sk-card" aria-hidden="true"><span class="sk sk-logo"></span><span class="sk sk-title"></span><span class="sk sk-line"></span><span class="sk sk-line"></span><span class="sk sk-line short"></span><span class="sk sk-line"></span><span class="sk sk-line short"></span><span class="sk sk-btn"></span><span class="sk sk-btn"></span></div></div>
+      <button class="button outline more" id="show-more" hidden>Показать все школы <span>↓</span></button>
       <p class="fine rating-fine">* Звёздочкой отмечены оценки, для которых пока мало отзывов. Условия обучения уточняй в карточке школы.</p>
     </div>
   </section>
@@ -61,6 +61,6 @@
 <script src="analytics-config.js?v=2"></script>
 <script src="analytics.js?v=15"></script>
 <script src="supabase-config.js?v=1"></script>
-<script type="module" src="ratings.js?v=87"></script>
+<script type="module" src="ratings.js?v=88"></script>
 <script type="module" src="motion.js?v=30"></script>
 </body></html>
