@@ -1648,3 +1648,5 @@ dialog:has(.qr) .qr h2{margin-top:0}
 .hero-facts span{padding:6px 12px;border-radius:999px;background:rgb(255 255 255/.7);border:1px solid var(--surface-line)}
 .hero-facts b{color:var(--blue);font-weight:700}
 @media(max-width:700px){.hero-facts{gap:6px;margin:-8px 0 20px;font-size:12px}.hero-facts span{padding:5px 10px}}
+/* Narrow-school line sits apart from the name, not glued to it. */
+.school-card p.card-narrow{margin:12px 0 18px;font-size:13px;line-height:1.45;color:var(--muted);font-weight:500}
