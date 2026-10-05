@@ -1648,7 +1648,3 @@ dialog:has(.qr) .qr h2{margin-top:0}
 .hero-facts span{padding:6px 12px;border-radius:999px;background:rgb(255 255 255/.7);border:1px solid var(--surface-line)}
 .hero-facts b{color:var(--blue);font-weight:700}
 @media(max-width:700px){.hero-facts{gap:6px;margin:-8px 0 20px;font-size:12px}.hero-facts span{padding:5px 10px}}
-/* Ratings cards: lesson formats as chips (visible on phones, where the long "Формат" line is hidden). */
-.card-formats{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
-.card-formats span{padding:4px 10px;border-radius:999px;background:#edf0ff;color:var(--blue);font-size:12px;font-weight:600}
-.card-formats span.is-unsure{background:#f3f3f6;color:var(--muted)}
