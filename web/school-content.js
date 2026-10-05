@@ -36,7 +36,7 @@ export const schoolContent={
 export const schoolFilters={
  'Умскул':{priceFrom:5490,lessons:['live','recorded']},
  '100балльный репетитор':{priceFrom:990,lessons:['live','recorded']},
- 'Сотка':{priceFrom:3990,lessons:['recorded'],unsure:['live']},
+ 'Сотка':{priceFrom:3990,lessons:['live','recorded']},
  'Фоксфорд':{priceFrom:4029,lessons:['live','recorded','individual']},
  'Вебиум':{priceFrom:3912,lessons:['live','recorded']},
  '99 Баллов':{priceFrom:null,lessons:['live','recorded']},
@@ -58,7 +58,7 @@ export const schoolFilters={
  'MAXIMUM Education':{priceFrom:8000,lessons:['live','individual']},
  'Годограф':{priceFrom:7900,lessons:['live','recorded']},
  'Коалиция':{priceFrom:null,lessons:['live','recorded']},
- 'Lomonosov School':{priceFrom:3400,lessons:[],unsure:['live','recorded']},
+ 'Lomonosov School':{priceFrom:4500,lessons:['live','recorded']},
  'EXAMMY':{priceFrom:1990,lessons:['recorded']},
  'Лектариум':{priceFrom:3890,lessons:['live','recorded']}
 };

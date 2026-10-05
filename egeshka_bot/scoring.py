@@ -123,7 +123,7 @@ FORMAT_MISSING = {"live": "живых занятий", "recorded": "заняти
 LESSON_FORMATS = {
     "Умскул": (("live", "recorded"), ()),
     "100балльный репетитор": (("live", "recorded"), ()),
-    "Сотка": (("recorded",), ("live",)),
+    "Сотка": (("live", "recorded"), ()),
     "Фоксфорд": (("live", "recorded", "individual"), ()),
     "Вебиум": (("live", "recorded"), ()),
     "99 Баллов": (("live", "recorded"), ()),
@@ -145,7 +145,7 @@ LESSON_FORMATS = {
     "MAXIMUM Education": (("live", "individual"), ()),
     "Годограф": (("live", "recorded"), ()),
     "Коалиция": (("live", "recorded"), ()),
-    "Lomonosov School": ((), ("live", "recorded")),
+    "Lomonosov School": (("live", "recorded"), ()),
     "EXAMMY": (("recorded",), ()),
     "Лектариум": (("live", "recorded"), ()),
 }

@@ -1,5 +1,5 @@
 import { applyLiveRatings } from './supabase-client.js?v=7';
-import { chooseSchoolUrl, schoolFilters } from './school-content.js?v=39';
+import { chooseSchoolUrl, schoolFilters } from './school-content.js?v=40';
 const $ = (selector) => document.querySelector(selector);
 const escape = (value) => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = n => Number(n).toFixed(1).replace('.', ',');
