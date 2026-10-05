@@ -1518,10 +1518,7 @@ body.compare-page{overflow-x:clip}
 .quiz-match:first-child .quiz-match-badge{background:var(--blue);color:#fff}
 .quiz-match-cons{margin:0 0 10px;padding:8px 11px;border-radius:var(--r-sm);background:var(--blush);color:var(--ink);font-size:12px;line-height:1.45}
 .quiz-match-cons b{font-weight:700}
-/* Quiz result: what moved the percentage, cost until the exam, near-tie note and a short feedback row. */
-.quiz-match-factors{margin:0 0 10px;font-size:12px;line-height:1.45;color:var(--muted)}
-.quiz-match-factors b{color:var(--ink);font-weight:700}
-.quiz-match-factors .up{color:#1f7a3f;font-weight:700}.quiz-match-factors .down{color:#b3123f;font-weight:700}
+/* Quiz result: cost until the exam, near-tie note and a short feedback row. */
 .quiz-match-total{display:block;margin-top:4px}
 .quiz-tie{margin:0 0 14px;padding:9px 12px;border-radius:var(--r-sm);background:#edf0ff;font-size:13px;line-height:1.45}
 .quiz-feedback{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:18px 0 0;font-size:13px}

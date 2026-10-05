@@ -1109,8 +1109,6 @@ async def build_quiz_result(session_factory, profile: QuizProfile):
         line = f"{index}. {school.name} — {score:.0f}% совпадение\nПочему: {', '.join(match['pros'])}"
         if match["cons"]:
             line += f"\n⚠️ Учти: {'; '.join(match['cons'])}"
-        if match.get("factors"):
-            line += "\n📊 Что повлияло: " + " · ".join(f"{label} {'+' if value > 0 else '−'}{abs(value)}" for label, value in match["factors"])
         line += f"\n💸 {price}"
         monthly = float(getattr(school, "monthly_price_from", 0) or 0)
         if monthly > 0 and profile.subject != "математика базовая":
