@@ -1600,3 +1600,4 @@ body.compare-page{overflow-x:clip}
 .qr .qr-actions a,.qr .qr-actions button{border-color:var(--surface-line)}
 .qr .qr-place{background:#edf0ff}
 .qr p.qr-recap{color:var(--blue)}
+.qr .qr-price{white-space:nowrap}@media(max-width:360px){.qr .qr-bottom{flex-wrap:wrap}.qr .qr-choose{flex:1;justify-content:center}}
