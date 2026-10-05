@@ -77,3 +77,12 @@ def test_months_to_exam_counts_payments_until_may():
     assert scoring.months_to_exam(date(2027, 6, 10)) == 1
     assert scoring.months_to_exam(date(2027, 7, 1)) == 11
     assert "examYear=m>=7?today.getFullYear()+1:today.getFullYear()" in APP
+
+
+def test_price_bonus_is_the_same():
+    assert f"const PRICE_BONUS_MAX={scoring.PRICE_BONUS_MAX};" in APP
+
+
+def test_more_matches_threshold_is_the_same():
+    from egeshka_bot.bot import MORE_MIN_SCORE
+    assert f"const MORE_MIN_SCORE={MORE_MIN_SCORE};" in APP

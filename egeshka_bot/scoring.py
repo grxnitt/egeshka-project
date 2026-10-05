@@ -247,16 +247,36 @@ def _need_penalty(school, profile: QuizProfile):
     return points, reasons
 
 
-def _budget_fit(school, profile: QuizProfile):
+# With "цена" as a priority, cheapness is a real advantage: up to PRICE_BONUS_MAX points for being cheaper than
+# the budget (or, without a budget, than the median catalog price). Same scale as the over-budget penalty.
+PRICE_BONUS_MAX = 20
+
+
+def _median_price(peers) -> float:
+    prices = sorted(float(getattr(p, "monthly_price_from", 0) or 0) for p in peers)
+    prices = [p for p in prices if p > 0]
+    if not prices:
+        return 0.0
+    middle = len(prices) // 2
+    return prices[middle] if len(prices) % 2 else (prices[middle - 1] + prices[middle]) / 2
+
+
+def _budget_fit(school, profile: QuizProfile, peers=()):
     """(points, pro, con): over budget costs 50 points per 100% over, at most 40; with "price" as a priority,
-    a school clearly cheaper than the budget earns up to 8 points."""
-    if not profile.budget or profile.subject == "математика базовая":
+    a cheaper school earns up to PRICE_BONUS_MAX points."""
+    if profile.subject == "математика базовая":
         return 0.0, None, None
+    wants_cheap = "price" in profile.priorities
     price = float(getattr(school, "monthly_price_from", 0) or 0)
+    if not profile.budget:
+        reference = _median_price(peers) if wants_cheap else 0.0
+        if reference and 0 < price < reference:
+            return round(PRICE_BONUS_MAX * (1 - price / reference), 1), "дешевле большинства школ", None
+        return 0.0, None, None
     if price <= 0:
         return -PENALTY["price_unknown"], None, "цена не опубликована — уточни у школы"
     if price <= profile.budget:
-        bonus = round(8 * (1 - price / profile.budget), 1) if "price" in profile.priorities else 0.0
+        bonus = round(PRICE_BONUS_MAX * (1 - price / profile.budget), 1) if wants_cheap else 0.0
         return bonus, "входит в бюджет", None
     return -min(PENALTY["over_budget_max"], (price - profile.budget) / profile.budget * 50), None, "может быть выше бюджета"
 
@@ -303,7 +323,7 @@ def school_match(school, profile: QuizProfile, subject_teacher_score: Optional[f
             emphasised.append((importance[key], key, percentile))
 
     format_points, format_pro, format_con = _format_fit(school, profile)
-    budget_points, budget_pro, budget_con = _budget_fit(school, profile)
+    budget_points, budget_pro, budget_con = _budget_fit(school, profile, peers)
     need_points, need_reasons = _need_penalty(school, profile)
     factors.update({"subject_teacher": teacher_points, "format": format_points, "budget": budget_points, "needs": -need_points})
     pros += [item for item in (format_pro, budget_pro) if item]

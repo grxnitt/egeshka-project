@@ -1046,6 +1046,10 @@ async def best_subject_teacher_scores(session, school_ids, subject_name):
     return best
 
 
+# "Ещё подходят": places 4-6 under the top three, only if they still fit reasonably (same as MORE_MIN_SCORE in web/app.js).
+MORE_MIN_SCORE = 40
+
+
 async def build_quiz_result(session_factory, profile: QuizProfile):
     rows = await active_schools(session_factory)
     subject_name = next((item for item in SUBJECTS if item.lower() == profile.subject), profile.subject.title())
@@ -1059,6 +1063,7 @@ async def build_quiz_result(session_factory, profile: QuizProfile):
     ]
     ranked.sort(key=lambda item: item[0], reverse=True)
     top = ranked[:3]
+    more = [(score, school) for score, _, school in ranked[3:6] if score >= MORE_MIN_SCORE]
     if not top:
         text = (
             f"🎯 <b>Подбор по предмету: {escape(subject_name)}</b>\n\n"
@@ -1121,6 +1126,7 @@ async def build_quiz_result(session_factory, profile: QuizProfile):
         f"🎯 <b>Подбор по предмету: {escape(subject_name)}</b>\n\n"
         "Мы отобрали школы по твоим ответам. Открой карточку курса: там формат, тарифы и преподаватели именно по предмету.\n\n"
         + "\n\n".join(escape(line) for line in lines)
+        + (escape("\n\nЕщё подходят: " + ", ".join(f"{school.name} ({score:.0f}%)" for score, school in more)) if more else "")
     )
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
