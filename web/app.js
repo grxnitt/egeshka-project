@@ -27,7 +27,7 @@ const quizSteps=[
 ];
 // Question 4 is two independent choices on one screen: current level and target score (any pair, e.g. "с нуля" -> 90+).
 const GOAL_LEVELS=[['Почти с нуля','low'],['Что-то знаю','middle'],['База хорошая','high']];
-const goalTargets=()=>siteQuiz.answers.subject==='математика базовая'?[['Сдать на 3','3'],['На 4','4'],['На 5','5']]:[['Уверенно сдать','60'],['70+','70'],['80+','80'],['90+','90']];
+const goalTargets=()=>siteQuiz.answers.subject==='математика базовая'?[['Сдать на 3','3'],['На 4','4'],['На 5','5']]:[['Просто сдать','60'],['70+','70'],['80+','80'],['90+','90']];
 // A big jump from the current level to the target: practice and checked work matter more, and the result warns about pace.
 const bigGap=a=>a.subject==='математика базовая'?a.level==='low'&&a.target==='5':(a.level==='low'&&Number(a.target)>=80)||(a.level==='middle'&&a.target==='90');
 function goalStep(step){const a=siteQuiz.answers,row=(name,items,current)=>`<div class="quiz-pair-row"><p>${name}</p><div class="quiz-chips" role="radiogroup" aria-label="${name}">${items.map(([label,value])=>`<button type="button" role="radio" aria-checked="${current===value}" class="quiz-chip${current===value?' is-on':''}" data-pair="${name==='Сейчас'?'level':'target'}" data-value="${escape(value)}">${escape(label)}</button>`).join('')}</div></div>`;

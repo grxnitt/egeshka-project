@@ -30,7 +30,7 @@ def test_level_and_target_are_two_independent_rows_on_one_screen():
     assert "key:'level'" not in APP and "key:'target'" not in APP
     assert "{key:'goal',questionNumber:4," in APP and "pair:true" in APP
     assert "const GOAL_LEVELS=[['Почти с нуля','low'],['Что-то знаю','middle'],['База хорошая','high']];" in APP
-    assert "[['Уверенно сдать','60'],['70+','70'],['80+','80'],['90+','90']]" in APP  # any level can pick any target
+    assert "[['Просто сдать','60'],['70+','70'],['80+','80'],['90+','90']]" in APP  # any level can pick any target
 
 
 def test_answers_multiply_weights_and_schools_are_ranked_against_each_other():
