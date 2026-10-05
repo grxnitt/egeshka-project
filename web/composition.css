@@ -1630,7 +1630,7 @@ dialog:has(.qr) .qr h2{margin-top:0}
  .filters-fold[open]>summary:after{content:'−'}
  .filters-fold[open]{padding:0 14px 14px}
  .filters-fold[open]>summary{padding:13px 2px}
- .school-card .school-decision>div:nth-child(2),.school-card .card-price-scope{display:none}
+ .school-card .card-price-scope{display:none}
  .school-card .school-decision dd{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
  .school-card{padding:20px}
  .school-card-top{margin-bottom:10px}
