@@ -16,7 +16,7 @@ from .config import Settings
 from .db import SCHOOL_REVIEW_SLUGS, delete_user_data, get_or_create_user
 from .models import Course, Event, Review, ReviewCriterionScore, School, Teacher, User
 from .scoring import (
-    STATUS_NONE, STATUS_TIER, QuizProfile, applicable_criteria, editorial_score, effective_weights, months_to_exam, school_match, school_score, status_of,
+    STATUS_NONE, STATUS_TIER, QuizProfile, applicable_criteria, editorial_score, big_gap, effective_weights, months_to_exam, school_match, school_score, status_of,
 )
 
 
@@ -71,12 +71,12 @@ class Quiz(StatesGroup):
     step = State()
 
 
-# Same eight questions, order and values as the site quiz (web/app.js quizSteps).
-def _goal_options(data):
+# Same questions, order and values as the site quiz (web/app.js quizSteps). The site asks level and target on one
+# screen with two rows of chips; the bot asks them as two short steps.
+def _target_options(data):
     if data.get("subject") == "математика базовая":
-        return [("Начинаю почти с нуля — главное сдать на 3", "low|3"), ("Что-то знаю — хочу 4", "middle|4"), ("База хорошая — иду на 5", "high|5")]
-    return [("Начинаю почти с нуля — хочу уверенно сдать", "low|60"), ("Что-то знаю, нужна система — цель 70–80", "middle|70"),
-            ("База хорошая — хочу 80+", "high|80"), ("Иду на максимум — 90+", "high|90")]
+        return [("Сдать на 3", "3"), ("На 4", "4"), ("На 5", "5")]
+    return [("Уверенно сдать", "60"), ("70+", "70"), ("80+", "80"), ("90+", "90")]
 
 
 QUIZ_STEPS = [
@@ -86,7 +86,8 @@ QUIZ_STEPS = [
     ("format", "Как тебе удобнее заниматься?",
      lambda data: [("Вживую с преподавателем — эфиры и вопросы в чате", "live"), ("В записи, в своём темпе", "recorded"),
                    ("Один на один с репетитором", "individual"), ("Не важно, главное — результат", "any")]),
-    ("goal", "Где ты сейчас и на какой результат идёшь?", _goal_options),
+    ("level", "Где ты сейчас по этому предмету?", lambda data: [("Почти с нуля", "low"), ("Что-то знаю", "middle"), ("База хорошая", "high")]),
+    ("target", "На какой результат идёшь?", _target_options),
     ("support", "Сколько сопровождения тебе нужно?",
      lambda data: [("Справлюсь сам — главное материалы", "1"), ("Иногда хочу задать вопрос куратору", "2"),
                    ("Нужны регулярные проверки и дедлайны", "3"), ("Без жёсткого контроля я всё откладываю", "4")]),
@@ -104,7 +105,7 @@ def quiz_question(index: int, data: dict):
 
 
 def profile_from_answers(data: dict) -> QuizProfile:
-    level, target = data["goal"].split("|")
+    level, target = data["level"], data["target"]
     support = int(data["support"])
     return QuizProfile(
         subject=data["subject"],
@@ -1125,6 +1126,8 @@ async def build_quiz_result(session_factory, profile: QuizProfile):
     text = (
         f"🎯 <b>Подбор по предмету: {escape(subject_name)}</b>\n\n"
         "Мы отобрали школы по твоим ответам. Открой карточку курса: там формат, тарифы и преподаватели именно по предмету.\n\n"
+        + (f"🚀 Путь с твоего уровня до цели за {months_to_exam()} мес. до экзамена реален, но только при плотном графике. "
+           "Выбирай курс с регулярной практикой и проверкой работ: в подборе мы уже подняли их вес.\n\n" if big_gap(profile) else "")
         + "\n\n".join(escape(line) for line in lines)
         + (escape("\n\nЕщё подходят: " + ", ".join(f"{school.name} ({score:.0f}%)" for score, school in more)) if more else "")
     )

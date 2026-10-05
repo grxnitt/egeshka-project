@@ -110,6 +110,7 @@ IMPORTANCE = {
     "target": {90: {"teachers_score": 1.5, "practice_score": 1.5}, 5: {"teachers_score": 1.3, "practice_score": 1.3}},
     "workload": {1: {"workload_score": 2}, 4: {"practice_score": 1.5}},
     "teacher": {1: {"teachers_score": 0.7}, 2: {"teachers_score": 1.5}, 3: {"teachers_score": 3}},
+    "gap": {1: {"practice_score": 1.3, "feedback_score": 1.3}},
 }
 PRIORITY_MULTIPLIER = 2
 MAX_IMPORTANCE = 4
@@ -158,11 +159,18 @@ def _support_level(profile: QuizProfile) -> int:
     return max(profile.curator_need, profile.control_need)
 
 
+def big_gap(profile: QuizProfile) -> bool:
+    """A big jump from the current level to the target (mirrors bigGap in web/app.js)."""
+    if profile.subject == "математика базовая":
+        return profile.current_level == "low" and profile.target == 5
+    return (profile.current_level == "low" and profile.target >= 80) or (profile.current_level == "middle" and profile.target == 90)
+
+
 def importance_of(profile: QuizProfile) -> dict:
     """Importance multiplier per criterion for this student (1 = as in the methodology)."""
     multipliers = {key: 1.0 for key in BASE_WEIGHTS}
     answers = {"support": _support_level(profile), "level": profile.current_level, "target": profile.target,
-               "workload": profile.workload, "teacher": profile.teacher_need}
+               "workload": profile.workload, "teacher": profile.teacher_need, "gap": 1 if big_gap(profile) else 0}
     for answer, table in IMPORTANCE.items():
         for key, factor in table.get(answers[answer], {}).items():
             multipliers[key] *= factor

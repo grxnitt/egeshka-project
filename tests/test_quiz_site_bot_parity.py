@@ -50,6 +50,7 @@ def test_bot_asks_the_same_eight_questions_as_the_site():
     from egeshka_bot.bot import QUIZ_STEPS
     site_keys = re.findall(r"\{key:'(\w+)',questionNumber:\d", APP)
     bot_keys = [key if key != "priority" else "priority1" for key, _, _ in QUIZ_STEPS]
+    bot_keys[bot_keys.index("level"):bot_keys.index("target") + 1] = ["goal"]  # one screen on the site, two steps in the bot
     assert bot_keys == site_keys
 
 
@@ -86,3 +87,12 @@ def test_price_bonus_is_the_same():
 def test_more_matches_threshold_is_the_same():
     from egeshka_bot.bot import MORE_MIN_SCORE
     assert f"const MORE_MIN_SCORE={MORE_MIN_SCORE};" in APP
+
+
+def test_big_gap_is_the_same():
+    from egeshka_bot.scoring import QuizProfile, big_gap
+    p = lambda subject, level, target: QuizProfile(subject, None, level, target, 2, 2, 2, (), "any", 2)
+    assert big_gap(p("русский", "low", 90)) and big_gap(p("русский", "low", 80)) and big_gap(p("русский", "middle", 90))
+    assert not big_gap(p("русский", "low", 70)) and not big_gap(p("русский", "high", 90))
+    assert big_gap(p("математика базовая", "low", 5)) and not big_gap(p("математика базовая", "middle", 5))
+    assert "(a.level==='low'&&Number(a.target)>=80)||(a.level==='middle'&&a.target==='90')" in APP

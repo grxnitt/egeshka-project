@@ -1535,3 +1535,13 @@ body.compare-page{overflow-x:clip}
 .quiz-more a:hover span{color:var(--blue)}
 .quiz-more b{color:var(--blue)}
 .quiz-more small{display:block;margin-top:2px;font-size:12px;color:var(--muted)}
+/* Quiz question 4: current level and target as two independent rows of chips. */
+.quiz-pair{display:grid;gap:18px}
+.quiz-pair-row p{margin:0 0 8px;font-size:13px;font-weight:700;color:var(--muted)}
+.quiz-chips{display:flex;flex-wrap:wrap;gap:8px}
+.quiz-chip{border:1px solid var(--line);background:#fff;border-radius:var(--r-pill);padding:11px 18px;font-size:14px;font-weight:600;transition:background .15s,border-color .15s,color .15s}
+.quiz-chip:hover{border-color:var(--blue);color:var(--blue)}
+.quiz-chip.is-on{background:var(--blue);border-color:var(--blue);color:#fff}
+.quiz-pair-next{justify-self:start;margin-top:4px}
+.quiz-pair-next[disabled]{opacity:.45;cursor:default;transform:none}
+.quiz-gap{margin:0 0 14px;padding:9px 12px;border-radius:var(--r-sm);background:#edf0ff;font-size:13px;line-height:1.45}
