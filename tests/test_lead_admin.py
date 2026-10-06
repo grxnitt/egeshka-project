@@ -134,6 +134,7 @@ def test_admin_commands_are_registered():
     async def build():
         dp = Dispatcher()
         lead_admin.register(dp, None, Settings(bot_token="x"))
-        return {handler.callback.__name__ for handler in dp.message.handlers}
-    names = asyncio.run(build())
+        return ({handler.callback.__name__ for handler in dp.message.handlers}, {h.callback.__name__ for h in dp.my_chat_member.handlers})
+    names, member = asyncio.run(build())
+    assert "added_to_group" in member
     assert {"lead_set", "lead_test", "lead_on", "lead_off", "leads_stats", "lead_report", "lead_exclude", "lead_secret"} <= names

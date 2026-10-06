@@ -1268,6 +1268,9 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
     consent_gate = ConsentMiddleware(session_factory, settings)
     dp.message.outer_middleware(consent_gate)
     dp.callback_query.outer_middleware(consent_gate)
+    # The bot talks only in private chats. In a school's sales group it just posts leads and never answers anything.
+    dp.message.filter(F.chat.type == "private")
+    dp.callback_query.filter(F.message.chat.type == "private")
     lead_admin.register(dp, session_factory, settings)  # admin-only lead commands, before the catch-all handlers
 
     @dp.callback_query(F.data == "consent:yes")

@@ -9,7 +9,7 @@ from typing import Optional
 
 from aiogram import Dispatcher
 from aiogram.filters import Command
-from aiogram.types import BufferedInputFile, Message
+from aiogram.types import BufferedInputFile, ChatMemberUpdated, Message
 from sqlalchemy import func, select
 
 from . import leads
@@ -182,6 +182,22 @@ def register(dp: Dispatcher, session_factory, settings):
     def arg(message: Message) -> str:
         parts = (message.text or "").split(maxsplit=1)
         return parts[1].strip() if len(parts) > 1 else ""
+
+    @dp.my_chat_member()
+    async def added_to_group(event: ChatMemberUpdated):
+        """A school added the bot to its sales chat: tell the admins the chat ID, say nothing in the group."""
+        if event.chat.type not in ("group", "supergroup", "channel"):
+            return
+        if event.new_chat_member.status not in ("member", "administrator") or event.old_chat_member.status in ("member", "administrator"):
+            return
+        who = event.from_user.full_name if event.from_user else "кто-то"
+        text = (f"Бота добавили в чат «{event.chat.title}» ({who}).\nID чата: {event.chat.id}\n\n"
+                f"Подключить к школе: /lead_set Школа | tg={event.chat.id}")
+        for admin_id in settings.admin_id_set:
+            try:
+                await event.bot.send_message(admin_id, text)
+            except Exception:  # noqa: BLE001 - an admin who never opened the bot can't be messaged
+                pass
 
     @dp.message(Command("lead_help"))
     async def lead_help(message: Message):
