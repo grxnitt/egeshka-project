@@ -168,6 +168,10 @@ class LeadSchool(Base):
     sales_contact: Mapped[str] = mapped_column(String(200), default="")  # who handles leads at the school
     pd_contact: Mapped[str] = mapped_column(String(200), default="")  # who receives withdrawal notices
     rate: Mapped[int] = mapped_column(Integer, default=0)  # rubles per valid lead, from the contract
+    # Bonus for a lead who became a paying student: a fixed sum, or a percent of the first payment (not below bonus_min).
+    bonus_fixed: Mapped[int] = mapped_column(Integer, default=0)
+    bonus_percent: Mapped[int] = mapped_column(Integer, default=0)
+    bonus_min: Mapped[int] = mapped_column(Integer, default=0)
 
 
 class Lead(Base):
@@ -194,4 +198,6 @@ class Lead(Base):
     delivered_via: Mapped[str] = mapped_column(String(40), default="")  # channels that accepted the lead
     is_test: Mapped[bool] = mapped_column(Boolean, default=False)  # admin test leads never appear in reports
     excluded_reason: Mapped[str] = mapped_column(String(200), default="")  # set when a school's dispute is accepted
+    paid_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)  # the school reported a first payment
+    first_payment: Mapped[int] = mapped_column(Integer, default=0)  # rubles, needed only for a percent bonus
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, index=True)

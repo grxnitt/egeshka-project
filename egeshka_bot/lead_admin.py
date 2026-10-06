@@ -17,25 +17,30 @@ from .models import Lead, LeadSchool, School
 
 MSK = timedelta(hours=3)
 WITHDRAW_FREE_HOURS = 24  # a lead withdrawn this soon after delivery is not paid (contract 5.3 "д")
+SALE_WINDOW_DAYS = 60  # a first payment counts for the bonus within this many days of delivery (contract 5.8)
 CONTACT_LABELS = {"phone": "Телефон", "telegram": "Telegram", "vk": "VK", "email": "Почта"}
 
 # /lead_set keys -> LeadSchool fields
 SET_KEYS = {
     "name": "legal_name", "inn": "inn", "policy": "policy_url", "contacts": "contact_types", "email": "delivery_email",
     "webhook": "webhook_url", "tg": "tg_chat_id", "sales": "sales_contact", "pd": "pd_contact", "rate": "rate",
+    "bonus": "bonus_fixed", "percent": "bonus_percent", "min": "bonus_min",
 }
+INT_KEYS = {"rate", "bonus", "percent", "min"}
 
 HELP = (
     "Заявки — команды админа\n\n"
     "/lead_schools — школы и их статус\n"
     "/lead_set Школа | name=ООО «…» | inn=… | policy=https://… | contacts=phone,telegram,vk,email | "
-    "email=… | webhook=https://… | tg=-100… | sales=… | pd=… | rate=300 — подключить или изменить (любые ключи)\n"
+    "email=… | webhook=https://… | tg=-100… | sales=… | pd=… | rate=400 | bonus=1500 — подключить или изменить (любые ключи); "
+    "для процентного бонуса: percent=15 | min=1000 вместо bonus\n"
     "/lead_secret Школа — новый ключ подписи вебхука\n"
     "/lead_test Школа — тестовая заявка (в отчёт не попадает)\n"
     "/lead_on Школа, /lead_off Школа — включить или поставить на паузу\n"
     "/leads — статистика за сегодня и месяц\n"
     "/lead_report Школа ГГГГ-ММ — отчёт за месяц файлом\n"
-    "/lead_exclude ID причина — принять спор школы, /lead_include ID — вернуть заявку в оплату"
+    "/lead_exclude ID причина — принять спор школы, /lead_include ID — вернуть заявку в оплату\n"
+    "/lead_paid ID [первый платёж ₽] [ГГГГ-ММ-ДД] — школа сообщила, что ученик оплатил; /lead_unpaid ID — отменить"
 )
 
 
@@ -61,10 +66,12 @@ def parse_set(text: str):
             raise ValueError("ИНН — 10 или 12 цифр")
         if key in ("policy", "webhook") and value and not value.startswith("https://"):
             raise ValueError(f"{key} должен начинаться с https://")
-        if key == "rate":
+        if key in INT_KEYS:
             if not value.isdigit():
-                raise ValueError("rate — целое число рублей")
+                raise ValueError(f"{key} — целое число")
             value = int(value)
+            if key == "percent" and value > 100:
+                raise ValueError("percent — от 0 до 100")
         values[SET_KEYS[key]] = value
     return head[1].strip(), values
 
@@ -83,6 +90,15 @@ def missing_for_launch(cfg: LeadSchool) -> list:
     if not cfg.rate:
         missing.append("rate (ставка)")
     return missing
+
+
+def sale_bonus(cfg: Optional[LeadSchool], lead: Lead) -> int:
+    """Bonus for a lead who became a paying student: percent of the first payment (not below the minimum) or a fixed sum."""
+    if not cfg:
+        return 0
+    if cfg.bonus_percent:
+        return max(cfg.bonus_min, round((lead.first_payment or 0) * cfg.bonus_percent / 100))
+    return cfg.bonus_fixed
 
 
 def _status(lead: Lead):
@@ -120,11 +136,19 @@ async def month_report(session, school: School, cfg: Optional[LeadSchool], month
         lines.append([lead.id, (lead.sent_at + MSK).strftime("%d.%m.%Y %H:%M"), lead.subject,
                       CONTACT_LABELS.get(lead.contact_type, lead.contact_type), channels, status, reason or "—"])
     rate = cfg.rate if cfg else 0
-    summary = {"delivered": len(rows), "excluded": len(rows) - valid, "valid": valid, "rate": rate, "total": valid * rate}
-    return lines, summary
+    sold = (await session.execute(
+        select(Lead).where(Lead.school_id == school.id, Lead.is_test == False, Lead.excluded_reason == "",  # noqa: E712
+                           Lead.paid_at.is_not(None), Lead.paid_at >= start, Lead.paid_at < end).order_by(Lead.id)
+    )).scalars().all()
+    sales = [[lead.id, (lead.sent_at + MSK).strftime("%d.%m.%Y") if lead.sent_at else "—", (lead.paid_at + MSK).strftime("%d.%m.%Y"),
+              lead.first_payment or "—", sale_bonus(cfg, lead)] for lead in sold]
+    bonus_total = sum(row[4] for row in sales)
+    summary = {"delivered": len(rows), "excluded": len(rows) - valid, "valid": valid, "rate": rate, "leads_total": valid * rate,
+               "sales": len(sales), "bonus_total": bonus_total, "total": valid * rate + bonus_total}
+    return lines, summary, sales
 
 
-def report_csv(school_name: str, month: str, lines: list, summary: dict) -> bytes:
+def report_csv(school_name: str, month: str, lines: list, summary: dict, sales: Optional[list] = None) -> bytes:
     """Semicolon CSV with a BOM, so Excel in Russian locale opens it with the right columns and letters."""
     out = io.StringIO()
     writer = csv.writer(out, delimiter=";")
@@ -133,11 +157,18 @@ def report_csv(school_name: str, month: str, lines: list, summary: dict) -> byte
                      "Основание исключения"])
     writer.writerows(lines)
     writer.writerow([])
-    writer.writerow(["Доставлено", summary["delivered"]])
+    writer.writerow(["Оплатившие ученики (по данным школы)"])
+    writer.writerow(["№ заявки", "Дата доставки", "Дата первой оплаты", "Первый платёж, ₽", "Вознаграждение, ₽"])
+    writer.writerows(sales or [])
+    writer.writerow([])
+    writer.writerow(["Доставлено заявок", summary["delivered"]])
     writer.writerow(["Исключено", summary["excluded"]])
     writer.writerow(["Валидных заявок", summary["valid"]])
-    writer.writerow(["Ставка, ₽", summary["rate"]])
-    writer.writerow(["К оплате, ₽", summary["total"]])
+    writer.writerow(["Ставка за заявку, ₽", summary["rate"]])
+    writer.writerow(["За заявки, ₽", summary["leads_total"]])
+    writer.writerow(["Оплативших учеников", summary["sales"]])
+    writer.writerow(["За оплативших учеников, ₽", summary["bonus_total"]])
+    writer.writerow(["Итого к оплате, ₽", summary["total"]])
     writer.writerow(["Отчёт не содержит имён и контактов учеников."])
     return ("﻿" + out.getvalue()).encode("utf-8")
 
@@ -149,21 +180,22 @@ async def stats_text(session, now: Optional[datetime] = None) -> str:
     month_start = datetime(local.year, local.month, 1) - MSK
     schools = {s.id: s.name for s in (await session.execute(select(School))).scalars().all()}
     rows = (await session.execute(
-        select(Lead.school_id, Lead.status, Lead.created_at, Lead.withdrawn_at).where(
+        select(Lead.school_id, Lead.status, Lead.created_at, Lead.withdrawn_at, Lead.paid_at).where(
             Lead.is_test == False, Lead.created_at >= month_start)  # noqa: E712
     )).all()
     if not rows:
         return f"Заявок за {local:%m.%Y} пока нет."
     per = {}
-    for school_id, status, created_at, withdrawn_at in rows:
-        item = per.setdefault(schools.get(school_id, str(school_id)), {"today": 0, "month": 0, "failed": 0, "withdrawn": 0})
+    for school_id, status, created_at, withdrawn_at, paid_at in rows:
+        item = per.setdefault(schools.get(school_id, str(school_id)), {"today": 0, "month": 0, "failed": 0, "withdrawn": 0, "paid": 0})
+        item["paid"] += paid_at is not None
         item["month"] += 1
         item["today"] += created_at >= day_start
         item["failed"] += status in ("new", "failed")
         item["withdrawn"] += withdrawn_at is not None
-    lines = [f"Заявки: сегодня / за {local:%m.%Y} · не доставлено · отозвано"]
+    lines = [f"Заявки: сегодня / за {local:%m.%Y} · не доставлено · отозвано · оплатили"]
     for name, item in sorted(per.items(), key=lambda kv: -kv[1]["month"]):
-        lines.append(f"• {name}: {item['today']} / {item['month']} · {item['failed']} · {item['withdrawn']}")
+        lines.append(f"• {name}: {item['today']} / {item['month']} · {item['failed']} · {item['withdrawn']} · {item['paid']}")
     total = sum(item["month"] for item in per.values())
     lines.append(f"Всего за месяц: {total}")
     return "\n".join(lines)
@@ -327,14 +359,14 @@ def register(dp: Dispatcher, session_factory, settings):
                 await message.answer("Школа не найдена.")
                 return
             try:
-                lines, summary = await month_report(session, school, cfg, match.group(2))
+                lines, summary, sales = await month_report(session, school, cfg, match.group(2))
             except ValueError as exc:
                 await message.answer(str(exc))
                 return
-        data = report_csv(school.name, match.group(2), lines, summary)
+        data = report_csv(school.name, match.group(2), lines, summary, sales)
         await message.answer_document(BufferedInputFile(data, filename=f"egematch-{match.group(2)}-{school.id}.csv"),
                                       caption=f"«{school.name}», {match.group(2)}: доставлено {summary['delivered']}, "
-                                              f"валидных {summary['valid']}, к оплате {summary['total']} ₽.")
+                                              f"валидных {summary['valid']}, оплативших {summary['sales']}, к оплате {summary['total']} ₽.")
 
     @dp.message(Command("lead_exclude"))
     async def lead_exclude(message: Message):
@@ -352,6 +384,49 @@ def register(dp: Dispatcher, session_factory, settings):
             lead.excluded_reason = match.group(2)[:200]
             await session.commit()
         await message.answer(f"Заявка №{lead.id} исключена из оплаты: {lead.excluded_reason}")
+
+    @dp.message(Command("lead_paid"))
+    async def lead_paid(message: Message):
+        if not admin(message):
+            return
+        match = re.fullmatch(r"(\d+)(?:\s+(\d+))?(?:\s+(\d{4}-\d{2}-\d{2}))?", arg(message))
+        if not match:
+            await message.answer("Формат: /lead_paid ID [первый платёж ₽] [ГГГГ-ММ-ДД]")
+            return
+        try:
+            paid_at = datetime.strptime(match.group(3), "%Y-%m-%d") - MSK if match.group(3) else datetime.utcnow()
+        except ValueError:
+            await message.answer("Дата в формате ГГГГ-ММ-ДД")
+            return
+        async with session_factory() as session:
+            lead = await session.get(Lead, int(match.group(1)))
+            if not lead or lead.is_test or not lead.sent_at:
+                await message.answer("Такой доставленной заявки нет.")
+                return
+            if paid_at - lead.sent_at > timedelta(days=SALE_WINDOW_DAYS) or paid_at < lead.sent_at - timedelta(days=1):
+                await message.answer(f"Оплата должна быть в течение {SALE_WINDOW_DAYS} дней после доставки заявки "
+                                     f"({(lead.sent_at + MSK):%d.%m.%Y}). Бонус не начисляется.")
+                return
+            cfg = await session.get(LeadSchool, lead.school_id)
+            lead.paid_at, lead.first_payment = paid_at, int(match.group(2) or 0)
+            await session.commit()
+            bonus = sale_bonus(cfg, lead)
+            note = " Для процентного бонуса укажи сумму первого платежа." if cfg and cfg.bonus_percent and not lead.first_payment else ""
+        await message.answer(f"Заявка №{lead.id}: ученик оплатил {(paid_at + MSK):%d.%m.%Y}, вознаграждение {bonus} ₽.{note}")
+
+    @dp.message(Command("lead_unpaid"))
+    async def lead_unpaid(message: Message):
+        if not admin(message):
+            return
+        value = arg(message)
+        async with session_factory() as session:
+            lead = await session.get(Lead, int(value)) if value.isdigit() else None
+            if not lead:
+                await message.answer("Формат: /lead_unpaid ID")
+                return
+            lead.paid_at, lead.first_payment = None, 0
+            await session.commit()
+        await message.answer(f"Заявка №{lead.id}: отметка об оплате снята.")
 
     @dp.message(Command("lead_include"))
     async def lead_include(message: Message):

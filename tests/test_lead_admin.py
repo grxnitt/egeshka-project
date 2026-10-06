@@ -72,12 +72,13 @@ def test_monthly_report_pays_only_valid_leads_and_hides_contacts():
             await session.commit()
             school = await session.get(School, 1)
             cfg = await session.get(LeadSchool, 1)
-            lines, summary = await lead_admin.month_report(session, school, cfg, "2026-11")
+            lines, summary, sales = await lead_admin.month_report(session, school, cfg, "2026-11")
         assert [line[0] for line in lines] == [1, 2, 3, 4]
-        assert summary == {"delivered": 4, "excluded": 2, "valid": 2, "rate": 300, "total": 600}
+        assert summary == {"delivered": 4, "excluded": 2, "valid": 2, "rate": 300, "leads_total": 600,
+                           "sales": 0, "bonus_total": 0, "total": 600}
         assert lines[0][1] == "10.11.2026 12:00" and lines[0][4] == "Telegram"  # Moscow time, channel label
-        data = lead_admin.report_csv("Школа", "2026-11", lines, summary).decode("utf-8-sig")
-        assert "К оплате, ₽;600" in data and "@" not in data and "+7" not in data
+        data = lead_admin.report_csv("Школа", "2026-11", lines, summary, sales).decode("utf-8-sig")
+        assert "Итого к оплате, ₽;600" in data and "@" not in data and "+7" not in data
     asyncio.run(scenario())
 
 
@@ -137,4 +138,36 @@ def test_admin_commands_are_registered():
         return ({handler.callback.__name__ for handler in dp.message.handlers}, {h.callback.__name__ for h in dp.my_chat_member.handlers})
     names, member = asyncio.run(build())
     assert "added_to_group" in member
-    assert {"lead_set", "lead_test", "lead_on", "lead_off", "leads_stats", "lead_report", "lead_exclude", "lead_secret"} <= names
+    assert {"lead_set", "lead_test", "lead_on", "lead_off", "leads_stats", "lead_report", "lead_exclude", "lead_secret", "lead_paid", "lead_unpaid"} <= names
+
+
+def test_bonus_is_fixed_or_a_percent_with_a_floor():
+    lead = Lead(first_payment=20000)
+    assert lead_admin.sale_bonus(LeadSchool(bonus_fixed=1500, bonus_percent=0, bonus_min=0), lead) == 1500
+    assert lead_admin.sale_bonus(LeadSchool(bonus_fixed=0, bonus_percent=15, bonus_min=1000), lead) == 3000
+    assert lead_admin.sale_bonus(LeadSchool(bonus_fixed=0, bonus_percent=15, bonus_min=1000), Lead(first_payment=4000)) == 1000
+    assert lead_admin.parse_set("/lead_set Школа | percent=15 | min=1000")[1] == {"bonus_percent": 15, "bonus_min": 1000}
+    with pytest.raises(ValueError):
+        lead_admin.parse_set("/lead_set Школа | percent=150")
+
+
+def test_paid_students_are_billed_in_the_month_the_school_reported_them():
+    async def scenario():
+        sessions = await _db()
+        async with sessions() as session:
+            cfg = await session.get(LeadSchool, 1)
+            cfg.rate, cfg.bonus_fixed = 400, 1500
+            october = datetime(2026, 10, 25, 9, 0)
+            session.add_all([
+                _lead(1, october, paid_at=datetime(2026, 11, 3, 9, 0)),                  # delivered in Oct, paid in Nov
+                _lead(2, datetime(2026, 11, 5, 9, 0), paid_at=datetime(2026, 11, 20, 9, 0)),
+                _lead(3, datetime(2026, 11, 6, 9, 0), paid_at=datetime(2026, 11, 7, 9, 0), excluded_reason="действующий ученик"),
+                _lead(4, datetime(2026, 11, 6, 9, 0), paid_at=datetime(2026, 11, 7, 9, 0), is_test=True),
+            ])
+            await session.commit()
+            school = await session.get(School, 1)
+            lines, summary, sales = await lead_admin.month_report(session, school, cfg, "2026-11")
+        assert [row[0] for row in sales] == [1, 2] and all(row[4] == 1500 for row in sales)
+        assert summary["valid"] == 1 and summary["leads_total"] == 400  # lead 3 is excluded, lead 1 was delivered in October
+        assert summary["sales"] == 2 and summary["bonus_total"] == 3000 and summary["total"] == 3400
+    asyncio.run(scenario())
