@@ -164,6 +164,10 @@ class LeadSchool(Base):
     delivery_email: Mapped[str] = mapped_column(String(200), default="")
     webhook_url: Mapped[str] = mapped_column(String(500), default="")
     tg_chat_id: Mapped[str] = mapped_column(String(40), default="")
+    webhook_secret: Mapped[str] = mapped_column(String(64), default="")  # HMAC key so the school can verify a webhook is ours
+    sales_contact: Mapped[str] = mapped_column(String(200), default="")  # who handles leads at the school
+    pd_contact: Mapped[str] = mapped_column(String(200), default="")  # who receives withdrawal notices
+    rate: Mapped[int] = mapped_column(Integer, default=0)  # rubles per valid lead, from the contract
 
 
 class Lead(Base):
@@ -186,4 +190,8 @@ class Lead(Base):
     last_error: Mapped[str] = mapped_column(String(300), default="")
     sent_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
     withdraw_hash: Mapped[str] = mapped_column(String(64), default="", index=True)
+    withdrawn_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    delivered_via: Mapped[str] = mapped_column(String(40), default="")  # channels that accepted the lead
+    is_test: Mapped[bool] = mapped_column(Boolean, default=False)  # admin test leads never appear in reports
+    excluded_reason: Mapped[str] = mapped_column(String(200), default="")  # set when a school's dispute is accepted
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, index=True)

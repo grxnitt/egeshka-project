@@ -10,7 +10,11 @@ create table if not exists public.lead_schools (
   contact_types varchar(60) not null default 'phone,telegram,vk,email',
   delivery_email varchar(200) not null default '',
   webhook_url varchar(500) not null default '',
-  tg_chat_id varchar(40) not null default ''
+  tg_chat_id varchar(40) not null default '',
+  webhook_secret varchar(64) not null default '',
+  sales_contact varchar(200) not null default '',
+  pd_contact varchar(200) not null default '',
+  rate integer not null default 0
 );
 
 create table if not exists public.leads (
@@ -30,6 +34,10 @@ create table if not exists public.leads (
   last_error varchar(300) not null default '',
   sent_at timestamp,
   withdraw_hash varchar(64) not null default '',
+  withdrawn_at timestamp,
+  delivered_via varchar(40) not null default '',
+  is_test boolean not null default false,
+  excluded_reason varchar(200) not null default '',
   created_at timestamp not null default now()
 );
 create index if not exists leads_school_idx on public.leads (school_id);

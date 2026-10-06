@@ -9,6 +9,8 @@ Rules this module enforces (they come from the privacy policy, not from taste):
 """
 import asyncio
 import hashlib
+import hmac
+import json
 import re
 import secrets
 import smtplib
@@ -155,12 +157,12 @@ async def enabled_schools(session) -> list:
     return [{"name": name, "contactTypes": [t for t in types.split(",") if t in CONTACT_TYPES]} for name, types in rows]
 
 
-async def create_lead(session, school: School, clean: dict, now: Optional[datetime] = None):
+async def create_lead(session, school: School, clean: dict, now: Optional[datetime] = None, is_test: bool = False):
     """Store the lead. Returns (lead, withdraw_token, duplicate). A repeat of the same contact for the same
     school within 90 days is not stored or delivered again (the school would pay twice for one student)."""
     now = now or datetime.utcnow()
     digest = contact_hash(school.id, clean["contact_type"], clean["contact"])
-    existing = (await session.execute(
+    existing = None if is_test else (await session.execute(
         select(Lead).where(Lead.contact_hash == digest, Lead.created_at >= now - timedelta(days=DUPLICATE_WINDOW_DAYS),
                            Lead.status != "withdrawn")
     )).scalars().first()
@@ -168,7 +170,7 @@ async def create_lead(session, school: School, clean: dict, now: Optional[dateti
         return existing, "", True
     token = secrets.token_urlsafe(24)
     lead = Lead(school_id=school.id, contact_hash=digest, consent_version=CONSENT_VERSION, consent_at=now, created_at=now,
-                withdraw_hash=hashlib.sha256(token.encode()).hexdigest(), **clean)
+                withdraw_hash=hashlib.sha256(token.encode()).hexdigest(), is_test=is_test, **clean)
     session.add(lead)
     await session.commit()
     return lead, token, False
@@ -177,7 +179,8 @@ async def create_lead(session, school: School, clean: dict, now: Optional[dateti
 def lead_message(lead: Lead, school_name: str) -> str:
     kind = {"phone": "Телефон", "telegram": "Telegram", "vk": "VK", "email": "Email"}[lead.contact_type]
     return (
-        f"Новая заявка с ЕГЭ Мэтч №{lead.id} для школы «{school_name}»\n"
+        ("ТЕСТОВАЯ ЗАЯВКА — не обрабатывайте её как настоящую.\n" if lead.is_test else "")
+        + f"Новая заявка с ЕГЭ Мэтч №{lead.id} для школы «{school_name}»\n"
         f"Имя: {lead.name}\n{kind}: {lead.contact}\nПредмет: {lead.subject}\n"
         + ("Заявку оставил родитель или законный представитель.\n" if lead.guardian else "")
         + f"Согласие на передачу данных получено {lead.consent_at:%d.%m.%Y %H:%M} UTC (версия {lead.consent_version}).\n"
@@ -200,34 +203,59 @@ def _send_email(settings, to: str, subject: str, body: str):
         smtp.send_message(message)
 
 
-async def deliver(settings, cfg: LeadSchool, subject: str, body: str, payload: Optional[dict] = None) -> Optional[str]:
+CHANNEL_LABELS = {"email": "Почта", "webhook": "CRM", "telegram": "Telegram"}
+
+
+def sign_webhook(secret: str, body: bytes) -> str:
+    """Value of the X-EgeMatch-Signature header: sha256=<hex HMAC of the raw body>."""
+    return "sha256=" + hmac.new(secret.encode(), body, hashlib.sha256).hexdigest()
+
+
+async def _telegram_send(settings, chat_id, text: str) -> Optional[str]:
+    timeout = aiohttp.ClientTimeout(total=20)
+    async with aiohttp.ClientSession(timeout=timeout) as http:
+        async with http.post(f"https://api.telegram.org/bot{settings.bot_token}/sendMessage",
+                             json={"chat_id": chat_id, "text": text}) as response:
+            return None if response.status < 300 else f"HTTP {response.status}"
+
+
+async def deliver(settings, cfg: LeadSchool, subject: str, body: str, payload: Optional[dict] = None,
+                  delivered: Optional[list] = None) -> Optional[str]:
     """Send one message through every channel the school configured. Returns None on success, else an error text.
-    A lead counts as delivered only if all configured channels worked."""
+    A lead counts as delivered only if all configured channels worked; `delivered` collects the ones that did."""
     errors, tried = [], 0
+    delivered = delivered if delivered is not None else []
     if cfg.delivery_email and settings.smtp_host:
         tried += 1
         try:
             await asyncio.to_thread(_send_email, settings, cfg.delivery_email, subject, body)
+            delivered.append("email")
         except Exception as exc:  # noqa: BLE001 - any SMTP failure is retried later
             errors.append(f"email: {type(exc).__name__}")
     timeout = aiohttp.ClientTimeout(total=20)
     if cfg.webhook_url:
         tried += 1
+        raw = json.dumps({"text": body, **(payload or {})}, ensure_ascii=False).encode()
+        headers = {"Content-Type": "application/json"}
+        if cfg.webhook_secret:
+            headers["X-EgeMatch-Signature"] = sign_webhook(cfg.webhook_secret, raw)
         try:
             async with aiohttp.ClientSession(timeout=timeout) as http:
-                async with http.post(cfg.webhook_url, json={"text": body, **(payload or {})}) as response:
+                async with http.post(cfg.webhook_url, data=raw, headers=headers) as response:
                     if response.status >= 300:
                         errors.append(f"webhook: HTTP {response.status}")
+                    else:
+                        delivered.append("webhook")
         except Exception as exc:  # noqa: BLE001
             errors.append(f"webhook: {type(exc).__name__}")
     if cfg.tg_chat_id and settings.bot_token:
         tried += 1
         try:
-            async with aiohttp.ClientSession(timeout=timeout) as http:
-                async with http.post(f"https://api.telegram.org/bot{settings.bot_token}/sendMessage",
-                                     json={"chat_id": cfg.tg_chat_id, "text": body}) as response:
-                    if response.status >= 300:
-                        errors.append(f"telegram: HTTP {response.status}")
+            error = await _telegram_send(settings, cfg.tg_chat_id, body)
+            if error:
+                errors.append(f"telegram: {error}")
+            else:
+                delivered.append("telegram")
         except Exception as exc:  # noqa: BLE001
             errors.append(f"telegram: {type(exc).__name__}")
     if not tried:
@@ -235,17 +263,34 @@ async def deliver(settings, cfg: LeadSchool, subject: str, body: str, payload: O
     return "; ".join(errors)[:300] or None
 
 
+async def alert_admins(settings, text: str):
+    """Tell the people in ADMIN_IDS that something needs a hand (a lead that could not be delivered)."""
+    if not settings.bot_token:
+        return
+    for admin_id in settings.admin_id_set:
+        try:
+            await _telegram_send(settings, admin_id, text)
+        except Exception:  # noqa: BLE001 - an alert must never break delivery
+            pass
+
+
 async def deliver_lead(session, settings, lead: Lead, school: School, cfg: LeadSchool) -> bool:
     lead.attempts += 1
-    error = await deliver(settings, cfg, f"Заявка с ЕГЭ Мэтч №{lead.id}", lead_message(lead, school.name),
+    delivered = []
+    title = ("ТЕСТ. " if lead.is_test else "") + f"Заявка с ЕГЭ Мэтч №{lead.id}"
+    error = await deliver(settings, cfg, title, lead_message(lead, school.name),
                           {"lead_id": lead.id, "name": lead.name, "contact_type": lead.contact_type, "contact": lead.contact,
-                           "subject": lead.subject, "guardian": lead.guardian})
+                           "subject": lead.subject, "guardian": lead.guardian, "test": lead.is_test}, delivered)
     lead.last_error = error or ""
+    lead.delivered_via = ",".join(sorted(set(lead.delivered_via.split(",") if lead.delivered_via else []) | set(delivered)))
     if error is None:
         lead.status, lead.sent_at = "sent", datetime.utcnow()
     else:
         lead.status = "failed"
     await session.commit()
+    if error is not None and lead.attempts >= MAX_ATTEMPTS:
+        await alert_admins(settings, f"⚠️ Заявка №{lead.id} для «{school.name}» не доставлена после {lead.attempts} попыток: {error}. "
+                                     "Проверь канал доставки школы и свяжись с ней.")
     return error is None
 
 
@@ -278,6 +323,7 @@ async def withdraw(session, settings, token: str) -> bool:
     cfg = await session.get(LeadSchool, lead.school_id)
     reached_school = lead.status == "sent" or lead.attempts > 0  # a partly failed delivery may still have reached it
     lead.name, lead.contact, lead.contact_hash, lead.withdraw_hash, lead.status = "", "", "", "", "withdrawn"
+    lead.withdrawn_at = datetime.utcnow()
     await session.commit()
     if reached_school and school and cfg:
         await deliver(settings, cfg, f"Отзыв заявки №{lead.id}", withdrawal_message(lead.id, school.name))

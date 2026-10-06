@@ -3,6 +3,7 @@ from aiogram.enums import ParseMode
 from aiogram.filters import Command, CommandStart
 from aiogram.exceptions import TelegramBadRequest
 from .teacher_copy import teacher_description
+from . import lead_admin
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message
@@ -1267,6 +1268,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
     consent_gate = ConsentMiddleware(session_factory, settings)
     dp.message.outer_middleware(consent_gate)
     dp.callback_query.outer_middleware(consent_gate)
+    lead_admin.register(dp, session_factory, settings)  # admin-only lead commands, before the catch-all handlers
 
     @dp.callback_query(F.data == "consent:yes")
     async def consent_yes(call: CallbackQuery):
