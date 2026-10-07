@@ -1932,3 +1932,6 @@ body{background:#eef1fc}
 .hero-glow,.hero-centered .hero-glow{opacity:.55!important;filter:none}
 .hero-stage h1.home-title{font-size:clamp(46px,10.2vw,140px)}
 @media(max-width:700px){.hero-stage h1.home-title{font-size:clamp(34px,11.4vw,64px)}}
+/* home title back to its large size ("АГРЕГАТОР" needs 6.6em, so it fits at these sizes) */
+.hero-stage h1.home-title{font-size:clamp(52px,11.4vw,168px)}
+@media(max-width:700px){.hero-stage h1.home-title{font-size:clamp(38px,13.4vw,70px)}}
