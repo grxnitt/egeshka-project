@@ -1643,11 +1643,6 @@ dialog:has(.qr) .qr h2{margin-top:0}
  .rating-catalog .rating-filter-head h2{font-size:28px}
 }
 @media(max-width:700px){.rating-centered h1{font-size:36px}.rating-centered{padding-top:16px;padding-bottom:4px}}
-/* Home hero: three facts a pupil can trust at a glance. */
-.hero-facts{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:-6px 0 26px;font-size:13px;color:var(--muted)}
-.hero-facts span{padding:6px 12px;border-radius:999px;background:rgb(255 255 255/.7);border:1px solid var(--surface-line)}
-.hero-facts b{color:var(--blue);font-weight:700}
-@media(max-width:700px){.hero-facts{gap:6px;margin:-8px 0 20px;font-size:12px}.hero-facts span{padding:5px 10px}}
 /* Narrow-school line sits apart from the name, not glued to it. */
 .school-card p.card-narrow{margin:12px 0 18px;font-size:13px;line-height:1.45;color:var(--muted);font-weight:500}
 /* Loading skeletons: same size as the real content, so nothing jumps when data arrives. */
