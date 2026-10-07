@@ -1743,3 +1743,11 @@ dialog[open]::backdrop{animation:backdrop-in .3s ease-out}
 @media(max-width:700px){.hero-copy-narrow>.hero-sticker{right:2px}.hero-copy-narrow>.hero-sticker.is-light{left:2px}.articles-hero .hero-copy>.hero-sticker{top:-26px}}
 @media(min-width:701px){.articles-hero .hero-copy-narrow>.hero-sticker{top:4px;right:24%;left:auto}.articles-hero .hero-copy-narrow>.hero-sticker.is-light{top:34px;left:23%;right:auto}}
 @media(min-width:701px){.articles-hero .hero-copy-narrow>.hero-sticker{right:calc(50% - 400px)}.articles-hero .hero-copy-narrow>.hero-sticker.is-light{left:calc(50% - 400px)}}
+/* Collage layering: the headline sits ON TOP of the stickers. Stickers tuck under the letters, keep only a flat
+   shadow, and the letters get a thin paper-coloured halo so they read as cut out and laid over the stickers. */
+.hero-centered h1{position:relative;z-index:2;text-shadow:3px 0 var(--paper),-3px 0 var(--paper),0 3px var(--paper),0 -3px var(--paper),2px 2px var(--paper),-2px -2px var(--paper),2px -2px var(--paper),-2px 2px var(--paper)}
+.hero-sticker,.hero-sticker.is-light,.hero-sticker.is-blue,.hero-sticker.is-blush{z-index:1;box-shadow:0 3px 0 rgb(24 25 35/.07)}
+.hero-centered .hero-actions>.button,.hero-centered .hero-compare-link{z-index:2}
+@media(min-width:701px){.hero-copy>.hero-sticker{top:-26px}}
+@media(max-width:700px){.hero-copy>.hero-sticker{top:-20px}}
+@media(min-width:701px){.articles-hero .hero-copy-narrow>.hero-sticker{top:14px}.articles-hero .hero-copy-narrow>.hero-sticker.is-light{top:40px}}
