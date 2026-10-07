@@ -1910,3 +1910,7 @@ dialog[open]::backdrop{animation:backdrop-in .3s ease-out}
   .hs-fact.is-pink{grid-column:1/-1}
   .hs-fact span{font-size:12px;overflow-wrap:normal}
 }
+/* hero stage: lighter blue fill and quieter glows */
+.hero-stage{background:#5b73f0}
+.hs-glow-a{background:#9fb0ff;opacity:.3}
+.hs-glow-b{opacity:.22}
