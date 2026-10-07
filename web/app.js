@@ -121,9 +121,6 @@ function bindQuizFeedback(a){const box=document.querySelector('[data-quiz-feedba
 const SHORT_REASONS={'преподаватели':'сильные преподаватели','практика и дз':'много практики','проверка работ':'сильная проверка работ','кураторы':'сильные кураторы','платформа':'удобная платформа','нагрузка и темп':'комфортный темп','организация обучения':'чёткая организация'};
 function shortReason(text){const m=text.match(/^(.+?) — лучше \d+% школ$/);if(m)return SHORT_REASONS[m[1]]||m[1];const weak=text.match(/^(.+?) — слабее большинства школ$/);if(weak)return `${weak[1]} слабее многих`;
  return text.replace('входит в бюджет','в бюджете').replace('может быть выше бюджета','дороже твоего бюджета').replace('дешевле большинства школ','дешевле многих').replace(/^есть /,'').replace(/сильный препод именно по этому предмету.*/,'сильный препод по предмету').replace(/ — уточни у школы$/,'');}
-// Home hero: the two top schools as glass cards over the headline.
-function renderHeroCards(){if(!catalog)return;const top=[...catalog.schools].filter(s=>s.subjects.length>=5).sort((a,b)=>b.score-a.score).slice(0,2);
- top.forEach((s,i)=>{const el=document.getElementById(`hs-card-${i+1}`);if(!el)return;el.innerHTML=`<span class="hs-card-logo"><b>${escape(s.name.slice(0,1))}</b>${schoolLogos[s.name]?`<img src="${escape(schoolLogos[s.name])}" alt="" aria-hidden="true">`:''}</span><span class="hs-card-name"><b>${escape(s.name)}</b><small>${i+1} место</small></span><em>${number(s.score)}</em>`;el.hidden=false;el.querySelectorAll('img').forEach(img=>img.addEventListener('error',()=>img.remove(),{once:true}));});}
 // Home: top three schools, same order as the ratings page with no subject chosen (broad schools first).
 function renderHomeTop(){const list=$('#home-top-list');if(!list||!catalog)return;
  const top=[...catalog.schools].filter(s=>s.subjects.length>=5).sort((a,b)=>b.score-a.score).slice(0,3);
@@ -198,7 +195,7 @@ const applyLinks=()=>{$('#channel-link').href=links.channel;$('#review-link').hr
 applyLinks();
 try{
  await catalogReady;
- renderHomeTop();renderHeroCards();
+ renderHomeTop();
  {const facts=document.querySelector('[data-fact="schools"]');if(facts&&catalog)facts.textContent=catalog.schools.length;const people=document.querySelector('[data-fact="teachers"]');if(people&&catalog)people.textContent=`${Math.floor(catalog.teachers.length/10)*10}+`;}
  try{const fresh=await fetch('links.json');if(fresh.ok){links=await fresh.json();applyLinks();}}catch{}
  if(new URLSearchParams(location.search).get('resume')==='quiz'){
