@@ -1720,3 +1720,12 @@ dialog[open]::backdrop{animation:backdrop-in .3s ease-out}
 .hero-centered .hero-note{top:-58px;right:calc(50% + 150px)}
 .hero-centered .hero-note{top:-30px;right:calc(50% + 272px)}
 .hero-centered .hero-note{right:calc(50% + 296px)}
+/* More hero stickers (kept to three) and the arrow sits higher and further left. */
+.hero-sticker.is-light{right:auto;left:6%;top:-10px;rotate:-7deg;background:#fff;color:var(--blue);border:2px solid var(--blue);box-shadow:0 10px 24px rgb(52 75 216/.14);animation:sticker-in .6s .7s cubic-bezier(.34,1.56,.64,1) both,sticker-float 6s 1.4s ease-in-out infinite}
+.hero-sticker.is-blue{top:auto;bottom:calc(100% + 10px);right:auto;left:calc(50% + 250px);rotate:-6deg;background:var(--blue);box-shadow:0 10px 24px rgb(52 75 216/.28);animation:sticker-in .6s .9s cubic-bezier(.34,1.56,.64,1) both,sticker-float 5.5s 1.6s ease-in-out infinite}
+.hero-sticker.is-blue b{font-weight:700}
+.hero-centered .hero-note{top:-64px;right:calc(50% + 330px)}
+@media(max-width:1100px){.hero-sticker.is-blue{display:none}}
+@media(max-width:700px){.hero-sticker.is-light{left:2px;top:-30px;padding:6px 12px;font-size:13px;border-radius:12px}}
+.hero-sticker.is-blue{bottom:auto;top:4px;left:calc(50% + 300px)}
+@media(min-width:701px){.hero-copy>.hero-sticker{top:-50px}}
