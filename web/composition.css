@@ -1760,3 +1760,8 @@ dialog[open]::backdrop{animation:backdrop-in .3s ease-out}
 .article-card:not(.is-featured) .article-card-title{font-size:clamp(17px,1.5vw,19px)}
 .compare-prices h3,.compare-verdict h3{font-size:21px}
 .teacher-compare-card h3{font-size:21px}
+
+/* rating cards: Geologica reads heavier than Onest, so the decision rows are lightened to sit back behind the title */
+.school-decision dt{font-weight:500;color:var(--muted)}
+.school-decision dd{font-weight:350;color:#454856}
+.school-decision .card-price-scope{font-weight:350}
