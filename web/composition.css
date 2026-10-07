@@ -1833,3 +1833,7 @@ dialog[open]::backdrop{animation:backdrop-in .3s ease-out}
   .hero-centered:has(h1.home-title) .hero-copy{max-width:100%}
   h1.home-title{font-size:clamp(44px,5.8vw,76px)}
 }
+
+/* title stickers sit a little higher so they barely touch the headline letters */
+.hero-copy>.hero-sticker{margin-top:-18px}
+@media(max-width:700px){.hero-copy>.hero-sticker{margin-top:-14px}}
