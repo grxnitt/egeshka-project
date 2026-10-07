@@ -1765,3 +1765,13 @@ dialog[open]::backdrop{animation:backdrop-in .3s ease-out}
 .school-decision dt{font-weight:500;color:var(--muted)}
 .school-decision dd{font-weight:350;color:#454856}
 .school-decision .card-price-scope{font-weight:350}
+
+/* page stage: after the hero, the working part of each page sits on the soft brand panel (same as the rating catalog); white cards on it */
+.page-stage{background:var(--surface-soft);border-radius:var(--r-xl);padding:72px 0 64px;margin-top:8px}
+.page-stage>:first-child{margin-top:0!important;padding-top:0!important}
+.page-stage>:last-child{margin-bottom:0!important;padding-bottom:0!important}
+.page-stage .how-card{background:#fff;border-color:transparent}
+.page-stage .home-top-card,.page-stage .article-card{border-color:transparent}
+.page-stage+*{margin-top:var(--section-gap,96px)}
+@media(max-width:700px){.page-stage{padding:44px 0 40px;border-radius:var(--r-lg)}}
+.articles-page>.breadcrumbs.wrap{margin-left:auto;margin-right:auto}
