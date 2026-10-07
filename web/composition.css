@@ -1935,3 +1935,4 @@ body{background:#eef1fc}
 /* home title back to its large size ("АГРЕГАТОР" needs 6.6em, so it fits at these sizes) */
 .hero-stage h1.home-title{font-size:clamp(52px,11.4vw,168px)}
 @media(max-width:700px){.hero-stage h1.home-title{font-size:clamp(38px,13.4vw,70px)}}
+@media(max-width:700px){.hs-inner{padding-top:84px}}
