@@ -1660,3 +1660,12 @@ dialog:has(.qr) .qr h2{margin-top:0}
 .sk-label{height:14px;width:80%}.sk-bar{height:22px}
 .visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media(max-width:700px){.sk-card{min-height:520px}.sk-chip{height:44px;width:110px}.sk-chip.is-wide{width:150px}}
+/* Motion (motion.js): headline words, bars that fill on view, softer dialog entrance. */
+.mw{display:inline-block}
+.mw.mw-fade{display:inline}
+.motion-on .meter-segments:not(.is-in) i:after{animation-play-state:paused}
+dialog[open]::backdrop{animation:backdrop-in .3s ease-out}
+@keyframes backdrop-in{from{opacity:0}to{opacity:1}}
+@keyframes sheet-in{from{opacity:.4;transform:translateY(40px)}to{opacity:1;transform:none}}
+@media(max-width:700px){dialog:has(.site-quiz)[open],dialog:has(.quiz-calc)[open],dialog:has(.qr)[open],.lead-dialog[open]{animation:sheet-in .36s cubic-bezier(.22,.7,.25,1)}}
+@media(prefers-reduced-motion:reduce){dialog[open]::backdrop,dialog[open]{animation:none}}
