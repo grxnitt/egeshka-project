@@ -16,7 +16,7 @@ CSS_VERSIONS = {
     "styles.css": "36",
     "refinements.css": "44",
     "typography.css": "31",
-    "composition.css": "193",
+    "composition.css": "194",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -215,6 +215,37 @@ def criterion_row(label, value, status="yes"):
     )
 
 
+CONTACT_EMAIL = "starodubcevs22@gmail.com"
+_LEGAL = None
+
+
+def school_legal(slug):
+    """Who provides the school's services (content/school_legal.json, verified against EGRUL)."""
+    global _LEGAL
+    if _LEGAL is None:
+        path = ROOT / "content" / "school_legal.json"
+        _LEGAL = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    return _LEGAL.get(slug) or {}
+
+
+def legal_block(school):
+    info = school_legal(school["reviewSlug"])
+    name = escape(school["name"])
+    provider = (f' Услуги школы оказывает {escape(info["entity"])}, ИНН {escape(info["inn"])} (по данным сайта школы).'
+                if info.get("inn") else "")
+    mail = f'<a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a>'
+    return (
+        '<section class="sp-legal" aria-label="Правовая информация"><h2>Правовая информация</h2>'
+        f'<p>Название и логотип «{name}» используются только чтобы обозначить школу в обзоре и сравнении; права на них принадлежат правообладателю.{provider} '
+        'ЕГЭ Мэтч не связан со школой и не является её официальным представителем.</p>'
+        '<p>Оценка — мнение редакции по открытой <a href="/methodology">методике</a>, а не утверждение о качестве услуг. '
+        'Цены и условия приведены по данным сайта школы и не являются офертой — актуальные условия уточняй у школы. '
+        'Отзывы — личное мнение их авторов.</p>'
+        f'<p>Если вы представляете школу и не согласны с размещением или нашли ошибку, напишите на {mail} — исправим или удалим в течение 10 рабочих дней. Школа также может прислать ответ на отзыв.</p>'
+        '</section>'
+    )
+
+
 def build_page(school, people, others, header, footer, teacher_slugs):
     slug = school["reviewSlug"]
     url = f"{SITE}/schools/{slug}"
@@ -275,6 +306,7 @@ def build_page(school, people, others, header, footer, teacher_slugs):
   <div class="sp-actions"><a class="button dark" href="{card_url}" target="_blank" rel="noopener" data-source="school_page">Курсы и отзывы в боте <span>↗</span></a><a class="button blue" href="{lead_url}" target="_blank" rel="noopener" data-choose-school="{escape(school["name"])}" data-source="school_page">Выбрать школу <span>↗</span></a><a class="button outline" href="{compare_url}">Сравнить с другой школой <span>→</span></a><a class="button outline" href="{review_url}" target="_blank" rel="noopener">Оставить отзыв <span>↗</span></a></div>
   <p class="sp-site-link">В боте: тарифы, преподаватели и отзывы учеников. Условия и цены школа публикует на <a href="{escape(school["url"])}" target="_blank" rel="noopener">официальном сайте ↗</a></p>
   <section class="sp-section"><h2 class="t-h3">Другие школы</h2><nav class="sp-more" aria-label="Другие школы">{other_links}</nav><p class="sp-more-all"><a href="/ratings">Весь рейтинг →</a></p></section>
+  {legal_block(school)}
 </main>
 {footer}
 <script>window.TEACHER_SLUGS={slug_map};</script>
@@ -347,6 +379,7 @@ def build_teacher_page(person, school, colleagues, header, footer):
   <div class="sp-actions"><a class="button dark" href="{card_url}" target="_blank" rel="noopener" data-source="teacher_page">Курсы школы и отзывы в боте <span>↗</span></a><a class="button blue" href="{lead_url}" target="_blank" rel="noopener" data-choose-school="{escape(school["name"])}" data-source="teacher_page">Выбрать школу <span>↗</span></a><a class="button outline" href="{school_url}">О школе <span>→</span></a><a class="button outline" href="{review_url}" target="_blank" rel="noopener">Оставить отзыв <span>↗</span></a></div>
   <p class="sp-site-link">Профиль на сайте школы: <a href="{escape(person["url"])}" target="_blank" rel="noopener">{escape(person["name"])} ↗</a></p>
   <section class="sp-section"><h2 class="t-h3">Другие преподаватели школы</h2><nav class="sp-more" aria-label="Другие преподаватели школы">{other_links}</nav><p class="sp-more-all"><a href="{school_url}#teachers">Все преподаватели школы →</a></p></section>
+  <section class="sp-legal" aria-label="Правовая информация"><p>Имя, предметы и описание преподавателя приведены по открытым данным с сайта школы. Оценки — мнение учеников, оставивших отзывы. Если вы преподаватель и хотите исправить или убрать эту страницу, напишите на <a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a> — сделаем в течение 10 рабочих дней.</p></section>
 </main>
 {footer}
 <script src="/analytics-config.js?v=2"></script>
