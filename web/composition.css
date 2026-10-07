@@ -1896,3 +1896,33 @@ body:has(.hero-stage),body.ratings-page{background:#eef1fc}
   .ratings-page .hero-centered h1{font-size:clamp(36px,13vw,70px);line-height:1.02}
 }
 @media(max-width:700px){.hs-inner{padding-top:54px}.hs-sticker{top:-38px}}
+
+/* ===== All other pages: same pastel page, giant caps titles with one blue word, no panels or glows ===== */
+body{background:#eef1fc}
+.page-stage{background:transparent;border-radius:0;padding:0;margin-top:0}
+.hero-centered .hero-glow{display:none}
+.hero-centered h1{text-transform:uppercase;font-size:clamp(38px,7.8vw,108px);line-height:1;letter-spacing:-.06em;text-shadow:none;color:var(--ink)}
+.hero-centered h1 .hero-title-line:first-child{color:var(--blue)}
+.hero-centered h1 .brand-dot:after{display:none}
+.articles-hero h1{color:var(--blue)}
+.school-hero h1{text-transform:none;font-size:clamp(34px,6vw,84px);letter-spacing:-.05em}
+.privacy-hero h1{font-size:clamp(28px,5.2vw,72px)}
+@media(max-width:700px){
+  .hero-centered h1{font-size:clamp(34px,12vw,64px);text-wrap:balance}
+  .school-hero h1{font-size:clamp(32px,10vw,54px)}
+  .privacy-hero h1{text-transform:none;font-size:clamp(28px,8vw,44px)}
+}
+@media(min-width:701px){
+  .articles-hero .hero-copy-narrow>.hero-sticker{top:-34px}
+  .articles-hero .hero-copy-narrow>.hero-sticker.is-light{top:-8px}
+  .articles-hero{padding-bottom:20px}
+}
+.article-list{margin-top:56px}
+/* long article titles stay readable: no caps, moderate size */
+.article-page .hero-centered:not(.privacy-hero) h1{text-transform:none;font-size:clamp(28px,4.2vw,58px);line-height:1.12;letter-spacing:-.045em;text-wrap:balance}
+@media(max-width:700px){.article-page .hero-centered:not(.privacy-hero) h1{font-size:clamp(26px,7.6vw,38px)}}
+.privacy-hero h1{font-size:clamp(26px,4.2vw,56px);hyphens:none;-webkit-hyphens:none;overflow-wrap:normal}
+.privacy-hero .hero-copy,.privacy-hero .hero-copy-narrow{max-width:100%}
+.hero-centered h1 .brand-dot:after{display:none!important}
+@media(max-width:700px){.privacy-hero h1{font-size:clamp(20px,6vw,28px);text-transform:none}}
+@media(max-width:700px){.articles-hero{padding-top:44px}}
