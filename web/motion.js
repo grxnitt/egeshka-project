@@ -56,7 +56,7 @@
 
   /* 2. Small cards rise into place when they first scroll into view; cards in one row follow each other.
      Big panels (articles, CTA blocks, page sections) stay still: a whole panel sliding in is too loud. */
-  const surfaces = ['.how-card', '.school-card', '.faq-item', '.review-card'].join(',');
+  const surfaces = ['.how-card', '.school-card', '.home-top-card', '.faq-item', '.review-card'].join(',');
   // Fast scrolling: skip the entrance so nothing lags behind or flickers.
   let lastY = scrollY, lastT = performance.now(), speed = 0;
   addEventListener('scroll', () => {
@@ -65,7 +65,7 @@
     lastY = scrollY; lastT = now;
   }, {passive: true});
   /* 4. Score bars fill and scores count up when they become visible. */
-  const scores = '.sp-score strong, .card-score strong, .detail-score strong';
+  const scores = '.sp-score strong, .card-score strong, .detail-score strong, .home-top-score';
   const meters = '.meter-segments';
   // Panels whose background ornament runs only while they are on screen (CSS .motion-visible).
   const decor = '.hero-centered,.channel-section,.reviews,.rating-next';

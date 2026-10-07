@@ -1,5 +1,5 @@
 import { applyLiveRatings } from './supabase-client.js?v=7';
-import { chooseSchoolUrl, schoolFilters } from './school-content.js?v=40';
+import { chooseSchoolUrl, schoolContent, schoolFilters, schoolLogos } from './school-content.js?v=41';
 const $ = (selector) => document.querySelector(selector);
 const escape = (value) => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = n => Number(n).toFixed(1).replace('.', ',');
@@ -121,6 +121,13 @@ function bindQuizFeedback(a){const box=document.querySelector('[data-quiz-feedba
 const SHORT_REASONS={'преподаватели':'сильные преподаватели','практика и дз':'много практики','проверка работ':'сильная проверка работ','кураторы':'сильные кураторы','платформа':'удобная платформа','нагрузка и темп':'комфортный темп','организация обучения':'чёткая организация'};
 function shortReason(text){const m=text.match(/^(.+?) — лучше \d+% школ$/);if(m)return SHORT_REASONS[m[1]]||m[1];const weak=text.match(/^(.+?) — слабее большинства школ$/);if(weak)return `${weak[1]} слабее многих`;
  return text.replace('входит в бюджет','в бюджете').replace('может быть выше бюджета','дороже твоего бюджета').replace('дешевле большинства школ','дешевле многих').replace(/^есть /,'').replace(/сильный препод именно по этому предмету.*/,'сильный препод по предмету').replace(/ — уточни у школы$/,'');}
+// Home: top three schools, same order as the ratings page with no subject chosen (broad schools first).
+function renderHomeTop(){const list=$('#home-top-list');if(!list||!catalog)return;
+ const top=[...catalog.schools].filter(s=>s.subjects.length>=5).sort((a,b)=>b.score-a.score).slice(0,3);
+ const price=s=>Number(s.monthlyPriceFrom)>0?`от ${Number(s.monthlyPriceFrom).toLocaleString('ru-RU')} ₽/мес`:'цена у школы';
+ list.innerHTML=top.map((s,i)=>`<a class="home-top-card" href="/schools/${escape(s.reviewSlug)}"><div class="home-top-head"><span class="school-mark school-mark-logo ${i%2?'pink-mark':'blue-mark'}"><b>${escape(s.name.slice(0,1))}</b>${schoolLogos[s.name]?`<img src="${escape(schoolLogos[s.name])}" alt="" aria-hidden="true">`:''}</span><span class="home-top-place">${i+1} место</span></div><h3>${escape(s.name)}</h3><p class="home-top-fit">${escape(schoolContent[s.name]?.fit||s.description)}</p><div class="home-top-meta"><span>${escape(price(s))}</span><strong class="home-top-score">${number(s.score)}<small>/10</small></strong></div><span class="home-top-more">Подробнее о школе <span aria-hidden="true">→</span></span></a>`).join('');
+ list.removeAttribute('aria-busy');
+ list.querySelectorAll('img').forEach(img=>img.addEventListener('error',()=>img.remove(),{once:true}));}
 // One label per card so three results read as three different choices, not three copies of "fits".
 function matchBadge(top,item,index){if(index===0)return 'Лучшее совпадение';const priced=top.filter(x=>x.match.price>0);const cheapest=priced.length?priced.reduce((x,y)=>y.match.price<x.match.price?y:x):null;if(cheapest===item&&cheapest.match.price<(top[0].match.price||Infinity))return 'Выгоднее по цене';const strongest=top.reduce((x,y)=>y.match.teachers>x.match.teachers?y:x);if(strongest===item&&item.match.teachers>top[0].match.teachers)return 'Сильнее преподаватели';return '';}
 const shortPrice=value=>value.length>118?`${value.slice(0,115).trim()}…`:value;
@@ -188,6 +195,7 @@ const applyLinks=()=>{$('#channel-link').href=links.channel;$('#review-link').hr
 applyLinks();
 try{
  await catalogReady;
+ renderHomeTop();
  try{const fresh=await fetch('links.json');if(fresh.ok){links=await fresh.json();applyLinks();}}catch{}
  if(new URLSearchParams(location.search).get('resume')==='quiz'){
   let saved=null;try{saved=JSON.parse(sessionStorage.getItem('egeshka-quiz'));}catch{}
