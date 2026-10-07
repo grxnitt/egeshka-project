@@ -1732,3 +1732,6 @@ dialog[open]::backdrop{animation:backdrop-in .3s ease-out}
 .hero-sticker.is-blush{top:52px;right:auto;left:calc(50% + 318px);rotate:5deg;background:var(--blush);color:#862b52;box-shadow:0 10px 24px rgb(255 77 141/.16);animation:sticker-in .6s 1.05s cubic-bezier(.34,1.56,.64,1) both,sticker-float 6.5s 1.8s ease-in-out infinite}
 .hero-sticker.is-blush b{font-weight:700}
 @media(max-width:1100px){.hero-sticker.is-blush{display:none}}
+/* Hero glows fade out on their own instead of being cut by a straight edge at the bottom of the hero. */
+.hero.hero-centered{overflow:visible;overflow-x:clip}
+.hero-centered+*{position:relative;z-index:1}
