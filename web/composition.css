@@ -1826,3 +1826,10 @@ dialog[open]::backdrop{animation:backdrop-in .3s ease-out}
 .hero-centered .hero-actions>.hero-compare-link{background:#e3e8ff;color:var(--blue)}
 .hero-centered .hero-actions>.hero-compare-link:hover{background:#d3dbff}
 .hero-centered .hero-actions>.hero-compare-link span{color:var(--blue)}
+
+/* desktop: more air between the floating header and the page; larger home headline in a wider block */
+@media(min-width:801px){body{padding-top:104px}}
+@media(min-width:701px){
+  .hero-centered:has(h1.home-title) .hero-copy{max-width:100%}
+  h1.home-title{font-size:clamp(44px,5.8vw,76px)}
+}
