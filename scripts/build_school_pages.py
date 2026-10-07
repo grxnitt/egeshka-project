@@ -13,10 +13,10 @@ WEB = ROOT / "web"
 SITE = "https://egematch.ru"
 BOT = "https://t.me/egematch_bot"
 CSS_VERSIONS = {
-    "styles.css": "35",
+    "styles.css": "36",
     "refinements.css": "44",
     "typography.css": "31",
-    "composition.css": "185",
+    "composition.css": "186",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -164,7 +164,7 @@ def make_head(title, description, url, crumbs, noindex=False, og_type="website",
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="manifest" href="/site.webmanifest">
-  <link rel="preload" href="/assets/fonts/onest-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/unbounded-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/onest-symbols-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geologica-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/unbounded-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/onest-symbols-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 {css}
   <script type="application/ld+json">{json.dumps(breadcrumb, ensure_ascii=False)}</script>{extra}
 </head>"""

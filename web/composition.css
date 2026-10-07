@@ -1751,3 +1751,12 @@ dialog[open]::backdrop{animation:backdrop-in .3s ease-out}
 @media(min-width:701px){.hero-copy>.hero-sticker{top:-26px}}
 @media(max-width:700px){.hero-copy>.hero-sticker{top:-20px}}
 @media(min-width:701px){.articles-hero .hero-copy-narrow>.hero-sticker{top:14px}.articles-hero .hero-copy-narrow>.hero-sticker.is-light{top:40px}}
+
+/* card titles in the display face: gives every card the brand voice; body text stays Geologica */
+.how-card h3,.home-top-card h3,.school-card h3,.teacher-compare-card h3,.compare-prices h3,.compare-verdict h3,
+.article-card:not(.is-featured) .article-card-title,.t-title{font-family:var(--font-display)!important;font-weight:600!important;letter-spacing:-.035em!important;line-height:1.2!important;text-wrap:balance}
+.home-top-card h3{font-size:22px}
+.t-title{font-size:17px!important}
+.article-card:not(.is-featured) .article-card-title{font-size:clamp(17px,1.5vw,19px)}
+.compare-prices h3,.compare-verdict h3{font-size:21px}
+.teacher-compare-card h3{font-size:21px}

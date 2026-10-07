@@ -158,7 +158,7 @@ def test_article_pages_end_with_exactly_two_cards_telegram_and_rating():
         assert 'href="https://t.me/EgeMatch_blog"' in cta
         assert 'href="/ratings"' in cta
         assert "egematch_bot" not in cta and "#compare" not in cta
-        assert '<script src="/analytics.js?v=15"></script>' in page
+        assert '<script src="/analytics.js?v=18"></script>' in page
 
 
 def test_feed_carries_full_text_and_cover_for_syndication():
