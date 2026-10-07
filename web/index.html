@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="styles.css?v=36">
   <link rel="stylesheet" href="refinements.css?v=44">
   <link rel="stylesheet" href="typography.css?v=31">
-  <link rel="stylesheet" href="composition.css?v=200">
+  <link rel="stylesheet" href="composition.css?v=203">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"ЕГЭ Мэтч","url":"https://egematch.ru/","logo":"https://egematch.ru/assets/egeshka-logo-icon.svg","sameAs":["https://t.me/EgeMatch_blog"]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"ЕГЭ Мэтч","url":"https://egematch.ru/","inLanguage":"ru","description":"Сравнение онлайн-школ и преподавателей для подготовки к ЕГЭ."}</script>
 </head>
@@ -28,11 +28,24 @@
 <script>(function(){var l=location;if(l.hash==="#compare"||/[?&]compare(Left|Right)=/.test(l.search))l.replace("/compare"+(/[?&]compare(Left|Right)=/.test(l.search)?l.search.replace(/[?&]start=[^&]*/,""):""))})()</script>
 <header class="header wrap"><a class="logo" href="#" aria-label="ЕГЭ Мэтч, главная">ЕГЭ Мэтч<span>.</span></a><nav aria-label="Главная навигация"><a href="/ratings">Рейтинг школ</a><a href="/compare">Сравнение</a><a href="/reviews">Отзывы</a><a href="/articles">Статьи</a></nav><a class="header-action" href="/?start=quiz" data-quiz-link>Подобрать <span>→</span></a></header>
 <main>
-<section class="hero hero-centered wrap">
-  <div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div class="hero-glow hero-glow-pink" aria-hidden="true"></div>
-  <div class="hero-copy"><span class="hero-sticker" aria-hidden="true">бесплатно</span><span class="hero-sticker is-light" aria-hidden="true">без рекламы</span><h1 class="home-title"><span class="hero-title-line">Независимый рейтинг</span> <span class="hero-title-line">онлайн-школ <span class="brand-dot">ЕГЭ</span></span></h1><p class="lead">Оценки, цены, преподаватели и отзывы в одном месте. Не знаешь, какую школу выбрать? Подберём за пару минут.</p><div class="hero-actions"><span class="hero-sticker is-blue" aria-hidden="true"><b data-fact="schools">27</b> школ</span><span class="hero-sticker is-blush" aria-hidden="true"><b data-fact="teachers">180+</b> преподавателей</span><button class="button pink" id="quiz-start">Подобрать подготовку <span aria-hidden="true">→</span></button><a class="hero-compare-link" href="/ratings">Рейтинг школ <span aria-hidden="true">→</span></a></div></div>
+<section class="hero-stage" aria-labelledby="hs-title">
+  <div class="hs-glow hs-glow-a" aria-hidden="true"></div><div class="hs-glow hs-glow-b" aria-hidden="true"></div>
+  <div class="hs-inner wrap">
+    <div class="hs-title-wrap">
+      <span class="hs-sticker" aria-hidden="true">независимый</span>
+      <h1 id="hs-title" class="home-title"><span class="hs-line">Рейтинг</span> <span class="hs-line">школ ЕГЭ</span></h1>
+      <div class="hs-card hs-card-1" id="hs-card-1" hidden></div>
+      <div class="hs-card hs-card-2" id="hs-card-2" hidden></div>
+      <svg class="hs-scribble hs-scribble-1" viewBox="0 0 170 150" aria-hidden="true"><path d="M20 120 C 40 40, 90 40, 100 90 C 108 130, 140 110, 150 70"/><path d="M128 70 L152 66 L156 92"/></svg>
+      <svg class="hs-scribble hs-scribble-2" viewBox="0 0 150 130" aria-hidden="true"><path d="M130 20 C 60 0, 10 40, 30 100"/><path d="M12 80 L30 104 L52 86"/></svg>
+    </div>
+    <p class="hs-lead">Оценки, цены, преподаватели и отзывы онлайн-школ в одном месте. Не знаешь, какую выбрать? Подберём за пару минут.</p>
+    <div class="hs-actions"><button class="hs-btn hs-btn-main" id="quiz-start" type="button">Подобрать подготовку <span aria-hidden="true">→</span></button><a class="hs-btn hs-btn-ghost" href="/ratings">Рейтинг школ <span aria-hidden="true">→</span></a></div>
+    <svg class="hs-badge" viewBox="0 0 150 150" aria-hidden="true"><circle cx="75" cy="75" r="73"/><defs><path id="hs-circle" d="M75 75 m-52 0 a52 52 0 1 1 104 0 a52 52 0 1 1 -104 0"/></defs><text><textPath href="#hs-circle" startOffset="0" textLength="320" lengthAdjust="spacing">БЕСПЛАТНО · БЕЗ РЕКЛАМЫ · </textPath></text><path class="hs-badge-arrow" d="M58 88 L92 58 M70 56 L93 57 L94 80"/></svg>
+  </div>
 </section>
-<div class="page-stage"><section class="how-it-works wrap" id="how"><div class="section-heading"><div><h2 class="t-h2">Как это работает?</h2></div><a class="text-link" href="/methodology">Как считается рейтинг <span aria-hidden="true">→</span></a></div><div class="how-grid">
+<div class="page-stage hs-stage"><div class="hs-facts wrap"><div class="hs-fact is-white"><b data-fact="schools">27</b><span>школ в рейтинге</span></div><div class="hs-fact is-blush"><b data-fact="teachers">180+</b><span>преподавателей</span></div><div class="hs-fact is-pink"><b>7</b><span>критериев оценки</span></div></div>
+<section class="how-it-works wrap" id="how"><div class="section-heading"><div><h2 class="t-h2">Как это работает?</h2></div><a class="text-link" href="/methodology">Как считается рейтинг <span aria-hidden="true">→</span></a></div><div class="how-grid">
   <article class="how-card" data-step="1"><span class="how-number">01</span><h3>Находишь своего мэтча</h3><p>Отвечаешь на 8 коротких вопросов — и получаешь три школы под свои ответы, а не общий топ.</p><a class="how-link" href="/?start=quiz" data-quiz-link>Подобрать школу <span aria-hidden="true">→</span></a></article>
   <article class="how-card" data-step="2"><span class="how-number">02</span><h3>Смотришь рейтинг</h3><p>Выбираешь предмет — и видишь оценки, цены, формат и отзывы. Всё в одном месте, без десятка вкладок.</p><a class="how-link" href="/ratings#choose-subject">Открыть рейтинг <span aria-hidden="true">→</span></a></article>
   <article class="how-card" data-step="3"><span class="how-number">03</span><h3>Сравниваешь школы</h3><p>Ставишь две школы рядом и видишь, чем они отличаются: критерии, цена, формат.</p><a class="how-link" href="/compare">Сравнить школы <span aria-hidden="true">→</span></a></article>
@@ -49,7 +62,7 @@
 <script src="analytics-config.js?v=2"></script>
 <script src="analytics.js?v=19"></script>
 <script src="supabase-config.js?v=1"></script>
-<script type="module" src="app.js?v=87"></script>
+<script type="module" src="app.js?v=88"></script>
 <script type="module" src="article-views.js?v=3"></script>
 
 </body></html>
