@@ -1778,3 +1778,6 @@ dialog[open]::backdrop{animation:backdrop-in .3s ease-out}
 
 /* phones: no paper outline around the hero title (it showed as a white halo over the glow); stickers sit above the title instead of under it */
 @media(max-width:700px){.hero-centered h1{text-shadow:none}.hero-centered .hero-copy{padding-top:24px}}
+
+/* home hero: the pink CTA uses white text, same as the blue rating button next to it */
+.hero #quiz-start.button.pink,.hero #quiz-start.button.pink span{color:#fff}
