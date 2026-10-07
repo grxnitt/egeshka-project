@@ -1798,3 +1798,23 @@ dialog[open]::backdrop{animation:backdrop-in .3s ease-out}
 
 /* home: the new headline is long; a slightly smaller size on phones keeps it to three lines instead of leaving "ЕГЭ" alone on a fourth */
 @media(max-width:700px){h1.home-title{font-size:30px}}
+
+/* desktop header: one floating frosted pill (logo, links, quiz button) instead of a full-width bar with a rule under it */
+@media(min-width:801px){
+  :root .header{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:60;width:auto;max-width:calc(100% - 32px);height:auto;margin:0;gap:26px;padding:8px 8px 8px 24px;background:rgb(255 255 255/.86);-webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%);border:0;border-radius:var(--r-pill);box-shadow:0 8px 30px rgb(32 36 43/.08)}
+  :root .header .logo{font-size:21px;letter-spacing:-1.2px;line-height:1}
+  :root .header nav{gap:2px;padding:0;background:none}
+  :root .header nav a{padding:10px 14px;border-radius:var(--r-pill);font-size:13px;font-weight:600;transition:background .2s,color .2s}
+  :root .header nav a:after,:root .header nav a.active:after{display:none}
+  :root .header nav a:hover,:root .header nav a.active{background:var(--surface-soft);color:var(--blue)}
+  :root .header .header-action{display:inline-flex;align-items:center;gap:10px;padding:11px 18px;border-radius:var(--r-pill);background:var(--blue);color:#fff;font-size:13px;font-weight:600;transition:background .2s}
+  :root .header .header-action span{margin:0}
+  :root .header .header-action:hover{background:#263dbb}
+  body{padding-top:78px}
+  html{scroll-padding-top:96px}
+  .compare-page .header{position:fixed}
+}
+/* home headline: capped so it stays on two lines on wide screens */
+@media(min-width:701px){h1.home-title{font-size:clamp(44px,5.4vw,70px)}}
+@media(min-width:801px){:root .header nav a,:root .header .header-action,:root .header .logo{white-space:nowrap}}
+@media(min-width:801px) and (max-width:1100px){:root .header{gap:14px;padding-left:18px}:root .header nav a{padding:10px 10px}:root .header .header-action{padding:11px 14px}}
