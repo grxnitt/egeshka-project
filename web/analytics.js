@@ -223,7 +223,7 @@
 
   window.egeTrack=goal;
   /* Decorative motion on every page (motion.js is a no-op without support or with reduced motion). */
-  (function(){var m=document.createElement('script');m.src='/motion.js?v=31';m.defer=true;document.head.appendChild(m)})();
+  (function(){var m=document.createElement('script');m.src='/motion.js?v=32';m.defer=true;document.head.appendChild(m)})();
   /* On-site lead window: only loaded once an API address is configured in analytics-config.js. */
   if(window.EGE_LEADS_API){var leadScript=document.createElement('script');leadScript.src='/lead.js?v=2';leadScript.defer=true;document.head.appendChild(leadScript)}
   document.addEventListener('click',onClick,true);

@@ -54,13 +54,21 @@
     }, {passive: true});
   }
 
-  /* 2. Blocks rise into place when they first scroll into view; cards in one row follow each other. */
-  const surfaces = ['.section-heading', '.how-card', '.school-card', '.article-card', '.faq-item', '.comparison-box',
-    '.compare-price-card', '.channel-section', '.reviews', '.rating-next', '.about-grid article', '.detail-card',
-    '.sp-section', '.method-section', '.review-card', '.quiz-match'].join(',');
+  /* 2. Small cards rise into place when they first scroll into view; cards in one row follow each other.
+     Big panels (articles, CTA blocks, page sections) stay still: a whole panel sliding in is too loud. */
+  const surfaces = ['.how-card', '.school-card', '.faq-item', '.review-card'].join(',');
+  // Fast scrolling: skip the entrance so nothing lags behind or flickers.
+  let lastY = scrollY, lastT = performance.now(), speed = 0;
+  addEventListener('scroll', () => {
+    const now = performance.now();
+    speed = Math.abs(scrollY - lastY) / Math.max(1, now - lastT);
+    lastY = scrollY; lastT = now;
+  }, {passive: true});
   /* 4. Score bars fill and scores count up when they become visible. */
   const scores = '.sp-score strong, .card-score strong, .detail-score strong';
   const meters = '.meter-segments';
+  // Panels whose background ornament runs only while they are on screen (CSS .motion-visible).
+  const decor = '.hero-centered,.channel-section,.reviews,.rating-next';
   const seen = new WeakSet();
 
   function countUp(el) {
@@ -85,18 +93,20 @@
       if (target.matches(meters)) { target.classList.add('is-in'); continue; }
       if (reduced) continue;
       if (target.matches(scores)) { countUp(target); continue; }
+      if (!target.matches(surfaces)) continue;  // decorative panels only get the motion-visible class
+      if (speed > 1.5 || target.getBoundingClientRect().top < innerHeight * .55) continue;  // fast scroll or already on screen
       const row = target.parentNode ? [...target.parentNode.children].filter(el => el.matches(surfaces)) : [];
       const index = Math.max(0, row.indexOf(target)) % 3;
-      target.animate([{opacity: 0, transform: 'translateY(28px)'}, {opacity: 1, transform: 'none'}],
-                     {duration: 700, delay: index * 90, easing: ease, fill: 'backwards'});
+      target.animate([{opacity: 0, transform: 'translateY(14px)'}, {opacity: 1, transform: 'none'}],
+                     {duration: 520, delay: index * 70, easing: ease, fill: 'backwards'});
     }
   }, {threshold: .08, rootMargin: '0px 0px -40px 0px'});
 
   const registered = new WeakSet();
   function register(root) {
     if (root.nodeType !== 1) return;
-    const nodes = [...root.querySelectorAll(`${surfaces},${scores},${meters},.hero-centered`)];
-    if (root.matches(`${surfaces},${scores},${meters}`)) nodes.push(root);
+    const nodes = [...root.querySelectorAll(`${surfaces},${scores},${meters},${decor}`)];
+    if (root.matches(`${surfaces},${scores},${meters},${decor}`)) nodes.push(root);
     for (const node of nodes) if (!registered.has(node)) { registered.add(node); observer.observe(node); }
   }
   register(document.body);
