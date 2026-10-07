@@ -1890,3 +1890,9 @@ body:has(.hero-stage),body.ratings-page{background:#eef1fc}
 .ratings-page .hero-centered h1 .hero-title-line{display:block}
 @media(max-width:700px){.ratings-page .hero-centered h1{font-size:clamp(30px,9.4vw,52px)}}
 @media(max-width:800px){body:has(.hero-stage) .header,body.ratings-page .header{background:rgb(238 241 252/.88)}}
+/* phones: bigger giant titles */
+@media(max-width:700px){
+  .hero-stage h1.home-title{font-size:clamp(40px,14.4vw,76px)}
+  .ratings-page .hero-centered h1{font-size:clamp(36px,13vw,70px);line-height:1.02}
+}
+@media(max-width:700px){.hs-inner{padding-top:54px}.hs-sticker{top:-38px}}
