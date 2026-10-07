@@ -1735,3 +1735,11 @@ dialog[open]::backdrop{animation:backdrop-in .3s ease-out}
 /* Hero glows fade out on their own instead of being cut by a straight edge at the bottom of the hero. */
 .hero.hero-centered{overflow:visible;overflow-x:clip}
 .hero-centered+*{position:relative;z-index:1}
+/* Stickers on pages with a short headline sit closer to it. */
+.hero-copy-narrow>.hero-sticker{right:20%}
+.hero-copy-narrow>.hero-sticker.is-light{left:18%;right:auto}
+.hero-sticker b{font-weight:700}
+@media(min-width:701px){.articles-hero .hero-copy>.hero-sticker{top:-24px}.articles-hero .hero-copy-narrow>.hero-sticker{right:28%}.articles-hero .hero-copy-narrow>.hero-sticker.is-light{left:26%}}
+@media(max-width:700px){.hero-copy-narrow>.hero-sticker{right:2px}.hero-copy-narrow>.hero-sticker.is-light{left:2px}.articles-hero .hero-copy>.hero-sticker{top:-26px}}
+@media(min-width:701px){.articles-hero .hero-copy-narrow>.hero-sticker{top:4px;right:24%;left:auto}.articles-hero .hero-copy-narrow>.hero-sticker.is-light{top:34px;left:23%;right:auto}}
+@media(min-width:701px){.articles-hero .hero-copy-narrow>.hero-sticker{right:calc(50% - 400px)}.articles-hero .hero-copy-narrow>.hero-sticker.is-light{left:calc(50% - 400px)}}

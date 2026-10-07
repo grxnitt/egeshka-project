@@ -377,7 +377,7 @@ def build_index_page(articles, header, footer):
   <nav class="breadcrumbs" aria-label="Навигация"><a href="/">Главная</a><span>›</span><span aria-current="page">Статьи</span></nav>
   <section class="hero hero-centered articles-hero">
     {GLOWS}
-    <div class="hero-copy"><h1><span class="brand-dot">Статьи</span></h1><p class="lead">Коротко о ЕГЭ, онлайн-школах и рынке образования.<br> Каждая статья читается за 3–4 минуты.</p></div>
+    <div class="hero-copy hero-copy-narrow"><span class="hero-sticker is-light" aria-hidden="true">коротко и по делу</span><span class="hero-sticker" aria-hidden="true">разборы ЕГЭ-2027</span><h1><span class="brand-dot">Статьи</span></h1><p class="lead">Коротко о ЕГЭ, онлайн-школах и рынке образования.<br> Каждая статья читается за 3–4 минуты.</p></div>
   </section>
   <section class="article-list" aria-label="Список статей">
     {cards}
