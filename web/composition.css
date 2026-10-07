@@ -1877,8 +1877,7 @@ body:has(.hero-stage),body.ratings-page{background:#eef1fc}
   .hs-fact b{min-width:84px;height:62px;font-size:30px}
 }
 /* rating page on the pastel page: giant caps title, no halo, no glows, catalog panel melts into the page */
-.ratings-page .hero-centered .hero-glow{display:none}
-.ratings-page .hero-centered h1{text-transform:uppercase;font-size:clamp(46px,9vw,128px);line-height:1;letter-spacing:-.06em;text-shadow:none;color:var(--ink)}
+.ratings-page .ratings-page .hero-centered h1{text-transform:uppercase;font-size:clamp(46px,9vw,128px);line-height:1;letter-spacing:-.06em;text-shadow:none;color:var(--ink)}
 .ratings-page .hero-centered h1 .hero-title-line:first-child{color:var(--blue)}
 .ratings-page .hero-centered h1 .brand-dot:after{display:none}
 .ratings-page .rating-catalog{background:transparent;border-radius:0}
@@ -1900,7 +1899,6 @@ body:has(.hero-stage),body.ratings-page{background:#eef1fc}
 /* ===== All other pages: same pastel page, giant caps titles with one blue word, no panels or glows ===== */
 body{background:#eef1fc}
 .page-stage{background:transparent;border-radius:0;padding:0;margin-top:0}
-.hero-centered .hero-glow{display:none}
 .hero-centered h1{text-transform:uppercase;font-size:clamp(38px,7.8vw,108px);line-height:1;letter-spacing:-.06em;text-shadow:none;color:var(--ink)}
 .hero-centered h1 .hero-title-line:first-child{color:var(--blue)}
 .hero-centered h1 .brand-dot:after{display:none}
@@ -1926,3 +1924,11 @@ body{background:#eef1fc}
 .hero-centered h1 .brand-dot:after{display:none!important}
 @media(max-width:700px){.privacy-hero h1{font-size:clamp(20px,6vw,28px);text-transform:none}}
 @media(max-width:700px){.articles-hero{padding-top:44px}}
+
+/* light glows behind the titles again */
+.hero-stage{overflow:visible;overflow-x:clip}
+.hs-inner{z-index:1}
+.hero-glow-blue{background:radial-gradient(circle,#c9d3ff 0%,#dde3ff80 40%,transparent 70%)}
+.hero-glow,.hero-centered .hero-glow{opacity:.55!important;filter:none}
+.hero-stage h1.home-title{font-size:clamp(46px,10.2vw,140px)}
+@media(max-width:700px){.hero-stage h1.home-title{font-size:clamp(34px,11.4vw,64px)}}
