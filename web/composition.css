@@ -1775,3 +1775,6 @@ dialog[open]::backdrop{animation:backdrop-in .3s ease-out}
 .page-stage+*{margin-top:var(--section-gap,96px)}
 @media(max-width:700px){.page-stage{padding:44px 0 40px;border-radius:var(--r-lg)}}
 .articles-page>.breadcrumbs.wrap{margin-left:auto;margin-right:auto}
+
+/* phones: no paper outline around the hero title (it showed as a white halo over the glow); stickers sit above the title instead of under it */
+@media(max-width:700px){.hero-centered h1{text-shadow:none}.hero-centered .hero-copy{padding-top:24px}}
