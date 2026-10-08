@@ -2155,3 +2155,14 @@ body{background:#eef1fc}
 .sp-about-list li.is-no .sp-about-v i:before{content:'✕'}
 .sp-about-v a{color:var(--blue);text-decoration:underline;text-underline-offset:3px}
 @media(max-width:700px){.sp-about-list li{grid-template-columns:minmax(0,1fr);gap:4px;padding:12px 0}}
+
+/* Letter marks stand in for school logos: first letter of the name on blue or pink. */
+.school-mark{font:700 20px/1 var(--font-display)}
+.school-mark.blue-mark,.school-mark.pink-mark{font-size:20px}
+.school-mark.is-long{font-size:15px;letter-spacing:-.04em}
+.school-mark b{font:inherit}
+.school-card-top{justify-content:flex-start;margin-bottom:18px}
+.at-logo b{font:inherit}
+.at-logo.blue-mark{background:#dce4ff;box-shadow:none;color:var(--blue)}
+.at-logo.pink-mark{background:var(--blush);box-shadow:none;color:#b3195a}
+.at-logo.is-long{font-size:10px;letter-spacing:-.04em}
