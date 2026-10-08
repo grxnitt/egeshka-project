@@ -13,6 +13,8 @@ OUT = ROOT / "web" / "assets" / "articles"
 W, H = 1200, 630
 BLUE, PINK, INK, WHITE = "#344bd8", "#ff4d8d", "#181923", "#ffffff"
 LAVENDER = "#eceaff"
+# Pastel palette (site redesign): soft page-like backgrounds, no black blocks.
+SOFT, BLUSH, SKY, PERI = "#e3e8ff", "#f8dce8", "#eef1fc", "#8b9bf0"
 
 
 class Canvas:
@@ -112,8 +114,8 @@ class Canvas:
 
 
 def cover_exam():
-    c = Canvas(BLUE)
-    c.ring(930, 330, 200, 70, "#4a60e2")
+    c = Canvas(SOFT)
+    c.ring(930, 330, 200, 70, "#cfd7ff")
     c.circle(985, 195, 80, PINK)
     c.circle(1075, 445, 26, WHITE)
     c.circle(760, 140, 16, "#8b9bf0")
@@ -134,17 +136,17 @@ def cover_exam():
 
 
 def cover_market():
-    c = Canvas(PINK)
+    c = Canvas(BLUSH)
     c.ring(90, 90, 120, 50, BLUE)
     for row in range(3):
         for col in range(4):
-            c.circle(900 + col * 44, 70 + row * 44, 6, "#ff85ad")
+            c.circle(900 + col * 44, 70 + row * 44, 6, "#f3b7cd")
     heights = [130, 190, 260, 330, 370, 392]
     base = 545
     tops = []
     for i, h in enumerate(heights):
         x = 130 + i * 156
-        c.bar(x, base - h, 120, h, 30, INK if i == len(heights) - 1 else WHITE)
+        c.bar(x, base - h, 120, h, 30, BLUE if i == len(heights) - 1 else WHITE)
         tops.append((x + 60, base - h - 42))
     c.line(tops, BLUE, 10)
     for x, y in tops:
@@ -154,8 +156,8 @@ def cover_market():
 
 
 def cover_ai():
-    c = Canvas(INK)
-    c.ring(140, 560, 150, 46, "#262839")
+    c = Canvas(SKY)
+    c.ring(140, 560, 150, 46, "#dfe5ff")
     c.rect(120, 90, 560, 170, 48, BLUE)
     c.poly([(190, 258), (150, 322), (262, 258)], BLUE)
     for i, w in enumerate((360, 430, 250)):
@@ -167,7 +169,7 @@ def cover_ai():
     c.rect(532, 454, 340, 18, 9, "#dcdce6")
     c.sparkle(985, 165, 88, PINK)
     c.sparkle(850, 100, 38, "#8b9bf0")
-    c.sparkle(1100, 290, 24, WHITE)
+    c.sparkle(1100, 290, 24, PERI)
     return c
 
 
@@ -181,7 +183,7 @@ def cover_scores():
     c.circle(cx + r * math.cos(end), cy + r * math.sin(end), w / 2, BLUE)
     c.circle(cx, cy, 92, PINK)
     c.tick(cx, cy, WHITE, 2.2, 12)
-    for i, (fill, filled) in enumerate(((BLUE, 300), (PINK, 240), (INK, 180))):
+    for i, (fill, filled) in enumerate(((BLUE, 300), (PINK, 240), (PERI, 180))):
         y = 140 + i * 120
         c.rect(720, y, 360, 72, 36, WHITE)
         c.rect(720, y, filled + 40, 72, 36, fill)
@@ -204,8 +206,8 @@ def cover_admission():
     for x in (206, 306, 406, 506):
         c.rect(x + dx, 304, 62, 184, 12, WHITE)
     c.rect(150 + dx, 488, 500, 34, 10, BLUE)
-    c.rect(122 + dx, 522, 556, 30, 10, INK)
-    for i, (color, w) in enumerate(((BLUE, 210), (PINK, 170), (INK, 130))):
+    c.rect(122 + dx, 522, 556, 30, 10, PERI)
+    for i, (color, w) in enumerate(((BLUE, 210), (PINK, 170), (PERI, 130))):
         y = 290 + i * 84
         c.rect(760, y, 260, 60, 30, WHITE)
         c.circle(792, y + 30, 18, color)
@@ -232,8 +234,8 @@ def shield_points(cx, top, bottom, half, steps=14):
 
 
 def cover_safety():
-    c = Canvas(INK)
-    c.ring(1080, 560, 130, 44, "#262839")
+    c = Canvas(SOFT)
+    c.ring(1080, 560, 130, 44, "#cfd7ff")
     c.rect(110, 120, 400, 380, 44, WHITE)
     c.rect(150, 168, 190, 22, 11, "#dcdce6")
     c.rect(150, 214, 310, 18, 9, "#dcdce6")
@@ -258,13 +260,13 @@ def cover_teacher():
     c.ring(1085, 520, 70, 30, BLUE)
     c.sparkle(790, 92, 32, BLUE)
     c.circle(120, 560, 16, PINK)
-    c.rect(140, 90, 580, 380, 40, INK)
+    c.rect(140, 90, 580, 380, 40, WHITE)
     for i, w in enumerate((400, 320, 360)):
         c.rect(196, 148 + i * 58, w, 20, 10, "#c9cde6")
     c.ring(590, 372, 44, 9, PINK)
     c.tick(590, 372, PINK, 1.5, 9)
-    c.rect(196, 330, 250, 20, 10, "#4a60e2")
-    c.rect(196, 372, 190, 20, 10, "#4a60e2")
+    c.rect(196, 330, 250, 20, 10, PERI)
+    c.rect(196, 372, 190, 20, 10, PERI)
     c.rect(120, 470, 620, 30, 15, BLUE)
     for i, (color, w, x) in enumerate(((PINK, 300, 780), (WHITE, 250, 810), (BLUE, 210, 840))):
         y = 396 - i * 66
@@ -274,12 +276,12 @@ def cover_teacher():
 
 
 def cover_errors():
-    c = Canvas(PINK)
-    c.ring(1080, 90, 90, 44, "#ff85ad")
+    c = Canvas(BLUSH)
+    c.ring(1080, 90, 90, 44, "#f3b7cd")
     c.circle(90, 560, 70, BLUE)
     c.sparkle(740, 520, 30, WHITE)
     c.rect(150, 60, 430, 510, 38, WHITE)
-    c.rect(196, 108, 190, 28, 14, INK)
+    c.rect(196, 108, 190, 28, 14, BLUE)
     marked = {1, 3}
     for i in range(6):
         y = 176 + i * 62
@@ -291,9 +293,9 @@ def cover_errors():
         c.rect(206, y + 4, 240 if i % 2 else 290, 16, 8, "#dfe2f7")
     c.circle(840, 300, 132, WHITE)
     for i, h in enumerate((90, 150, 210)):
-        c.bar(756 + i * 62, 396 - h, 44, h, 12, (BLUE, PINK, INK)[i])
+        c.bar(756 + i * 62, 396 - h, 44, h, 12, (BLUE, PINK, PERI)[i])
     c.ring(840, 300, 132, 30, BLUE)
-    c.line([(935, 395), (1050, 510)], INK, 40)
+    c.line([(935, 395), (1050, 510)], BLUE, 40)
     return c
 
 
@@ -324,7 +326,7 @@ def cover_compare():
         c.rect(670, y, w, 38, 19, PINK)
     c.rect(670, 468, 300, 46, 23, PINK)
 
-    c.circle(600, 313, 64, INK)
+    c.circle(600, 313, 64, "#5b73f0")
     c.poly([(552, 274), (552, 352), (600, 313)], WHITE)
     c.poly([(648, 274), (648, 352), (600, 313)], WHITE)
     return c

@@ -268,7 +268,7 @@ CTA_BLOCK = f"""<aside class="article-cta" aria-label="Что дальше">
 GLOWS = '<div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div class="hero-glow hero-glow-pink" aria-hidden="true"></div>'
 RSS_LINK = f'\n  <link rel="alternate" type="application/rss+xml" title="ЕГЭ Мэтч — статьи" href="/articles/feed.xml">'
 SCRIPTS = f"""<script src="/analytics-config.js?v=2"></script>
-<script src="/analytics.js?v=20"></script>
+<script src="/analytics.js?v=21"></script>
 <script src="/supabase-config.js?v=1"></script>
 <script type="module" src="/article-views.js?v=3"></script>
 {site.NAV_SCRIPT}"""
@@ -443,7 +443,20 @@ def update_home(articles):
     cards = "".join(card(a, heading="h3") for a in articles[:HOME_ARTICLES])
     block = f'{start}<div class="article-grid home-article-grid">{cards}</div>{end}' if cards else f"{start}{end}"
     head, rest = html.split(start, 1)
-    page.write_text(head + block + rest.split(end, 1)[1], encoding="utf-8")
+    html = head + block + rest.split(end, 1)[1]
+    # The channel mock-up on the home page shows the Telegram post of the newest article.
+    pstart, pend = "<!-- home-post:start -->", "<!-- home-post:end -->"
+    if articles and pstart in html and pend in html:
+        a = articles[0]
+        post = (
+            f'{pstart}<span class="ab-date">{escape(a.date_label)}</span>'
+            f'<div class="hc-post"><img src="{cover_svg(a)}" alt="" width="1200" height="630" loading="lazy">'
+            f'<p>{escape(a.tg)}</p><span class="hc-post-link">Читать на сайте →</span>'
+            f'<time>{a.published.strftime("%H:%M")}</time></div>{pend}'
+        )
+        head, rest = html.split(pstart, 1)
+        html = head + post + rest.split(pend, 1)[1]
+    page.write_text(html, encoding="utf-8")
 
 
 def main():

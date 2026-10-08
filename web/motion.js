@@ -146,4 +146,21 @@
   new MutationObserver(records => {
     for (const record of records) for (const node of record.addedNodes) paintArrows(node);
   }).observe(document.body, {childList: true, subtree: true});
+
+  /* 8. Home steps: when the bento scrolls into view, bars fill, the bot "types" and the quiz chips cycle. */
+  const bento = document.querySelector('.how-bento');
+  if (bento && 'IntersectionObserver' in window) {
+    const chips = [...bento.querySelectorAll('.aq-chips span')];
+    let timer = 0;
+    new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) bento.classList.add('is-live');
+      if (reduced || chips.length < 2) return;
+      clearInterval(timer);
+      if (entry.isIntersecting) timer = setInterval(() => {
+        const at = chips.findIndex(c => c.classList.contains('on'));
+        chips[at].classList.remove('on');
+        chips[(at + 1) % chips.length].classList.add('on');
+      }, 1600);
+    }, {threshold: .25}).observe(bento);
+  }
 })();

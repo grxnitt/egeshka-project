@@ -2047,3 +2047,67 @@ body{background:#eef1fc}
 .av-row small{grid-column:1/-1;grid-row:1;overflow:visible;text-overflow:clip}
 .av-row i{grid-column:1;grid-row:2}
 .av-row em{grid-column:2;grid-row:2}
+
+/* ===== Home bottom: two bento cards (reviews + channel with a real post in a phone) ===== */
+.home-cta{margin-top:var(--section-gap,96px)}
+.hc-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:18px}
+.hc-card{position:relative;overflow:hidden;border-radius:36px;padding:44px}
+.hc-card .t-h2{font-size:clamp(28px,3vw,40px);margin:0}
+.hc-card p{margin:16px 0 24px;font-size:16px;line-height:1.55;max-width:460px}
+.hc-card.is-blue{display:flex;flex-direction:column;background:var(--blue);color:#fff}
+.hc-card.is-blue p{color:#dfe4ff}
+.hc-card.is-blue .review-steps{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 28px}
+.hc-card.is-blue .review-steps span{padding:9px 14px;border-radius:999px;background:rgb(255 255 255/.14);font:600 13px var(--font-ui);color:#fff}
+.hc-card.is-blue .review-steps b{margin-right:6px;color:#b9c4ff}
+.hc-card.is-blue .button{margin-top:auto;align-self:flex-start}
+.hc-quote{position:absolute;right:30px;top:-40px;font:700 260px/1 var(--font-display);color:rgb(255 255 255/.1);pointer-events:none}
+.hc-card.is-white{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.95fr);gap:30px;align-items:center;background:#fff}
+.hc-card.is-white p{color:var(--muted)}
+.hc-phone{border:6px solid #dfe5ff;border-radius:30px;overflow:hidden;background:#fff;box-shadow:0 18px 40px rgb(52 75 216/.12)}
+.hc-feed{display:flex;flex-direction:column;gap:10px;padding:14px;background-color:#dfe7f6;background-image:radial-gradient(rgb(255 255 255/.55) 1.5px,transparent 1.6px);background-size:18px 18px}
+.hc-feed .ab-date{align-self:center}
+.hc-post{position:relative;padding:8px 8px 26px;border-radius:18px 18px 18px 6px;background:#fff;box-shadow:0 1px 2px rgb(24 25 35/.08)}
+.hc-post img{display:block;width:100%;height:auto;border-radius:12px}
+.hc-card .hc-post p{margin:10px 6px 6px;font-size:13px;line-height:1.45;color:var(--ink);max-width:none;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.hc-post-link{margin:0 6px;font:600 13px var(--font-ui);color:var(--blue)}
+.hc-post time{position:absolute;right:12px;bottom:7px;font:500 10px var(--font-ui);color:var(--muted)}
+@media(max-width:1000px){.hc-grid{grid-template-columns:1fr}}
+@media(max-width:700px){.hc-card{padding:28px 22px;border-radius:28px}.hc-card.is-white{grid-template-columns:1fr}.hc-quote{font-size:180px;right:14px;top:-26px}}
+
+/* ===== Footer: blue closing panel with a giant wordmark (all pages) ===== */
+.site-footer.wrap.footer{width:auto;max-width:none;margin:96px 0 0;padding:64px max(32px,calc((100% - 1200px)/2)) 0;background:var(--blue);color:#fff;border:0;border-radius:44px 44px 0 0;overflow:hidden}
+.site-footer .logo{color:#fff}.site-footer .logo span{color:var(--pink)}
+.site-footer .footer-brand p,.site-footer .footer-col a,.site-footer .footer-bottom,.site-footer .footer-bottom a{color:#dfe4ff}
+.site-footer .footer-title{color:#fff}
+.site-footer .footer-col a:hover,.site-footer .footer-bottom a:hover{color:#fff;text-decoration:underline;text-underline-offset:4px}
+.site-footer .footer-bottom{border-top-color:rgb(255 255 255/.2)}
+.site-footer:after{content:'ЕГЭ МЭТЧ';grid-column:1/-1;display:block;margin:28px 0 -.14em;text-align:center;white-space:nowrap;font:700 clamp(56px,13.2vw,210px)/.85 var(--font-display);letter-spacing:-.06em;color:#fff;pointer-events:none}
+@media(max-width:700px){.site-footer.wrap.footer{margin-top:64px;padding:40px 20px calc(96px + env(safe-area-inset-bottom));border-radius:32px 32px 0 0}.site-footer:after{font-size:15vw;margin-bottom:0}}
+
+/* ===== Steps come alive when they scroll into view (motion.js adds .is-live) ===== */
+.motion-on .how-bento:not(.is-live) .at-row u,.motion-on .how-bento:not(.is-live) .av-card u,.motion-on .how-bento:not(.is-live) .aq-top u{transform:scaleX(0)}
+.how-bento .at-row u,.how-bento .av-card u,.how-bento .aq-top u{transform-origin:left;transition:transform 1.1s cubic-bezier(.22,.7,.25,1)}
+.how-bento .at-row:nth-child(2) u{transition-delay:.15s}.how-bento .at-row:nth-child(3) u{transition-delay:.3s}
+.how-bento .av-card:last-child u{transition-delay:.2s}
+.aq-chips span{transition:background .35s,color .35s}
+.ab-typing{display:none}
+.motion-on .how-bento .art-bot .ab-body>*{opacity:0}
+.motion-on .how-bento.is-live .art-bot .ab-date{animation:ab-in .4s .1s both}
+.motion-on .how-bento.is-live .art-bot .ab-msg.me{animation:ab-in .45s .45s both}
+.motion-on .how-bento.is-live .art-bot .ab-typing{display:flex;animation:ab-typing 1.3s 1s both}
+.motion-on .how-bento.is-live .art-bot .ab-msg:not(.me){animation:ab-in .45s 2.3s both}
+.motion-on .how-bento.is-live .art-bot .ab-btns{animation:ab-in .45s 2.6s both}
+.ab-typing{gap:4px;align-self:flex-start;padding:12px 14px;border-radius:16px 16px 16px 6px;background:#fff}
+.ab-typing i{width:6px;height:6px;border-radius:50%;background:#a7b1d6;animation:ab-dot 1s infinite}
+.ab-typing i:nth-child(2){animation-delay:.15s}.ab-typing i:nth-child(3){animation-delay:.3s}
+@keyframes ab-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes ab-typing{0%{opacity:0;max-height:0;padding:0 14px}12%{opacity:1;max-height:40px;padding:12px 14px}85%{opacity:1;max-height:40px;padding:12px 14px}100%{opacity:0;max-height:0;padding:0 14px;margin:-8px 0 0}}
+@keyframes ab-dot{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(-3px);opacity:1}}
+@media(prefers-reduced-motion:reduce){.motion-on .how-bento .art-bot .ab-body>*{opacity:1;animation:none!important}.ab-typing{display:none!important}.how-bento u{transition:none}}
+.hc-grid{grid-template-columns:minmax(0,.85fr) minmax(0,1.35fr)}
+.hc-card.is-white{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);padding:40px}
+.hc-card.is-white .t-h2{font-size:clamp(26px,2.4vw,34px)}
+.hc-card .button{white-space:nowrap}
+@media(max-width:1000px){.hc-grid{grid-template-columns:1fr}}
+@media(max-width:700px){.hc-card.is-white{grid-template-columns:1fr;padding:28px 22px}.hc-card .button{white-space:normal}}
+.nowrap{white-space:nowrap}
