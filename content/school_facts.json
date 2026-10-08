@@ -1,5 +1,5 @@
 {
-  "_note": "Facts a school states on its own site/offer (collected 2026-10-08). Licences: looked up by the legal entity's INN in the Rosobrnadzor licence registry (islod.obrnadzor.gov.ru/rlic) on 2026-10-08, only active ones are listed. A missing key means 'not confirmed', never 'no'. Exception: deduction=no only when the school itself says so. Exammy (IP Bulavin) is not found in the registry; foxford, studycats, shkolapifagora have no confirmed INN.",
+  "_note": "Facts a school states on its own site/offer (collected 2026-10-08). Licences: looked up by the legal entity's INN in the Rosobrnadzor licence registry (islod.obrnadzor.gov.ru/rlic) on 2026-10-08, only active ones are listed. A missing key means 'not confirmed', never 'no'. Exception: deduction=no only when the school itself says so. Exammy (IP Bulavin) is not found in the registry on that date (shown as 'not found in the registry', found=false); foxford, studycats, shkolapifagora have no confirmed INN.",
   "checked": "2026-10-08",
   "schools": {
     "umskul": {
@@ -198,6 +198,12 @@
         "number": "Л035-01298-77/06165555",
         "term": "бессрочная",
         "source": "registry"
+      }
+    },
+    "exammy": {
+      "license": {
+        "source": "registry",
+        "found": false
       }
     }
   },

@@ -21,10 +21,10 @@ def test_facts_belong_to_known_schools_and_have_valid_values():
         assert item.get("deduction", "yes") in ("yes", "no")
         lic = item.get("license")
         if lic:
-            assert lic.get("number") or lic.get("url") or lic.get("claimed")
+            assert lic.get("number") or lic.get("url") or lic.get("claimed") or lic.get("found") is False
             if lic.get("url"):
                 assert lic["url"].startswith("https://")
-            if lic.get("source") == "registry":
+            if lic.get("source") == "registry" and lic.get("found") is not False:
                 # A full registry number: a truncated one (e.g. ".../002547") was published once and must never be again.
                 assert re.fullmatch(r"Л035-\d{5}-\d{2}/\d{8}", lic["number"]), (slug, lic["number"])
                 assert LEGAL[slug].get("inn"), slug
@@ -48,7 +48,8 @@ def test_registry_licence_links_to_the_search_by_the_schools_inn():
         lic = item.get("license") or {}
         if lic.get("source") == "registry":
             assert f"https://islod.obrnadzor.gov.ru/rlic/?eoName={LEGAL[slug]['inn']}" in page(slug), slug
-            assert f"№{lic['number']}" in page(slug), slug
+            if lic.get("found") is not False:
+                assert f"№{lic['number']}" in page(slug), slug
 
 
 def test_school_that_says_no_deduction_is_shown_as_such():
@@ -61,5 +62,12 @@ def test_missing_data_is_not_rendered_as_a_negative():
     # Only a school's own "no" may produce a negative row; unknowns are simply absent.
     for slug in SLUGS:
         html = page(slug)
-        expected_no = FACTS["schools"].get(slug, {}).get("deduction") == "no"
+        item = FACTS["schools"].get(slug, {})
+        expected_no = item.get("deduction") == "no" or (item.get("license") or {}).get("found") is False
         assert ('class="is-no"' in html) == expected_no, slug
+
+
+def test_school_not_found_in_the_registry_is_shown_as_not_found_not_as_unlicensed_claim():
+    html = page("exammy")
+    assert "В реестре Рособрнадзора лицензия не найдена" in html
+    assert "eoName=631917326709" in html

@@ -295,6 +295,15 @@ def facts_block(school):
     registry_checked = False
     if lic:
         inn = school_legal(school["reviewSlug"]).get("inn")
+        if lic.get("source") == "registry" and lic.get("found") is False and inn:
+            registry_checked = True
+            rows.append(row(
+                "Образовательная лицензия",
+                f'В реестре Рособрнадзора лицензия не найдена (<a href="{REGISTRY_SEARCH}{escape(inn, quote=True)}" target="_blank" rel="noopener">поиск по ИНН ↗</a>)',
+                "no",
+            ))
+            lic = None
+    if lic:
         if lic.get("source") == "registry" and lic.get("number") and inn:
             registry_checked = True
             term = f', {escape(lic["term"])}' if lic.get("term") else ""
