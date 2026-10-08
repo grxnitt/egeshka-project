@@ -444,18 +444,6 @@ def update_home(articles):
     block = f'{start}<div class="article-grid home-article-grid">{cards}</div>{end}' if cards else f"{start}{end}"
     head, rest = html.split(start, 1)
     html = head + block + rest.split(end, 1)[1]
-    # The channel mock-up on the home page shows the Telegram post of the newest article.
-    pstart, pend = "<!-- home-post:start -->", "<!-- home-post:end -->"
-    if articles and pstart in html and pend in html:
-        a = articles[0]
-        post = (
-            f'{pstart}<span class="ab-date">{escape(a.date_label)}</span>'
-            f'<div class="hc-post"><img src="{cover_svg(a)}" alt="" width="1200" height="630" loading="lazy">'
-            f'<p>{escape(a.tg)}</p><span class="hc-post-link">Читать на сайте →</span>'
-            f'<time>{a.published.strftime("%H:%M")}</time></div>{pend}'
-        )
-        head, rest = html.split(pstart, 1)
-        html = head + post + rest.split(pend, 1)[1]
     page.write_text(html, encoding="utf-8")
 
 

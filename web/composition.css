@@ -2111,3 +2111,10 @@ body{background:#eef1fc}
 @media(max-width:1000px){.hc-grid{grid-template-columns:1fr}}
 @media(max-width:700px){.hc-card.is-white{grid-template-columns:1fr;padding:28px 22px}.hc-card .button{white-space:normal}}
 .nowrap{white-space:nowrap}
+/* channel card without the phone: text card with a big soft Telegram plane in the corner */
+.hc-card.is-white{display:flex;flex-direction:column;justify-content:center}
+.hc-card.is-white .hc-copy{position:relative;z-index:1;max-width:560px}
+.hc-plane{position:absolute;right:-30px;bottom:-40px;width:260px;height:260px;fill:#e3e8ff;rotate:-10deg;pointer-events:none}
+@media(max-width:700px){.hc-plane{width:170px;height:170px;right:-30px;bottom:-30px}}
+.hc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:1000px){.hc-grid{grid-template-columns:1fr}}
