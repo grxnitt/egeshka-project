@@ -215,6 +215,7 @@ def criterion_row(label, value, status="yes"):
     )
 
 
+LOGOS_ALLOWED = False  # schools have not yet allowed their logos; keep in sync with LOGOS_ALLOWED in web/school-content.js
 CONTACT_EMAIL = "starodubcevs22@gmail.com"
 _LEGAL = None
 
@@ -236,7 +237,7 @@ def legal_block(school):
     mail = f'<a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a>'
     return (
         '<section class="sp-legal" aria-label="Правовая информация"><h2>Правовая информация</h2>'
-        f'<p>Название и логотип «{name}» используются только чтобы обозначить школу в обзоре и сравнении; права на них принадлежат правообладателю.{provider} '
+        f'<p>Название «{name}» используется только чтобы обозначить школу в обзоре и сравнении; права на него принадлежат правообладателю.{provider} '
         'ЕГЭ Мэтч не связан со школой и не является её официальным представителем.</p>'
         '<p>Оценка — мнение редакции по открытой <a href="/methodology">методике</a>, а не утверждение о качестве услуг. '
         'Цены и условия приведены по данным сайта школы и не являются офертой — актуальные условия уточняй у школы. '
