@@ -261,7 +261,7 @@ def card(article, featured=False, heading="h2"):
 
 CTA_BLOCK = f"""<aside class="article-cta hc-grid" aria-label="Что дальше">
   <div class="hc-card is-blue art-cta-channel"><svg class="hc-plane on-blue" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.4 4.3 2.9 11.5c-1 .4-.9 1.7.1 2l4.5 1.4 1.8 5.5c.3.8 1.3 1 1.9.4l2.6-2.5 4.7 3.5c.7.5 1.7.1 1.9-.7l2.9-14.4c.2-1-.8-1.8-1.9-1.4ZM9.6 14.6l8-6.6-6.3 7.8-.4 3.2-1.3-4.4Z"/></svg><h2 class="t-h2">Такие разборы — в Telegram</h2><p>Изменения ЕГЭ, новости онлайн-школ и честные разборы. Коротко и по делу.</p><a class="button" href="{CHANNEL}" target="_blank" rel="noopener" data-source="article_cta">Открыть Telegram-канал <span>↗</span></a></div>
-  <div class="hc-card is-white art-cta-rating"><div class="hc-copy"><h2 class="t-h2">Выбираешь школу?</h2><p>Сравни школы по семи критериям и отзывам учеников.</p><a class="button dark" href="/ratings">Рейтинг школ <span>→</span></a></div><span class="hc-bars" aria-hidden="true"><i></i><i></i><i></i></span></div>
+  <div class="hc-card is-white art-cta-rating"><div class="hc-copy"><h2 class="t-h2">Выбираешь школу?</h2><p>Сравни школы по семи критериям и отзывам учеников.</p><a class="button dark" href="/ratings">Рейтинг школ <span>→</span></a></div></div>
 </aside>"""
 
 
