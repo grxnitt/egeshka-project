@@ -2135,3 +2135,9 @@ body{background:#eef1fc}
 .hc-card.is-white .hc-copy .button{margin-top:auto;align-self:flex-start}
 .hc-card .t-h2,.hc-card.is-white .t-h2{font-size:clamp(28px,2.8vw,38px)}
 .hc-card.is-white{padding:44px}@media(max-width:700px){.hc-card.is-white{padding:28px 22px}}
+/* quiz result: quiet "О школе" next to the accent "Выбрать школу" */
+.qr .qr-bottom{gap:8px}
+.qr .qr-price{margin-right:auto}
+.qr-about{display:inline-flex;align-items:center;padding:10px 16px;border-radius:999px;background:#eef1fc;color:var(--blue);font:600 13px/1 var(--font-ui);white-space:nowrap;transition:background .2s,transform .2s}
+.qr-about:hover{background:#e0e6ff;transform:translateY(-2px)}
+@media(max-width:480px){.qr .qr-bottom{flex-wrap:wrap}.qr .qr-price{flex-basis:100%}.qr .qr-about,.qr .qr-choose{flex:1;justify-content:center}}
