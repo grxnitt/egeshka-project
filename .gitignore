@@ -10,3 +10,5 @@ __pycache__/
 # local logs and databases never go to git
 *.log
 bot.log
+
+.venv/
