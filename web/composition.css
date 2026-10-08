@@ -2141,3 +2141,4 @@ body{background:#eef1fc}
 .qr-about{display:inline-flex;align-items:center;padding:10px 16px;border-radius:999px;background:#eef1fc;color:var(--blue);font:600 13px/1 var(--font-ui);white-space:nowrap;transition:background .2s,transform .2s}
 .qr-about:hover{background:#e0e6ff;transform:translateY(-2px)}
 @media(max-width:480px){.qr .qr-bottom{flex-wrap:wrap}.qr .qr-price{flex-basis:100%}.qr .qr-about,.qr .qr-choose{flex:1;justify-content:center}}
+.qr-price-note{display:block;margin-top:3px;font:500 11px/1.2 var(--font-ui);color:var(--muted)}
