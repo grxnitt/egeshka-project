@@ -311,7 +311,7 @@ def build_page(school, people, others, header, footer, teacher_slugs):
 {footer}
 <script>window.TEACHER_SLUGS={slug_map};</script>
 <script src="/analytics-config.js?v=2"></script>
-<script src="/analytics.js?v=21"></script>
+<script src="/analytics.js?v=22"></script>
 {NAV_SCRIPT}
 {FILTER_SCRIPT}
 </body>
@@ -383,7 +383,7 @@ def build_teacher_page(person, school, colleagues, header, footer):
 </main>
 {footer}
 <script src="/analytics-config.js?v=2"></script>
-<script src="/analytics.js?v=21"></script>
+<script src="/analytics.js?v=22"></script>
 {NAV_SCRIPT}
 </body>
 </html>

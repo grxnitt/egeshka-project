@@ -125,7 +125,7 @@
   }
 
   /* 7. Button arrows sit in a round badge: the badge takes the button's text colour, the arrow its fill
-     (outline buttons get a dark badge). Runs for buttons added later too (quiz, dialogs). */
+     (outline buttons get a dark badge). Pills only. Runs for buttons added later too (quiz, dialogs). */
   const ARROWS = /^[→↗↓←]$/;
   function paintArrows(root) {
     if (root.nodeType !== 1) return;
@@ -135,6 +135,9 @@
       const badge = btn.lastElementChild;
       if (!badge || badge.tagName !== 'SPAN' || !ARROWS.test(badge.textContent.trim())) continue;
       const cs = getComputedStyle(btn), fill = cs.backgroundColor;
+      // Only big pill buttons get the badge; squarer buttons (comparison, quiz cards) keep a plain arrow.
+      const rect = btn.getBoundingClientRect();
+      if (rect.height && (rect.height < 50 || parseFloat(cs.borderTopLeftRadius) < rect.height / 2 - 4)) continue;
       const clear = fill === 'transparent' || /rgba\(\d+, \d+, \d+, 0\)/.test(fill);
       badge.classList.add('btn-arrow');
       if (badge.textContent.trim() === '→') badge.classList.add('is-right');
