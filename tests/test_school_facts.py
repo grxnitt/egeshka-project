@@ -1,0 +1,52 @@
+import json
+import re
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+FACTS = json.loads((ROOT / "content" / "school_facts.json").read_text(encoding="utf-8"))
+CATALOG = json.loads((ROOT / "web" / "catalog.json").read_text(encoding="utf-8"))
+SLUGS = {school["reviewSlug"] for school in CATALOG["schools"]}
+
+
+def page(slug):
+    return (ROOT / "web" / "schools" / f"{slug}.html").read_text(encoding="utf-8")
+
+
+def test_facts_belong_to_known_schools_and_have_valid_values():
+    assert re.fullmatch(r"\d{4}-\d{2}-\d{2}", FACTS["checked"])
+    for slug, item in FACTS["schools"].items():
+        assert slug in SLUGS
+        assert set(item) <= {"license", "deduction", "installment", "trial", "refund"}
+        assert item.get("deduction", "yes") in ("yes", "no")
+        lic = item.get("license")
+        if lic:
+            assert lic.get("number") or lic.get("url") or lic.get("claimed")
+            if lic.get("url"):
+                assert lic["url"].startswith("https://")
+
+
+def test_block_is_drawn_only_for_schools_with_confirmed_facts():
+    for slug in SLUGS:
+        html = page(slug)
+        assert ('id="facts"' in html) == bool(FACTS["schools"].get(slug)), slug
+
+
+def test_block_states_the_source_and_the_check_date():
+    html = page("umskul")
+    assert "Факты о школе" in html and "Со слов школы" in html
+    assert "8 октября 2026" in html
+    assert "№Л035-01272-16/002547" in html
+
+
+def test_school_that_says_no_deduction_is_shown_as_such():
+    html = page("100ballov")
+    assert "вычет пока не предоставляется" in html
+    assert 'class="is-no"' in html
+
+
+def test_missing_data_is_not_rendered_as_a_negative():
+    # Only a school's own "no" may produce a negative row; unknowns are simply absent.
+    for slug in SLUGS:
+        html = page(slug)
+        expected_no = FACTS["schools"].get(slug, {}).get("deduction") == "no"
+        assert ('class="is-no"' in html) == expected_no, slug

@@ -16,7 +16,7 @@ CSS_VERSIONS = {
     "styles.css": "36",
     "refinements.css": "44",
     "typography.css": "31",
-    "composition.css": "239",
+    "composition.css": "240",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -247,6 +247,69 @@ def legal_block(school):
     )
 
 
+REGISTRY_URL = "https://obrnadzor.gov.ru/gosudarstvennye-uslugi-i-funkczii/gosudarstvennye-uslugi/liczenzirovanie-obrazovatelnoj-deyatelnosti/svodnyj-reestr-liczenzij/"
+MONTHS = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"]
+_FACTS = None
+
+
+def school_facts_data():
+    """What each school states about licence, deduction, instalments, trial and refund (content/school_facts.json)."""
+    global _FACTS
+    if _FACTS is None:
+        path = ROOT / "content" / "school_facts.json"
+        _FACTS = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"schools": {}}
+    return _FACTS
+
+
+def facts_date(iso):
+    year, month, day = (int(part) for part in iso.split("-"))
+    return f"{day} {MONTHS[month - 1]} {year}"
+
+
+def facts_block(school):
+    """'Факты о школе': only what the school itself states; rows with no confirmed data are not drawn."""
+    data = school_facts_data()
+    facts = data["schools"].get(school["reviewSlug"])
+    if not facts:
+        return ""
+
+    def row(label, text_html, state="yes"):
+        return (
+            f'<li class="is-{state}"><span class="sp-about-k">{label}</span>'
+            f'<span class="sp-about-v"><i aria-hidden="true"></i><span>{text_html}</span></span></li>'
+        )
+
+    rows = []
+    lic = facts.get("license")
+    if lic:
+        if lic.get("number") and lic.get("url"):
+            text = f'Есть, <a href="{escape(lic["url"], quote=True)}" target="_blank" rel="noopener nofollow">{escape(lic["number"])} ↗</a>'
+        elif lic.get("number"):
+            text = f'Есть, {escape(lic["number"])}'
+        elif lic.get("url"):
+            text = f'Есть, <a href="{escape(lic["url"], quote=True)}" target="_blank" rel="noopener nofollow">документ на сайте школы ↗</a>'
+        else:
+            text = "Школа заявляет, что лицензия есть"
+        rows.append(row("Образовательная лицензия", text))
+    deduction = facts.get("deduction")
+    if deduction == "yes":
+        rows.append(row("Налоговый вычет 13%", "Школа сообщает, что вычет можно оформить"))
+    elif deduction == "no":
+        rows.append(row("Налоговый вычет 13%", "Школа сообщает, что вычет пока не предоставляется", "no"))
+    for key, label in (("installment", "Рассрочка"), ("trial", "Пробное"), ("refund", "Возврат денег")):
+        if facts.get(key):
+            rows.append(row(label, escape(facts[key])))
+    if not rows:
+        return ""
+    return (
+        '<section class="sp-section sp-about" id="facts"><h2 class="t-h3">Факты о школе</h2>'
+        f'<ul class="sp-about-list">{"".join(rows)}</ul>'
+        f'<p class="sp-note">Со слов школы, по данным её сайта на {facts_date(data["checked"])}. '
+        f'Лицензии мы не сверяем с реестром, <a href="{REGISTRY_URL}" target="_blank" rel="noopener">проверить в реестре Рособрнадзора ↗</a>. '
+        'Право на вычет и условия возврата уточняйте в договоре.</p></section>'
+    )
+
+
 def build_page(school, people, others, header, footer, teacher_slugs):
     slug = school["reviewSlug"]
     url = f"{SITE}/schools/{slug}"
@@ -301,6 +364,7 @@ def build_page(school, people, others, header, footer, teacher_slugs):
     <div class="hero-copy"><h1>{escape(school["name"])}</h1><p class="lead">{escape(school["description"])}</p><div class="sp-score"><small>Оценка ЕГЭ Мэтча</small><strong>{num(school["score"])}</strong><span>из 10</span></div></div>
   </section>
   <section class="sp-section"><h2 class="t-h3">Оценка по критериям</h2><ul class="sp-criteria">{criteria_rows}</ul>{missing_note}<p class="sp-note">Оценка складывается из редакционной части и отзывов учеников. <a href="/methodology">Как считается оценка</a></p><a class="button blue sp-hero-cta" href="{lead_url}" target="_blank" rel="noopener" data-choose-school="{escape(school["name"])}" data-source="school_page_criteria">Выбрать школу <span>↗</span></a></section>
+  {facts_block(school)}
   <section class="sp-section"><h2 class="t-h3">Предметы ({len(school["subjects"])})</h2><ul class="sp-chips">{subjects}</ul></section>
   <section class="sp-facts"><article><h2 class="t-title">Стоимость</h2><p>{escape(school["price"])}</p><p class="sp-inline-link"><a href="{escape(school["url"])}" target="_blank" rel="noopener">Проверить актуальные цены на сайте школы ↗</a></p></article><article><h2 class="t-title">Формат обучения</h2><p>{escape(school["format"])}</p></article><article><h2 class="t-title">Почему выбирают</h2><p>{escape(school["strengths"])}</p></article><article><h2 class="t-title">Что проверить перед покупкой</h2><p>{escape(school["weaknesses"])}</p></article></section>
   {teachers_block}
