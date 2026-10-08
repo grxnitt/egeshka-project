@@ -153,8 +153,8 @@ def test_mobile_bottom_navigation_has_the_four_core_destinations_not_articles():
 def test_article_pages_end_with_exactly_two_cards_telegram_and_rating():
     for article in articles():
         page = (WEB / "articles" / f"{article.slug}.html").read_text(encoding="utf-8")
-        cta = re.search(r'<aside class="article-cta".*?</aside>', page, re.S).group(0)
-        assert cta.count('class="art-cta-card') == 2
+        cta = re.search(r'<aside class="article-cta[^"]*".*?</aside>', page, re.S).group(0)
+        assert cta.count('class="hc-card') == 2
         assert 'href="https://t.me/EgeMatch_blog"' in cta
         assert 'href="/ratings"' in cta
         assert "egematch_bot" not in cta and "#compare" not in cta
