@@ -2032,3 +2032,18 @@ body{background:#eef1fc}
 .ab-btns{display:grid;grid-template-columns:1fr 1fr;gap:6px;max-width:84%}
 .ab-btns span{text-align:center;background:rgb(255 255 255/.75);border-radius:10px}
 .ab-btns .wide{grid-column:1/-1}
+/* steps art: everything straight (only stickers tilt), light phone frame, labelled real criteria in the VS cards */
+.aq-card,.at-panel,.av-card:first-child,.av-card:last-child,.art-bot{rotate:none}
+.art-bot{border-color:#dfe5ff}
+.av-row{display:grid;grid-template-columns:1fr auto;gap:4px 8px;align-items:center}
+.av-row small{font:500 11px var(--font-ui);color:var(--muted)}
+.av-row em{font:700 12px var(--font-display);font-style:normal;letter-spacing:-.03em}
+.av-row i{grid-column:1/-1}
+.av-card{min-width:0;overflow:hidden}
+.av-row{grid-template-columns:minmax(0,1fr) auto}
+.av-row small{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:800px){.art-vs{gap:6px}.av-card{padding:12px 10px}.av-row small{font-size:10px}.av-vs{width:34px;height:34px;font-size:11px}}
+.av-row{grid-template-columns:minmax(0,1fr) auto;row-gap:4px}
+.av-row small{grid-column:1/-1;grid-row:1;overflow:visible;text-overflow:clip}
+.av-row i{grid-column:1;grid-row:2}
+.av-row em{grid-column:2;grid-row:2}

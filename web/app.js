@@ -125,7 +125,7 @@ function shortReason(text){const m=text.match(/^(.+?) — лучше \d+% шко
 function renderHowArt(){if(!catalog)return;const top=[...catalog.schools].filter(s=>s.subjects.length>=5).sort((a,b)=>b.score-a.score).slice(0,3);
  const logo=s=>`<span class="at-logo">${schoolLogos[s.name]?`<img src="/${escape(schoolLogos[s.name])}" alt="">`:`<b>${escape(s.name.slice(0,1))}</b>`}</span>`;
  const rows=$('#how-top-rows');if(rows&&top.length)rows.innerHTML=top.map((s,i)=>`<div class="at-row${i?'':' is-first'}"><b>${i+1}</b>${logo(s)}<span class="at-name">${escape(s.name)}</span><i><u style="width:${Math.round(s.score*10)}%"></u></i><em>${number(s.score)}</em></div>`).join('');
- [['#how-vs-a',top[0]],['#how-vs-b',top[1]]].forEach(([sel,s])=>{const el=$(sel);if(!el||!s)return;el.querySelector('.at-logo').outerHTML=logo(s);el.querySelector('b:not(.at-logo b)').textContent=s.name;});
+ [['#how-vs-a',top[0]],['#how-vs-b',top[1]]].forEach(([sel,s])=>{const el=$(sel);if(!el||!s)return;el.querySelector('.at-logo').outerHTML=logo(s);el.querySelector(':scope>b').textContent=s.name;const c=s.criteria||{};[c.teachers_score,c.practice_score].forEach((v,i)=>{const row=el.querySelectorAll('.av-row')[i];if(!row||!(v>0))return;row.querySelector('em').textContent=number(v);row.querySelector('u').style.width=`${Math.round(v*10)}%`;});});
  document.querySelectorAll('.how-art img').forEach(img=>img.addEventListener('error',()=>img.remove(),{once:true}));}
 // Home: top three schools, same order as the ratings page with no subject chosen (broad schools first).
 function renderHomeTop(){const list=$('#home-top-list');if(!list||!catalog)return;
