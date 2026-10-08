@@ -58,7 +58,7 @@ def test_school_page_and_ratings_tray_open_the_compare_page_with_the_pair():
 
 def test_every_how_it_works_step_opens_the_place_it_describes():
     home = read("index.html")
-    cards = re.findall(r'<article class="how-card" data-step="(\d)">.*?<a class="how-link" href="([^"]+)"', home, re.S)
+    cards = re.findall(r'<article class="how-card[^"]*" data-step="(\d)">.*?<a class="how-link" href="([^"]+)"', home, re.S)
     # the real path: guided pick (quiz) -> rating -> compare -> bot
     assert cards == [("1", "/?start=quiz"), ("2", "/ratings#choose-subject"), ("3", "/compare"), ("4", "https://t.me/egematch_bot")]
     assert 'data-quiz-link' in home and 'data-bot-link data-source="how_step"' in home

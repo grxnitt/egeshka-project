@@ -123,4 +123,27 @@
                                {duration: 320, easing: ease});
     }).observe(content, {childList: true});
   }
+
+  /* 7. Button arrows sit in a round badge: the badge takes the button's text colour, the arrow its fill
+     (outline buttons get a dark badge). Runs for buttons added later too (quiz, dialogs). */
+  const ARROWS = /^[→↗↓←]$/;
+  function paintArrows(root) {
+    if (root.nodeType !== 1) return;
+    const buttons = [...root.querySelectorAll('.button,.hs-btn')];
+    if (root.matches('.button,.hs-btn')) buttons.push(root);
+    for (const btn of buttons) {
+      const badge = btn.lastElementChild;
+      if (!badge || badge.tagName !== 'SPAN' || !ARROWS.test(badge.textContent.trim())) continue;
+      const cs = getComputedStyle(btn), fill = cs.backgroundColor;
+      const clear = fill === 'transparent' || /rgba\(\d+, \d+, \d+, 0\)/.test(fill);
+      badge.classList.add('btn-arrow');
+      if (badge.textContent.trim() === '→') badge.classList.add('is-right');
+      badge.style.background = clear ? '#181923' : cs.color;
+      badge.style.color = clear ? '#fff' : fill;
+    }
+  }
+  paintArrows(document.body);
+  new MutationObserver(records => {
+    for (const record of records) for (const node of record.addedNodes) paintArrows(node);
+  }).observe(document.body, {childList: true, subtree: true});
 })();

@@ -121,6 +121,12 @@ function bindQuizFeedback(a){const box=document.querySelector('[data-quiz-feedba
 const SHORT_REASONS={'преподаватели':'сильные преподаватели','практика и дз':'много практики','проверка работ':'сильная проверка работ','кураторы':'сильные кураторы','платформа':'удобная платформа','нагрузка и темп':'комфортный темп','организация обучения':'чёткая организация'};
 function shortReason(text){const m=text.match(/^(.+?) — лучше \d+% школ$/);if(m)return SHORT_REASONS[m[1]]||m[1];const weak=text.match(/^(.+?) — слабее большинства школ$/);if(weak)return `${weak[1]} слабее многих`;
  return text.replace('входит в бюджет','в бюджете').replace('может быть выше бюджета','дороже твоего бюджета').replace('дешевле большинства школ','дешевле многих').replace(/^есть /,'').replace(/сильный препод именно по этому предмету.*/,'сильный препод по предмету').replace(/ — уточни у школы$/,'');}
+// Home "how it works": the mini leaderboard and the VS cards show the real top schools.
+function renderHowArt(){if(!catalog)return;const top=[...catalog.schools].filter(s=>s.subjects.length>=5).sort((a,b)=>b.score-a.score).slice(0,3);
+ const logo=s=>`<span class="at-logo">${schoolLogos[s.name]?`<img src="/${escape(schoolLogos[s.name])}" alt="">`:`<b>${escape(s.name.slice(0,1))}</b>`}</span>`;
+ const rows=$('#how-top-rows');if(rows&&top.length)rows.innerHTML=top.map((s,i)=>`<div class="at-row${i?'':' is-first'}"><b>${i+1}</b>${logo(s)}<span class="at-name">${escape(s.name)}</span><i><u style="width:${Math.round(s.score*10)}%"></u></i><em>${number(s.score)}</em></div>`).join('');
+ [['#how-vs-a',top[0]],['#how-vs-b',top[1]]].forEach(([sel,s])=>{const el=$(sel);if(!el||!s)return;el.querySelector('.at-logo').outerHTML=logo(s);el.querySelector('b:not(.at-logo b)').textContent=s.name;});
+ document.querySelectorAll('.how-art img').forEach(img=>img.addEventListener('error',()=>img.remove(),{once:true}));}
 // Home: top three schools, same order as the ratings page with no subject chosen (broad schools first).
 function renderHomeTop(){const list=$('#home-top-list');if(!list||!catalog)return;
  const top=[...catalog.schools].filter(s=>s.subjects.length>=5).sort((a,b)=>b.score-a.score).slice(0,3);
@@ -195,7 +201,7 @@ const applyLinks=()=>{$('#channel-link').href=links.channel;$('#review-link').hr
 applyLinks();
 try{
  await catalogReady;
- renderHomeTop();
+ renderHomeTop();renderHowArt();
  {const facts=document.querySelector('[data-fact="schools"]');if(facts&&catalog)facts.textContent=catalog.schools.length;const people=document.querySelector('[data-fact="teachers"]');if(people&&catalog)people.textContent=`${Math.floor(catalog.teachers.length/10)*10}+`;}
  try{const fresh=await fetch('links.json');if(fresh.ok){links=await fresh.json();applyLinks();}}catch{}
  if(new URLSearchParams(location.search).get('resume')==='quiz'){
