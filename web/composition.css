@@ -2128,3 +2128,10 @@ body{background:#eef1fc}
 .hc-card.is-white .hc-copy{position:relative;z-index:1}
 .articles-page .article-rss{margin-top:32px}
 @media(max-width:700px){.article-cta.hc-grid{margin-top:48px}}
+/* bottom cards: same structure in both (title on top, button pinned to the bottom); the big quote stays decoration */
+.hc-card.is-blue>.hc-quote{position:absolute;z-index:0}
+.hc-card.is-white{justify-content:flex-start}
+.hc-card.is-white .hc-copy{display:flex;flex-direction:column;flex:1;max-width:none}
+.hc-card.is-white .hc-copy .button{margin-top:auto;align-self:flex-start}
+.hc-card .t-h2,.hc-card.is-white .t-h2{font-size:clamp(28px,2.8vw,38px)}
+.hc-card.is-white{padding:44px}@media(max-width:700px){.hc-card.is-white{padding:28px 22px}}
