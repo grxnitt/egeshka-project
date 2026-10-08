@@ -3,6 +3,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+LEGAL = json.loads((ROOT / "content" / "school_legal.json").read_text(encoding="utf-8"))
 FACTS = json.loads((ROOT / "content" / "school_facts.json").read_text(encoding="utf-8"))
 CATALOG = json.loads((ROOT / "web" / "catalog.json").read_text(encoding="utf-8"))
 SLUGS = {school["reviewSlug"] for school in CATALOG["schools"]}
@@ -23,6 +24,10 @@ def test_facts_belong_to_known_schools_and_have_valid_values():
             assert lic.get("number") or lic.get("url") or lic.get("claimed")
             if lic.get("url"):
                 assert lic["url"].startswith("https://")
+            if lic.get("source") == "registry":
+                # A full registry number: a truncated one (e.g. ".../002547") was published once and must never be again.
+                assert re.fullmatch(r"Л035-\d{5}-\d{2}/\d{8}", lic["number"]), (slug, lic["number"])
+                assert LEGAL[slug].get("inn"), slug
 
 
 def test_block_is_drawn_only_for_schools_with_confirmed_facts():
@@ -33,9 +38,17 @@ def test_block_is_drawn_only_for_schools_with_confirmed_facts():
 
 def test_block_states_the_source_and_the_check_date():
     html = page("umskul")
-    assert "Факты о школе" in html and "Со слов школы" in html
-    assert "8 октября 2026" in html
-    assert "№Л035-01272-16/002547" in html
+    assert "Факты о школе" in html and "сверена с реестром Рособрнадзора" in html
+    assert "Остальное — со слов школы" in html and "8 октября 2026" in html
+    assert "№Л035-01272-16/00254722" in html
+
+
+def test_registry_licence_links_to_the_search_by_the_schools_inn():
+    for slug, item in FACTS["schools"].items():
+        lic = item.get("license") or {}
+        if lic.get("source") == "registry":
+            assert f"https://islod.obrnadzor.gov.ru/rlic/?eoName={LEGAL[slug]['inn']}" in page(slug), slug
+            assert f"№{lic['number']}" in page(slug), slug
 
 
 def test_school_that_says_no_deduction_is_shown_as_such():

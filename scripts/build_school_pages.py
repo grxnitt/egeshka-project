@@ -248,6 +248,7 @@ def legal_block(school):
 
 
 REGISTRY_URL = "https://obrnadzor.gov.ru/gosudarstvennye-uslugi-i-funkczii/gosudarstvennye-uslugi/liczenzirovanie-obrazovatelnoj-deyatelnosti/svodnyj-reestr-liczenzij/"
+REGISTRY_SEARCH = "https://islod.obrnadzor.gov.ru/rlic/?eoName="
 MONTHS = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"]
 _FACTS = None
 
@@ -266,6 +267,16 @@ def facts_date(iso):
     return f"{day} {MONTHS[month - 1]} {year}"
 
 
+def facts_note(data, registry_checked):
+    if registry_checked:
+        return (f'Лицензия сверена с реестром Рособрнадзора по ИНН юрлица школы на {facts_date(data["registry_checked"])}. '
+                f'Остальное — со слов школы, по данным её сайта на {facts_date(data["checked"])}. '
+                'Право на вычет и условия возврата уточняйте в договоре.')
+    return (f'Со слов школы, по данным её сайта на {facts_date(data["checked"])}. '
+            f'Лицензии мы не сверяем с реестром, <a href="{REGISTRY_URL}" target="_blank" rel="noopener">проверить в реестре Рособрнадзора ↗</a>. '
+            'Право на вычет и условия возврата уточняйте в договоре.')
+
+
 def facts_block(school):
     """'Факты о школе': only what the school itself states; rows with no confirmed data are not drawn."""
     data = school_facts_data()
@@ -281,8 +292,15 @@ def facts_block(school):
 
     rows = []
     lic = facts.get("license")
+    registry_checked = False
     if lic:
-        if lic.get("number") and lic.get("url"):
+        inn = school_legal(school["reviewSlug"]).get("inn")
+        if lic.get("source") == "registry" and lic.get("number") and inn:
+            registry_checked = True
+            term = f', {escape(lic["term"])}' if lic.get("term") else ""
+            text = (f'В реестре Рособрнадзора: <a href="{REGISTRY_SEARCH}{escape(inn, quote=True)}" target="_blank" rel="noopener">'
+                    f'№{escape(lic["number"])} ↗</a>{term}')
+        elif lic.get("number") and lic.get("url"):
             text = f'Есть, <a href="{escape(lic["url"], quote=True)}" target="_blank" rel="noopener nofollow">{escape(lic["number"])} ↗</a>'
         elif lic.get("number"):
             text = f'Есть, {escape(lic["number"])}'
@@ -304,9 +322,7 @@ def facts_block(school):
     return (
         '<section class="sp-section sp-about" id="facts"><h2 class="t-h3">Факты о школе</h2>'
         f'<ul class="sp-about-list">{"".join(rows)}</ul>'
-        f'<p class="sp-note">Со слов школы, по данным её сайта на {facts_date(data["checked"])}. '
-        f'Лицензии мы не сверяем с реестром, <a href="{REGISTRY_URL}" target="_blank" rel="noopener">проверить в реестре Рособрнадзора ↗</a>. '
-        'Право на вычет и условия возврата уточняйте в договоре.</p></section>'
+        f'<p class="sp-note">{facts_note(data, registry_checked)}</p></section>'
     )
 
 

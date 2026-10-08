@@ -1,98 +1,205 @@
 {
-  "_note": "Facts a school states on its own site/offer, collected 2026-10-08. Only confirmed items are listed; a missing key means 'not confirmed', never 'no'. Exception: deduction=no only when the school itself says so. Licences are NOT cross-checked with the Rosobrnadzor registry.",
+  "_note": "Facts a school states on its own site/offer (collected 2026-10-08). Licences: looked up by the legal entity's INN in the Rosobrnadzor licence registry (islod.obrnadzor.gov.ru/rlic) on 2026-10-08, only active ones are listed. A missing key means 'not confirmed', never 'no'. Exception: deduction=no only when the school itself says so. Exammy (IP Bulavin) is not found in the registry; foxford, studycats, shkolapifagora have no confirmed INN.",
   "checked": "2026-10-08",
   "schools": {
     "umskul": {
-      "license": {"number": "№Л035-01272-16/002547", "url": "https://umschool.net/documents/educational-license/"},
+      "license": {
+        "number": "Л035-01272-16/00254722",
+        "term": "бессрочная",
+        "source": "registry"
+      },
       "deduction": "yes",
       "installment": "Рассрочка, Яндекс Сплит или «Плати частями» от Сбера"
     },
     "100ballov": {
       "deduction": "no",
       "installment": "Беспроцентная рассрочка, условия в оферте",
-      "refund": "Порядок возврата описан в оферте"
+      "refund": "Порядок возврата описан в оферте",
+      "license": {
+        "number": "Л035-01298-77/02300242",
+        "term": "бессрочная",
+        "source": "registry"
+      }
     },
     "sotka": {
-      "license": {"url": "https://sotkaonline.ru/license"},
+      "license": {
+        "number": "Л035-01272-16/00254579",
+        "term": "бессрочная",
+        "source": "registry"
+      },
       "installment": "Рассрочка от школы и от партнёров",
       "trial": "Бесплатное вводное занятие",
       "refund": "Гарантия результата закреплена в договоре, условия — в нём"
     },
     "webium": {
-      "license": {"url": "https://islod.obrnadzor.gov.ru/rlic/details/4a69c8dd-51c9-b8bd-8682-924f103bf844/"},
+      "license": {
+        "number": "Л035-01271-78/00640267",
+        "term": "бессрочная",
+        "source": "registry"
+      },
       "deduction": "yes",
       "installment": "Яндекс Сплит или рассрочка через Т-банк и Сбербанк до 24 месяцев"
     },
     "turbo": {
-      "license": {"url": "https://egeturbo.ru/assets/base/img/s/lic_1.jpg"},
+      "license": {
+        "number": "Л035-01276-61/00201035",
+        "term": "бессрочная",
+        "source": "registry"
+      },
       "deduction": "yes",
       "installment": "Оплата частями",
       "refund": "Возврат за неиспользованное время по обращению"
     },
     "egeland": {
-      "license": {"url": "https://el-ed.ru/wp-content/themes/egeland/docs/license.pdf"}
+      "license": {
+        "number": "Л035-01220-38/00575933",
+        "term": "бессрочная",
+        "source": "registry"
+      }
     },
     "smitap": {
-      "license": {"url": "https://disk.yandex.ru/i/o4ueS1Z4lKXTEg"},
+      "license": {
+        "number": "Л035-01271-78/04032994",
+        "term": "бессрочная",
+        "source": "registry"
+      },
       "deduction": "yes",
       "installment": "Рассрочка без комиссии на 6, 10 или 12 месяцев",
       "trial": "Бесплатные уроки"
     },
     "parta": {
-      "license": {"url": "https://storage.yandexcloud.net/parta-media-prod/info/files/license.pdf"}
+      "license": {
+        "number": "Л035-01265-18/00256826",
+        "term": "бессрочная",
+        "source": "registry"
+      }
     },
     "skysmart": {
-      "license": {"number": "№Л035-01298-77/00181469 от 06.08.2019"},
+      "license": {
+        "number": "Л035-01298-77/00181469",
+        "term": "бессрочная",
+        "source": "registry"
+      },
       "installment": "Рассрочка от школы и от партнёров",
       "refund": "Неиспользованные уроки можно вернуть, условия описаны в договоре"
     },
     "shkolkovo": {
-      "license": {"url": "https://3.shkolkovo.online/legal"}
+      "license": {
+        "number": "Л035-01298-77/00646528",
+        "term": "бессрочная",
+        "source": "registry"
+      }
     },
     "egenalegke": {
-      "license": {"url": "https://egenalegke.getcourse.ru/license"},
+      "license": {
+        "number": "Л035-01255-50/05134128",
+        "term": "бессрочная",
+        "source": "registry"
+      },
       "deduction": "yes",
       "trial": "Бесплатные пробные курсы и демонеделя",
       "refund": "Полный возврат в первые 7 дней, позже — перерасчёт за неизученные материалы"
     },
     "neofamily": {
-      "license": {"url": "https://islod.obrnadzor.gov.ru/rlic/details/1b195f02-b3b1-2f38-7753-c98a32980625/"},
+      "license": {
+        "number": "Л035-01271-78/00395698",
+        "term": "бессрочная",
+        "source": "registry"
+      },
       "deduction": "yes"
     },
     "morozilka": {
-      "license": {"url": "https://disk.yandex.ru/i/sbXWI_-LP_Nvcw"}
+      "license": {
+        "number": "Л035-01298-77/05996285",
+        "term": "бессрочная",
+        "source": "registry"
+      }
     },
     "insperia": {
-      "license": {"number": "№Л035-1271-78/1277314", "url": "https://drive.google.com/file/d/1mcJLZNjTP7P8Hya_y92RkJWbvj8uv5qB/view"},
+      "license": {
+        "number": "Л035-01271-78/01277314",
+        "term": "бессрочная",
+        "source": "registry"
+      },
       "deduction": "yes",
       "installment": "Сплит, «Долями» или рассрочка без процентов",
       "trial": "Бесплатный вводный урок",
       "refund": "Возврат 100% в первую неделю обучения"
     },
     "egehub": {
-      "license": {"url": "https://islod.obrnadzor.gov.ru/view/320830"},
+      "license": {
+        "number": "Л035-01298-77/05287921",
+        "term": "бессрочная",
+        "source": "registry"
+      },
       "deduction": "yes",
       "installment": "Рассрочка",
       "trial": "Бесплатный пробный доступ"
     },
     "noo": {
-      "license": {"number": "№Л035-01298-77/036770", "url": "https://www.no-os.ru/license"},
+      "license": {
+        "number": "Л035-01298-77/03677001",
+        "term": "бессрочная",
+        "source": "registry"
+      },
       "deduction": "yes",
       "trial": "Пробные видеоуроки"
     },
     "maximum": {
       "deduction": "yes",
       "installment": "Яндекс Сплит и рассрочка через банки-партнёры",
-      "refund": "Гарантия результата прописана в договоре, условия — в нём"
+      "refund": "Гарантия результата прописана в договоре, условия — в нём",
+      "license": {
+        "number": "Л035-01298-77/00181927",
+        "term": "бессрочная",
+        "source": "registry"
+      }
     },
     "godograf": {
-      "license": {"number": "№038973 от 29.11.2017", "url": "https://godege.ru/svedeniya-ob-organizatsii.html"},
+      "license": {
+        "number": "Л035-01298-77/00184638",
+        "term": "бессрочная",
+        "source": "registry"
+      },
       "deduction": "yes"
     },
     "koalicia": {
-      "license": {"claimed": true},
+      "license": {
+        "number": "Л035-01298-77/00180170",
+        "term": "бессрочная",
+        "source": "registry"
+      },
       "installment": "Беспроцентная рассрочка",
       "trial": "Пробный урок ЕГЭ"
+    },
+    "99ballov": {
+      "license": {
+        "number": "Л035-01272-16/00615676",
+        "term": "бессрочная",
+        "source": "registry"
+      }
+    },
+    "tetrika": {
+      "license": {
+        "number": "Л035-01298-77/00179607",
+        "term": "бессрочная",
+        "source": "registry"
+      }
+    },
+    "lectarium": {
+      "license": {
+        "number": "Л035-01298-77/00179607",
+        "term": "бессрочная",
+        "source": "registry"
+      }
+    },
+    "lomonosov": {
+      "license": {
+        "number": "Л035-01298-77/06165555",
+        "term": "бессрочная",
+        "source": "registry"
+      }
     }
-  }
+  },
+  "registry_checked": "2026-10-08"
 }
