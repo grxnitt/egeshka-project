@@ -285,6 +285,7 @@ class ConsentMiddleware(BaseMiddleware):
 
 VERIFIED_REVIEW_WEIGHT = 1.0
 UNVERIFIED_REVIEW_WEIGHT = 0.4
+REVIEW_TEXT_MAX = 1500  # per answer; also keeps the moderator notification under Telegram's 4096-character limit
 SITE_URL = "https://egematch.ru"
 
 
@@ -1720,16 +1721,32 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         # A skipped criterion is not stored, so it counts neither in the average nor in the weight.
         await next_review_criterion(call, state, data, dict(data.get("review_criteria_scores", {})), index, criteria)
 
+    async def review_text_or_none(message: Message):
+        """The review text of this step, or None after telling the user what is wrong (not text, or too long)."""
+        text = (message.text or "").strip()
+        if not text:
+            await message.answer("Пришли ответ текстом или напиши «пропустить».")
+            return None
+        if len(text) > REVIEW_TEXT_MAX:
+            await message.answer(f"Слишком длинно: в отзыве можно до {REVIEW_TEXT_MAX} символов в одном ответе. Сократи и отправь ещё раз.")
+            return None
+        return "" if text.lower() == "пропустить" else text
+
     @dp.message(ReviewForm.positive)
     async def review_positive(message: Message, state: FSMContext):
-        await state.update_data(review_positive="" if message.text.lower().strip() == "пропустить" else message.text.strip())
+        positive = await review_text_or_none(message)
+        if positive is None:
+            return
+        await state.update_data(review_positive=positive)
         await state.set_state(ReviewForm.negative)
         await message.answer("Что было неудобно или не понравилось? Напиши одним сообщением. Можно написать «пропустить».")
 
     @dp.message(ReviewForm.negative)
     async def review_negative(message: Message, state: FSMContext):
         data = await state.get_data()
-        negative = "" if message.text.lower().strip() == "пропустить" else message.text.strip()
+        negative = await review_text_or_none(message)
+        if negative is None:
+            return
         blocked = await review_guard(
             message.from_user.id,
             data["review_school_id"],

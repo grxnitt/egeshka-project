@@ -158,3 +158,22 @@ def test_site_form_is_wired_but_switched_off_until_an_api_address_is_set():
     script = (web / "lead.js").read_text(encoding="utf-8")
     assert "a[data-choose-school]" in script and "innerHTML" not in script  # never builds markup from user input
     assert "https://api.egematch.ru" in (web / "vercel.json").read_text(encoding="utf-8")
+
+def test_rate_limit_ignores_forged_forwarded_for_entries_and_withdraw_is_limited():
+    async def scenario():
+        sessions = await make_db()
+        app = create_app(Settings(bot_token="", leads_enabled=True), sessions)
+        async with TestClient(TestServer(app)) as client:
+            # The proxy appends the real address LAST; a visitor can only forge the first entries.
+            statuses = []
+            for forged in range(8):
+                response = await client.post(
+                    "/api/leads", json=body(school="Школа", name=f"Имя {forged}", phone=f"+7900000{forged:04d}"),
+                    headers={"X-Forwarded-For": f"10.0.0.{forged}, 203.0.113.7"},
+                )
+                statuses.append(response.status)
+            assert statuses[-1] == 429, statuses  # the same real address hits the limit despite changing forged entries
+            codes = [(await client.post("/api/leads/withdraw", json={"token": "x" * 30},
+                                         headers={"X-Forwarded-For": "198.51.100.9"})).status for _ in range(25)]
+            assert codes[0] == 200 and codes[-1] == 429
+    asyncio.run(scenario())

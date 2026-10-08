@@ -20,6 +20,7 @@ log = logging.getLogger("leads_api")
 def create_app(settings: Settings, session_factory) -> web.Application:
     origins = {item.strip() for item in settings.leads_allowed_origins.split(",") if item.strip()}
     limiter = leads.RateLimiter()
+    withdraw_limiter = leads.RateLimiter(limit=20, window=3600)
 
     @web.middleware
     async def cors(request, handler):
@@ -38,6 +39,12 @@ def create_app(settings: Settings, session_factory) -> web.Application:
             response.headers["Vary"] = "Origin"
         response.headers["Cache-Control"] = "no-store"
         return response
+
+    def visitor_key(request):
+        """Who is asking, for rate limits. Behind our proxy the LAST X-Forwarded-For entry is the one the proxy added;
+        the first entries can be forged by the visitor, so they must not decide the limit."""
+        forwarded = [part.strip() for part in request.headers.get("X-Forwarded-For", "").split(",") if part.strip()]
+        return forwarded[-1] if forwarded else (request.remote or "")
 
     def reply(payload, status=200):
         return web.json_response(payload, status=status)
@@ -60,7 +67,7 @@ def create_app(settings: Settings, session_factory) -> web.Application:
     async def create_lead(request):
         if not settings.leads_enabled:
             return reply({"error": "off"}, 404)
-        visitor = request.headers.get("X-Forwarded-For", request.remote or "").split(",")[0].strip()
+        visitor = visitor_key(request)
         if not limiter.allow(visitor):
             return reply({"error": "Слишком много заявок. Попробуйте позже."}, 429)
         try:
@@ -82,6 +89,8 @@ def create_app(settings: Settings, session_factory) -> web.Application:
             return reply({"ok": True, "token": token, "id": lead.id})
 
     async def withdraw(request):
+        if not withdraw_limiter.allow(visitor_key(request)):
+            return reply({"error": "Слишком много попыток. Попробуйте позже."}, 429)
         try:
             data = await request.json()
         except Exception:  # noqa: BLE001

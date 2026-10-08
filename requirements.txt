@@ -1,3 +1,7 @@
+# SECURITY NOTE (audit 2026-10-08): aiohttp 3.12.x has known vulnerabilities fixed in 3.14.x, python-dotenv 1.2.1 in 1.2.2.
+# Both fixed versions need Python 3.10+, and aiogram 3.22 caps aiohttp below 3.13. On a server with Python 3.10+ install the newest
+# aiogram that allows aiohttp>=3.14.3 plus python-dotenv>=1.2.2, run the tests, and only then switch the bot over.
+# Until then keep the leads API (the only part of the bot that is a server) switched off: LEADS_ENABLED=false.
 aiogram>=3.4,<4
 SQLAlchemy>=2.0,<3
 greenlet>=3.0,<4

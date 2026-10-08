@@ -6,3 +6,7 @@ __pycache__/
 .pytest_cache/
 
 .DS_Store
+
+# local logs and databases never go to git
+*.log
+bot.log
