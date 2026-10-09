@@ -1,0 +1,10 @@
+{
+  "_note": "Written permissions to show a school's logo. A logo is shown only for schools listed here (and in LOGO_CONSENTS in web/school-content.js). The permission can be withdrawn at any time.",
+  "turbo": {
+    "school": "Турбо ЕГЭ",
+    "granted": "2026-10-09",
+    "how": "ответ на наше письмо с info@egeturbo.ru (вопрос 2)",
+    "scope": "логотип и название школы в каталоге, подборе и сравнении ЕГЭ Мэтча, только чтобы обозначить школу",
+    "file": "web/assets/schools/turbo-avatar.png"
+  }
+}
