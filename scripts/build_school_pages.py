@@ -216,7 +216,7 @@ def criterion_row(label, value, status="yes"):
 
 
 LOGOS_ALLOWED = False  # schools have not yet allowed their logos; keep in sync with LOGOS_ALLOWED in web/school-content.js
-CONTACT_EMAIL = "starodubcevs22@gmail.com"
+CONTACT_EMAIL = "info@egematch.ru"
 _LEGAL = None
 
 
