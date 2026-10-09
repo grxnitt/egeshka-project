@@ -41,11 +41,12 @@
                    {duration: 650, delay: 80 + i * 70, easing: ease, fill: 'backwards'});
     });
     // The blue-word highlight starts once the words have settled.
-    Promise.all(headline.getAnimations({subtree: true}).map(a => a.finished.catch(() => {})))
-      .then(() => headline.classList.add('shine-on'));
+    const words = headline.querySelectorAll('.mw').length;
+    setTimeout(() => { headline.classList.add('shine-on'); document.documentElement.classList.add('shine-go'); },
+               80 + words * 70 + 650 + 150);
   } else if (headline && !reduced) {
     // Other pages: no word-by-word entrance, so the highlight can start right after load.
-    const start = () => setTimeout(() => headline.classList.add('shine-on'), 600);
+    const start = () => setTimeout(() => { headline.classList.add('shine-on'); document.documentElement.classList.add('shine-go'); }, 600);
     if (document.readyState === 'complete') start(); else addEventListener('load', start, {once: true});
   }
 
