@@ -2178,3 +2178,12 @@ body{background:#eef1fc}
   @starting-style{dialog[open]{opacity:1;transform:none}dialog[open]::backdrop{opacity:1}}
 }
 @media(prefers-reduced-motion:reduce){dialog,dialog::backdrop{transition:opacity .12s linear}dialog:not([open]){transform:none}}
+
+/* Blue headline word: a soft highlight sweeps across it once every 7 seconds (about 1s of motion, then rest). */
+.hero-centered h1 .hero-title-line:first-child,.hs-line:first-child{
+  background:linear-gradient(100deg,var(--blue) 0 44%,#a9b8ff 50%,var(--blue) 56% 100%) 0 0/250% 100% no-repeat;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  animation:title-shine 7s var(--ease-in-out) 2.5s infinite;
+}
+.hero-centered h1 .hero-title-line:first-child .mw,.hs-line:first-child .mw{-webkit-text-fill-color:transparent}
+@keyframes title-shine{0%{background-position:100% 0}16%,100%{background-position:0 0}}
