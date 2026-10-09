@@ -4,10 +4,11 @@
   if (window.__egeMotion) return;
   window.__egeMotion = true;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const ease = 'cubic-bezier(.22,.7,.25,1)';
+  const ease = 'cubic-bezier(.23,1,.32,1)';  // = --ease-out in styles.css
   document.documentElement.classList.add('motion-on');
 
-  /* 1. Page headline: words rise one after another. Words inside .brand-dot only fade, so the pink dot stays put. */
+  /* 1. Page headline: words rise one after another, on the home page only. The same entrance on every page the
+     visitor opens would just slow navigation down. Words inside .brand-dot only fade, so the pink dot stays put. */
   function splitWords(node) {
     for (const child of [...node.childNodes]) {
       if (child.nodeType === 3) {
@@ -29,7 +30,8 @@
     }
   }
   const headline = document.querySelector('main h1');
-  if (headline && !reduced) {
+  const isHome = /^\/(index\.html)?$/.test(location.pathname);
+  if (headline && !reduced && isHome) {
     splitWords(headline);
     headline.style.animation = 'none';
     headline.querySelectorAll('.mw').forEach((word, i) => {
@@ -65,7 +67,8 @@
     lastY = scrollY; lastT = now;
   }, {passive: true});
   /* 4. Score bars fill and scores count up when they become visible. */
-  const scores = '.sp-score strong, .card-score strong, .detail-score strong, .home-top-score';
+  // Counting up only the big score on a school page (seen once). On rating cards the number is what people read, so it stays still.
+  const scores = '.sp-score strong, .detail-score strong';
   const meters = '.meter-segments';
   // Panels whose background ornament runs only while they are on screen (CSS .motion-visible).
   const decor = '.hero-centered,.channel-section,.reviews,.rating-next';
