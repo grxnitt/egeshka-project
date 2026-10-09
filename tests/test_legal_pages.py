@@ -57,3 +57,12 @@ def test_policy_describes_site_leads_and_the_age_gate():
     for needed in ("3.4. Данные заявки в школу", "Передача заявки в школу", "365 дней", "самостоятельным оператором", "родитель (законный представитель)"):
         assert needed in policy
     assert "Выбрать школу" in policy and "Выбрать школу" in read("terms.html")
+
+
+def test_rating_is_described_as_informational_and_materials_are_protected():
+    terms, method = read("terms.html"), read("methodology.html")
+    assert "социологический характер" in terms and "не профессиональный (экспертный) рейтинг" in terms
+    assert "Автором концепции Сервиса" in terms and "запрещено копировать" in terms
+    assert "социологический характер" in method and 'href="/terms"' in method
+    page = read("schools/umskul.html")
+    assert "социологический характер" in page
