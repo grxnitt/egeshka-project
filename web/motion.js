@@ -40,6 +40,13 @@
                         : [{opacity: 0, transform: 'translateY(.45em)'}, {opacity: 1, transform: 'none'}],
                    {duration: 650, delay: 80 + i * 70, easing: ease, fill: 'backwards'});
     });
+    // The blue-word highlight starts once the words have settled.
+    Promise.all(headline.getAnimations({subtree: true}).map(a => a.finished.catch(() => {})))
+      .then(() => headline.classList.add('shine-on'));
+  } else if (headline && !reduced) {
+    // Other pages: no word-by-word entrance, so the highlight can start right after load.
+    const start = () => setTimeout(() => headline.classList.add('shine-on'), 600);
+    if (document.readyState === 'complete') start(); else addEventListener('load', start, {once: true});
   }
 
   /* 3. Hero glow follows the pointer a little (on top of its slow CSS drift). */
