@@ -327,7 +327,15 @@ body:has(dialog[open]){overflow:hidden}
  .quiz-match-head>span{width:24px;height:24px}
  .quiz-match p{font-size:12px}
 }
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+/* "Reduce motion": fewer and gentler, not zero. Nothing moves or loops, but short fades and colour changes stay so a state change is still visible. */
+@keyframes reduced-fade{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){
+html{scroll-behavior:auto}
+*,*::before,*::after{animation:none!important;transition-property:opacity,color,background-color,border-color,box-shadow,outline-color!important;transition-duration:.15s!important;transition-delay:0s!important;transition-timing-function:linear!important}
+dialog,dialog::backdrop{transition-property:opacity,display,overlay!important;transition-behavior:allow-discrete!important}
+dialog[open],dialog[open]::backdrop{animation:reduced-fade .15s linear both!important}
+.faq-item::details-content{transition-property:opacity,content-visibility!important;transition-behavior:allow-discrete!important}
+}
 .rating-orbit{display:none}
 .subject{white-space:nowrap;flex-shrink:0}
 @media(max-width:700px){.mobile-product-nav a{font-size:12px}.catalog-toolbar select{background:#e5e9ff;color:var(--blue)}.catalog-toolbar label:after{color:var(--blue)}}
