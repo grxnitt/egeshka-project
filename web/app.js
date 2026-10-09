@@ -8,7 +8,7 @@ import { labels, quizSubjectKeys, teacherSubjects } from './subjects.js?v=1';
 const dialog = $('#detail-dialog');
 let catalog, links = {bot:'https://t.me/egematch_bot', channel:'https://t.me/EgeMatch_blog'};
 // Started right away so the quiz can wait for it on a slow connection instead of failing.
-const catalogReady = fetch('catalog.json?v=5').then(response => { if (!response.ok) throw new Error('catalog'); return response.json(); }).then(async data => { await applyLiveRatings(data); catalog = data; });
+const catalogReady = fetch('catalog.json?v=6').then(response => { if (!response.ok) throw new Error('catalog'); return response.json(); }).then(async data => { await applyLiveRatings(data); catalog = data; });
 catalogReady.catch(() => {});
 function showDialog(html){ $('#dialog-content').innerHTML = html; dialog.showModal();document.querySelector("#dialog-content").scrollTop=0; }
 $('.close').onclick = () => dialog.close();

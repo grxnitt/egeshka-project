@@ -109,7 +109,7 @@ document.querySelectorAll('[data-mode]').forEach(button => button.onclick = () =
   populate();
 });
 try {
-  const response = await fetch('catalog.json?v=5');
+  const response = await fetch('catalog.json?v=6');
   if (!response.ok) throw new Error('catalog');
   catalog = await response.json();
   await applyLiveRatings(catalog);
