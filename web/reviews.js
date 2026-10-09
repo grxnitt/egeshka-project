@@ -190,7 +190,7 @@ document.addEventListener('click', event => {
 
 (async () => {
   try {
-    const [catalogResponse, linksResponse] = await Promise.all([fetch('catalog.json?v=7'), fetch('links.json')]);
+    const [catalogResponse, linksResponse] = await Promise.all([fetch('catalog.json?v=8'), fetch('links.json')]);
     if (!catalogResponse.ok) throw new Error('catalog');
     catalog = await catalogResponse.json();
     await applyLiveRatings(catalog);
