@@ -17,7 +17,7 @@ def test_facts_belong_to_known_schools_and_have_valid_values():
     assert re.fullmatch(r"\d{4}-\d{2}-\d{2}", FACTS["checked"])
     for slug, item in FACTS["schools"].items():
         assert slug in SLUGS
-        assert set(item) <= {"license", "deduction", "installment", "trial", "refund"}
+        assert set(item) <= {"license", "deduction", "deduction_text", "installment", "trial", "refund"}
         assert item.get("deduction", "yes") in ("yes", "no")
         lic = item.get("license")
         if lic:

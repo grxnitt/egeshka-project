@@ -205,6 +205,33 @@
         "source": "registry",
         "found": false
       }
+    },
+    "elita": {
+      "license": {
+        "number": "Л035-01251-91/02513786",
+        "term": "бессрочная",
+        "source": "registry"
+      },
+      "deduction": "yes"
+    },
+    "talantum": {
+      "license": {
+        "number": "Л035-01298-77/00180228",
+        "term": "бессрочная",
+        "source": "registry"
+      },
+      "deduction": "yes",
+      "installment": "Можно платить помесячно или за курс целиком со скидкой до 20%",
+      "trial": "Бесплатный урок перед началом обучения"
+    },
+    "stoballnik": {
+      "license": {
+        "source": "registry",
+        "found": false,
+        "note": "школа пишет, что лицензия есть, но документ на сайте ещё не опубликован"
+      },
+      "deduction": "no",
+      "deduction_text": "Школа сообщает: вычет возможен только на образовательных тарифах, «Стандартный» и «Индивидуальный» таковыми не являются"
     }
   },
   "registry_checked": "2026-10-08"

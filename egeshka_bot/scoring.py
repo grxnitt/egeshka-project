@@ -148,6 +148,9 @@ LESSON_FORMATS = {
     "Lomonosov School": (("live", "recorded"), ()),
     "EXAMMY": (("recorded",), ()),
     "Лектариум": (("live", "recorded"), ()),
+    "Элита": (("live",), ("recorded",)),
+    "Талантум": (("live",), ("recorded",)),
+    "Стобалльник": (("live", "recorded"), ()),
 }
 
 

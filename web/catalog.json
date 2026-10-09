@@ -982,6 +982,116 @@
       },
       "criteriaStatus": {},
       "score": 8.3
+    },
+    {
+      "id": 28,
+      "name": "Элита",
+      "description": "Онлайн-школа подготовки к ЕГЭ по обществознанию, истории, русскому языку, математике, биологии и химии с собственной платформой, кураторами и разбором второй части.",
+      "subjects": [
+        "обществознание",
+        "история",
+        "русский",
+        "математика профильная",
+        "биология",
+        "химия"
+      ],
+      "price": "Цена за один предмет в месяц по тарифам на официальном сайте (октябрь 2026): «Эконом» — 4 490 ₽, «Комфорт» — 6 490 ₽, «Элита» — 16 490 ₽. При покупке нескольких предметов скидка на каждый следующий: 10% на второй, 20% на третий, 50% на четвёртый. Школа сообщает о налоговом вычете до 13% и оплате материнским капиталом.",
+      "monthlyPriceFrom": 4490,
+      "strengths": "Преподаватели с проверяемыми результатами (98–100 баллов на ЕГЭ, эксперты ЕГЭ), платформа с прогнозом балла и банком ошибок, чёткая лесенка тарифов, бесплатная летняя школа и спецкурсы в подарок к годовому курсу.",
+      "weaknesses": "Куратор и ручная проверка второй части доступны только с тарифа «Комфорт». Результаты — собственные цифры школы, независимых отзывов нет, блок отзывов на сайте выглядит как шаблон (один и тот же отзыв повторён). Срок курса и итоговая цена года не указаны.",
+      "format": "Онлайн: 8 вебинаров с теорией и 2 вебинара с практикой в месяц, тест-бот с заданиями ФИПИ и реальных ЕГЭ, домашки, собственная платформа со статистикой, прогнозом балла и «корзиной ошибок», учебная группа («кампус»). На старших тарифах добавляются куратор и персональные созвоны. Летом для учеников школы проходит бесплатная летняя школа.",
+      "url": "https://elite-ege.ru/",
+      "leadUrl": null,
+      "reviewSlug": "elita",
+      "criteria": {
+        "teachers_score": 8.4,
+        "practice_score": 8.3,
+        "feedback_score": 8.0,
+        "curator_score": 7.8,
+        "platform_score": 8.3,
+        "workload_score": 7.6,
+        "organization_score": 7.6
+      },
+      "criteriaStatus": {
+        "curator_score": "tier",
+        "feedback_score": "tier"
+      },
+      "score": 8.1
+    },
+    {
+      "id": 29,
+      "name": "Талантум",
+      "description": "Центр подготовки к ЕГЭ и ОГЭ в Москве с 2014 года; онлайн-курс на учебный год с персональным куратором, входной диагностикой и пробными экзаменами.",
+      "subjects": [
+        "математика профильная",
+        "русский",
+        "физика",
+        "химия",
+        "биология",
+        "информатика",
+        "история",
+        "обществознание",
+        "английский",
+        "литература"
+      ],
+      "price": "Онлайн-курс на учебный год (8,5 месяцев, 8 занятий в месяц), цены по странице обществознания (октябрь 2026): первый предмет — от 6 900 ₽/мес или 51 750 ₽ за курс целиком; «комплект из 4 предметов» — от 7 700 ₽/мес или 65 450 ₽ за курс. Скидка до 20% при оплате курса целиком, 5% многодетным семьям; школа сообщает о налоговом вычете до 13% и оплате материнским капиталом.",
+      "monthlyPriceFrom": 6900,
+      "strengths": "Работает с 2014 года, лицензия подтверждена реестром, персональный куратор у всех учеников, входная диагностика и пробники, цены от 6 900 ₽/мес, вычет 13% и материнский капитал, 99 независимых отзывов со средней оценкой 4,9 (в основном об очных занятиях).",
+      "weaknesses": "Цена «комплекта из 4 предметов» подана неясно. У онлайн-преподавателей средние баллы учеников скромнее, чем у школ-лидеров (70–86), описание платформы и тренажёров минимальное. Независимые отзывы в основном об очном центре в Москве, а не об онлайн-курсе.",
+      "format": "Онлайн-занятия в группах, 8 занятий в месяц, старт 14 сентября, 8,5 месяцев (учебный год). Входная диагностика знаний, персональный трек подготовки, регулярные срезы и пробные экзамены ЕГЭ, обратная связь куратора. Начать можно с бесплатного урока.",
+      "url": "https://talantum.ru/kursi-ege-online",
+      "leadUrl": null,
+      "reviewSlug": "talantum",
+      "criteria": {
+        "teachers_score": 7.9,
+        "practice_score": 8.0,
+        "feedback_score": 8.1,
+        "curator_score": 8.3,
+        "platform_score": 7.2,
+        "workload_score": 8.1,
+        "organization_score": 8.0
+      },
+      "criteriaStatus": {},
+      "score": 7.9
+    },
+    {
+      "id": 30,
+      "name": "Стобалльник",
+      "description": "Онлайн-школа подготовки к ЕГЭ и ОГЭ в мини-группах: два занятия в неделю, проверка домашних заданий, ежемесячный пробный экзамен и преподаватели из МГУ, Бауманки, ВШЭ и ИТМО.",
+      "subjects": [
+        "математика профильная",
+        "русский",
+        "физика",
+        "информатика",
+        "английский",
+        "обществознание",
+        "история",
+        "химия",
+        "биология",
+        "литература",
+        "география"
+      ],
+      "price": "Цена за один предмет в месяц по главной странице (октябрь 2026): «Стандартный» — 6 990 ₽, «Премиальный» — 7 990 ₽. При оплате нескольких курсов скидка на весь заказ: 5% за два, 10% за три и больше. Школа сообщает, что материнским капиталом можно оплатить образовательный тариф при полной годовой оплате.",
+      "monthlyPriceFrom": 6990,
+      "strengths": "Преподаватели с проверяемыми профилями (МГУ, МГТУ им. Баумана, ВШЭ, ИТМО; у части 99–100 баллов на ЕГЭ), два занятия в неделю в мини-группах, пробник каждый месяц, все занятия записываются, честная позиция по «гарантиям» поступления.",
+      "weaknesses": "Образовательная лицензия заявлена, но не опубликована и не найдена в реестре Рособрнадзора. По словам школы, налоговый вычет возможен только на образовательных тарифах, а не на «Стандартном»; оферта оформлена на консультационные услуги. Отдельного куратора нет. Результаты — собственные цифры, независимых отзывов не найдено.",
+      "format": "Два онлайн-занятия в неделю в мини-группе по каждому предмету, проверка и разбор домашних заданий, пробный экзамен каждый месяц, интерактивная платформа с записями занятий, материалами и тестами. Поддержка 24/7; на «Премиальном» тарифе — индивидуальная поддержка преподавателя.",
+      "url": "https://stoballnik.com/",
+      "leadUrl": null,
+      "reviewSlug": "stoballnik",
+      "criteria": {
+        "teachers_score": 8.6,
+        "practice_score": 8.3,
+        "feedback_score": 8.1,
+        "curator_score": 7.3,
+        "platform_score": 8.0,
+        "workload_score": 8.0,
+        "organization_score": 7.4
+      },
+      "criteriaStatus": {
+        "curator_score": "tier"
+      },
+      "score": 8.0
     }
   ],
   "teachers": [
@@ -3883,6 +3993,518 @@
       "criteria": {},
       "url": "https://lectarium.ru/",
       "slug": "lectarium-mariya-rachkevich"
+    },
+    {
+      "id": 182,
+      "school": "Элита",
+      "name": "Егорик Историк",
+      "subject": "История",
+      "subjects": [
+        "История"
+      ],
+      "description": "Преподаватель истории с высшим юридическим образованием. По данным школы, пятый год готовит к ЕГЭ, сам сдал экзамен на 96 баллов, выпустил более 1 000 учеников, средний балл его учеников — 83,5, каждый третий пишет на 85+.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://elite-ege.ru/",
+      "slug": "elita-egorik-istorik"
+    },
+    {
+      "id": 183,
+      "school": "Элита",
+      "name": "Гирей Боссович",
+      "subject": "Русский язык",
+      "subjects": [
+        "Русский язык"
+      ],
+      "description": "Преподаватель русского языка и эксперт ЕГЭ, по образованию филолог. По данным школы, седьмой год готовит к экзамену, дважды сдавал его на 98 баллов, каждый второй его ученик пишет на 85+; третий год стажирует молодых преподавателей.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://elite-ege.ru/",
+      "slug": "elita-girey-bossovich"
+    },
+    {
+      "id": 184,
+      "school": "Элита",
+      "name": "Ваня Элита",
+      "subject": "Обществознание",
+      "subjects": [
+        "Обществознание"
+      ],
+      "description": "Основатель школы «Элита», преподаватель обществознания и эксперт ЕГЭ с двумя высшими образованиями (юрист и преподаватель). По данным школы, седьмой год готовит к ЕГЭ, повторно сдал экзамен на 99 баллов, выпустил почти 3 000 учеников, средний балл — 86,8.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://elite-ege.ru/",
+      "slug": "elita-vanya-elita"
+    },
+    {
+      "id": 185,
+      "school": "Элита",
+      "name": "Никита Наумный",
+      "subject": "Математика профильная",
+      "subjects": [
+        "Математика профильная"
+      ],
+      "description": "Преподаватель профильной математики, студент МФТИ. По данным школы, победитель олимпиады «Физтех», трижды призёр Всероссийской олимпиады, сдал ЕГЭ суммарно на 294 балла, в том числе 100 баллов по профильной математике.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://elite-ege.ru/",
+      "slug": "elita-nikita-naumnyy"
+    },
+    {
+      "id": 186,
+      "school": "Элита",
+      "name": "Саша ДНКаша",
+      "subject": "Биология",
+      "subjects": [
+        "Биология"
+      ],
+      "description": "Преподаватель биологии, выпускница СЗГМУ им. Мечникова (лечебное дело) со школьной золотой медалью. По данным школы, четвёртый год готовит к ЕГЭ, призёр международной олимпиады по биомедицинским наукам.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://elite-ege.ru/",
+      "slug": "elita-sasha-dnkasha"
+    },
+    {
+      "id": 187,
+      "school": "Элита",
+      "name": "Эльвис Химсли",
+      "subject": "Химия",
+      "subjects": [
+        "Химия"
+      ],
+      "description": "Преподаватель химии, выпускник медицинского университета с красным дипломом. По данным школы, победитель Алмазовской олимпиады по неврологии (2026) и международной олимпиады «Medicine of the Future 2025», автор публикаций в научных журналах (Scopus, ВАК, РИНЦ).",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://elite-ege.ru/",
+      "slug": "elita-elvis-khimsli"
+    },
+    {
+      "id": 188,
+      "school": "Талантум",
+      "name": "Никита Маскаев",
+      "subject": "Математика профильная",
+      "subjects": [
+        "Математика профильная"
+      ],
+      "description": "Преподаватель профильной математики онлайн-курса «Талантум». По данным школы, 6 лет опыта преподавания, средний балл его учеников — 80.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://talantum.ru/kursi-ege-online",
+      "slug": "talantum-nikita-maskaev"
+    },
+    {
+      "id": 189,
+      "school": "Талантум",
+      "name": "Надежда Щербахо",
+      "subject": "Русский язык",
+      "subjects": [
+        "Русский язык"
+      ],
+      "description": "Преподаватель русского языка и литературы онлайн-курса «Талантум». По данным школы, 15 лет опыта преподавания, средний балл её учеников — 84.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://talantum.ru/kursi-ege-online",
+      "slug": "talantum-nadezhda-shcherbakho"
+    },
+    {
+      "id": 190,
+      "school": "Талантум",
+      "name": "Надежда Щербахо",
+      "subject": "Литература",
+      "subjects": [
+        "Литература"
+      ],
+      "description": "Преподаватель русского языка и литературы онлайн-курса «Талантум». По данным школы, 15 лет опыта преподавания, средний балл её учеников — 84.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://talantum.ru/kursi-ege-online",
+      "slug": "talantum-nadezhda-shcherbakho"
+    },
+    {
+      "id": 191,
+      "school": "Талантум",
+      "name": "Евгения Яковлева",
+      "subject": "Русский язык",
+      "subjects": [
+        "Русский язык"
+      ],
+      "description": "Преподаватель русского языка онлайн-курса «Талантум»; по данным страницы курса, 8 лет опыта преподавания. Указана на странице курса вместе с Надеждой Щербахо.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://talantum.ru/kursi-ege-online",
+      "slug": "talantum-evgeniya-yakovleva"
+    },
+    {
+      "id": 192,
+      "school": "Талантум",
+      "name": "Ульяна Дьячкова",
+      "subject": "Физика",
+      "subjects": [
+        "Физика"
+      ],
+      "description": "Преподаватель физики и химии онлайн-курса «Талантум». По данным школы, 7 лет опыта преподавания, средний балл её учеников по физике — 80.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://talantum.ru/kursi-ege-online",
+      "slug": "talantum-ulyana-dyachkova"
+    },
+    {
+      "id": 193,
+      "school": "Талантум",
+      "name": "Ульяна Дьячкова",
+      "subject": "Химия",
+      "subjects": [
+        "Химия"
+      ],
+      "description": "Преподаватель физики и химии онлайн-курса «Талантум». По данным школы, 7 лет опыта преподавания, средний балл её учеников по физике — 80.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://talantum.ru/kursi-ege-online",
+      "slug": "talantum-ulyana-dyachkova"
+    },
+    {
+      "id": 194,
+      "school": "Талантум",
+      "name": "Алексей Тосканов",
+      "subject": "Химия",
+      "subjects": [
+        "Химия"
+      ],
+      "description": "Преподаватель химии онлайн-курса «Талантум». По данным школы, 9 лет опыта преподавания, средний балл его учеников — 86.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://talantum.ru/kursi-ege-online",
+      "slug": "talantum-aleksey-toskanov"
+    },
+    {
+      "id": 195,
+      "school": "Талантум",
+      "name": "Анна Егорова",
+      "subject": "Биология",
+      "subjects": [
+        "Биология"
+      ],
+      "description": "Преподаватель биологии онлайн-курса «Талантум». По данным школы, 10 лет опыта преподавания; средний балл учеников на странице курса указан без пояснений.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://talantum.ru/kursi-ege-online",
+      "slug": "talantum-anna-egorova"
+    },
+    {
+      "id": 196,
+      "school": "Талантум",
+      "name": "Ксения Конова",
+      "subject": "Обществознание",
+      "subjects": [
+        "Обществознание"
+      ],
+      "description": "Преподаватель обществознания онлайн-курса «Талантум». По данным школы, 5 лет опыта преподавания, средний балл её учеников — 70.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://talantum.ru/kursi-ege-online",
+      "slug": "talantum-kseniya-konova"
+    },
+    {
+      "id": 197,
+      "school": "Талантум",
+      "name": "Иван Васильев",
+      "subject": "Информатика",
+      "subjects": [
+        "Информатика"
+      ],
+      "description": "Преподаватель информатики онлайн-курса «Талантум». По данным школы, 5 лет опыта преподавания, средний балл его учеников — 75.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://talantum.ru/kursi-ege-online",
+      "slug": "talantum-ivan-vasilev"
+    },
+    {
+      "id": 198,
+      "school": "Талантум",
+      "name": "Екатерина Лановая",
+      "subject": "История",
+      "subjects": [
+        "История"
+      ],
+      "description": "Преподаватель истории онлайн-курса «Талантум». По данным школы, 7 лет опыта преподавания, средний балл её учеников — 86.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://talantum.ru/kursi-ege-online",
+      "slug": "talantum-ekaterina-lanovaya"
+    },
+    {
+      "id": 199,
+      "school": "Талантум",
+      "name": "Екатерина Воскресенская",
+      "subject": "Английский язык",
+      "subjects": [
+        "Английский язык"
+      ],
+      "description": "Преподаватель английского языка онлайн-курса «Талантум». По данным школы, 15 лет опыта преподавания, средний балл её учеников — 80.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://talantum.ru/kursi-ege-online",
+      "slug": "talantum-ekaterina-voskresenskaya"
+    },
+    {
+      "id": 200,
+      "school": "Стобалльник",
+      "name": "Екатерина Головина",
+      "subject": "Математика профильная",
+      "subjects": [
+        "Математика профильная"
+      ],
+      "description": "Эксперт ОГЭ и ЕГЭ: сдала профильную математику на 99 баллов, аспирант физического факультета МГУ им. Ломоносова, научный сотрудник лаборатории квантовых и кооперативных явлений МГУ.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://stoballnik.com/",
+      "slug": "stoballnik-ekaterina-golovina"
+    },
+    {
+      "id": 201,
+      "school": "Стобалльник",
+      "name": "София Демина",
+      "subject": "Математика профильная",
+      "subjects": [
+        "Математика профильная"
+      ],
+      "description": "Эксперт ОГЭ и ЕГЭ, стобалльница ЕГЭ по математике, бакалавр и магистр с отличием МГТУ им. Баумана. Ведёт математику и физику.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://stoballnik.com/",
+      "slug": "stoballnik-sofiya-demina"
+    },
+    {
+      "id": 202,
+      "school": "Стобалльник",
+      "name": "София Демина",
+      "subject": "Физика",
+      "subjects": [
+        "Физика"
+      ],
+      "description": "Эксперт ОГЭ и ЕГЭ, стобалльница ЕГЭ по математике, бакалавр и магистр с отличием МГТУ им. Баумана. Ведёт математику и физику.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://stoballnik.com/",
+      "slug": "stoballnik-sofiya-demina"
+    },
+    {
+      "id": 203,
+      "school": "Стобалльник",
+      "name": "Анна Богацкая",
+      "subject": "Русский язык",
+      "subjects": [
+        "Русский язык"
+      ],
+      "description": "Эксперт ОГЭ и ЕГЭ, филолог, учитель высшей квалификационной категории, выпускница ЮУРГГПУ по направлению «русский язык и литература».",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://stoballnik.com/",
+      "slug": "stoballnik-anna-bogatskaya"
+    },
+    {
+      "id": 204,
+      "school": "Стобалльник",
+      "name": "Ксения Щербакова",
+      "subject": "Русский язык",
+      "subjects": [
+        "Русский язык"
+      ],
+      "description": "Эксперт ОГЭ и ЕГЭ, филолог, учитель русского языка и литературы высшей категории в школе № 46, выпускница ЮУРГГПУ. Ведёт русский язык и литературу.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://stoballnik.com/",
+      "slug": "stoballnik-kseniya-shcherbakova"
+    },
+    {
+      "id": 205,
+      "school": "Стобалльник",
+      "name": "Ксения Щербакова",
+      "subject": "Литература",
+      "subjects": [
+        "Литература"
+      ],
+      "description": "Эксперт ОГЭ и ЕГЭ, филолог, учитель русского языка и литературы высшей категории в школе № 46, выпускница ЮУРГГПУ. Ведёт русский язык и литературу.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://stoballnik.com/",
+      "slug": "stoballnik-kseniya-shcherbakova"
+    },
+    {
+      "id": 206,
+      "school": "Стобалльник",
+      "name": "Михаил Болкунов",
+      "subject": "Физика",
+      "subjects": [
+        "Физика"
+      ],
+      "description": "Эксперт ОГЭ и ЕГЭ, магистр факультета фотоники ИТМО, преподаватель курса углублённой физики, учитель физики старших классов, научный сотрудник лаборатории высокодобротных резонансов ФТИ им. Иоффе.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://stoballnik.com/",
+      "slug": "stoballnik-mikhail-bolkunov"
+    },
+    {
+      "id": 207,
+      "school": "Стобалльник",
+      "name": "Ольга Сорокина",
+      "subject": "Информатика",
+      "subjects": [
+        "Информатика"
+      ],
+      "description": "Эксперт ОГЭ и ЕГЭ, бакалавр прикладной математики и информатики МЭИ, магистр математики и компьютерных наук Центрального университета.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://stoballnik.com/",
+      "slug": "stoballnik-olga-sorokina"
+    },
+    {
+      "id": 208,
+      "school": "Стобалльник",
+      "name": "Александр Жарких",
+      "subject": "Английский язык",
+      "subjects": [
+        "Английский язык"
+      ],
+      "description": "Эксперт ОГЭ и ЕГЭ, выпускник факультета иностранных языков МГУ. Уровень C2 подтверждён сертификатом CAE (2025), регулярно сдаёт ЕГЭ на 95+ для подтверждения уровня, владеет английским и немецким.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://stoballnik.com/",
+      "slug": "stoballnik-aleksandr-zharkikh"
+    },
+    {
+      "id": 209,
+      "school": "Стобалльник",
+      "name": "Влада Морозова",
+      "subject": "Биология",
+      "subjects": [
+        "Биология"
+      ],
+      "description": "Эксперт ОГЭ и ЕГЭ, бакалавр биологического факультета МГУ, магистр направления «синтетическая биология и биодизайн» (МГМУ им. Сеченова), обучает искусственный интеллект биологии в Яндексе.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://stoballnik.com/",
+      "slug": "stoballnik-vlada-morozova"
+    },
+    {
+      "id": 210,
+      "school": "Стобалльник",
+      "name": "Александр Соколов",
+      "subject": "Обществознание",
+      "subjects": [
+        "Обществознание"
+      ],
+      "description": "Эксперт ОГЭ и ЕГЭ, сдал ЕГЭ по обществознанию на 100 баллов, бакалавр экономического факультета СПбГУ.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://stoballnik.com/",
+      "slug": "stoballnik-aleksandr-sokolov"
+    },
+    {
+      "id": 211,
+      "school": "Стобалльник",
+      "name": "Иван Соломатов",
+      "subject": "Химия",
+      "subjects": [
+        "Химия"
+      ],
+      "description": "Эксперт ОГЭ и ЕГЭ, дважды сдавал ЕГЭ по химии на 100 баллов, аспирант химического факультета ВШЭ, учитель в Школе Центра педагогического мастерства, научный сотрудник ИОНХ РАН.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://stoballnik.com/",
+      "slug": "stoballnik-ivan-solomatov"
+    },
+    {
+      "id": 212,
+      "school": "Стобалльник",
+      "name": "Герман Бароян",
+      "subject": "История",
+      "subjects": [
+        "История"
+      ],
+      "description": "Эксперт ОГЭ и ЕГЭ, кандидат исторических наук, аспирант ВШЭ по истории, учитель истории в гимназии № 1543 им. Завельского.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://stoballnik.com/",
+      "slug": "stoballnik-german-baroyan"
+    },
+    {
+      "id": 213,
+      "school": "Стобалльник",
+      "name": "Марина Зарубина",
+      "subject": "География",
+      "subjects": [
+        "География"
+      ],
+      "description": "Эксперт ОГЭ и ЕГЭ, учитель географии, магистр географического факультета МГУ, прошла повышение квалификации по педагогике.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://stoballnik.com/",
+      "slug": "stoballnik-marina-zarubina"
     }
   ]
 }

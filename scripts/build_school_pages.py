@@ -297,9 +297,11 @@ def facts_block(school):
         inn = school_legal(school["reviewSlug"]).get("inn")
         if lic.get("source") == "registry" and lic.get("found") is False and inn:
             registry_checked = True
+            note = lic.get("note")
+            tail = f". {escape(note[:1].upper() + note[1:])}" if note else ""
             rows.append(row(
                 "Образовательная лицензия",
-                f'В реестре Рособрнадзора лицензия не найдена (<a href="{REGISTRY_SEARCH}{escape(inn, quote=True)}" target="_blank" rel="noopener">поиск по ИНН ↗</a>)',
+                f'В реестре Рособрнадзора лицензия не найдена (<a href="{REGISTRY_SEARCH}{escape(inn, quote=True)}" target="_blank" rel="noopener">поиск по ИНН ↗</a>){tail}',
                 "no",
             ))
             lic = None
@@ -319,7 +321,9 @@ def facts_block(school):
             text = "Школа заявляет, что лицензия есть"
         rows.append(row("Образовательная лицензия", text))
     deduction = facts.get("deduction")
-    if deduction == "yes":
+    if facts.get("deduction_text"):
+        rows.append(row("Налоговый вычет 13%", escape(facts["deduction_text"]), "no" if deduction == "no" else "yes"))
+    elif deduction == "yes":
         rows.append(row("Налоговый вычет 13%", "Школа сообщает, что вычет можно оформить"))
     elif deduction == "no":
         rows.append(row("Налоговый вычет 13%", "Школа сообщает, что вычет пока не предоставляется", "no"))
