@@ -66,3 +66,11 @@ def test_rating_is_described_as_informational_and_materials_are_protected():
     assert "социологический характер" in method and 'href="/terms"' in method
     page = read("schools/umskul.html")
     assert "социологический характер" in page
+
+
+def test_monthly_review_of_the_editorial_part_is_stated_everywhere_it_matters():
+    method, terms = read("methodology.html"), read("terms.html")
+    assert "1-го числа каждого месяца" in method and "1 ноября 2026" in method
+    assert "Отзывы учеников её не меняют" in method
+    assert "1-го числа каждого месяца" in terms
+    assert "1-го числа каждого месяца" in read("schools/umskul.html")
