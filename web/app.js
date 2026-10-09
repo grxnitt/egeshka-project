@@ -1,5 +1,5 @@
 import { applyLiveRatings } from './supabase-client.js?v=7';
-import { chooseSchoolUrl, schoolContent, schoolFilters, schoolInitial, schoolLogos, schoolTone } from './school-content.js?v=47';
+import { chooseSchoolUrl, schoolContent, schoolFilters, schoolInitial, schoolLogos, schoolTone } from './school-content.js?v=48';
 const $ = (selector) => document.querySelector(selector);
 const escape = (value) => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = n => Number(n).toFixed(1).replace('.', ',');
@@ -8,7 +8,7 @@ import { labels, quizSubjectKeys, teacherSubjects } from './subjects.js?v=1';
 const dialog = $('#detail-dialog');
 let catalog, links = {bot:'https://t.me/egematch_bot', channel:'https://t.me/EgeMatch_blog'};
 // Started right away so the quiz can wait for it on a slow connection instead of failing.
-const catalogReady = fetch('catalog.json?v=8').then(response => { if (!response.ok) throw new Error('catalog'); return response.json(); }).then(async data => { await applyLiveRatings(data); catalog = data; });
+const catalogReady = fetch('catalog.json?v=9').then(response => { if (!response.ok) throw new Error('catalog'); return response.json(); }).then(async data => { await applyLiveRatings(data); catalog = data; });
 catalogReady.catch(() => {});
 function showDialog(html){ $('#dialog-content').innerHTML = html; dialog.showModal();document.querySelector("#dialog-content").scrollTop=0; }
 $('.close').onclick = () => dialog.close();

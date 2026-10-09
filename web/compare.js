@@ -1,5 +1,5 @@
-import { chooseSchoolUrl, priceContext } from './school-content.js?v=47';
-import { priceDetails, relativeStrengths } from './comparison.js?v=33';
+import { chooseSchoolUrl, priceContext } from './school-content.js?v=48';
+import { priceDetails, relativeStrengths } from './comparison.js?v=34';
 import { applyLiveRatings, teacherRatingLabel } from './supabase-client.js?v=7';
 import { teacherSubjects } from './subjects.js?v=1';
 const $ = selector => document.querySelector(selector);
@@ -109,7 +109,7 @@ document.querySelectorAll('[data-mode]').forEach(button => button.onclick = () =
   populate();
 });
 try {
-  const response = await fetch('catalog.json?v=8');
+  const response = await fetch('catalog.json?v=9');
   if (!response.ok) throw new Error('catalog');
   catalog = await response.json();
   await applyLiveRatings(catalog);
