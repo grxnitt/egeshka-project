@@ -5,7 +5,7 @@ from typing import Optional
 from sqlalchemy import delete, inspect, select, text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
-from .models import Base, Course, Event, Review, ReviewCriterionScore, School, Teacher, User
+from .models import Base, Course, Event, Followup, Review, ReviewCriterionScore, School, Teacher, User
 from .subjects import BASE_SCHOOL_SOURCES, teacher_exam_subject
 
 
@@ -1841,6 +1841,7 @@ async def delete_user_data(session: AsyncSession, telegram_id: int) -> dict[str,
             await session.execute(delete(Review).where(Review.user_id == user.id))
         await session.delete(user)
 
+    await session.execute(delete(Followup).where(Followup.telegram_id == telegram_id))
     deleted_events = (await session.execute(
         delete(Event).where(Event.telegram_id == telegram_id)
     )).rowcount or 0

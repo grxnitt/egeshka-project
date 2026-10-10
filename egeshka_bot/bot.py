@@ -3,7 +3,7 @@ from aiogram.enums import ParseMode
 from aiogram.filters import Command, CommandStart
 from aiogram.exceptions import TelegramBadRequest
 from .teacher_copy import teacher_description
-from . import lead_admin
+from . import followups, lead_admin
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message
@@ -1141,6 +1141,10 @@ async def build_quiz_result(session_factory, profile: QuizProfile):
             )]
             for _, _, school in top
         ]
+        + [[InlineKeyboardButton(
+            text="🔔 Спросить через 2 месяца, как идёт",
+            callback_data=f"fu_on:{SUBJECTS.index(subject_name)}:{followups.encode_schools(school_ids)}",
+        )] for school_ids in [top_school_ids] if subject_name in SUBJECTS]
         + [[InlineKeyboardButton(text="📰 Новости и разборы ЕГЭ", callback_data="channel")]]
         + [[InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")]]
     )
@@ -1459,7 +1463,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
     async def show_data_controls(message: Message, edit: bool = False):
         text_value = (
             "🔐 <b>Твои данные</b>\n\n"
-            "Здесь можно удалить профиль в ЕГЭ Мэтче, отправленные отзывы, оценки по критериям, ссылки на подтверждения и историю действий в боте. "
+            "Здесь можно удалить профиль в ЕГЭ Мэтче, напоминания, отправленные отзывы, оценки по критериям, ссылки на подтверждения и историю действий в боте. "
             "После удаления вклад этих отзывов исчезнет из пользовательской части рейтинга.\n\n"
             "Сообщения в самом чате Telegram управляются приложением Telegram и в базу ЕГЭ Мэтча не входят."
         )
@@ -1487,7 +1491,7 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
     async def delete_data_request(call: CallbackQuery):
         await call.message.edit_text(
             "<b>Удалить все данные без возможности восстановления?</b>\n\n"
-            "Будут удалены профиль, отзывы, поставленные оценки, ссылки на подтверждения и история действий. "
+            "Будут удалены профиль, отзывы, поставленные оценки, ссылки на подтверждения, история действий и напоминания. "
             "Если позже снова открыть бота, будет создан новый пустой профиль.",
             reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                 [InlineKeyboardButton(text="Да, удалить всё", callback_data="delete_data_confirm")],
@@ -1515,6 +1519,91 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
             ]),
         )
         await call.answer("Готово")
+
+    @dp.callback_query(F.data.startswith("fu_on:"))
+    async def followup_on(call: CallbackQuery):
+        try:
+            _, index, raw = call.data.split(":", 2)
+            subject_name = SUBJECTS[int(index)]
+        except (ValueError, IndexError):
+            await call.answer()
+            return
+        async with session_factory() as session:
+            await followups.subscribe(session, call.from_user.id, subject_name, followups.decode_schools(raw))
+        await track(call.from_user.id, "followup_on", {"subject": subject_name})
+        await call.message.answer(
+            f"Готово. Через 2 месяца я напишу и спрошу, как идёт подготовка по предмету «{subject_name}», потом ещё раз каждые 2 месяца "
+            "до экзамена (не больше четырёх раз). Отключить можно в любой момент командой /stop_followups."
+        )
+        await call.answer("Напомню")
+
+    async def stop_followups(telegram_id: int) -> int:
+        async with session_factory() as session:
+            return await followups.stop_all(session, telegram_id)
+
+    @dp.message(Command("stop_followups"))
+    async def stop_followups_command(message: Message):
+        stopped = await stop_followups(message.from_user.id)
+        await message.answer("Напоминания отключены." if stopped else "Активных напоминаний нет.")
+
+    @dp.callback_query(F.data == "fu_stop")
+    async def followup_stop(call: CallbackQuery):
+        await stop_followups(call.from_user.id)
+        await call.message.edit_text("Напоминания отключены. Спасибо, что был с нами!")
+        await call.answer()
+
+    @dp.callback_query(F.data.startswith("fu_ans:"))
+    async def followup_answer(call: CallbackQuery):
+        # fu_ans:<subject index>:<code>; code is a school id, "other", "still" or "none"
+        try:
+            _, index, code = call.data.split(":", 2)
+            subject_name = SUBJECTS[int(index)]
+        except (ValueError, IndexError):
+            await call.answer()
+            return
+        school_id = int(code) if code.isdigit() else None
+        await track(call.from_user.id, "followup_answer", {"subject": subject_name, "answer": "school" if school_id else code, "school_id": school_id})
+        rows = []
+        if school_id:
+            text_value = "Отлично! Расскажи, как идут занятия: твой отзыв помогает другим выбрать школу."
+            rows.append([InlineKeyboardButton(text="💬 Оставить отзыв о школе", callback_data=f"review_school:{school_id}")])
+        elif code == "other":
+            text_value = "Понял, спасибо! Если захочешь, оставь отзыв о своей школе в разделе «Отзывы» в меню."
+        elif code == "still":
+            text_value = "Понял. Загляни в рейтинг школ и сравнение, а я напишу ещё раз через 2 месяца."
+        else:
+            text_value = "Понял, спасибо за ответ."
+        rows.append([InlineKeyboardButton(text="Больше не напоминать", callback_data="fu_stop")])
+        await call.message.edit_text(text_value, reply_markup=InlineKeyboardMarkup(inline_keyboard=rows))
+        await call.answer()
+
+    async def send_due_followups(bot):
+        async with session_factory() as session:
+            items = await followups.due(session)
+            for item in items:
+                try:
+                    subject_index = SUBJECTS.index(item.subject)
+                except ValueError:
+                    await followups.deactivate(session, item)
+                    continue
+                school_ids = followups.decode_schools(item.school_ids)
+                names = {row.id: row.name for row in (await session.execute(
+                    select(School).where(School.id.in_(school_ids or [0])))).scalars()}
+                rows = [[InlineKeyboardButton(text=f"Занимаюсь: {names[sid]}"[:60], callback_data=f"fu_ans:{subject_index}:{sid}")]
+                        for sid in school_ids if sid in names]
+                rows += [[InlineKeyboardButton(text="Выбрал другую школу", callback_data=f"fu_ans:{subject_index}:other")],
+                         [InlineKeyboardButton(text="Ещё выбираю", callback_data=f"fu_ans:{subject_index}:still")],
+                         [InlineKeyboardButton(text="Не занимаюсь", callback_data=f"fu_ans:{subject_index}:none")],
+                         [InlineKeyboardButton(text="Больше не напоминать", callback_data="fu_stop")]]
+                try:
+                    await bot.send_message(item.telegram_id, followups.message_text(item),
+                                           reply_markup=InlineKeyboardMarkup(inline_keyboard=rows))
+                except Exception:
+                    await followups.deactivate(session, item)  # blocked the bot or deleted the chat: stop asking
+                    continue
+                await followups.mark_sent(session, item)
+
+    dp.workflow_data["send_due_followups"] = send_due_followups
 
     @dp.callback_query(F.data == "menu")
     async def to_menu(call: CallbackQuery, state: FSMContext):
@@ -2541,10 +2630,20 @@ async def run(settings: Settings):
             await asyncio.sleep(24 * 60 * 60)
             await cleanup_expired_proofs(session_factory)
 
+    async def followup_loop():
+        while True:
+            await asyncio.sleep(60 * 60)
+            try:
+                await dp.workflow_data["send_due_followups"](bot)
+            except Exception:
+                pass
+
     cleanup_task = asyncio.create_task(proof_cleanup_loop())
+    followup_task = asyncio.create_task(followup_loop())
     try:
         await dp.start_polling(bot)
     finally:
         cleanup_task.cancel()
+        followup_task.cancel()
         await bot.session.close()
         await engine.dispose()

@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional
-from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Integer, Numeric, String, Text
+from sqlalchemy import BigInteger, Boolean, DateTime, Float, ForeignKey, Integer, Numeric, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -201,3 +201,16 @@ class Lead(Base):
     paid_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)  # the school reported a first payment
     first_payment: Mapped[int] = mapped_column(Integer, default=0)  # rubles, needed only for a percent bonus
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, index=True)
+
+
+class Followup(Base):
+    """Opt-in reminder: the student asked the bot to check in every two months after the quiz."""
+    __tablename__ = "followups"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    telegram_id: Mapped[int] = mapped_column(BigInteger, index=True)
+    subject: Mapped[str] = mapped_column(String(60))
+    school_ids: Mapped[str] = mapped_column(String(60), default="")   # the schools the quiz suggested, comma-separated
+    round: Mapped[int] = mapped_column(Integer, default=0)            # reminders already sent
+    next_due_at: Mapped[datetime] = mapped_column(DateTime, index=True)
+    active: Mapped[bool] = mapped_column(Boolean, default=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
