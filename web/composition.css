@@ -2198,3 +2198,10 @@ body{background:#eef1fc}
 
 /* A school logo given as a full-bleed square avatar (file name ends with -avatar) fills the mark. */
 .school-mark-logo img[src*="-avatar"],.at-logo img[src*="-avatar"]{padding:0;object-fit:cover}
+
+.sp-badges{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 6px;padding:0;list-style:none}
+.sp-badges li{padding:6px 12px;border-radius:var(--r-pill);background:var(--blue);color:#fff;font-size:13px;font-weight:600}
+.sp-badges-note{max-width:640px;margin:0 0 18px;color:var(--muted);font-size:12.5px;line-height:1.45}
+.school-card-badges{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0;padding:0;list-style:none}
+.school-card-badges li{padding:4px 10px;border-radius:var(--r-pill);background:#e5e9ff;color:var(--blue);font-size:12px;font-weight:600}
+.badges-footnote{max-width:640px;margin:14px 0 0;color:var(--muted);font-size:12.5px;line-height:1.45}

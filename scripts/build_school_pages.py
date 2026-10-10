@@ -16,7 +16,7 @@ CSS_VERSIONS = {
     "styles.css": "37",
     "refinements.css": "46",
     "typography.css": "31",
-    "composition.css": "250",
+    "composition.css": "251",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -354,6 +354,36 @@ def facts_legal_note(school):
 
 
 
+TOP_BADGE_PLACES = 3
+BADGE_LABELS = {"teachers_score": "преподавателям", "practice_score": "практике", "feedback_score": "проверке работ", "curator_score": "кураторам", "platform_score": "платформе", "workload_score": "нагрузке и темпу", "organization_score": "организации"}
+BADGE_NOTE = ("«Топ-3» — места по редакционной оценке критерия и отзывам учеников. Это не рекомендация "
+              "и не объективное измерение качества.")
+
+
+def top_badges(school, all_schools):
+    """Criteria where the school is in the top 3 by editorial score (ties at 3rd place included).
+    Criteria offered only on some tariffs ("tier") or not at all do not earn a badge. Mirrors topBadges() in web/ratings.js."""
+    result = []
+    for key, label in CRITERIA.items():
+        value = (school.get("criteria") or {}).get(key)
+        if value is None or (school.get("criteriaStatus") or {}).get(key, "yes") != "yes":
+            continue
+        scores = sorted((s["criteria"][key] for s in all_schools
+                         if s["criteria"].get(key) is not None and (s.get("criteriaStatus") or {}).get(key, "yes") == "yes"),
+                        reverse=True)
+        if value >= scores[min(TOP_BADGE_PLACES, len(scores)) - 1]:
+            result.append((value, key, label))
+    return [(key, BADGE_LABELS[key]) for _, key, label in sorted(result, key=lambda item: -item[0])[:3]]
+
+
+def badges_html(school, all_schools):
+    badges = top_badges(school, all_schools)
+    if not badges:
+        return ""
+    chips = "".join(f"<li>Топ-3 по {escape(label)}</li>" for _, label in badges)
+    return f'<ul class="sp-badges" aria-label="Сильные стороны по редакционной оценке">{chips}</ul><p class="sp-badges-note">{BADGE_NOTE}</p>'
+
+
 def build_page(school, people, others, header, footer, teacher_slugs):
     slug = school["reviewSlug"]
     url = f"{SITE}/schools/{slug}"
@@ -363,6 +393,7 @@ def build_page(school, people, others, header, footer, teacher_slugs):
         for key, label in CRITERIA.items()
         if key in school["criteria"]
     )
+    badges_block = badges_html(school, others + [school])
     missing = [label for key, label in CRITERIA.items() if status.get(key) == "none"]
     missing_note = (
         f'<p class="sp-note sp-note-na">В оценку не входит: {escape(", ".join(missing).lower())} — этого нет в школе. '
@@ -407,7 +438,7 @@ def build_page(school, people, others, header, footer, teacher_slugs):
     <div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div class="hero-glow hero-glow-pink" aria-hidden="true"></div>
     <div class="hero-copy"><h1>{escape(school["name"])}</h1><p class="lead">{escape(school["description"])}</p><div class="sp-score"><small>Оценка ЕГЭ Мэтча</small><strong>{num(school["score"])}</strong><span>из 10</span></div></div>
   </section>
-  <section class="sp-section"><h2 class="t-h3">Оценка по критериям</h2><ul class="sp-criteria">{criteria_rows}</ul>{missing_note}<a class="button blue sp-hero-cta" href="{lead_url}" target="_blank" rel="noopener" data-choose-school="{escape(school["name"])}" data-source="school_page_criteria">Выбрать школу <span>↗</span></a></section>
+  <section class="sp-section"><h2 class="t-h3">Оценка по критериям</h2>{badges_block}<ul class="sp-criteria">{criteria_rows}</ul>{missing_note}<a class="button blue sp-hero-cta" href="{lead_url}" target="_blank" rel="noopener" data-choose-school="{escape(school["name"])}" data-source="school_page_criteria">Выбрать школу <span>↗</span></a></section>
   {facts_block(school)}
   <section class="sp-section"><h2 class="t-h3">Предметы ({len(school["subjects"])})</h2><ul class="sp-chips">{subjects}</ul></section>
   <section class="sp-facts"><article><h2 class="t-title">Стоимость</h2><p>{escape(school["price"])}</p><p class="sp-inline-link"><a href="{escape(school["url"])}" target="_blank" rel="noopener">Проверить актуальные цены на сайте школы ↗</a></p></article><article><h2 class="t-title">Формат обучения</h2><p>{escape(school["format"])}</p></article><article><h2 class="t-title">Почему выбирают</h2><p>{escape(school["strengths"])}</p></article><article><h2 class="t-title">Что проверить перед покупкой</h2><p>{escape(school["weaknesses"])}</p></article></section>
