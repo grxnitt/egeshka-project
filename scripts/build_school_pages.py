@@ -16,7 +16,7 @@ CSS_VERSIONS = {
     "styles.css": "37",
     "refinements.css": "46",
     "typography.css": "31",
-    "composition.css": "249",
+    "composition.css": "250",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -235,6 +235,7 @@ def legal_block(school):
     provider = (f' Услуги школы оказывает {escape(info["entity"])}, ИНН {escape(info["inn"])} (по данным сайта школы).'
                 if info.get("inn") else "")
     mail = f'<a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a>'
+    facts_note_html = facts_legal_note(school)
     return (
         '<section class="sp-legal" aria-label="Правовая информация"><h2>Правовая информация</h2>'
         f'<p>Название «{name}» используется только чтобы обозначить школу в обзоре и сравнении; права на него принадлежат правообладателю.{provider} '
@@ -242,6 +243,7 @@ def legal_block(school):
         '<p>Оценка — мнение редакции по открытой <a href="/methodology">методике</a>, а не утверждение о качестве услуг; рейтинг носит информационный, социологический характер и не является профессиональной экспертизой. Материалы сайта охраняются, копирование без согласия запрещено (<a href="/terms">Условия</a>, раздел 6). '
         'Цены и условия приведены по данным сайта школы и не являются офертой — актуальные условия уточняй у школы. '
         'Отзывы — личное мнение их авторов.</p>'
+        f'{facts_note_html}'
         f'<p>Если вы представляете школу и не согласны с размещением или нашли ошибку, напишите на {mail} — исправим или удалим в течение 10 рабочих дней.</p>'
         '</section>'
     )
@@ -334,9 +336,21 @@ def facts_block(school):
         return ""
     return (
         '<section class="sp-section sp-about" id="facts"><h2 class="t-h3">Факты о школе</h2>'
-        f'<ul class="sp-about-list">{"".join(rows)}</ul>'
-        f'<p class="sp-note">{facts_note(data, registry_checked)}</p></section>'
+        f'<ul class="sp-about-list">{"".join(rows)}</ul></section>'
     )
+
+
+def facts_legal_note(school):
+    """The source/date note of the facts block; it lives in the legal block at the end of the page."""
+    data = school_facts_data()
+    facts = data["schools"].get(school["reviewSlug"])
+    if not facts:
+        return ""
+    inn = school_legal(school["reviewSlug"]).get("inn")
+    lic = facts.get("license") or {}
+    registry_checked = bool(inn and lic.get("source") == "registry" and (lic.get("number") or lic.get("found") is False))
+    return f'<p><b>Факты о школе.</b> {facts_note(data, registry_checked)}</p>'
+
 
 
 def build_page(school, people, others, header, footer, teacher_slugs):
