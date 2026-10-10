@@ -2202,6 +2202,8 @@ body{background:#eef1fc}
 .sp-badges{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 6px;padding:0;list-style:none}
 .sp-badges li{padding:6px 12px;border-radius:var(--r-pill);background:var(--blue);color:#fff;font-size:13px;font-weight:600}
 .sp-badges-note{max-width:640px;margin:0 0 18px;color:var(--muted);font-size:12.5px;line-height:1.45}
-.school-card-badges{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0;padding:0;list-style:none}
-.school-card-badges li{padding:4px 10px;border-radius:var(--r-pill);background:#e5e9ff;color:var(--blue);font-size:12px;font-weight:600}
+.school-card-badges{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 0;padding:0;list-style:none}
+.school-card-badges li{display:flex;align-items:center;gap:5px;padding:6px 11px;border:1px solid transparent;border-radius:var(--r-pill);background:#e5e9ff;color:var(--blue);font-size:11px;font-weight:700;white-space:nowrap}
+.school-card-badges li:before{content:'★';font-size:10px}
+.school-card-badges+.school-card-priority{margin-top:6px}
 .badges-footnote{max-width:640px;margin:14px 0 0;color:var(--muted);font-size:12.5px;line-height:1.45}
