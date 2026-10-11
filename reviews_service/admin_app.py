@@ -10,7 +10,8 @@
 import json
 import logging
 import secrets
-from datetime import timedelta
+from datetime import timedelta, timezone
+from zoneinfo import ZoneInfo
 from pathlib import Path
 
 from aiohttp import web
@@ -21,8 +22,16 @@ from .models import Review, ReviewCriterionScore, ReviewProof, School, Teacher, 
 
 log = logging.getLogger("reviews.admin")
 STATIC = Path(__file__).with_name("admin_static")
+MOSCOW = ZoneInfo("Europe/Moscow")
 PAGE_CSP = ("default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; "
             "form-action 'none'; frame-ancestors 'none'; base-uri 'none'")
+
+
+def moscow(moment) -> str:
+    """Times are stored in UTC; the moderator reads Moscow time."""
+    if moment.tzinfo is None:
+        moment = moment.replace(tzinfo=timezone.utc)
+    return moment.astimezone(MOSCOW).strftime("%Y-%m-%d %H:%M")
 
 
 def create_app(settings, session_factory) -> web.Application:
@@ -86,7 +95,7 @@ def create_app(settings, session_factory) -> web.Application:
                 "id": r.id, "school": schools.get(r.school_id, "?"), "teacher": teachers.get(r.teacher_id),
                 "scores": json.loads(r.criteria_json or "{}"), "score": r.score, "positive": r.text_positive,
                 "negative": r.text_negative, "period": r.study_period, "status": r.moderation_status,
-                "verified": r.verified, "created": r.created_at.isoformat(timespec="minutes"),
+                "verified": r.verified, "created": moscow(r.created_at),
                 "proofs": proofs.get(r.id, []), "samePerson": same_person, "sameNetwork": same_ip,
             })
         return result

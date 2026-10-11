@@ -7,6 +7,8 @@ Wants=network-online.target
 User=egematch
 Group=egematch
 WorkingDirectory=/opt/egematch
+# The service writes naive UTC timestamps; TZ=UTC makes the database driver read them as UTC too.
+Environment=TZ=UTC
 EnvironmentFile=/etc/egematch/reviews-admin.env
 ExecStart=/opt/egematch/.venv/bin/python -m reviews_service admin
 Restart=always

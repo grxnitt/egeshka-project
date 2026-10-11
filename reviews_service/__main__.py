@@ -14,7 +14,10 @@ from .config import Settings
 async def serve(kind: str):
     settings = Settings()
     settings.check()
-    engine = create_async_engine(settings.database_url, pool_size=4, max_overflow=2, pool_pre_ping=True)
+    # The service writes naive UTC timestamps: the database session must read them as UTC (the server runs on Moscow time).
+    connect_args = {"server_settings": {"timezone": "UTC"}} if "asyncpg" in settings.database_url else {}
+    engine = create_async_engine(settings.database_url, pool_size=4, max_overflow=2, pool_pre_ping=True,
+                                 connect_args=connect_args)
     sessions = async_sessionmaker(engine, expire_on_commit=False)
     if kind == "public":
         app, port = public_api.create_app(settings, sessions), settings.public_port
