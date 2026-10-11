@@ -24,7 +24,7 @@ def chrome():
 def page(slug, title, description, body_class, main, script=None, index=True):
     header, mobile, footer, fonts = chrome()
     styles = "".join(f'  <link rel="stylesheet" href="{name}?v={version}">\n' for name, version in CSS.items())
-    scripts = '<script src="analytics-config.js?v=2"></script>\n<script src="analytics.js?v=27"></script>\n'
+    scripts = '<script src="analytics-config.js?v=2"></script>\n<script src="analytics.js?v=28"></script>\n'
     if script:
         scripts += f'<script type="module" src="{script}?v={JS_VERSION}"></script>\n'
     robots = "" if index else '  <meta name="robots" content="noindex">\n'

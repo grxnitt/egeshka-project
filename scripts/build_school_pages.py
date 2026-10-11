@@ -452,7 +452,7 @@ def build_page(school, people, others, header, footer, teacher_slugs):
 <script src="/supabase-config.js?v=2"></script>
 <script type="module" src="/school-live.js?v=1"></script>
 <script src="/analytics-config.js?v=2"></script>
-<script src="/analytics.js?v=27"></script>
+<script src="/analytics.js?v=28"></script>
 {NAV_SCRIPT}
 {FILTER_SCRIPT}
 </body>
@@ -523,7 +523,7 @@ def build_teacher_page(person, school, colleagues, header, footer):
 </main>
 {footer}
 <script src="/analytics-config.js?v=2"></script>
-<script src="/analytics.js?v=27"></script>
+<script src="/analytics.js?v=28"></script>
 {NAV_SCRIPT}
 </body>
 </html>

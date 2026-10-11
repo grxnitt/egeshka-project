@@ -89,9 +89,10 @@
     if (!match) return;
     const decimals = match[2] === undefined ? 0 : 1;
     const target = Number(decimals ? `${match[1]}.${match[2]}` : match[1]), start = performance.now();
-    const duration = decimals ? 900 : 1300, original = text.textContent;
+    // Whole numbers on the home page count slowly (about 3 seconds, a soft ease-out) while the visitor reads; scores stay quick.
+    const duration = decimals ? 900 : 3200, original = text.textContent;
     const step = now => {
-      const t = Math.min(1, (now - start) / duration), value = target * (1 - Math.pow(1 - t, 3));
+      const t = Math.min(1, (now - start) / duration), value = target * (decimals ? 1 - Math.pow(1 - t, 3) : 1 - Math.pow(1 - t, 2));
       text.textContent = original.replace(match[0], decimals ? value.toFixed(1).replace('.', ',') : String(Math.round(value)));
       if (t < 1) requestAnimationFrame(step); else text.textContent = original;
     };
