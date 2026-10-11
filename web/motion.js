@@ -76,21 +76,23 @@
   }, {passive: true});
   /* 4. Score bars fill and scores count up when they become visible. */
   // Counting up only the big score on a school page (seen once). On rating cards the number is what people read, so it stays still.
-  const scores = '.sp-score strong, .detail-score strong';
+  const scores = '.sp-score strong, .detail-score strong, .hs-fact b';
   const meters = '.meter-segments';
   // Panels whose background ornament runs only while they are on screen (CSS .motion-visible).
   const decor = '.hero-centered,.channel-section,.reviews,.rating-next';
   const seen = new WeakSet();
 
   function countUp(el) {
+    // "8,7" counts with one decimal; "30" and "210+" count as whole numbers and keep their suffix.
     const text = [...el.childNodes].find(n => n.nodeType === 3 && /\d/.test(n.textContent));
-    const match = text && text.textContent.match(/(\d+)[.,](\d)/);
+    const match = text && text.textContent.match(/(\d+)(?:[.,](\d))?/);
     if (!match) return;
-    const target = Number(`${match[1]}.${match[2]}`), start = performance.now(), duration = 900;
-    const original = text.textContent;
+    const decimals = match[2] === undefined ? 0 : 1;
+    const target = Number(decimals ? `${match[1]}.${match[2]}` : match[1]), start = performance.now();
+    const duration = decimals ? 900 : 1300, original = text.textContent;
     const step = now => {
       const t = Math.min(1, (now - start) / duration), value = target * (1 - Math.pow(1 - t, 3));
-      text.textContent = original.replace(match[0], value.toFixed(1).replace('.', ','));
+      text.textContent = original.replace(match[0], decimals ? value.toFixed(1).replace('.', ',') : String(Math.round(value)));
       if (t < 1) requestAnimationFrame(step); else text.textContent = original;
     };
     requestAnimationFrame(step);
