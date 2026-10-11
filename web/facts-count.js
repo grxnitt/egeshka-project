@@ -1,5 +1,5 @@
 /* The numbers on the home page ("30 школ", "210+ преподавателей") count up from zero, together, at an even pace,
-   and arrive at the same moment, about 7 seconds after the visitor can see them.
+   and arrive at the same moment, about 5 seconds after the visitor can see them.
 
    Why this is its own file, and not part of motion.js:
    - One owner. While the count runs, only this file writes the number. Another script writing the final value
@@ -13,7 +13,7 @@
 (function (root) {
   'use strict';
 
-  var DURATION = 7000;     // ms of painted time from 0 to the final number
+  var DURATION = 5200;     // ms of painted time from 0 to the final number
   var MAX_STEP = 50;       // ms: the most one frame may add to the clock
   var START_DELAY = 700;   // ms after the page has loaded (the headline intro and the catalog are done by then)
   var CRUISE = 0.8;        // constant speed up to this share of the time, then a soft landing

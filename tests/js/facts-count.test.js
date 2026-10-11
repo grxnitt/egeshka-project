@@ -50,7 +50,7 @@ assert.ok(Math.abs((fc.ease(0.8001) - fc.ease(0.8)) / 0.0001 - 1) < 0.01, 'speed
   for (const list of trace) assert.ok(list.every((v, i) => !i || v >= list[i - 1]), 'never goes backwards');
   assert.ok(maxJump(big) <= 2 && maxJump(small) <= 1, 'no frame jumps ahead');
   assert.equal(new Set(big).size >= 200, true, `every number on the way is shown (saw ${new Set(big).size} different)`);
-  const half = Math.round(big.length * (3500 / fc.DURATION));
+  const half = Math.round(big.length * 0.5);
   assert.ok(Math.abs(big[half] - 105) <= 4 && Math.abs(small[half] - 15) <= 1, 'evenly: halfway in time is halfway in number');
   assert.equal(items[0].el.textContent, '30'); assert.equal(items[1].el.textContent, '210+');
   assert.equal(items.every(item => !item.el.dataset.counting), true, 'ownership is given back');
@@ -77,7 +77,7 @@ assert.ok(Math.abs((fc.ease(0.8001) - fc.ease(0.8)) / 0.0001 - 1) < 0.01, 'speed
 {
   const items = make('210+');
   let jumpAt = null;
-  const {trace} = simulate(items, {onFrame: (index, t) => { if (t > 3500 && jumpAt === null) { jumpAt = index; fc.setFact(items[0].el, '220+'); } }});
+  const {trace} = simulate(items, {onFrame: (index, t) => { if (t > fc.DURATION / 2 && jumpAt === null) { jumpAt = index; fc.setFact(items[0].el, '220+'); } }});
   assert.equal(items[0].el.textContent, '220+');
   assert.ok(maxJump(trace[0]) <= 7, `retargeting is not a jump (largest ${maxJump(trace[0])})`);
 }
