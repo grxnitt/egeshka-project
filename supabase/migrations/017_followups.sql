@@ -13,5 +13,8 @@ create table if not exists public.followups (
 create index if not exists followups_telegram_id_idx on public.followups (telegram_id);
 create index if not exists followups_next_due_at_idx on public.followups (next_due_at);
 alter table public.followups enable row level security;
+drop policy if exists followups_bot_write on public.followups;
+create policy followups_bot_write on public.followups for all to egeshka_bot_app using (true) with check (true);
+revoke all on public.followups from anon, authenticated;
 grant select, insert, update, delete on public.followups to egeshka_bot_app;
 grant usage, select on all sequences in schema public to egeshka_bot_app;
