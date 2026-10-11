@@ -426,7 +426,6 @@ def build_page(school, people, others, header, footer, teacher_slugs):
     )
     compare_url = "/compare?compareLeft=" + re.sub(r"\s", "+", school["name"])
     review_url = f'/review?school={slug}'
-    card_url = f'{BOT}?start=school_{slug}'
     lead_url = choose_school_url(school)
     slug_map = json.dumps({p["name"]: p["slug"] for p in people}, ensure_ascii=False)
     body = f"""<body class="school-page-body">
@@ -443,7 +442,7 @@ def build_page(school, people, others, header, footer, teacher_slugs):
   <section class="sp-section"><h2 class="t-h3">Предметы ({len(school["subjects"])})</h2><ul class="sp-chips">{subjects}</ul></section>
   <section class="sp-facts"><article><h2 class="t-title">Стоимость</h2><p>{escape(school["price"])}</p><p class="sp-inline-link"><a href="{escape(school["url"])}" target="_blank" rel="noopener">Проверить актуальные цены на сайте школы ↗</a></p></article><article><h2 class="t-title">Формат обучения</h2><p>{escape(school["format"])}</p></article><article><h2 class="t-title">Почему выбирают</h2><p>{escape(school["strengths"])}</p></article><article><h2 class="t-title">Что проверить перед покупкой</h2><p>{escape(school["weaknesses"])}</p></article></section>
   {teachers_block}
-  <div class="sp-actions"><a class="button blue" href="{lead_url}" target="_blank" rel="noopener" data-choose-school="{escape(school["name"])}" data-source="school_page">Выбрать школу <span>↗</span></a><a class="button dark" href="{card_url}" target="_blank" rel="noopener" data-source="school_page">Курсы в боте <span>↗</span></a><a class="button outline" href="{compare_url}">Сравнить с другой школой <span>→</span></a><a class="button outline" href="{review_url}">Оставить отзыв <span>→</span></a></div>
+  <div class="sp-actions"><a class="button blue" href="{lead_url}" target="_blank" rel="noopener" data-choose-school="{escape(school["name"])}" data-source="school_page">Выбрать школу <span>↗</span></a><a class="button dark" href="{review_url}" data-source="school_page_review">Оставить отзыв <span>→</span></a><a class="button outline" href="{compare_url}">Сравнить с другой школой <span>→</span></a></div>
   <p class="sp-site-link">В боте: тарифы, преподаватели и отзывы учеников. Условия и цены школа публикует на <a href="{escape(school["url"])}" target="_blank" rel="noopener">официальном сайте ↗</a></p>
   <section class="sp-section"><h2 class="t-h3">Другие школы</h2><nav class="sp-more" aria-label="Другие школы">{other_links}</nav><p class="sp-more-all"><a href="/ratings">Весь рейтинг →</a></p></section>
   {legal_block(school)}
@@ -484,7 +483,6 @@ def build_teacher_page(person, school, colleagues, header, footer):
         else "Появятся, когда наберётся вес трёх подтверждённых отзывов."
     )
     review_url = f"/review?teacher={person['slug']}"
-    card_url = f"{BOT}?start=school_{school_slug}"
     lead_url = choose_school_url(school)
     if has_criteria:
         reviews_intro = f'<p class="sp-hint">{escape(reviews_hint)}</p>'
@@ -516,7 +514,7 @@ def build_teacher_page(person, school, colleagues, header, footer):
   </section>
   <section class="sp-section"><h2 class="t-h3">О преподавателе</h2><p class="sp-body">{escape(person.get("description") or "")}</p></section>
   <section class="sp-section"><h2 class="t-h3">Оценки учеников</h2>{reviews_intro}<ul class="sp-criteria">{rows}</ul></section>
-  <div class="sp-actions"><a class="button blue" href="{lead_url}" target="_blank" rel="noopener" data-choose-school="{escape(school["name"])}" data-source="teacher_page">Выбрать школу <span>↗</span></a><a class="button dark" href="{card_url}" target="_blank" rel="noopener" data-source="teacher_page">Курсы школы в боте <span>↗</span></a><a class="button outline" href="{school_url}">О школе <span>→</span></a><a class="button outline" href="{review_url}">Оставить отзыв <span>→</span></a></div>
+  <div class="sp-actions"><a class="button blue" href="{lead_url}" target="_blank" rel="noopener" data-choose-school="{escape(school["name"])}" data-source="teacher_page">Выбрать школу <span>↗</span></a><a class="button dark" href="{review_url}" data-source="teacher_page_review">Оставить отзыв <span>→</span></a><a class="button outline" href="{school_url}">О школе <span>→</span></a></div>
   <p class="sp-site-link">Профиль на сайте школы: <a href="{escape(person["url"])}" target="_blank" rel="noopener">{escape(person["name"])} ↗</a></p>
   <section class="sp-section"><h2 class="t-h3">Другие преподаватели школы</h2><nav class="sp-more" aria-label="Другие преподаватели школы">{other_links}</nav><p class="sp-more-all"><a href="{school_url}#teachers">Все преподаватели школы →</a></p></section>
   <section class="sp-legal" aria-label="Правовая информация"><p>Имя, предметы и описание преподавателя приведены по открытым данным с сайта школы. Оценки — мнение учеников, оставивших отзывы. Если вы преподаватель и хотите исправить или убрать эту страницу, напишите на <a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a> — сделаем в течение 10 рабочих дней.</p></section>
