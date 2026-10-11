@@ -1478,24 +1478,32 @@ body.compare-page{overflow-x:clip}
 .review-combo-list .review-combo-empty{color:var(--muted);cursor:default}
 @media(hover:hover){.review-combo-list .review-combo-empty:hover{background:none}}
 .reviews-count{margin:0;font-size:13px;color:var(--muted)}
-.review-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-.review-card{background:var(--paper);border-radius:var(--r-lg);padding:22px;display:flex;flex-direction:column;gap:10px}
-.review-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.review-card-head a{font-weight:700;font-size:15px;text-decoration:underline;text-underline-offset:3px}
-.review-card-head a span{font-weight:400;color:var(--muted);text-decoration:none}
-.review-score{flex-shrink:0;font-family:var(--font-ui);font-weight:700;font-size:20px;color:var(--blue)}
-.review-score small{font-weight:600;font-size:11px;color:var(--muted)}
-.review-card-meta{display:flex;gap:12px;font-size:11px;color:var(--muted)}
-.review-verified{color:#1c8a4b;font-weight:700}
-.review-unverified{color:var(--muted)}
-.review-criteria{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
-.review-criteria li{display:flex;align-items:center;gap:6px;background:white;border-radius:var(--r-pill);padding:6px 12px;font-size:11px}
-.review-criteria b{color:var(--blue)}
-.review-card p{margin:0;font-size:13px;line-height:1.55;color:#4f5567}
-.review-card p b{color:var(--ink)}
+.review-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.review-card{background:#fff;border:1px solid var(--surface-line);border-radius:var(--r-lg);padding:22px;display:flex;flex-direction:column;gap:14px;transition:box-shadow .25s var(--ease-out),border-color .25s var(--ease-out)}
+@media(hover:hover){.review-card:hover{border-color:#d3d8f3;box-shadow:0 14px 30px -18px rgb(52 75 216/.35)}}
+.review-card-head{display:flex;align-items:center;gap:12px}
+.review-school-mark{width:42px;height:42px;flex-shrink:0;font-size:17px!important;border-radius:var(--r-md)}
+.review-school-mark.is-long{font-size:13px!important}
+.review-title{display:grid;min-width:0;flex:1}
+.review-title a{font-weight:700;font-size:16px;line-height:1.25;letter-spacing:-.2px;overflow-wrap:anywhere}
+@media(hover:hover){.review-title a:hover{color:var(--blue)}}
+.review-title small{font-size:12px;color:var(--muted);line-height:1.35}
+.review-score{flex-shrink:0;align-self:flex-start;padding:6px 11px;border-radius:var(--r-md);background:#eef0ff;font:700 20px/1 var(--font-ui);color:var(--blue);font-variant-numeric:tabular-nums}
+.review-score small{font-weight:600;font-size:11px;color:#7d86c4}
+.review-card-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;font-size:12px;color:var(--muted)}
+.review-badge{padding:3px 9px;border-radius:var(--r-pill);background:var(--surface-soft);font-weight:600}
+.review-badge.is-verified{background:#e6f5ec;color:#1d7f47}
+.review-criteria{list-style:none;margin:0;padding:12px 14px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 18px;background:var(--surface-soft);border-radius:var(--r-md)}
+.review-criteria li{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;line-height:1.5;color:#4f5567}
+.review-criteria b{color:var(--blue);font-variant-numeric:tabular-nums}
+.review-text h4{margin:0 0 2px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+.review-text.is-plus h4{color:#1d7f47}
+.review-text.is-minus h4{color:#c2185b}
+.review-card p{margin:0;font-size:14px;line-height:1.55;color:#3f4456;white-space:pre-line;overflow-wrap:anywhere}
+.review-empty{color:var(--muted)!important;font-size:13px!important}
 .review-empty{color:var(--muted);font-style:italic}
 .review-empty-state{grid-column:1/-1;text-align:center;color:var(--muted);padding:30px 0}
-@media(max-width:700px){.review-list{grid-template-columns:1fr}.reviews-controls{flex-direction:column;align-items:stretch}.review-combo{max-width:none}}
+@media(max-width:700px){.review-criteria{grid-template-columns:1fr}.review-list{grid-template-columns:1fr}.reviews-controls{flex-direction:column;align-items:stretch}.review-combo{max-width:none}}
 
 /* School page: the main lead action right under the score, not seven screens down. */
 .sp-hero-cta{display:inline-flex;margin-top:24px}

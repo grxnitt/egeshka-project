@@ -1,4 +1,4 @@
-import { incrementArticleView, fetchArticleViews, fetchArticleViewsBatch } from './supabase-client.js?v=7';
+import { incrementArticleView, fetchArticleViews, fetchArticleViewsBatch } from './supabase-client.js?v=8';
 
 function pluralViews(n) {
   const mod10 = n % 10, mod100 = n % 100;

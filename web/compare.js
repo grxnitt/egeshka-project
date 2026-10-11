@@ -1,6 +1,6 @@
 import { chooseSchoolUrl, priceContext } from './school-content.js?v=48';
 import { priceDetails, relativeStrengths } from './comparison.js?v=34';
-import { applyLiveRatings, teacherRatingLabel } from './supabase-client.js?v=7';
+import { applyLiveRatings, teacherRatingLabel } from './supabase-client.js?v=8';
 import { teacherSubjects } from './subjects.js?v=1';
 const $ = selector => document.querySelector(selector);
 const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

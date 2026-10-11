@@ -1,8 +1,11 @@
-import { applyLiveRatings, fetchPublicReviews } from './supabase-client.js?v=7';
+import { applyLiveRatings, fetchPublicReviews } from './supabase-client.js?v=8';
+import { schoolInitial, schoolLogos, schoolTone } from './school-content.js?v=48';
 
 const $ = selector => document.querySelector(selector);
 const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = n => Number(n).toFixed(1).replace('.', ',');
+const grade = n => Number.isInteger(Number(n)) ? String(Number(n)) : number(n);   // review scores are whole numbers 1-10
+const PERIODS = {'2026/27': 'учился в 2026/27', '2025/26': 'учился в 2025/26', '2024/25': 'учился в 2024/25', earlier: 'учился раньше 2024 года'};
 
 const SCHOOL_CRITERIA = {teachers_score:'Преподаватели',practice_score:'Практика и ДЗ',feedback_score:'Проверка работ',curator_score:'Кураторы',platform_score:'Платформа',workload_score:'Нагрузка и темп',organization_score:'Организация обучения'};
 const TEACHER_CRITERIA = {explanation:'Объяснение материала',practice:'Практика и разбор ошибок',atmosphere:'Атмосфера и вовлечённость',structure:'Структура и темп занятий',exam_value:'Польза для экзамена'};
@@ -25,26 +28,38 @@ function criteriaRows(review) {
   } catch { /* ignore malformed criteria_json */ }
   if (!entries.length && review.criterion && labels[review.criterion]) entries = [[review.criterion, review.score]];
   if (!entries.length) return '';
-  return `<ul class="review-criteria">${entries.map(([key, value]) => `<li><span>${escape(labels[key])}</span><b>${number(value)}</b></li>`).join('')}</ul>`;
+  return `<ul class="review-criteria">${entries.map(([key, value]) => `<li><span>${escape(labels[key])}</span><b>${grade(value)}</b></li>`).join('')}</ul>`;
+}
+
+function mark(school) {
+  const logo = schoolLogos[school.name], letters = schoolInitial(school.name);
+  return `<span class="school-mark review-school-mark ${logo ? 'school-mark-logo ' : ''}${schoolTone(school.name)}-mark${letters.length > 1 ? ' is-long' : ''}" aria-hidden="true"><b>${escape(letters)}</b>${logo ? `<img src="${escape(logo)}" alt="" loading="lazy">` : ''}</span>`;
 }
 
 function reviewCard(review) {
   const school = schoolById(review.school_id);
   const teacher = review.teacher_id ? teacherById(review.teacher_id) : null;
   if (!school) return '';
-  const target = teacher ? `${escape(teacher.name)} <span>· ${escape(school.name)}</span>` : escape(school.name);
   const link = teacher ? `/teachers/${teacher.slug || ''}` : `/schools/${school.reviewSlug}`;
-  const date = review.created_at ? new Date(review.created_at).toLocaleDateString('ru-RU', {day:'numeric', month:'long', year:'numeric'}) : '';
+  const title = teacher ? escape(teacher.name) : escape(school.name);
+  const subtitle = teacher ? `${escape((teacher.subjects || [teacher.subject]).join(', '))} · ${escape(school.name)}` : 'школа целиком';
+  const date = review.created_at ? new Date(review.created_at).toLocaleDateString('ru-RU', {day: 'numeric', month: 'long', year: 'numeric'}) : '';
+  const meta = [
+    review.verified ? '<span class="review-badge is-verified">✓ подтверждён</span>' : '<span class="review-badge">без подтверждения</span>',
+    date ? `<span>${escape(date)}</span>` : '',
+    PERIODS[review.study_period] ? `<span>${PERIODS[review.study_period]}</span>` : '',
+  ].join('');
   const texts = [
-    review.text_positive ? `<p><b>Плюсы:</b> ${escape(review.text_positive)}</p>` : '',
-    review.text_negative ? `<p><b>Минусы:</b> ${escape(review.text_negative)}</p>` : '',
+    review.text_positive ? `<div class="review-text is-plus"><h4>Понравилось</h4><p>${escape(review.text_positive)}</p></div>` : '',
+    review.text_negative ? `<div class="review-text is-minus"><h4>Не понравилось</h4><p>${escape(review.text_negative)}</p></div>` : '',
   ].join('');
   return `<article class="review-card">
-    <div class="review-card-head">
-      <a href="${escape(link)}">${target}</a>
-      <span class="review-score">${number(review.score)}<small>/10</small></span>
-    </div>
-    <div class="review-card-meta">${review.verified ? '<span class="review-verified">✓ подтверждён</span>' : '<span class="review-unverified">без подтверждения</span>'}${date ? `<span>${escape(date)}</span>` : ''}</div>
+    <header class="review-card-head">
+      ${mark(school)}
+      <div class="review-title"><a href="${escape(link)}">${title}</a><small>${subtitle}</small></div>
+      <span class="review-score">${grade(review.score)}<small>/10</small></span>
+    </header>
+    <div class="review-card-meta">${meta}</div>
     ${criteriaRows(review)}
     ${texts || '<p class="review-empty">Без комментария — только оценки.</p>'}
   </article>`;
