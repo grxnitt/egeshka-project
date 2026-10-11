@@ -17,8 +17,8 @@ from pathlib import Path
 from aiohttp import web
 from sqlalchemy import delete, func, select
 
-from . import images, lead_admin_api, store
-from .models import Review, ReviewCriterionScore, ReviewProof, School, Teacher, User, utcnow
+from . import audit, console_tools, images, lead_admin_api, store
+from .models import Blocked, Review, ReviewCriterionScore, ReviewProof, School, Teacher, User, utcnow
 
 log = logging.getLogger("reviews.admin")
 STATIC = Path(__file__).with_name("admin_static")
@@ -68,7 +68,7 @@ def create_app(settings, session_factory) -> web.Application:
 
     async def asset(request):
         name = request.match_info["name"]
-        if name not in ("admin.js", "admin.css", "partners.js"):
+        if name not in ("admin.js", "admin.css", "partners.js", "tools.js"):
             raise web.HTTPNotFound()
         kind = "application/javascript" if name.endswith(".js") else "text/css"
         return web.Response(text=(STATIC / name).read_text(encoding="utf-8"), content_type=kind)
@@ -144,6 +144,16 @@ def create_app(settings, session_factory) -> web.Application:
             if review is None or review.source != "site":
                 raise web.HTTPNotFound()
             was_public = review.moderation_status == "approved"
+            block = data.get("block") if action == "reject" else None
+            if block in ("author", "network"):
+                owner = await session.get(User, review.user_id)
+                value, kind = (owner.email_hash, "email") if block == "author" else (review.ip_hash, "ip")
+                if value:
+                    exists = await session.scalar(select(func.count()).select_from(Blocked).where(Blocked.kind == kind, Blocked.value == value))
+                    if not exists:
+                        session.add(Blocked(kind=kind, value=value, reason=f"отзыв №{review.id}: {str(data.get('reason') or 'накрутка')[:120]}"))
+                else:
+                    block = None          # nothing to block (the network hash is gone after a decision)
             files = list((await session.execute(select(ReviewProof.file_name).where(
                 ReviewProof.review_id == review.id))).scalars())
             await session.execute(delete(ReviewProof).where(ReviewProof.review_id == review.id))
@@ -162,6 +172,8 @@ def create_app(settings, session_factory) -> web.Application:
                 review.verified = action == "approve" and data.get("verified") is True
                 review.moderated_at = utcnow()
                 review.ip_hash = None     # needed only to spot a flood while the review waited for moderation
+            await audit.record(session, f"review_{action}", f"отзыв №{review_id}",
+                               {"author": "автор заблокирован", "network": "сеть заблокирована"}.get(block, ""))
             await session.commit()
             if was_public or action == "approve":
                 await store.refresh_ratings(session)
@@ -179,4 +191,5 @@ def create_app(settings, session_factory) -> web.Application:
         web.post("/api/reviews/{id}/{action}", decide),
     ])
     lead_admin_api.register(app, settings, session_factory)
+    console_tools.register(app, settings, session_factory)
     return app

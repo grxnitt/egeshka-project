@@ -17,6 +17,7 @@ from sqlalchemy import func, select, text
 from egeshka_bot import lead_admin, leads
 from egeshka_bot.models import Lead, LeadSchool, School
 
+from . import audit
 from .lead_settings import LeadSettings
 
 SCHOOL_TEXT = {"legal_name": 200, "policy_url": 500, "delivery_email": 200, "webhook_url": 500, "tg_chat_id": 40,
@@ -159,6 +160,7 @@ def register(app: web.Application, settings, session_factory):
             missing = missing_labels(cfg)
             if cfg.enabled and missing:           # editing a live school must not leave it half-configured
                 cfg.enabled = False
+            await audit.record(session, "partner_save", school.name, "изменены данные школы" + ("; школа выключена: не хватает данных" if not cfg.enabled and missing else ""))
             await session.commit()
             counts = (await counts_by_school(session)).get(school_id, {"total": 0, "sent": 0, "waiting": 0, "withdrawn": 0})
             return web.json_response({"school": school_row(school, cfg, counts)})
@@ -173,6 +175,7 @@ def register(app: web.Application, settings, session_factory):
             if on and missing:
                 return web.json_response({"error": "Нельзя включить: не хватает — " + ", ".join(missing)}, status=400)
             cfg.enabled = on
+            await audit.record(session, "partner_on" if on else "partner_off", school.name)
             await session.commit()
             counts = (await counts_by_school(session)).get(school_id, {"total": 0, "sent": 0, "waiting": 0, "withdrawn": 0})
             return web.json_response({"school": school_row(school, cfg, counts)})
@@ -182,6 +185,7 @@ def register(app: web.Application, settings, session_factory):
         async with session_factory() as session:
             school, cfg = await ensure_config(session, school_id)
             cfg.webhook_secret = secrets.token_hex(24)
+            await audit.record(session, "partner_secret", school.name, "новый ключ подписи вебхука")
             await session.commit()
             return web.json_response({"secret": cfg.webhook_secret})   # shown once; hand it to the school
 
@@ -198,6 +202,8 @@ def register(app: web.Application, settings, session_factory):
                      "guardian": False, "source": "admin_test"}
             lead, _token, _dup = await leads.create_lead(session, school, clean, is_test=True)
             ok = await leads.deliver_lead(session, lead_settings, lead, school, cfg)
+            await audit.record(session, "partner_test", school.name, "доставлена" if ok else f"ошибка: {lead.last_error[:100]}")
+            await session.commit()
             return web.json_response({"ok": ok, "channels": lead.delivered_via, "error": lead.last_error, "id": lead.id,
                                       "asked": channels})
 
@@ -215,6 +221,7 @@ def register(app: web.Application, settings, session_factory):
                                   if session.bind.dialect.name == "postgresql" else
                                   text("update site_flags set value = :v, note = :n, updated_at = CURRENT_TIMESTAMP where key = 'leads_enabled'"),
                                   {"v": turning_on, "n": note})
+            await audit.record(session, "leads_global_on" if turning_on else "leads_global_off", "сайт", note)
             await session.commit()
             return web.json_response({"global": await flag(session)})
 
@@ -269,6 +276,7 @@ def register(app: web.Application, settings, session_factory):
                 lead.excluded_reason = ""
             else:
                 raise web.HTTPNotFound()
+            await audit.record(session, f"lead_{action}", f"заявка №{lead_id}", str(data.get("reason") or "")[:100])
             await session.commit()
             return web.json_response({"ok": True})
 

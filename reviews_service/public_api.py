@@ -17,10 +17,10 @@ import os
 import time
 
 from aiohttp import web
-from sqlalchemy import select
+from sqlalchemy import func, select
 
 from . import images, mailer, store, validation
-from .models import DeletionRequest, utcnow
+from .models import Blocked, DeletionRequest, ReviewProof, utcnow
 from .security import (MAX_CODE_ATTEMPTS, MAX_RESENDS, RESEND_COOLDOWN, Keys, RateLimiter, client_ip, new_code, new_token)
 from .validation import ReviewError
 
@@ -95,6 +95,12 @@ def create_app(settings, session_factory, sanitizer=None, send_mail=None) -> web
     def email_key(email: str) -> str:
         return keys.email(validation.identity_email(email))
 
+    async def is_blocked(session, email_hash: str, ip_hash: str) -> bool:
+        values = [value for value in (email_hash, ip_hash) if value]
+        if not values:
+            return False
+        return bool(await session.scalar(select(func.count()).select_from(Blocked).where(Blocked.value.in_(values))))
+
     async def form(request):
         if not limits["form_ip"].allow(client_ip(request)):
             return fail("Слишком много запросов. Попробуй позже.", 429)
@@ -149,6 +155,9 @@ def create_app(settings, session_factory, sanitizer=None, send_mail=None) -> web
         email_hash = email_key(email)
         school_id, teacher_id = validation.clean_target(data)
         async with session_factory() as session:
+            if await is_blocked(session, email_hash, keys.ip(ip)):
+                # Same answer as a transient failure: a blocked sender learns nothing about what was matched.
+                return fail("Не получилось принять отзыв. Если это ошибка, напиши на info@egematch.ru.", 403)
             school, teacher = await store.target(session, school_id, teacher_id)
         if school is None:
             return fail("Такой школы или преподавателя нет в каталоге. Обнови страницу.")
@@ -225,6 +234,12 @@ def create_app(settings, session_factory, sanitizer=None, send_mail=None) -> web
             draft = await store.draft_by_token(session, keys.token(str(data.get("draftToken", ""))))
             if draft is None:
                 return fail("Черновик отзыва не найден или устарел. Отправь отзыв заново.", 404)
+            if await is_blocked(session, draft.email_hash, draft.ip_hash):
+                names = list((await session.execute(select(ReviewProof.file_name).where(ReviewProof.draft_id == draft.id))).scalars())
+                await store.drop_draft(session, draft.id)
+                for name in names:
+                    images.remove_file(settings.proof_dir, name)
+                return fail("Не получилось принять отзыв. Если это ошибка, напиши на info@egematch.ru.", 403)
             result = store.check_code(draft, keys.code(draft.token_hash, code))
             if result == store.CodeResult.WRONG:
                 draft.attempts += 1

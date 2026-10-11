@@ -25,6 +25,19 @@ export async function applyLiveRatings(catalog) {
     clearTimeout(timeout);
     if (!response.ok) throw new Error(`rating snapshots: ${response.status}`);
     if (!teacherResponse.ok) throw new Error(`teacher rating snapshots: ${teacherResponse.status}`);
+    // Editorial scores edited in the console after the static files were built (optional: the catalog is the fallback).
+    try {
+      const liveScores = await fetch(`${config.url}/rest/v1/school_scores_public?select=school_id,teachers_score,practice_score,feedback_score,curator_score,platform_score,workload_score,organization_score,criteria_status`, {headers});
+      if (liveScores.ok) {
+        const byId = new Map((await liveScores.json()).map(item => [Number(item.school_id), item]));
+        catalog.schools.forEach(school => {
+          const live = byId.get(Number(school.id));
+          if (!live) return;
+          Object.keys(school.criteria || {}).forEach(key => { if (live[key] != null) school.criteria[key] = Number(live[key]); });
+          try { school.criteriaStatus = JSON.parse(live.criteria_status || '{}'); } catch { /* keep the catalog's statuses */ }
+        });
+      }
+    } catch { /* keep the catalog's scores */ }
     const snapshots = new Map((await response.json()).map(item => [Number(item.school_id), item]));
     catalog.schools.forEach(school => {
       const snapshot = snapshots.get(Number(school.id));

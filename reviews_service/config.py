@@ -24,6 +24,8 @@ class Settings(BaseSettings):
     telegram_bot_token: str = ""      # only to post a lead into a school's Telegram group
     telegram_api_base: str = ""       # a relay URL, because api.telegram.org is blocked from Russian servers
     leads_alert_email: str = ""       # where "a lead could not be delivered" goes
+    postgrest_url: str = "http://127.0.0.1:3000"   # for the health check
+    backup_status_file: str = "/var/lib/egematch/backup-status.json"   # written by the nightly backup job
     model_config = SettingsConfigDict(env_prefix="REVIEWS_", env_file=None, extra="ignore")
 
     @property

@@ -24,6 +24,14 @@ class School(Base):
     name: Mapped[str] = mapped_column(String(120), unique=True)
     criteria_status: Mapped[str] = mapped_column(Text, default="{}")
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    teachers_score: Mapped[float] = mapped_column(Float, default=7.0)
+    practice_score: Mapped[float] = mapped_column(Float, default=7.0)
+    feedback_score: Mapped[float] = mapped_column(Float, default=7.0)
+    curator_score: Mapped[float] = mapped_column(Float, default=7.0)
+    platform_score: Mapped[float] = mapped_column(Float, default=7.0)
+    workload_score: Mapped[float] = mapped_column(Float, default=7.0)
+    organization_score: Mapped[float] = mapped_column("price_quality_score", Float, default=7.0)
+    scores_reviewed_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
 
 
 class Teacher(Base):
@@ -120,3 +128,31 @@ class SiteFlag(Base):
     value: Mapped[bool] = mapped_column(Boolean, default=False)
     note: Mapped[str] = mapped_column(String(300), default="")
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+
+
+class AdminLog(Base):
+    __tablename__ = "admin_log"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    at: Mapped[datetime] = mapped_column(DateTime, default=utcnow, index=True)
+    action: Mapped[str] = mapped_column(String(60))
+    target: Mapped[str] = mapped_column(String(120), default="")
+    detail: Mapped[str] = mapped_column(String(500), default="")
+
+
+class Blocked(Base):
+    """Keyed hash of an email or a network that may not send reviews any more."""
+    __tablename__ = "blocked"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    kind: Mapped[str] = mapped_column(String(10))
+    value: Mapped[str] = mapped_column(String(64))
+    reason: Mapped[str] = mapped_column(String(200), default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+
+
+class SchoolScoreHistory(Base):
+    __tablename__ = "school_score_history"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    school_id: Mapped[int] = mapped_column(ForeignKey("schools.id", ondelete="CASCADE"), index=True)
+    at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+    reason: Mapped[str] = mapped_column(String(500))
+    changes: Mapped[str] = mapped_column(Text, default="{}")

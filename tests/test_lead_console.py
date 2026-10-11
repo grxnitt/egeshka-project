@@ -14,7 +14,7 @@ from reviews_service import admin_app
 from reviews_service.config import Settings
 from reviews_service.lead_admin_api import FieldError, clean_school_update
 from reviews_service.lead_settings import LeadSettings
-from reviews_service.models import SiteFlag
+from reviews_service.models import AdminLog, SiteFlag
 
 LOCAL = {"Host": "127.0.0.1:8090"}
 
@@ -40,6 +40,7 @@ async def make_env(tmp_path):
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
         await conn.run_sync(lambda sync: SiteFlag.__table__.create(sync))
+        await conn.run_sync(lambda sync: AdminLog.__table__.create(sync))
     sessions = async_sessionmaker(engine, expire_on_commit=False)
     async with sessions() as session:
         session.add(School(id=1, name="Школа", description="", official_url="https://school.example", subjects="Русский", monthly_price_from=0))

@@ -12,12 +12,16 @@
 <header class="top">
   <h1>ЕГЭ Мэтч · панель</h1>
   <nav class="views" aria-label="Раздел">
-    <button type="button" data-view="reviews" class="active">Отзывы</button>
+    <button type="button" data-view="dashboard" class="active">Сводка</button>
+    <button type="button" data-view="reviews">Отзывы</button>
     <button type="button" data-view="partners">Школы</button>
     <button type="button" data-view="leads">Заявки</button>
+    <button type="button" data-view="scores">Оценки</button>
+    <button type="button" data-view="journal">Журнал</button>
   </nav>
 </header>
-<main id="view-reviews">
+<main id="view-dashboard" class="wide"><div id="dashboard-root" aria-live="polite"></div></main>
+<main id="view-reviews" hidden>
   <nav class="tabs" aria-label="Статус">
     <button type="button" data-status="pending" class="active">На модерации <span id="count-pending"></span></button>
     <button type="button" data-status="approved">Опубликованные</button>
@@ -28,8 +32,11 @@
 </main>
 <main id="view-partners" hidden class="wide"><div id="partners-root" aria-live="polite"></div></main>
 <main id="view-leads" hidden class="wide"><div id="leads-root" aria-live="polite"></div></main>
+<main id="view-scores" hidden class="wide"><div id="scores-root" aria-live="polite"></div></main>
+<main id="view-journal" hidden class="wide"><div id="journal-root" aria-live="polite"></div></main>
 <dialog id="viewer"><img id="viewer-img" alt="Скриншот"><button type="button" id="viewer-close">Закрыть</button></dialog>
 <script src="/static/admin.js"></script>
 <script src="/static/partners.js"></script>
+<script src="/static/tools.js"></script>
 </body>
 </html>

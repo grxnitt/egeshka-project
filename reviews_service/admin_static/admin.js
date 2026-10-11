@@ -47,6 +47,12 @@ function card(review) {
       el('button', {type: 'button', class: 'ok', onclick: () => decide(review.id, 'approve', {verified: false})}, 'Опубликовать'),
       review.proofs.length ? el('button', {type: 'button', class: 'ok strong', onclick: () => decide(review.id, 'approve', {verified: true})}, 'Опубликовать как подтверждённый') : null,
       el('button', {type: 'button', class: 'no', onclick: () => decide(review.id, 'reject')}, 'Отклонить'),
+      el('button', {type: 'button', class: 'no soft', onclick: () => {
+        if (confirm('Отклонить отзыв и заблокировать автора (его почту)? Он больше не сможет отправлять отзывы.')) decide(review.id, 'reject', {block: 'author', reason: 'накрутка'});
+      }}, 'Отклонить и заблокировать автора'),
+      el('button', {type: 'button', class: 'no soft', onclick: () => {
+        if (confirm('Отклонить отзыв и заблокировать сеть, откуда он пришёл? Это может задеть других людей из той же сети (общий Wi-Fi, один оператор).')) decide(review.id, 'reject', {block: 'network', reason: 'накрутка'});
+      }}, 'и сеть'),
     ].filter(Boolean));
   } else {
     actions.append(el('button', {type: 'button', class: 'no', onclick: () => {

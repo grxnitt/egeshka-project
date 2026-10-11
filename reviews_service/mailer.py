@@ -29,6 +29,20 @@ def _send(settings, to: str, subject: str, body: str) -> None:
             smtp.send_message(message)
 
 
+def check_login(settings) -> None:
+    """Raises if the mailbox cannot be logged in to (used by the console health check; nothing is sent)."""
+    if not settings.smtp_host or not settings.smtp_user:
+        raise MailError("SMTP is not configured")
+    context = ssl.create_default_context()
+    if settings.smtp_port == 465:
+        with smtplib.SMTP_SSL(settings.smtp_host, settings.smtp_port, timeout=12, context=context) as smtp:
+            smtp.login(settings.smtp_user, settings.smtp_password)
+    else:
+        with smtplib.SMTP(settings.smtp_host, settings.smtp_port, timeout=12) as smtp:
+            smtp.starttls(context=context)
+            smtp.login(settings.smtp_user, settings.smtp_password)
+
+
 async def send(settings, to: str, subject: str, body: str) -> None:
     if not settings.smtp_host or not settings.smtp_user:
         raise MailError("SMTP is not configured")

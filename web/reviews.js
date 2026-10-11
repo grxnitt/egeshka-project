@@ -1,4 +1,4 @@
-import { applyLiveRatings, fetchPublicReviews } from './supabase-client.js?v=8';
+import { applyLiveRatings, fetchPublicReviews } from './supabase-client.js?v=9';
 import { schoolInitial, schoolLogos, schoolTone } from './school-content.js?v=48';
 
 const $ = selector => document.querySelector(selector);

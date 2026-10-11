@@ -198,18 +198,18 @@ def teacher_card(person, index=0):
     )
 
 
-def criterion_row(label, value, status="yes"):
+def criterion_row(label, value, status="yes", key=""):
     """One criterion of a school. status: yes | tier (only on some tariffs) | none (not offered, not scored)."""
     if status == "none" or value is None:
         return (
-            f'<li class="sp-empty"><span class="sp-crit-name">{escape(label)}</span>'
+            f'<li class="sp-empty" data-crit="{key}" data-label="{escape(label, quote=True)}"><span class="sp-crit-name">{escape(label)}</span>'
             '<em>Не предусмотрено</em></li>'
         )
     tier = ' <small class="sp-tier">зависит от тарифа</small>' if status == "tier" else ""
     score = max(0.0, min(10.0, float(value)))
     segments = "".join(f'<i style="--fill:{max(0.0, min(1.0, score - i)) * 100:.0f}%"></i>' for i in range(10))
     return (
-        f'<li><span class="sp-crit-name">{escape(label)}{tier}</span>'
+        f'<li data-crit="{key}" data-label="{escape(label, quote=True)}"><span class="sp-crit-name">{escape(label)}{tier}</span>'
         f'<div class="sp-crit-meter"><span class="meter-value">{num(score)}</span>'
         f'<span class="meter meter-segments" aria-hidden="true">{segments}</span></div></li>'
     )
@@ -389,7 +389,7 @@ def build_page(school, people, others, header, footer, teacher_slugs):
     url = f"{SITE}/schools/{slug}"
     status = school.get("criteriaStatus") or {}
     criteria_rows = "".join(
-        criterion_row(label, school["criteria"][key], status.get(key, "yes"))
+        criterion_row(label, school["criteria"][key], status.get(key, "yes"), key)
         for key, label in CRITERIA.items()
         if key in school["criteria"]
     )
@@ -435,9 +435,9 @@ def build_page(school, people, others, header, footer, teacher_slugs):
   <p class="back-row"><a class="back-link" href="/ratings" data-back="/ratings">← К рейтингу</a></p>
   <section class="hero hero-centered school-hero">
     <div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div class="hero-glow hero-glow-pink" aria-hidden="true"></div>
-    <div class="hero-copy"><h1>{escape(school["name"])}</h1><p class="lead">{escape(school["description"])}</p><div class="sp-score"><small>Оценка ЕГЭ Мэтча</small><strong>{num(school["score"])}</strong><span>из 10</span></div></div>
+    <div class="hero-copy"><h1>{escape(school["name"])}</h1><p class="lead">{escape(school["description"])}</p><div class="sp-score"><small>Оценка ЕГЭ Мэтча</small><strong id="sp-score-value">{num(school["score"])}</strong><span id="sp-score-note">из 10</span></div></div>
   </section>
-  <section class="sp-section"><h2 class="t-h3">Оценка по критериям</h2>{badges_block}<ul class="sp-criteria">{criteria_rows}</ul>{missing_note}<a class="button blue sp-hero-cta" href="{lead_url}" target="_blank" rel="noopener" data-choose-school="{escape(school["name"])}" data-source="school_page_criteria">Выбрать школу <span>↗</span></a></section>
+  <section class="sp-section"><h2 class="t-h3">Оценка по критериям</h2>{badges_block}<ul class="sp-criteria" id="sp-criteria" data-school-id="{school["id"]}">{criteria_rows}</ul>{missing_note}<a class="button blue sp-hero-cta" href="{lead_url}" target="_blank" rel="noopener" data-choose-school="{escape(school["name"])}" data-source="school_page_criteria">Выбрать школу <span>↗</span></a></section>
   {facts_block(school)}
   <section class="sp-section"><h2 class="t-h3">Предметы ({len(school["subjects"])})</h2><ul class="sp-chips">{subjects}</ul></section>
   <section class="sp-facts"><article><h2 class="t-title">Стоимость</h2><p>{escape(school["price"])}</p><p class="sp-inline-link"><a href="{escape(school["url"])}" target="_blank" rel="noopener">Проверить актуальные цены на сайте школы ↗</a></p></article><article><h2 class="t-title">Формат обучения</h2><p>{escape(school["format"])}</p></article><article><h2 class="t-title">Почему выбирают</h2><p>{escape(school["strengths"])}</p></article><article><h2 class="t-title">Что проверить перед покупкой</h2><p>{escape(school["weaknesses"])}</p></article></section>
@@ -449,6 +449,8 @@ def build_page(school, people, others, header, footer, teacher_slugs):
 </main>
 {footer}
 <script>window.TEACHER_SLUGS={slug_map};</script>
+<script src="/supabase-config.js?v=2"></script>
+<script type="module" src="/school-live.js?v=1"></script>
 <script src="/analytics-config.js?v=2"></script>
 <script src="/analytics.js?v=26"></script>
 {NAV_SCRIPT}

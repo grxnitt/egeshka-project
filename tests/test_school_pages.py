@@ -65,3 +65,10 @@ def test_ratings_cards_are_plain_links_to_school_pages():
     assert '<a class="card-open" href="/schools/${school.reviewSlug}">' in script
     assert '<a class="card-teachers" href="/schools/${school.reviewSlug}#teachers">' in script
     assert "location.replace(`/schools/" in script and "location.replace(`/teachers/" in script
+
+
+def test_school_pages_carry_what_the_live_script_needs():
+    from pathlib import Path
+    html = (Path("web") / "schools" / "umskul.html").read_text(encoding="utf-8")
+    assert 'id="sp-criteria" data-school-id="1"' in html and 'data-crit="teachers_score"' in html
+    assert 'id="sp-score-value"' in html and '/school-live.js' in html and '/supabase-config.js' in html
