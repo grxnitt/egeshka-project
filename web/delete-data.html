@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FAF8F5">
+  <meta name="description" content="Удаление отзывов и данных, оставленных на сайте ЕГЭ Мэтч, по коду из письма.">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://egematch.ru/delete-data">
+  <title>Удалить мои данные — ЕГЭ Мэтч</title>
+  <link rel="icon" href="assets/egeshka-logo-icon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="preload" href="/assets/fonts/geologica-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/unbounded-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/onest-symbols-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css?v=37">
+  <link rel="stylesheet" href="refinements.css?v=46">
+  <link rel="stylesheet" href="typography.css?v=31">
+  <link rel="stylesheet" href="composition.css?v=252">
+  <link rel="stylesheet" href="review-form.css?v=1">
+</head>
+<body class="review-form-page">
+<header class="header wrap"><a class="logo" href="/" aria-label="ЕГЭ Мэтч, главная">ЕГЭ Мэтч<span>.</span></a><nav aria-label="Главная навигация"><a href="/ratings">Рейтинг школ</a><a href="/compare">Сравнение</a><a href="/reviews">Отзывы</a><a href="/articles">Статьи</a></nav><a class="header-action" href="/?start=quiz">Подобрать <span>→</span></a></header>
+<main class="rf-page">
+  <section class="hero hero-centered rating-centered wrap privacy-hero rf-hero">
+    <div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div class="hero-glow hero-glow-pink" aria-hidden="true"></div>
+    <div class="hero-copy"><h1><span class="hero-title-line">Удалить</span> <span class="hero-title-line brand-dot">мои данные</span></h1><p class="lead">Удалим все отзывы, оставленные с твоей почты, и всё, что с ними связано. Восстановить их будет нельзя.</p></div>
+  </section>
+  <div class="wrap rf-layout rf-layout-narrow">
+    <div class="rf-card" id="dd-root">
+      <p id="rf-alert" class="rf-alert" role="alert" hidden></p>
+      <form id="dd-form" novalidate>
+        <h2>Отзывы на сайте</h2>
+        <label class="rf-field"><span>Почта, с которой ты оставлял отзывы</span><input type="email" id="dd-email" autocomplete="email" inputmode="email" maxlength="254" placeholder="you@example.ru"></label>
+        <p class="rf-hint">Пришлём код подтверждения. Мы не подскажем, есть ли у этой почты отзывы: ответ одинаковый для любого адреса.</p>
+        <p class="rf-error" id="dd-email-error" aria-live="polite"></p>
+        <div class="rf-hp" aria-hidden="true"><label>Это поле заполнять не нужно<input type="text" id="dd-website" tabindex="-1" autocomplete="off"></label></div>
+        <button type="submit" class="button blue rf-submit" id="dd-send"><span class="rf-label">Получить код</span><span aria-hidden="true">→</span></button>
+      </form>
+      <form id="dd-code-form" hidden novalidate>
+        <h2>Проверь почту</h2>
+        <p>Код отправлен на <b id="dd-code-email"></b>. После ввода кода данные удалятся сразу и навсегда.</p>
+        <label class="rf-field"><span>Код из письма</span><input id="dd-code" class="rf-code-input" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000"></label>
+        <p class="rf-error" id="dd-code-error" aria-live="polite"></p>
+        <button type="submit" class="button pink rf-submit" id="dd-confirm"><span class="rf-label">Удалить навсегда</span><span aria-hidden="true">×</span></button>
+      </form>
+      <section id="dd-done" class="rf-done" hidden>
+        <div class="rf-done-mark" aria-hidden="true">✓</div>
+        <h2>Готово</h2>
+        <p id="dd-done-text"></p>
+      </section>
+      <div class="rf-divider"></div>
+      <h2>Данные в Telegram-боте</h2>
+      <p class="rf-hint">Подбор и отзывы в боте @egematch_bot хранятся отдельно. Чтобы удалить их, открой бота и отправь команду <code>/delete_data</code>.</p>
+      <a class="button outline" href="https://t.me/egematch_bot?start=delete_data" target="_blank" rel="noopener">Открыть бота <span>↗</span></a>
+      <p class="rf-fine">Если что-то не получается, напиши на <a href="mailto:info@egematch.ru">info@egematch.ru</a> — ответим в течение 30 дней, как требует закон.</p>
+    </div>
+  </div>
+</main>
+<nav class="mobile-product-nav" aria-label="Разделы сервиса"><a href="/?start=quiz">Подобрать</a><a href="/ratings">Рейтинг</a><a href="/compare">Сравнить</a><a href="/reviews">Отзывы</a></nav>
+<footer class="wrap footer site-footer"><div class="footer-brand"><a class="logo" href="/" aria-label="ЕГЭ Мэтч, главная">ЕГЭ Мэтч<span>.</span></a><p>Выбирай осознанно.<br>Готовься по-своему.</p></div><nav class="footer-col" aria-label="Сервис"><p class="footer-title">Сервис</p><a href="/ratings">Рейтинг школ</a><a href="/compare">Сравнение</a><a href="/reviews">Отзывы</a><a href="/articles">Статьи</a><a href="/methodology">Методология</a></nav><nav class="footer-col" aria-label="Документы"><p class="footer-title">Документы</p><a href="/privacy">Политика конфиденциальности</a><a href="/terms">Условия использования</a><a href="/delete-data">Удалить данные</a></nav><div class="footer-col"><p class="footer-title">Связь</p><a href="https://t.me/EgeMatch_blog" target="_blank" rel="noopener">Telegram-канал</a><a href="https://t.me/egematch_bot" target="_blank" rel="noopener">Бот @egematch_bot</a><a href="mailto:info@egematch.ru">info@egematch.ru</a></div><div class="footer-bottom"><span>© ЕГЭ Мэтч, 2026</span><a href="#">Наверх ↑</a></div></footer>
+<script src="analytics-config.js?v=2"></script>
+<script src="analytics.js?v=26"></script>
+<script type="module" src="delete-data.js?v=1"></script>
+
+</body></html>

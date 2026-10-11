@@ -199,7 +199,7 @@ function startQuiz(preset={}){
 $('#quiz-start').onclick=()=>startQuiz();
 // Step 3 of "how it works" opens the quiz in place; without JS the link reloads the page with ?start=quiz.
 document.querySelectorAll('[data-quiz-link]').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();$('#quiz-start').click();}));
-const applyLinks=()=>{$('#channel-link').href=links.channel;$('#review-link').href=links.bot;document.querySelectorAll('[data-bot-link]').forEach(link=>{link.href=links.bot;});};
+const applyLinks=()=>{$('#channel-link').href=links.channel;document.querySelectorAll('[data-bot-link]').forEach(link=>{link.href=links.bot;});};
 applyLinks();
 try{
  await catalogReady;

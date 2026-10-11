@@ -1,0 +1,110 @@
+/* Review form, "delete my data" and consent pages. Uses the site tokens from styles.css and composition.css. */
+.rf-hero{padding-bottom:28px}
+.rf-page{padding-bottom:72px}
+.rf-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:28px;align-items:start;margin-top:8px}
+.rf-layout-narrow{grid-template-columns:minmax(0,680px);justify-content:center}
+.rf-card{position:relative;background:#fff;border:1px solid var(--surface-line);border-radius:var(--r-xl);padding:clamp(22px,3.4vw,40px)}
+.rf-card h2{font-size:22px;letter-spacing:-.6px;margin:0 0 6px}
+
+.rf-step{padding:26px 0;border-bottom:1px solid var(--surface-line)}
+.rf-step:first-of-type{padding-top:4px}
+.rf-step h2{display:flex;flex-wrap:wrap;align-items:center;gap:12px;font-size:20px}
+.rf-step h2 em{font-style:normal;font-size:12px;font-weight:500;letter-spacing:0;color:var(--muted);border:1px solid var(--surface-line);border-radius:var(--r-pill);padding:3px 10px}
+.rf-num{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;font-size:14px;letter-spacing:0;flex-shrink:0}
+.rf-tabs{width:fit-content;margin:16px 0 4px}
+.rf-tabs button{white-space:nowrap}
+
+.rf-field{display:grid;gap:6px;margin-top:16px;font-size:13px;font-weight:600}
+.rf-field input,.rf-field select,.rf-field textarea{width:100%;border:1px solid var(--line);border-radius:var(--r-md);background:#fff;color:var(--ink);font:400 15px/1.45 var(--font-ui);padding:13px 14px;transition:border-color .2s var(--ease-out),box-shadow .2s var(--ease-out)}
+.rf-field select{appearance:none;padding-right:40px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2362656f' stroke-width='1.8'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 15px center}
+.rf-field select:disabled{color:var(--muted);background-color:var(--surface-soft)}
+.rf-field textarea{resize:vertical;min-height:112px}
+.rf-field input:focus,.rf-field select:focus,.rf-field textarea:focus{outline:0;border-color:var(--blue);box-shadow:0 0 0 3px #344bd826}
+.rf-count{justify-self:end;font-size:12px;font-weight:400;color:var(--muted);font-variant-numeric:tabular-nums}
+.rf-count.rf-over{color:#b3123f;font-weight:600}
+
+.rf-score{margin:0;padding:16px 0;border:0;border-bottom:1px dashed var(--surface-line);min-width:0}
+.rf-score:last-of-type{border-bottom:0}
+.rf-score legend{padding:0;display:grid;gap:1px}
+.rf-score legend b{font-size:15px}
+.rf-score legend small{font-size:12.5px;color:var(--muted)}
+.rf-pills{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:6px;margin-top:4px}
+.rf-pill,.rf-chip{position:relative}
+.rf-pill input,.rf-chip input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.rf-pill span{display:grid;place-items:center;height:40px;border:1px solid var(--line);border-radius:var(--r-sm);background:#fff;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;transition:background .15s,border-color .15s,color .15s}
+.rf-pill input:checked+span{background:var(--blue);border-color:var(--blue);color:#fff}
+.rf-pill input:focus-visible+span,.rf-chip input:focus-visible+span{outline:3px solid var(--pink);outline-offset:2px}
+.rf-pill-skip{grid-column:1/-1}
+.rf-pill-skip span{height:auto;padding:9px 12px;font-size:13px;font-weight:500;color:var(--muted)}
+.rf-pill-skip input:checked+span{background:var(--ink);border-color:var(--ink);color:#fff}
+.rf-invalid .rf-pills span{border-color:#e4869f;background:#fff7f9}
+.rf-invalid legend b{color:#b3123f}
+.rf-scale{margin:10px 0 0}
+@media(hover:hover){.rf-pill input:not(:checked):hover+span,.rf-chip input:not(:checked):hover+span{border-color:var(--blue);color:var(--blue)}}
+
+.rf-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.rf-chip span{display:inline-block;padding:10px 18px;border:1px solid var(--line);border-radius:var(--r-pill);background:#fff;font-size:14px;font-weight:600;transition:background .15s,border-color .15s,color .15s}
+.rf-chip input:checked+span{background:var(--blue);border-color:var(--blue);color:#fff}
+
+.rf-muted{color:var(--muted);font-size:13.5px;margin:12px 0 0}
+.rf-hint{color:var(--muted);font-size:13px;line-height:1.5;margin:10px 0 0}
+.rf-note{font-size:12.5px;line-height:1.5;background:var(--surface-soft);border-radius:var(--r-md);padding:12px 14px;margin:12px 0 0}
+.rf-error{color:#b3123f;font-size:13px;font-weight:600;line-height:1.45;margin:8px 0 0}
+.rf-error:empty{display:none}
+.rf-alert{background:#fdeaf0;border:1px solid #f3b6c8;color:#8e1236;border-radius:var(--r-md);padding:14px 16px;font-size:14px;margin:0 0 18px}
+
+.rf-files{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+.rf-files:empty{display:none}
+.rf-file{position:relative;margin:0;aspect-ratio:4/3;border:1px solid var(--surface-line);border-radius:var(--r-md);overflow:hidden;background:var(--surface-soft)}
+.rf-file img{display:block;width:100%;height:100%;object-fit:cover}
+.rf-file-remove{position:absolute;top:6px;right:6px;width:32px;height:32px;border:0;border-radius:50%;background:rgb(24 25 35/.75);color:#fff;font-size:18px;line-height:1}
+.rf-drop{position:relative;display:grid;place-items:center;gap:3px;margin-top:14px;padding:26px 18px;border:1.5px dashed #c5c9e6;border-radius:var(--r-lg);background:#f6f7fd;text-align:center;cursor:pointer;transition:border-color .2s,background .2s}
+.rf-drop input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.rf-drop b{color:var(--blue);font-size:15px}
+.rf-drop small{color:var(--muted);font-size:12px}
+.rf-drop:focus-within{outline:3px solid var(--pink);outline-offset:3px}
+.rf-drop.rf-drag{border-color:var(--blue);background:#eef0ff}
+@media(hover:hover){.rf-drop:hover{border-color:var(--blue)}}
+
+.rf-check{display:flex;gap:10px;align-items:flex-start;margin-top:18px;font-size:13.5px;line-height:1.5}
+.rf-check input{width:20px;height:20px;margin:1px 0 0;flex-shrink:0;accent-color:var(--blue)}
+.rf-check a,.rf-fine a,.rf-hint a{text-decoration:underline;text-underline-offset:3px}
+.rf-hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+
+.rf-submit{width:100%;margin-top:26px}
+.rf-submit:disabled{opacity:.7;cursor:progress;transform:none}
+.rf-fine{font-size:12.5px;color:var(--muted);text-align:center;margin:14px 0 0;line-height:1.5}
+
+.rf-code h2,.rf-done h2{font-size:28px;letter-spacing:-1px;margin:4px 0 10px}
+.rf-code p,.rf-done p{font-size:15px;color:#4a4d58;margin:0 0 6px}
+.rf-code-input{max-width:240px;font-size:26px!important;letter-spacing:.35em;text-align:center;font-variant-numeric:tabular-nums}
+.rf-code .rf-submit{max-width:320px}
+.rf-code-actions{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin-top:18px}
+.rf-link{border:0;background:none;padding:6px 0;color:var(--blue);font-size:13.5px;font-weight:600;text-decoration:underline;text-underline-offset:4px}
+.rf-link:disabled{color:var(--muted);text-decoration:none;cursor:default}
+.rf-done{text-align:center;padding:24px 0 8px}
+.rf-done-mark{display:grid;place-items:center;width:64px;height:64px;margin:0 auto 16px;border-radius:50%;background:#e6f5ec;color:#1d7f47;font-size:30px;font-weight:700}
+.rf-done-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:22px}
+.rf-done-actions .button{margin:0}
+.rf-divider{height:1px;background:var(--surface-line);margin:30px 0}
+
+.rf-aside{position:sticky;top:24px;background:#eef0ff;border-radius:var(--r-xl);padding:26px}
+.rf-aside h2{font-size:21px;letter-spacing:-.6px;margin:0 0 14px}
+.rf-aside ul{display:grid;gap:14px;margin:0;padding:0;list-style:none;font-size:14px;line-height:1.5;color:#3d4152}
+.rf-aside b{display:block;color:var(--ink)}
+
+#dd-form h2,#dd-code-form h2{margin-bottom:4px}
+#dd-code-form p{font-size:15px;margin:6px 0 0}
+.rf-card code{background:var(--surface-soft);border-radius:6px;padding:1px 6px;font-size:13px}
+.rf-card>.button.outline{margin-top:14px}
+
+@media(max-width:960px){.rf-layout{grid-template-columns:minmax(0,1fr)}.rf-aside{position:static}}
+@media(max-width:700px){
+  .rf-card{border-radius:var(--r-lg);padding:22px 16px}
+  .rf-step h2{font-size:18px}
+  .rf-pills{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .rf-pill span{height:44px}
+  .rf-tabs{width:100%}.rf-tabs button{flex:1}
+  .rf-code-actions{flex-direction:column;align-items:flex-start}
+}
+@media(prefers-reduced-motion:reduce){.rf-pill span,.rf-chip span,.rf-drop,.rf-field input,.rf-field select,.rf-field textarea{transition:none}}

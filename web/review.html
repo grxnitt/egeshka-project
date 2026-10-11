@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FAF8F5">
+  <meta name="description" content="Оставь анонимный отзыв об онлайн-школе или преподавателе ЕГЭ: оценки по критериям, плюсы и минусы. Отзывы проходят модерацию.">
+  <link rel="canonical" href="https://egematch.ru/review">
+  <title>Оставить отзыв — ЕГЭ Мэтч</title>
+  <link rel="icon" href="assets/egeshka-logo-icon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="preload" href="/assets/fonts/geologica-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/unbounded-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/onest-symbols-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css?v=37">
+  <link rel="stylesheet" href="refinements.css?v=46">
+  <link rel="stylesheet" href="typography.css?v=31">
+  <link rel="stylesheet" href="composition.css?v=252">
+  <link rel="stylesheet" href="review-form.css?v=1">
+</head>
+<body class="review-form-page">
+<header class="header wrap"><a class="logo" href="/" aria-label="ЕГЭ Мэтч, главная">ЕГЭ Мэтч<span>.</span></a><nav aria-label="Главная навигация"><a href="/ratings">Рейтинг школ</a><a href="/compare">Сравнение</a><a href="/reviews">Отзывы</a><a href="/articles">Статьи</a></nav><a class="header-action" href="/?start=quiz">Подобрать <span>→</span></a></header>
+<main class="rf-page">
+  <section class="hero hero-centered rating-centered wrap privacy-hero rf-hero">
+    <div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div class="hero-glow hero-glow-pink" aria-hidden="true"></div>
+    <div class="hero-copy"><h1><span class="hero-title-line">Оставить</span> <span class="hero-title-line brand-dot">отзыв</span></h1><p class="lead">Отзыв выходит анонимно и после модерации. Займёт пару минут: оценки, пара предложений и почта для кода.</p></div>
+  </section>
+  <div class="wrap rf-layout">
+    <div id="rf-root" class="rf-card" aria-busy="true">
+      <p id="rf-alert" class="rf-alert" role="alert" hidden></p>
+      <form id="rf-form" novalidate>
+        <section class="rf-step" aria-labelledby="rf-h1">
+          <h2 id="rf-h1"><span class="rf-num">1</span>О ком отзыв</h2>
+          <div class="tabs rf-tabs" role="group" aria-label="О ком отзыв"><button type="button" data-kind="school" class="active" aria-pressed="true">О школе</button><button type="button" data-kind="teacher" aria-pressed="false">О преподавателе</button></div>
+          <label class="rf-field"><span>Школа</span><select id="rf-school"></select></label>
+          <label class="rf-field" id="rf-teacher-wrap" hidden><span>Преподаватель</span><select id="rf-teacher"></select></label>
+          <p class="rf-error" id="rf-target-error" aria-live="polite"></p>
+        </section>
+        <section class="rf-step" aria-labelledby="rf-h2">
+          <h2 id="rf-h2"><span class="rf-num">2</span>Оценки</h2>
+          <div id="rf-scores"></div>
+          <p class="rf-error" id="rf-scores-error" aria-live="polite"></p>
+        </section>
+        <section class="rf-step" aria-labelledby="rf-h3">
+          <h2 id="rf-h3"><span class="rf-num">3</span>Когда ты учился</h2>
+          <div class="rf-chips" id="rf-periods" role="radiogroup" aria-labelledby="rf-h3"></div>
+          <p class="rf-error" id="rf-period-error" aria-live="polite"></p>
+        </section>
+        <section class="rf-step" aria-labelledby="rf-h4">
+          <h2 id="rf-h4"><span class="rf-num">4</span>Расскажи подробнее</h2>
+          <label class="rf-field"><span>Что понравилось</span><textarea id="rf-positive" rows="4" maxlength="2200" placeholder="Например: понятно объясняют вторую часть, быстро проверяют домашки"></textarea><small class="rf-count" id="rf-positive-count"></small></label>
+          <label class="rf-field"><span>Что не понравилось</span><textarea id="rf-negative" rows="4" maxlength="2200" placeholder="Например: много записей вместо живых занятий, куратор отвечал через день"></textarea><small class="rf-count" id="rf-negative-count"></small></label>
+          <p class="rf-hint">Пиши о школе и занятиях. Отзывы с именами других учеников, телефонами, ссылками или оскорблениями не публикуем.</p>
+          <p class="rf-error" id="rf-text-error" aria-live="polite"></p>
+        </section>
+        <section class="rf-step" aria-labelledby="rf-h5">
+          <h2 id="rf-h5"><span class="rf-num">5</span>Подтверди, что учился <em>необязательно</em></h2>
+          <p class="rf-hint">Скриншот договора, чека или личного кабинета школы. Подтверждённые отзывы входят в оценку школы и преподавателя. Без подтверждения отзыв публикуется, но на оценку не влияет.</p>
+          <div class="rf-files" id="rf-files"></div>
+          <label class="rf-drop" id="rf-drop"><input type="file" id="rf-file-input" accept="image/jpeg,image/png,image/webp" multiple><b>Добавить скриншот</b><small>JPG, PNG или WebP · до 10 МБ · не больше трёх</small></label>
+          <p class="rf-note"><b>Закрой на скриншоте</b> ФИО, телефон, номер договора и паспортные данные. Скриншоты видит только модератор: мы пересохраняем их без метаданных и удаляем сразу после проверки.</p>
+          <p class="rf-error" id="rf-files-error" aria-live="polite"></p>
+        </section>
+        <section class="rf-step" aria-labelledby="rf-h6">
+          <h2 id="rf-h6"><span class="rf-num">6</span>Почта для кода</h2>
+          <label class="rf-field"><span>Электронная почта</span><input type="email" id="rf-email" autocomplete="email" inputmode="email" maxlength="254" placeholder="you@example.ru"></label>
+          <p class="rf-hint">Пришлём шестизначный код. Почту не публикуем и не храним: в базе остаётся только её необратимый отпечаток, чтобы один человек оставлял один отзыв о школе или преподавателе.</p>
+          <p class="rf-error" id="rf-email-error" aria-live="polite"></p>
+          <label class="rf-check"><input type="checkbox" id="rf-consent"><span>Я даю <a href="/consent" target="_blank">согласие на обработку персональных данных</a> и подтверждаю, что мне исполнилось 14 лет. Как мы обрабатываем данные — в <a href="/privacy" target="_blank">политике конфиденциальности</a>.</span></label>
+          <p class="rf-error" id="rf-consent-error" aria-live="polite"></p>
+          <div class="rf-hp" aria-hidden="true"><label>Это поле заполнять не нужно<input type="text" id="rf-website" tabindex="-1" autocomplete="off"></label></div>
+        </section>
+        <button type="submit" class="button blue rf-submit" id="rf-submit"><span class="rf-label">Получить код на почту</span><span aria-hidden="true">→</span></button>
+        <p class="rf-fine">Отзыв публикуется анонимно после модерации. Удалить его можно в любой момент на странице <a href="/delete-data">«Удалить данные»</a>.</p>
+      </form>
+      <section id="rf-code-step" class="rf-code" hidden>
+        <h2>Проверь почту</h2>
+        <p>Мы отправили код на <b id="rf-code-email"></b>. Письмо приходит в течение минуты — загляни и в «Спам».</p>
+        <form id="rf-code-form" novalidate>
+          <label class="rf-field"><span>Код из письма</span><input id="rf-code" class="rf-code-input" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000"></label>
+          <p class="rf-error" id="rf-code-error" aria-live="polite"></p>
+          <button type="submit" class="button blue rf-submit" id="rf-confirm"><span class="rf-label">Подтвердить</span><span aria-hidden="true">→</span></button>
+        </form>
+        <div class="rf-code-actions"><button type="button" class="rf-link" id="rf-resend" disabled>Отправить код ещё раз</button><button type="button" class="rf-link" id="rf-back">← Исправить отзыв или почту</button></div>
+      </section>
+      <section id="rf-done" class="rf-done" hidden>
+        <div class="rf-done-mark" aria-hidden="true">✓</div>
+        <h2>Спасибо! Отзыв на модерации</h2>
+        <p>Обычно проверяем за 1–2 дня. После проверки отзыв появится на странице школы и в разделе «Отзывы». Скриншоты удалим сразу после проверки.</p>
+        <p id="rf-done-replaced" hidden>Твой прошлый отзыв об этой школе (преподавателе) заменён новым.</p>
+        <div class="rf-done-actions"><a class="button outline" href="/reviews">Читать отзывы <span>→</span></a><button type="button" class="button pink" id="rf-again">Ещё один отзыв <span>+</span></button></div>
+      </section>
+    </div>
+    <aside class="rf-aside" aria-label="Как мы защищаем отзывы">
+      <h2>Честные отзывы</h2>
+      <ul>
+        <li><b>Без накруток.</b> Каждый отзыв подтверждается кодом из письма, один человек — один отзыв о школе или преподавателе.</li>
+        <li><b>Модерация.</b> Каждый отзыв читает человек. Школы не могут удалить или купить отзыв.</li>
+        <li><b>Анонимно.</b> На сайте не видно ни имени, ни почты автора.</li>
+        <li><b>Данные в России.</b> Отзывы хранятся на нашем сервере в Москве.</li>
+      </ul>
+    </aside>
+  </div>
+</main>
+<nav class="mobile-product-nav" aria-label="Разделы сервиса"><a href="/?start=quiz">Подобрать</a><a href="/ratings">Рейтинг</a><a href="/compare">Сравнить</a><a href="/reviews">Отзывы</a></nav>
+<footer class="wrap footer site-footer"><div class="footer-brand"><a class="logo" href="/" aria-label="ЕГЭ Мэтч, главная">ЕГЭ Мэтч<span>.</span></a><p>Выбирай осознанно.<br>Готовься по-своему.</p></div><nav class="footer-col" aria-label="Сервис"><p class="footer-title">Сервис</p><a href="/ratings">Рейтинг школ</a><a href="/compare">Сравнение</a><a href="/reviews">Отзывы</a><a href="/articles">Статьи</a><a href="/methodology">Методология</a></nav><nav class="footer-col" aria-label="Документы"><p class="footer-title">Документы</p><a href="/privacy">Политика конфиденциальности</a><a href="/terms">Условия использования</a><a href="/delete-data">Удалить данные</a></nav><div class="footer-col"><p class="footer-title">Связь</p><a href="https://t.me/EgeMatch_blog" target="_blank" rel="noopener">Telegram-канал</a><a href="https://t.me/egematch_bot" target="_blank" rel="noopener">Бот @egematch_bot</a><a href="mailto:info@egematch.ru">info@egematch.ru</a></div><div class="footer-bottom"><span>© ЕГЭ Мэтч, 2026</span><a href="#">Наверх ↑</a></div></footer>
+<script src="analytics-config.js?v=2"></script>
+<script src="analytics.js?v=26"></script>
+<script type="module" src="review.js?v=1"></script>
+
+</body></html>

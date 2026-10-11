@@ -133,7 +133,7 @@ function render() {
   const rows = filteredReviews();
   $('#review-count').textContent = rows.length ? `${rows.length} ${rows.length === 1 ? 'отзыв' : rows.length < 5 ? 'отзыва' : 'отзывов'}` : 'Пока нет отзывов по этому фильтру';
   const shown = rows.slice(0, expanded ? rows.length : 12);
-  $('#review-list').innerHTML = shown.length ? shown.map(reviewCard).join('') : '<p class="review-empty-state">Здесь пока пусто — будь первым, кто оставит отзыв в боте.</p>';
+  $('#review-list').innerHTML = shown.length ? shown.map(reviewCard).join('') : '<p class="review-empty-state">Здесь пока пусто — <a href="/review">оставь первый отзыв</a>.</p>';
   $('#review-more').hidden = expanded || rows.length <= shown.length;
 }
 
@@ -190,11 +190,11 @@ document.addEventListener('click', event => {
 
 (async () => {
   try {
-    const [catalogResponse, linksResponse] = await Promise.all([fetch('catalog.json?v=9'), fetch('links.json')]);
+    const catalogResponse = await fetch('catalog.json?v=9');
     if (!catalogResponse.ok) throw new Error('catalog');
     catalog = await catalogResponse.json();
     await applyLiveRatings(catalog);
-    if (linksResponse.ok) { const links = await linksResponse.json(); $('#review-cta').href = links.bot; }
+    
     reviews = await fetchPublicReviews();
     if (filterTeacher) mode = 'teachers';
     document.querySelectorAll('[data-mode]').forEach(b => { const active = b.dataset.mode === mode; b.classList.toggle('active', active); b.setAttribute('aria-pressed', String(active)); });
