@@ -77,3 +77,15 @@ def test_monthly_review_of_the_editorial_part_is_stated_everywhere_it_matters():
     assert "Отзывы учеников её не меняют" in method
     assert "1-го числа каждого месяца" in terms
     assert "1-го числа каждого месяца" in read("schools/umskul.html")
+
+
+def test_site_texts_match_how_reviews_work_now():
+    """Reviews are left on the site; only verified reviews count; the bot stores nothing. No page may say otherwise."""
+    import re
+    stale = re.compile(r"через Telegram-бота|Открой Telegram-бота|весит меньше|весят больше|меньшим весом|около 40%|"
+                       r"примерно 40%|вес трёх|веса десяти|отзывы в боте|вход через Telegram|отправь боту команду", re.I)
+    pages = list(WEB.glob("*.html")) + list(WEB.glob("*.js")) + list((WEB / "articles").glob("*.html")) \
+        + list((WEB / "schools").glob("*.html"))[:3] + list((WEB / "teachers").glob("*.html"))[:3]
+    for path in pages:
+        found = stale.search(path.read_text(encoding="utf-8"))
+        assert not found, f"{path.name}: «{found.group(0)}»"

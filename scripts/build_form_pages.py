@@ -171,7 +171,7 @@ DELETE_MAIN = """<main class="rf-page">
       </section>
       <div class="rf-divider"></div>
       <h2>Данные в Telegram-боте</h2>
-      <p class="rf-hint">Подбор и отзывы в боте @egematch_bot хранятся отдельно. Чтобы удалить их, открой бота и отправь команду <code>/delete_data</code>.</p>
+      <p class="rf-hint">Бот @egematch_bot ничего о пользователях не сохраняет. Если ты пользовался им до 11 октября 2026 года, удалить сохранённые тогда данные можно командой <code>/delete_data</code>.</p>
       <a class="button outline" href="https://t.me/egematch_bot?start=delete_data" target="_blank" rel="noopener">Открыть бота <span>↗</span></a>
       <p class="rf-fine">Если что-то не получается, напиши на <a href="mailto:info@egematch.ru">info@egematch.ru</a> — ответим в течение 30 дней, как требует закон.</p>
     </div>

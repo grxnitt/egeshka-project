@@ -89,7 +89,7 @@ function render(changed) {
     table += row('Школа', escape(left.school), escape(right.school));
     table += '<div class="criteria-title"><strong>По оценкам учеников</strong><span>Отдельные критерии, шкала 1–10</span></div>';
     table += Object.entries(teacherCriteria).map(([key, label]) => row(label, teacherMeter(left.criteria?.[key]), teacherMeter(right.criteria?.[key]), 'teacher-metric')).join('');
-    table += '<p class="fine">Оценка появляется, когда набирается вес трёх подтверждённых отзывов (без подтверждения отзыв весит меньше), и считается как среднее пяти критериев.</p>';
+    table += '<p class="fine">Оценка появляется после трёх подтверждённых отзывов (отзывы без подтверждения в неё не входят) и считается как среднее пяти критериев.</p>';
     const teacherCard = t => `<article class="teacher-compare-card"><div><span>${escape(t.school)}</span><strong>${escape(teacherRatingLabel(t))}</strong></div><h3>${escape(t.name)}</h3><p>${escape(t.description)}</p><a href="${escape(t.url)}" target="_blank" rel="noopener">Открыть профиль <b>↗</b></a></article>`;
     after = `<details class="teacher-details"><summary class="comparison-summary">Подробнее о преподавателях</summary><div class="teacher-compare-cards">${teacherCard(left)}${teacherCard(right)}</div></details>`;
   }
