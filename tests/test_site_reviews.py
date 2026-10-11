@@ -353,3 +353,18 @@ def test_admin_page_never_renders_review_text_as_html():
     script = (ROOT / "reviews_service" / "admin_static" / "admin.js").read_text(encoding="utf-8")
     assert "innerHTML" not in script and "insertAdjacentHTML" not in script and "eval(" not in script
     assert "'unsafe-inline'" not in admin_app.PAGE_CSP and "script-src 'self'" in admin_app.PAGE_CSP
+
+
+def test_after_a_review_the_page_suggests_the_other_kind():
+    script = (ROOT / "web" / "review.js").read_text(encoding="utf-8")
+    # school review -> pick one of its teachers; teacher review -> rate the school as a whole
+    assert "Учился у конкретного преподавателя?" in script and "в целом?" in script
+    assert "/review?school=" in script and "/review?teacher=" in script
+    page = (ROOT / "web" / "review.html").read_text(encoding="utf-8")
+    assert 'id="rf-next"' in page and 'id="rf-kind-hint"' in page
+
+
+def test_reviews_sticker_starts_at_ten():
+    script = (ROOT / "web" / "reviews.js").read_text(encoding="utf-8")
+    milestones = re.search(r"const MILESTONES = \[([^\]]+)\]", script).group(1)
+    assert [int(x) for x in milestones.split(",")][:3] == [10, 30, 50]

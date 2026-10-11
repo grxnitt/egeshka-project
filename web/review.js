@@ -46,7 +46,13 @@ function fieldError(id, message) {
 function clearErrors() { document.querySelectorAll('.rf-error').forEach(node => { node.textContent = ''; }); $('#rf-alert').hidden = true; }
 function alertBox(message) { const box = $('#rf-alert'); box.textContent = message; box.hidden = false; box.scrollIntoView({block: 'center', behavior: 'smooth'}); }
 
+const KIND_HINTS = {
+  school: 'Отзыв о школе в целом: организация, кураторы, платформа, проверка работ. Про конкретного преподавателя — отдельный отзыв, вкладка «О преподавателе».',
+  teacher: 'Отзыв о конкретном преподавателе: как объясняет, как ведёт занятия. Он попадает в карточку преподавателя, а не в оценку школы целиком.',
+};
+
 function renderTarget() {
+  $('#rf-kind-hint').textContent = KIND_HINTS[state.kind];
   const schools = [...catalog.schools].sort((a, b) => a.name.localeCompare(b.name, 'ru'));
   $('#rf-school').innerHTML = '<option value="">Выбери школу</option>' + schools.map(s => `<option value="${s.id}"${s.id === state.schoolId ? ' selected' : ''}>${escape(s.name)}</option>`).join('');
   document.querySelectorAll('[data-kind]').forEach(button => {
@@ -242,9 +248,12 @@ async function confirmCode(event) {
     const result = await api('/api/reviews/confirm', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({draftToken: state.draftToken, code})});
     track('review_confirmed', {kind: state.kind});
     state.files = [];
+    try { sessionStorage.setItem('rf-email', state.email); } catch {}   // only this tab: the next review is quicker
     $('#rf-code-step').hidden = true;
     $('#rf-done').hidden = false;
     $('#rf-done-replaced').hidden = !result.replaced;
+    $('#rf-done-replaced').textContent = `Твой прошлый отзыв ${state.kind === 'school' ? 'об этой школе' : 'об этом преподавателе'} заменён новым.`;
+    renderNext();
     $('#rf-done').scrollIntoView({block: 'start', behavior: 'smooth'});
   } catch (error) {
     fieldError('rf-code', error.message);
@@ -261,6 +270,32 @@ async function resend() {
   } catch (error) {
     fieldError('rf-code', error.message);
   }
+}
+
+// The hook after a review: from a school to one of its teachers, from a teacher to the school as a whole.
+function renderNext() {
+  const owner = school();
+  if (!owner) return;
+  const others = teachersOf(owner.id).filter(t => t.id !== state.teacherId);
+  const picker = label => `<div class="rf-next-pick"><select id="rf-next-teacher" aria-label="Преподаватель">${others.map(t => `<option value="${escape(t.slug || '')}">${escape(t.name)} — ${escape((t.subjects || [t.subject]).join(', '))}</option>`).join('')}</select><a class="button ${state.kind === 'school' ? 'blue' : 'outline'}" id="rf-next-go" href="#">${label} <span>→</span></a></div>`;
+  if (state.kind === 'school') {
+    if (!others.length) return;
+    $('#rf-next-title').textContent = 'Учился у конкретного преподавателя?';
+    $('#rf-next-text').textContent = `Оцени его отдельно — это другой отзыв: о школе ты рассказал про организацию и сервис, а о преподавателе расскажешь, как он объясняет. Такой отзыв появится в карточке преподавателя ${owner.name}.`;
+    $('#rf-next-row').innerHTML = picker('Оценить');
+  } else {
+    $('#rf-next-title').textContent = `А как тебе ${owner.name} в целом?`;
+    $('#rf-next-text').textContent = 'Отзыв о школе — отдельный: про организацию, кураторов, платформу и проверку работ. Он влияет на оценку школы.';
+    $('#rf-next-row').innerHTML = `<a class="button blue" href="/review?school=${encodeURIComponent(owner.reviewSlug)}">Оценить школу <span>→</span></a>`
+      + (others.length ? `<p class="rf-next-sub">Или другого преподавателя этой школы:</p>${picker('Оценить')}` : '');
+  }
+  const go = $('#rf-next-go');
+  if (go) go.addEventListener('click', event => {
+    event.preventDefault();
+    const slug = $('#rf-next-teacher')?.value;
+    if (slug) location.assign(`/review?teacher=${encodeURIComponent(slug)}`);
+  });
+  $('#rf-next').hidden = false;
 }
 
 function backToForm() {
@@ -327,6 +362,7 @@ async function start() {
     return;
   }
   prefill();
+  try { const saved = sessionStorage.getItem('rf-email'); if (saved) $('#rf-email').value = saved; } catch {}
   bind();
   renderTarget();
   renderScores();

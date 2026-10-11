@@ -7,8 +7,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 WEB = ROOT / "web"
-CSS = {"styles.css": "37", "refinements.css": "46", "typography.css": "31", "composition.css": "252", "review-form.css": "1"}
-JS_VERSION = "1"
+CSS = {"styles.css": "37", "refinements.css": "46", "typography.css": "31", "composition.css": "253", "review-form.css": "3"}
+JS_VERSION = "3"
 CONSENT_VERSION = "reviews-2026-10-11"   # keep equal to reviews_service.validation.CONSENT_VERSION
 
 
@@ -64,6 +64,7 @@ REVIEW_MAIN = """<main class="rf-page">
         <section class="rf-step" aria-labelledby="rf-h1">
           <h2 id="rf-h1"><span class="rf-num">1</span>О ком отзыв</h2>
           <div class="tabs rf-tabs" role="group" aria-label="О ком отзыв"><button type="button" data-kind="school" class="active" aria-pressed="true">О школе</button><button type="button" data-kind="teacher" aria-pressed="false">О преподавателе</button></div>
+          <p class="rf-hint rf-kind-hint" id="rf-kind-hint"></p>
           <label class="rf-field"><span>Школа</span><select id="rf-school"></select></label>
           <label class="rf-field" id="rf-teacher-wrap" hidden><span>Преподаватель</span><select id="rf-teacher"></select></label>
           <p class="rf-error" id="rf-target-error" aria-live="polite"></p>
@@ -120,6 +121,11 @@ REVIEW_MAIN = """<main class="rf-page">
         <h2>Спасибо! Отзыв на модерации</h2>
         <p>Обычно проверяем за 1–2 дня. После проверки отзыв появится на странице школы и в разделе «Отзывы». Скриншоты удалим сразу после проверки.</p>
         <p id="rf-done-replaced" hidden>Твой прошлый отзыв об этой школе (преподавателе) заменён новым.</p>
+        <section class="rf-next" id="rf-next" hidden aria-labelledby="rf-next-title">
+          <h3 id="rf-next-title"></h3>
+          <p id="rf-next-text"></p>
+          <div class="rf-next-row" id="rf-next-row"></div>
+        </section>
         <div class="rf-done-actions"><a class="button outline" href="/reviews">Читать отзывы <span>→</span></a><button type="button" class="button pink" id="rf-again">Ещё один отзыв <span>+</span></button></div>
       </section>
     </div>

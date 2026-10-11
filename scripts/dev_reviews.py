@@ -3,7 +3,7 @@
   .venv/bin/python scripts/dev_reviews.py /path/to/scratch
 
 SQLite database seeded from web/catalog.json, public API on 127.0.0.1:8085 (allows http://localhost:8934),
-moderation on 127.0.0.1:8090. Letters are not sent: each one is appended to <scratch>/mail.log.
+moderation on 127.0.0.1:8091 (8090 is left for the real SSH tunnel). Letters are not sent: each one is appended to <scratch>/mail.log.
 """
 import asyncio
 import json
@@ -47,11 +47,11 @@ async def main(scratch: Path):
             handle.write(f"--- to {to}: {subject}\n{body}\n")
 
     for app, port in ((public_api.create_app(settings, sessions, send_mail=fake_mail), 8085),
-                      (admin_app.create_app(settings.model_copy(update={"admin_port": 8090}), sessions), 8090)):
+                      (admin_app.create_app(settings.model_copy(update={"admin_port": 8091}), sessions), 8091)):
         runner = web.AppRunner(app)
         await runner.setup()
         await web.TCPSite(runner, "127.0.0.1", port).start()
-    print("dev review service: public 8085, admin 8090; mail ->", mail_log, flush=True)
+    print("dev review service: public 8085, admin 8091; mail ->", mail_log, flush=True)
     while True:
         await asyncio.sleep(3600)
 

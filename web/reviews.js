@@ -129,6 +129,17 @@ function syncCombo() {
   closeCombo();
 }
 
+// A sticker in the header appears from 10 published reviews and shows the last milestone passed: 10+, 30+, 50+, 100+...
+const MILESTONES = [10, 30, 50, 100, 200, 300, 500, 1000, 2000, 5000, 10000];
+function renderCounters() {
+  const reached = MILESTONES.filter(step => reviews.length >= step).pop();
+  const sticker = $('#reviews-sticker');
+  if (sticker && reached) { sticker.textContent = `${reached}+ отзывов`; sticker.hidden = false; }
+  const schools = reviews.filter(review => !review.teacher_id).length;
+  $('#count-schools').textContent = schools ? ` ${schools}` : '';
+  $('#count-teachers').textContent = reviews.length - schools ? ` ${reviews.length - schools}` : '';
+}
+
 function render() {
   const rows = filteredReviews();
   $('#review-count').textContent = rows.length ? `${rows.length} ${rows.length === 1 ? 'отзыв' : rows.length < 5 ? 'отзыва' : 'отзывов'}` : 'Пока нет отзывов по этому фильтру';
@@ -199,6 +210,7 @@ document.addEventListener('click', event => {
     if (filterTeacher) mode = 'teachers';
     document.querySelectorAll('[data-mode]').forEach(b => { const active = b.dataset.mode === mode; b.classList.toggle('active', active); b.setAttribute('aria-pressed', String(active)); });
     syncCombo();
+    renderCounters();
     render();
   } catch (error) {
     $('#review-list').innerHTML = '<p>Не удалось загрузить отзывы. Обнови страницу, чтобы попробовать ещё раз.</p>';

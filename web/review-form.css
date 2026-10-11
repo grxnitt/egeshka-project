@@ -86,6 +86,16 @@
 .rf-done-mark{display:grid;place-items:center;width:64px;height:64px;margin:0 auto 16px;border-radius:50%;background:#e6f5ec;color:#1d7f47;font-size:30px;font-weight:700}
 .rf-done-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:22px}
 .rf-done-actions .button{margin:0}
+.rf-kind-hint{margin-top:2px}
+.rf-next{margin:24px auto 0;max-width:560px;padding:20px 22px;border-radius:var(--r-lg);background:#eef0ff;text-align:left}
+.rf-next h3{margin:0 0 6px;font-size:18px;letter-spacing:-.4px}
+.rf-next p{font-size:14px!important;color:#4a4d58;margin:0 0 4px!important}
+.rf-next-row{margin-top:12px}
+.rf-next-row .button{margin:0}
+.rf-next-sub{margin:16px 0 0!important;font-size:13px!important;font-weight:600;color:var(--ink)!important}
+.rf-next-pick{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.rf-next-pick select{flex:1 1 220px;min-width:0;border:1px solid var(--line);border-radius:var(--r-md);background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2362656f' stroke-width='1.8'/%3E%3C/svg%3E") no-repeat right 15px center;appearance:none;padding:13px 40px 13px 14px;font:400 15px/1.45 var(--font-ui);color:var(--ink)}
+.rf-next-pick select:focus{outline:0;border-color:var(--blue);box-shadow:0 0 0 3px #344bd826}
 .rf-divider{height:1px;background:var(--surface-line);margin:30px 0}
 
 .rf-aside{position:sticky;top:24px;background:#eef0ff;border-radius:var(--r-xl);padding:26px}
