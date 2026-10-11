@@ -61,7 +61,9 @@ def test_review_count_label_shows_raw_counts():
     assert review_count_label(ReviewCount(4.4, 4, 1)) == "5 отзывов, из них подтверждённых 4"
 
 
-def test_approved_review_stats_mixes_verified_and_unverified_but_skips_pending():
+def test_approved_review_stats_mixes_verified_and_unverified_but_skips_pending(monkeypatch):
+    # the logic is kept for the day reviews come back to the bot; today the bot reads none
+    monkeypatch.setattr('egeshka_bot.bot.LOCAL_REVIEWS', True)
     async def scenario():
         engine = create_async_engine("sqlite+aiosqlite:///:memory:")
         async with engine.begin() as connection:

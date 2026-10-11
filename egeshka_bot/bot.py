@@ -24,6 +24,32 @@ from .scoring import (
 from .subjects import SUBJECTS, MATH_BOTH, split_teacher_subjects, subject_token, subject_from_token
 
 
+# The bot only shows information (rating, courses, matching). It stores nothing about its users: reviews are
+# written on the site (egematch.ru/review, data in Moscow), consent, action history and follow-ups are off.
+SITE = "https://egematch.ru"
+LOCAL_REVIEWS = False      # the bot neither reads nor writes reviews in its own database
+FOLLOWUPS_ENABLED = False  # "how is it going" reminders need a stored Telegram ID; off until they return
+
+
+def site_review_url(school_slug=None, teacher_slug=None) -> str:
+    if teacher_slug:
+        return f"{SITE}/review?teacher={teacher_slug}"
+    return f"{SITE}/review?school={school_slug}" if school_slug else f"{SITE}/review"
+
+
+def _teacher_slugs() -> dict:
+    """Teacher id -> page slug, from the site catalog next to the bot (web/catalog.json)."""
+    try:
+        from pathlib import Path
+        catalog = json.loads((Path(__file__).resolve().parents[1] / "web" / "catalog.json").read_text(encoding="utf-8"))
+        return {int(t["id"]): t["slug"] for t in catalog.get("teachers", []) if t.get("slug")}
+    except (OSError, ValueError, KeyError):
+        return {}
+
+
+TEACHER_SLUGS = _teacher_slugs()
+
+
 PRIORITIES = {
     "teacher": "преподаватели",
     "practice": "практика",
@@ -398,8 +424,7 @@ def menu():
             [InlineKeyboardButton(text="🎯 Подобрать школу", callback_data="quiz")],
             [InlineKeyboardButton(text="⚖️ Сравнить школы", callback_data="compare")],
             [InlineKeyboardButton(text="👩‍🏫 Сравнить преподавателей", callback_data="teacher_compare_menu")],
-            [InlineKeyboardButton(text="💬 Отзыв о школе", callback_data="review_school_menu"),
-             InlineKeyboardButton(text="👩‍🏫 Отзыв о преподавателе", callback_data="review_teacher_menu")],
+            [InlineKeyboardButton(text="💬 Оставить отзыв на сайте", url=site_review_url())],
             [InlineKeyboardButton(text="📚 Найти курс по предмету", callback_data="courses"),
              InlineKeyboardButton(text="🏫 Школы", callback_data="schools")],
             [InlineKeyboardButton(text="🏆 Рейтинг", callback_data="rating")],
@@ -1013,6 +1038,8 @@ async def best_subject_teacher_scores(session, school_ids, subject_name):
     teacher, since this now runs for every candidate school on every quiz submission, not just
     the top 3 shown after ranking.
     """
+    if not LOCAL_REVIEWS:
+        return {}
     teachers = (await session.execute(select(Teacher).where(
         Teacher.school_id.in_(school_ids),
         Teacher.subject.in_(teacher_subject_variants(subject_name)),
@@ -1144,7 +1171,7 @@ async def build_quiz_result(session_factory, profile: QuizProfile):
         + [[InlineKeyboardButton(
             text="🔔 Спросить через 2 месяца, как идёт",
             callback_data=f"fu_on:{SUBJECTS.index(subject_name)}:{followups.encode_schools(school_ids)}",
-        )] for school_ids in [top_school_ids] if subject_name in SUBJECTS]
+        )] for school_ids in [top_school_ids] if FOLLOWUPS_ENABLED and subject_name in SUBJECTS]
         + [[InlineKeyboardButton(text="📰 Новости и разборы ЕГЭ", callback_data="channel")]]
         + [[InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")]]
     )
@@ -1184,6 +1211,8 @@ PROOF_MANUAL_DELETE_NOTE = (
 
 
 async def approved_reviews_text(session, school_id, teacher_id=None, criterion=None, reviews_link=None):
+    if not LOCAL_REVIEWS:
+        return f"\n\n💬 Отзывы учеников — на сайте: {reviews_link or SITE + '/reviews'}"
     query = select(Review).where(Review.school_id == school_id, Review.moderation_status == "approved")
     if teacher_id is None:
         query = query.where(Review.teacher_id.is_(None))
@@ -1216,12 +1245,14 @@ async def approved_review_stats(session, school_id, teacher_id=None, criterion=N
     else:
         query = query.where(Review.teacher_id == teacher_id)
     query = query.where(Review.criterion == criterion)
-    rows = (await session.execute(query)).all()
+    rows = (await session.execute(query)).all() if LOCAL_REVIEWS else []
     return weighted_review_stats([(score, bool(verified)) for score, verified in rows])
 
 
 async def approved_school_criteria_stats(session, school_id):
     values = {field: [] for field, _, _ in CRITERIA}
+    if not LOCAL_REVIEWS:
+        return {field: weighted_review_stats(items) for field, items in values.items()}
     dedicated = (await session.execute(select(Review).where(
         Review.school_id == school_id,
         Review.teacher_id.is_(None),
@@ -1252,6 +1283,8 @@ async def approved_school_criteria_stats(session, school_id):
 
 async def approved_teacher_criteria_stats(session, school_id, teacher_id):
     values = {field: [] for field, _ in TEACHER_CRITERIA}
+    if not LOCAL_REVIEWS:
+        return {field: weighted_review_stats(items) for field, items in values.items()}
     reviews = (await session.execute(select(Review).where(
         Review.school_id == school_id,
         Review.teacher_id == teacher_id,
@@ -1270,13 +1303,42 @@ async def approved_teacher_criteria_stats(session, school_id, teacher_id):
 
 
 async def setup(dp: Dispatcher, session_factory, settings: Settings):
-    consent_gate = ConsentMiddleware(session_factory, settings)
-    dp.message.outer_middleware(consent_gate)
-    dp.callback_query.outer_middleware(consent_gate)
+    consent_gate = ConsentMiddleware(session_factory, settings)   # kept for its sets; not registered: nothing is stored
     # The bot talks only in private chats. In a school's sales group it just posts leads and never answers anything.
     dp.message.filter(F.chat.type == "private")
     dp.callback_query.filter(F.message.chat.type == "private")
     lead_admin.register(dp, session_factory, settings)  # admin-only lead commands, before the catch-all handlers
+
+    @dp.callback_query(F.data.startswith("review_"))
+    async def review_on_site(call: CallbackQuery, state: FSMContext):
+        """Reviews are written on the site now. Any old review button sends the user there."""
+        await state.clear()
+        school_slug = teacher_slug = None
+        kind, _, raw = call.data.partition(":")
+        target_id = int(raw.split(":")[0]) if raw.split(":")[0].isdigit() else None
+        async with session_factory() as session:
+            if target_id and kind in ("review_school", "review_criteria", "review_school_select"):
+                school = await session.get(School, target_id)
+                school_slug = SCHOOL_REVIEW_SLUGS.get(school.name) if school else None
+            elif target_id and kind == "review_course_school":
+                course = await session.get(Course, target_id)
+                school = await session.get(School, course.school_id) if course else None
+                school_slug = SCHOOL_REVIEW_SLUGS.get(school.name) if school else None
+            elif target_id and kind in ("review_teacher", "review_teacher_pick"):
+                teacher = await session.get(Teacher, target_id)
+                teacher_slug = TEACHER_SLUGS.get(target_id)
+                if teacher and not teacher_slug:
+                    school = await session.get(School, teacher.school_id)
+                    school_slug = SCHOOL_REVIEW_SLUGS.get(school.name) if school else None
+        await call.message.answer(
+            "Отзывы оставляются на сайте: пара минут, без регистрации, с подтверждением кодом на почту. "
+            "Отзыв о школе и отзыв о преподавателе — разные, их можно оставить оба.",
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text="💬 Оставить отзыв на сайте", url=site_review_url(school_slug, teacher_slug))],
+                [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
+            ]),
+        )
+        await call.answer()
 
     @dp.callback_query(F.data == "consent:yes")
     async def consent_yes(call: CallbackQuery):
@@ -1303,13 +1365,8 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
         )
         await call.answer()
     async def track(telegram_id: int, event_name: str, metadata=None):
-        async with session_factory() as session:
-            session.add(Event(
-                telegram_id=telegram_id,
-                event_name=event_name,
-                metadata_json=json.dumps(metadata or {}, ensure_ascii=False),
-            ))
-            await session.commit()
+        """Action history is off: the bot keeps no record of what a user opened."""
+        return None
 
     async def review_guard(telegram_id: int, school_id: int, teacher_id=None, criterion=None):
         async with session_factory() as session:
@@ -1403,9 +1460,6 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                 parse_mode=ParseMode.HTML,
             )
             return
-        await track(message.from_user.id, "start")
-        async with session_factory() as session:
-            await get_or_create_user(session, message.from_user.id)
         if payload.startswith("review_"):
             school_name = SCHOOL_BY_REVIEW_SLUG.get(payload.removeprefix("review_"))
             if school_name:
@@ -1416,11 +1470,11 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                     ))).scalar_one_or_none()
                 if school:
                     await state.clear()
-                    await track(message.from_user.id, "review_deeplink_opened", {"school_id": school.id})
                     await message.answer(
-                        f"Отзыв о школе «{school.name}»\n\nОцени весь опыт обучения: занятия, практику, проверку работ, поддержку, платформу и организацию курса.",
+                        f"Отзыв о школе «{school.name}» оставляется на сайте: это пара минут, без регистрации, "
+                        "с подтверждением кодом на почту.",
                         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-                            [InlineKeyboardButton(text="Оставить отзыв о школе", callback_data=f"review_school:{school.id}")],
+                            [InlineKeyboardButton(text="💬 Оставить отзыв на сайте", url=site_review_url(SCHOOL_REVIEW_SLUGS.get(school.name)))],
                             [InlineKeyboardButton(text="⌂ Главное меню", callback_data="menu")],
                         ]),
                     )
@@ -1456,16 +1510,16 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
                 await message.answer(text, reply_markup=keyboard, parse_mode=ParseMode.HTML)
                 return
         await message.answer(
-            "Привет! Я ЕГЭ Мэтч — помогу выбрать школу и преподавателя для ЕГЭ. Здесь можно пройти подбор, посмотреть оценки по критериям, сравнить школы и преподавателей и оставить свой отзыв.",
+            "Привет! Я ЕГЭ Мэтч — помогу выбрать школу и преподавателя для ЕГЭ. Здесь можно пройти подбор, посмотреть оценки по критериям и сравнить школы и преподавателей. Отзыв оставляется на сайте egematch.ru/review. Бот ничего о тебе не сохраняет.",
             reply_markup=menu(),
         )
 
     async def show_data_controls(message: Message, edit: bool = False):
         text_value = (
             "🔐 <b>Твои данные</b>\n\n"
-            "Здесь можно удалить профиль в ЕГЭ Мэтче, напоминания, отправленные отзывы, оценки по критериям, ссылки на подтверждения и историю действий в боте. "
-            "После удаления вклад этих отзывов исчезнет из пользовательской части рейтинга.\n\n"
-            "Сообщения в самом чате Telegram управляются приложением Telegram и в базу ЕГЭ Мэтча не входят."
+            "Бот больше ничего о тебе не сохраняет: ни ответы подбора, ни историю действий. Отзывы теперь оставляются "
+            "и удаляются на сайте: egematch.ru/delete-data.\n\n"
+            "Если ты пользовался ботом раньше, здесь можно удалить то, что осталось с тех пор: профиль, старые отзывы и историю действий."
         )
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="Удалить мои данные", callback_data="delete_data_request")],
@@ -2639,7 +2693,7 @@ async def run(settings: Settings):
                 pass
 
     cleanup_task = asyncio.create_task(proof_cleanup_loop())
-    followup_task = asyncio.create_task(followup_loop())
+    followup_task = asyncio.create_task(followup_loop()) if FOLLOWUPS_ENABLED else asyncio.create_task(asyncio.sleep(0))
     try:
         await dp.start_polling(bot)
     finally:

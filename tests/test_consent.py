@@ -104,15 +104,19 @@ def test_gate_lets_consented_users_admins_and_deletion_through():
     assert results["has_consent"] is True and results["stale"] is False
 
 
-def test_first_start_shows_consent_then_resumes_the_start_after_agreeing(tmp_path):
+def test_bot_stores_nothing_and_sends_reviews_to_the_site(tmp_path):
+    """The bot only shows information: /start goes straight to the menu, nothing about the user is written,
+    and every review button leads to the site form."""
     from datetime import datetime as dt
 
     from aiogram import Bot, Dispatcher
     from aiogram.methods import SendMessage
     from aiogram.types import Chat, Message, Update
+    from sqlalchemy import func, select
 
     from egeshka_bot.bot import setup
     from egeshka_bot.db import init_db
+    from egeshka_bot.models import Event, User
 
     class RecordingBot(Bot):
         def __init__(self):
@@ -125,45 +129,31 @@ def test_first_start_shows_consent_then_resumes_the_start_after_agreeing(tmp_pat
                 return Message(message_id=99, date=dt.now(), chat=Chat(id=5, type="private"))
             return True
 
-    def sender():
-        return {"id": 5, "is_bot": False, "first_name": "Тест"}
-
-    def message_update(update_id, text, entities):
-        return Update.model_validate({
-            "update_id": update_id,
-            "message": {
-                "message_id": update_id, "date": 1_700_000_000, "chat": {"id": 5, "type": "private"},
-                "from": sender(), "text": text, "entities": entities,
-            },
-        })
+    sender = {"id": 5, "is_bot": False, "first_name": "Тест"}
 
     async def scenario():
-        engine, sessions = await init_db(f"sqlite+aiosqlite:///{tmp_path}/consent.db")
+        engine, sessions = await init_db(f"sqlite+aiosqlite:///{tmp_path}/stateless.db")
         bot, dp = RecordingBot(), Dispatcher()
         await setup(dp, sessions, make_settings())
-
-        await dp.feed_update(bot, message_update(1, "/start", [{"type": "bot_command", "offset": 0, "length": 6}]))
-        first = list(bot.calls)
+        await dp.feed_update(bot, Update.model_validate({"update_id": 1, "message": {
+            "message_id": 1, "date": 1_700_000_000, "chat": {"id": 5, "type": "private"}, "from": sender,
+            "text": "/start", "entities": [{"type": "bot_command", "offset": 0, "length": 6}]}}))
+        start = list(bot.calls)
         bot.calls.clear()
-
-        yes = Update.model_validate({
-            "update_id": 2,
-            "callback_query": {
-                "id": "cb1", "from": sender(), "chat_instance": "x", "data": "consent:yes",
-                "message": {"message_id": 10, "date": 1_700_000_000, "chat": {"id": 5, "type": "private"}, "text": "consent"},
-            },
-        })
-        await dp.feed_update(bot, yes)
-        second = list(bot.calls)
-        consented = await user_has_consent(sessions, 5)
+        await dp.feed_update(bot, Update.model_validate({"update_id": 2, "callback_query": {
+            "id": "cb1", "from": sender, "chat_instance": "x", "data": "review_school:1",
+            "message": {"message_id": 10, "date": 1_700_000_000, "chat": {"id": 5, "type": "private"}, "text": "x"}}}))
+        review = list(bot.calls)
+        async with sessions() as session:
+            users = (await session.execute(select(func.count()).select_from(User))).scalar_one()
+            events = (await session.execute(select(func.count()).select_from(Event))).scalar_one()
         await engine.dispose()
         await bot.session.close()
-        return first, second, consented
+        return start, review, users, events
 
-    first, second, consented = asyncio.run(scenario())
-
-    assert len(first) == 1 and "Согласие на обработку данных" in first[0].text
-    assert consented is True
-    texts = [getattr(call, "text", "") or "" for call in second]
-    assert any("согласие сохранено" in text for text in texts)
-    assert len(second) >= 3  # confirmation edit, callback answer and the resumed /start reply
+    start, review, users, events = asyncio.run(scenario())
+    assert users == 0 and events == 0
+    assert "Согласие на обработку данных" not in start[0].text
+    sent = [call for call in review if isinstance(call, SendMessage)]
+    urls = [button.url for row in sent[0].reply_markup.inline_keyboard for button in row if button.url]
+    assert urls and urls[0].startswith("https://egematch.ru/review?school=")

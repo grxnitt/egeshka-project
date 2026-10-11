@@ -57,7 +57,9 @@ def test_broken_admin_copy_data_is_ignored():
     assert _proof_admin_copies(make_review(proof_admin_messages=json.dumps([[1], "x", [3, 30]]))) == [(3, 30)]
 
 
-def test_public_reviews_are_labelled_by_verification():
+def test_public_reviews_are_labelled_by_verification(monkeypatch):
+    # the logic is kept for the day reviews come back to the bot; today the bot reads none
+    monkeypatch.setattr('egeshka_bot.bot.LOCAL_REVIEWS', True)
     async def scenario():
         engine = create_async_engine("sqlite+aiosqlite:///:memory:")
         async with engine.begin() as connection:
