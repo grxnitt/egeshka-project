@@ -76,7 +76,7 @@
   }, {passive: true});
   /* 4. Score bars fill and scores count up when they become visible. */
   // Counting up only the big score on a school page (seen once). On rating cards the number is what people read, so it stays still.
-  const scores = '.sp-score strong, .detail-score strong, .hs-fact b';
+  const scores = '.sp-score strong, .detail-score strong, .hs-fact b[data-fact]';
   const meters = '.meter-segments';
   // Panels whose background ornament runs only while they are on screen (CSS .motion-visible).
   const decor = '.hero-centered,.channel-section,.reviews,.rating-next';
@@ -89,10 +89,12 @@
     if (!match) return;
     const decimals = match[2] === undefined ? 0 : 1;
     const target = Number(decimals ? `${match[1]}.${match[2]}` : match[1]), start = performance.now();
-    // Whole numbers on the home page count slowly (about 3 seconds, a soft ease-out) while the visitor reads; scores stay quick.
-    const duration = decimals ? 900 : 3200, original = text.textContent;
+    // Whole numbers on the home page ("30", "210+") count together, evenly and slowly, and finish at the same moment;
+    // scores stay quick. The ease is a gentle S-curve, so a big number is not already near the end after a second.
+    const duration = decimals ? 900 : 4800, original = text.textContent;
     const step = now => {
-      const t = Math.min(1, (now - start) / duration), value = target * (decimals ? 1 - Math.pow(1 - t, 3) : 1 - Math.pow(1 - t, 2));
+      const t = Math.min(1, (now - start) / duration);
+      const value = target * (decimals ? 1 - Math.pow(1 - t, 3) : 0.5 - 0.5 * Math.cos(Math.PI * t));
       text.textContent = original.replace(match[0], decimals ? value.toFixed(1).replace('.', ',') : String(Math.round(value)));
       if (t < 1) requestAnimationFrame(step); else text.textContent = original;
     };
