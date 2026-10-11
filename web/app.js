@@ -204,7 +204,7 @@ applyLinks();
 try{
  await catalogReady;
  renderHomeTop();renderHowArt();
- {const facts=document.querySelector('[data-fact="schools"]');if(facts&&catalog){const value=String(catalog.schools.length);if(facts.textContent!==value)facts.textContent=value;}const people=document.querySelector('[data-fact="teachers"]');if(people&&catalog){const value=`${Math.floor(catalog.teachers.length/10)*10}+`;if(people.textContent!==value)people.textContent=value;}}
+ {const put=(el,value)=>{if(window.egeSetFact)window.egeSetFact(el,value);else{el.dataset.final=value;if(el.textContent!==value)el.textContent=value;}};const facts=document.querySelector('[data-fact="schools"]');if(facts&&catalog)put(facts,String(catalog.schools.length));const people=document.querySelector('[data-fact="teachers"]');if(people&&catalog)put(people,`${Math.floor(catalog.teachers.length/10)*10}+`);}
  try{const fresh=await fetch('links.json');if(fresh.ok){links=await fresh.json();applyLinks();}}catch{}
  if(new URLSearchParams(location.search).get('resume')==='quiz'){
   let saved=null;try{saved=JSON.parse(sessionStorage.getItem('egeshka-quiz'));}catch{}

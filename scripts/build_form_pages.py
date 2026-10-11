@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 WEB = ROOT / "web"
-CSS = {"styles.css": "37", "refinements.css": "46", "typography.css": "31", "composition.css": "259", "review-form.css": "5"}
+CSS = {"styles.css": "37", "refinements.css": "46", "typography.css": "31", "composition.css": "260", "review-form.css": "5"}
 JS_VERSION = "5"
 CONSENT_VERSION = "reviews-2026-10-11"   # keep equal to reviews_service.validation.CONSENT_VERSION
 
@@ -24,7 +24,7 @@ def chrome():
 def page(slug, title, description, body_class, main, script=None, index=True):
     header, mobile, footer, fonts = chrome()
     styles = "".join(f'  <link rel="stylesheet" href="{name}?v={version}">\n' for name, version in CSS.items())
-    scripts = '<script src="analytics-config.js?v=2"></script>\n<script src="analytics.js?v=29"></script>\n'
+    scripts = '<script src="analytics-config.js?v=2"></script>\n<script src="analytics.js?v=30"></script>\n'
     if script:
         scripts += f'<script type="module" src="{script}?v={JS_VERSION}"></script>\n'
     robots = "" if index else '  <meta name="robots" content="noindex">\n'

@@ -2222,7 +2222,8 @@ body{background:#eef1fc}
 .method-table td{font-variant-numeric:tabular-nums}
 .method-table tbody tr:last-child td{border-bottom:0}
 @media(max-width:700px){.method-table th,.method-table td{padding:8px 6px;font-size:13px}}
-/* The home numbers count up from zero: hide them until the script starts (no flash of the final value), with a fallback reveal. */
-.hs-fact b[data-fact]{visibility:hidden;animation:fact-reveal 0s 1.5s forwards}
-.hs-fact b[data-fact].motion-visible{visibility:visible;animation:none}
+/* The home numbers count up (web/facts-count.js). Hidden until that script has put 0 in them, so the final number never flashes;
+   if the script does not run, they appear by themselves after 4 seconds (and at once without JS, see the noscript rule in index.html). */
+.hs-fact b[data-fact]{visibility:hidden;animation:fact-reveal 0s 4s forwards}
+.hs-fact b[data-fact].is-ready{visibility:visible;animation:none}
 @keyframes fact-reveal{to{visibility:visible}}
