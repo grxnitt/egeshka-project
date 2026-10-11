@@ -1,0 +1,36 @@
+[Unit]
+Description=EGE Match leads (requests to schools)
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+User=egematch
+Group=egematch
+WorkingDirectory=/opt/egematch
+# The service writes naive UTC timestamps; TZ=UTC makes the database driver read them as UTC too.
+Environment=TZ=UTC
+EnvironmentFile=/etc/egematch/reviews-leads.env
+ExecStart=/opt/egematch/.venv/bin/python -m reviews_service leads
+Restart=always
+RestartSec=5
+# Hardening: read-only system, no new privileges, only the screenshots folder is writable.
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+SystemCallArchitectures=native
+CapabilityBoundingSet=
+MemoryMax=900M
+TasksMax=64
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target

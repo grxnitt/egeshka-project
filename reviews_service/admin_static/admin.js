@@ -92,6 +92,12 @@ function openProof(id) {
 document.getElementById('viewer-close').addEventListener('click', () => viewer.close());
 viewer.addEventListener('click', event => { if (event.target === viewer) viewer.close(); });
 
+document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => {
+  document.querySelectorAll('[data-view]').forEach(item => item.classList.toggle('active', item === button));
+  document.querySelectorAll('main').forEach(view => { view.hidden = view.id !== `view-${button.dataset.view}`; });
+  document.dispatchEvent(new CustomEvent('admin-view', {detail: button.dataset.view}));
+}));
+
 document.querySelectorAll('[data-status]').forEach(button => button.addEventListener('click', () => {
   status = button.dataset.status;
   document.querySelectorAll('[data-status]').forEach(item => item.classList.toggle('active', item === button));

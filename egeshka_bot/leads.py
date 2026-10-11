@@ -196,6 +196,12 @@ def _send_email(settings, to: str, subject: str, body: str):
     message = EmailMessage()
     message["From"], message["To"], message["Subject"] = settings.smtp_from or settings.smtp_user, to, subject
     message.set_content(body)
+    if settings.smtp_port == 465:   # implicit TLS (the egematch.ru mailbox); 587 uses STARTTLS
+        with smtplib.SMTP_SSL(settings.smtp_host, settings.smtp_port, timeout=20) as smtp:
+            if settings.smtp_user:
+                smtp.login(settings.smtp_user, settings.smtp_password)
+            smtp.send_message(message)
+        return
     with smtplib.SMTP(settings.smtp_host, settings.smtp_port, timeout=20) as smtp:
         smtp.starttls()
         if settings.smtp_user:
@@ -214,7 +220,8 @@ def sign_webhook(secret: str, body: bytes) -> str:
 async def _telegram_send(settings, chat_id, text: str) -> Optional[str]:
     timeout = aiohttp.ClientTimeout(total=20)
     async with aiohttp.ClientSession(timeout=timeout) as http:
-        async with http.post(f"https://api.telegram.org/bot{settings.bot_token}/sendMessage",
+        base = getattr(settings, "telegram_api_base", "") or "https://api.telegram.org"   # a relay can be set when Telegram is blocked
+        async with http.post(f"{base}/bot{settings.bot_token}/sendMessage",
                              json={"chat_id": chat_id, "text": text}) as response:
             return None if response.status < 300 else f"HTTP {response.status}"
 
@@ -225,7 +232,10 @@ async def deliver(settings, cfg: LeadSchool, subject: str, body: str, payload: O
     A lead counts as delivered only if all configured channels worked; `delivered` collects the ones that did."""
     errors, tried = [], 0
     delivered = delivered if delivered is not None else []
-    if cfg.delivery_email and settings.smtp_host:
+    if cfg.delivery_email and not settings.smtp_host:
+        tried += 1
+        errors.append("email: на сервере не настроена отправка почты")
+    elif cfg.delivery_email:
         tried += 1
         try:
             await asyncio.to_thread(_send_email, settings, cfg.delivery_email, subject, body)
@@ -264,13 +274,20 @@ async def deliver(settings, cfg: LeadSchool, subject: str, body: str, payload: O
 
 
 async def alert_admins(settings, text: str):
-    """Tell the people in ADMIN_IDS that something needs a hand (a lead that could not be delivered)."""
+    """Tell the owner that something needs a hand (a lead that could not be delivered): by email when an alert
+    address is configured, and in Telegram to ADMIN_IDS."""
+    alert_email = getattr(settings, "alert_email", "")
+    if alert_email and settings.smtp_host:
+        try:
+            await asyncio.to_thread(_send_email, settings, alert_email, "ЕГЭ Мэтч: заявка не доставлена", text)
+        except Exception:  # noqa: BLE001 - an alert must never break delivery
+            pass
     if not settings.bot_token:
         return
     for admin_id in settings.admin_id_set:
         try:
             await _telegram_send(settings, admin_id, text)
-        except Exception:  # noqa: BLE001 - an alert must never break delivery
+        except Exception:  # noqa: BLE001
             pass
 
 

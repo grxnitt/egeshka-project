@@ -17,6 +17,13 @@ class Settings(BaseSettings):
     smtp_password: str = ""
     smtp_from: str = ""
     admin_notify_email: str = ""
+    # Leads (requests to schools). The master switch lives in the database (site_flags) and is flipped in the console.
+    leads_port: int = 8081
+    operator_name: str = "Стародубцев Александр Дмитриевич"
+    operator_contact: str = "info@egematch.ru"
+    telegram_bot_token: str = ""      # only to post a lead into a school's Telegram group
+    telegram_api_base: str = ""       # a relay URL, because api.telegram.org is blocked from Russian servers
+    leads_alert_email: str = ""       # where "a lead could not be delivered" goes
     model_config = SettingsConfigDict(env_prefix="REVIEWS_", env_file=None, extra="ignore")
 
     @property

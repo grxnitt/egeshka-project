@@ -1,7 +1,7 @@
 import asyncio
 import hashlib
 import hmac
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 
 import pytest
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
@@ -25,8 +25,12 @@ def test_lead_set_parses_keys_and_rejects_bad_values():
 
 def test_a_school_cannot_be_switched_on_half_configured():
     cfg = LeadSchool(legal_name="", inn="", delivery_email="", webhook_url="", tg_chat_id="", pd_contact="", rate=0)
-    assert len(lead_admin.missing_for_launch(cfg)) == 5
+    assert len(lead_admin.missing_for_launch(cfg)) == 5   # name, inn, channel, pd contact, agreement date
     cfg = LeadSchool(legal_name="ООО", inn="7700000000", delivery_email="", webhook_url="", tg_chat_id="-100", pd_contact="dpo", rate=300)
+    assert lead_admin.missing_for_launch(cfg) == ["дата договора со школой"]
+    cfg.agreement_date = date(2026, 10, 1)
+    assert lead_admin.missing_for_launch(cfg) == []
+    cfg.rate = 0   # a school can be switched on without a per-lead fee
     assert lead_admin.missing_for_launch(cfg) == []
 
 

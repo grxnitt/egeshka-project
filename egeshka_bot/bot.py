@@ -1307,7 +1307,8 @@ async def setup(dp: Dispatcher, session_factory, settings: Settings):
     # The bot talks only in private chats. In a school's sales group it just posts leads and never answers anything.
     dp.message.filter(F.chat.type == "private")
     dp.callback_query.filter(F.message.chat.type == "private")
-    lead_admin.register(dp, session_factory, settings)  # admin-only lead commands, before the catch-all handlers
+    # School leads moved to the console on the server (reviews_service), next to the database they live in; the bot's
+    # own database no longer holds them, so the /lead_* commands are not registered any more.
 
     @dp.callback_query(F.data.startswith("review_"))
     async def review_on_site(call: CallbackQuery, state: FSMContext):

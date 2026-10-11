@@ -17,7 +17,7 @@ from pathlib import Path
 from aiohttp import web
 from sqlalchemy import delete, func, select
 
-from . import images, store
+from . import images, lead_admin_api, store
 from .models import Review, ReviewCriterionScore, ReviewProof, School, Teacher, User, utcnow
 
 log = logging.getLogger("reviews.admin")
@@ -68,7 +68,7 @@ def create_app(settings, session_factory) -> web.Application:
 
     async def asset(request):
         name = request.match_info["name"]
-        if name not in ("admin.js", "admin.css"):
+        if name not in ("admin.js", "admin.css", "partners.js"):
             raise web.HTTPNotFound()
         kind = "application/javascript" if name.endswith(".js") else "text/css"
         return web.Response(text=(STATIC / name).read_text(encoding="utf-8"), content_type=kind)
@@ -178,4 +178,5 @@ def create_app(settings, session_factory) -> web.Application:
         web.get("/proof/{id}", proof),
         web.post("/api/reviews/{id}/{action}", decide),
     ])
+    lead_admin_api.register(app, settings, session_factory)
     return app

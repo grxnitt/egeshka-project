@@ -111,3 +111,12 @@ class DeletionRequest(Base):
     attempts: Mapped[int] = mapped_column(Integer, default=0)
     expires_at: Mapped[datetime] = mapped_column(DateTime)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+
+
+class SiteFlag(Base):
+    """Global switches. 'leads_enabled' (requests to schools on the site) starts OFF and only the console flips it."""
+    __tablename__ = "site_flags"
+    key: Mapped[str] = mapped_column(String(40), primary_key=True)
+    value: Mapped[bool] = mapped_column(Boolean, default=False)
+    note: Mapped[str] = mapped_column(String(300), default="")
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)

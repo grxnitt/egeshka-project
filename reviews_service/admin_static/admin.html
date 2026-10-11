@@ -5,23 +5,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <meta name="admin-token" content="__ADMIN_TOKEN__">
-<title>Модерация отзывов — ЕГЭ Мэтч</title>
+<title>Панель — ЕГЭ Мэтч</title>
 <link rel="stylesheet" href="/static/admin.css">
 </head>
 <body>
 <header class="top">
-  <h1>Модерация отзывов</h1>
+  <h1>ЕГЭ Мэтч · панель</h1>
+  <nav class="views" aria-label="Раздел">
+    <button type="button" data-view="reviews" class="active">Отзывы</button>
+    <button type="button" data-view="partners">Школы</button>
+    <button type="button" data-view="leads">Заявки</button>
+  </nav>
+</header>
+<main id="view-reviews">
   <nav class="tabs" aria-label="Статус">
     <button type="button" data-status="pending" class="active">На модерации <span id="count-pending"></span></button>
     <button type="button" data-status="approved">Опубликованные</button>
     <button type="button" data-status="rejected">Отклонённые</button>
   </nav>
-</header>
-<main>
   <p class="hint">Скриншоты удаляются сразу после решения. «Подтверждённый» ставь, только если на скриншоте видно, что автор учился в этой школе (у этого преподавателя). Отзывы с личными данными других людей, оскорблениями или рекламой — отклоняй.</p>
   <div id="list" aria-live="polite"></div>
 </main>
+<main id="view-partners" hidden class="wide"><div id="partners-root" aria-live="polite"></div></main>
+<main id="view-leads" hidden class="wide"><div id="leads-root" aria-live="polite"></div></main>
 <dialog id="viewer"><img id="viewer-img" alt="Скриншот"><button type="button" id="viewer-close">Закрыть</button></dialog>
 <script src="/static/admin.js"></script>
+<script src="/static/partners.js"></script>
 </body>
 </html>

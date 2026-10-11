@@ -87,8 +87,9 @@ def missing_for_launch(cfg: LeadSchool) -> list:
         missing.append("канал доставки (email, webhook или tg)")
     if not cfg.pd_contact:
         missing.append("pd (кому слать отзывы согласия)")
-    if not cfg.rate:
-        missing.append("rate (ставка)")
+    if not getattr(cfg, "agreement_date", None):
+        missing.append("дата договора со школой")
+    # rate may stay 0: leads can be accepted without a per-lead fee (the fee is agreed separately)
     return missing
 
 

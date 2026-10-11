@@ -6,6 +6,14 @@ data.egematch.ru {
 		X-Content-Type-Options nosniff
 		Referrer-Policy no-referrer
 	}
+	# Requests to schools (leads service). Matched before the generic /api/* so the review service never sees them.
+	@leads path /api/leads /api/leads/* /api/lead-schools /api/lead-consent
+	handle @leads {
+		request_body {
+			max_size 8KB
+		}
+		reverse_proxy 127.0.0.1:8081
+	}
 	# Site reviews (reviews_service public API). Bodies above 31 MB are cut before they reach Python.
 	handle /api/* {
 		request_body {

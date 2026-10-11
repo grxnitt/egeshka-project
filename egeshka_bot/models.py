@@ -1,6 +1,6 @@
-from datetime import datetime
+from datetime import date, datetime
 from typing import Optional
-from sqlalchemy import BigInteger, Boolean, DateTime, Float, ForeignKey, Integer, Numeric, String, Text
+from sqlalchemy import BigInteger, Boolean, Date, DateTime, Float, ForeignKey, Integer, Numeric, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -172,6 +172,8 @@ class LeadSchool(Base):
     bonus_fixed: Mapped[int] = mapped_column(Integer, default=0)
     bonus_percent: Mapped[int] = mapped_column(Integer, default=0)
     bonus_min: Mapped[int] = mapped_column(Integer, default=0)
+    agreement_date: Mapped[Optional[date]] = mapped_column(Date, nullable=True)  # when the agreement with the school was signed
+    notes: Mapped[str] = mapped_column(Text, default="")  # the owner's private notes, never shown on the site
 
 
 class Lead(Base):
