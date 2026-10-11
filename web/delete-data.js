@@ -4,13 +4,20 @@ const API = LOCAL ? 'http://127.0.0.1:8085' : 'https://data.egematch.ru';
 const $ = selector => document.querySelector(selector);
 let form = null, requestToken = null;
 
+const CONNECTION_HINT = 'Не получилось связаться с сервером. Если включён VPN, блокировщик рекламы или «безопасный DNS», выключи его на этой странице и попробуй снова.';
+const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 async function api(path, options) {
   let response;
-  try {
-    response = await fetch(`${API}${path}`, {...options, credentials: 'omit', mode: 'cors'});
-  } catch {
-    throw new Error('Нет связи с сервером. Проверь интернет и попробуй ещё раз.');
+  const attempts = options?.method === 'GET' ? 3 : 2;
+  for (let attempt = 0; attempt < attempts && !response; attempt++) {
+    try {
+      response = await fetch(`${API}${path}`, {...options, credentials: 'omit', mode: 'cors'});
+    } catch {
+      if (attempt < attempts - 1) await pause(700 * (attempt + 1));
+    }
   }
+  if (!response) throw new Error(CONNECTION_HINT);
   let data = {};
   try { data = await response.json(); } catch {}
   if (!response.ok) throw new Error(data.error || 'Что-то пошло не так. Попробуй ещё раз чуть позже.');

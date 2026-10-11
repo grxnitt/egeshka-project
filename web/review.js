@@ -152,13 +152,22 @@ function validate() {
   return !first;
 }
 
+const CONNECTION_HINT = 'Не получилось связаться с сервером. Если включён VPN, блокировщик рекламы или «безопасный DNS», выключи его на этой странице и попробуй снова.';
+const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+// A failed connection is retried (reading the form token is safe to repeat; a POST is retried only if it never reached us).
 async function api(path, options) {
-  let response;
-  try {
-    response = await fetch(`${API}${path}`, {...options, credentials: 'omit', mode: 'cors'});
-  } catch {
-    throw new Error('Нет связи с сервером. Проверь интернет и попробуй ещё раз.');
+  let response, lastError;
+  const attempts = options?.method === 'GET' ? 3 : 2;
+  for (let attempt = 0; attempt < attempts && !response; attempt++) {
+    try {
+      response = await fetch(`${API}${path}`, {...options, credentials: 'omit', mode: 'cors'});
+    } catch (error) {
+      lastError = error;
+      if (attempt < attempts - 1) await pause(700 * (attempt + 1));
+    }
   }
+  if (!response) throw Object.assign(new Error(CONNECTION_HINT), {network: true});
   let data = {};
   try { data = await response.json(); } catch {}
   if (!response.ok) throw Object.assign(new Error(data.error || 'Что-то пошло не так. Попробуй ещё раз чуть позже.'), {status: response.status});
@@ -369,7 +378,13 @@ async function start() {
   renderPeriods();
   renderFiles();
   $('#rf-root').removeAttribute('aria-busy');
-  loadFormToken().catch(() => alertBox('Форма временно недоступна: не получилось связаться с сервером. Попробуй обновить страницу чуть позже.'));
+  loadFormToken().catch(() => {
+    alertBox(CONNECTION_HINT);
+    const retry = document.createElement('button');
+    retry.type = 'button'; retry.className = 'rf-link'; retry.textContent = 'Повторить';
+    retry.addEventListener('click', () => { clearErrors(); loadFormToken().catch(() => { alertBox(CONNECTION_HINT); }); });
+    $('#rf-alert').append(' ', retry);
+  });
 }
 
 start();
