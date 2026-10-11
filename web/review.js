@@ -277,17 +277,17 @@ function renderNext() {
   const owner = school();
   if (!owner) return;
   const others = teachersOf(owner.id).filter(t => t.id !== state.teacherId);
-  const picker = label => `<div class="rf-next-pick"><select id="rf-next-teacher" aria-label="Преподаватель">${others.map(t => `<option value="${escape(t.slug || '')}">${escape(t.name)} — ${escape((t.subjects || [t.subject]).join(', '))}</option>`).join('')}</select><a class="button ${state.kind === 'school' ? 'blue' : 'outline'}" id="rf-next-go" href="#">${label} <span>→</span></a></div>`;
+  const picker = (label, lead) => `<div class="rf-next-option">${lead ? `<p class="rf-next-lead">${lead}</p>` : ''}<div class="rf-next-pick"><select id="rf-next-teacher" aria-label="Преподаватель">${others.map(t => `<option value="${escape(t.slug || '')}">${escape(t.name)} — ${escape((t.subjects || [t.subject]).join(', '))}</option>`).join('')}</select><a class="button outline" id="rf-next-go" href="#">${label} <span>→</span></a></div></div>`;
   if (state.kind === 'school') {
     if (!others.length) return;
     $('#rf-next-title').textContent = 'Учился у конкретного преподавателя?';
-    $('#rf-next-text').textContent = `Оцени его отдельно — это другой отзыв: о школе ты рассказал про организацию и сервис, а о преподавателе расскажешь, как он объясняет. Такой отзыв появится в карточке преподавателя ${owner.name}.`;
+    $('#rf-next-text').textContent = `Оцени его отдельно: о школе ты рассказал про организацию и сервис, а о преподавателе расскажешь, как он объясняет. Отзыв появится в карточке преподавателя ${owner.name}.`;
     $('#rf-next-row').innerHTML = picker('Оценить');
   } else {
     $('#rf-next-title').textContent = `А как тебе ${owner.name} в целом?`;
-    $('#rf-next-text').textContent = 'Отзыв о школе — отдельный: про организацию, кураторов, платформу и проверку работ. Он влияет на оценку школы.';
-    $('#rf-next-row').innerHTML = `<a class="button blue" href="/review?school=${encodeURIComponent(owner.reviewSlug)}">Оценить школу <span>→</span></a>`
-      + (others.length ? `<p class="rf-next-sub">Или другого преподавателя этой школы:</p>${picker('Оценить')}` : '');
+    $('#rf-next-text').textContent = 'Отзыв о школе отдельный: про организацию, кураторов, платформу и проверку работ. Он влияет на оценку школы.';
+    $('#rf-next-row').innerHTML = `<div class="rf-next-option"><a class="button blue rf-next-school" href="/review?school=${encodeURIComponent(owner.reviewSlug)}">Оценить школу <span>→</span></a></div>`
+      + (others.length ? `<div class="rf-next-or" aria-hidden="true"><span>или</span></div>${picker('Оценить', 'Другого преподавателя этой школы')}` : '');
   }
   const go = $('#rf-next-go');
   if (go) go.addEventListener('click', event => {
