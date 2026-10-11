@@ -173,10 +173,10 @@ def make_head(title, description, url, crumbs, noindex=False, og_type="website",
 def page_head(school, url):
     description = (
         f"{first_sentence(school['description'])} "
-        f"Оценка {num(school['score'])} из 10, цены, {len(school['subjects'])} предметов, преподаватели "
-        f"и как оставить отзыв."
+        f"Оценка {num(school['score'])} из 10 по семи критериям, цены, {len(school['subjects'])} предметов, "
+        f"преподаватели и отзывы учеников."
     )
-    title = f"{school['name']}: оценка, цены и преподаватели для ЕГЭ — ЕГЭ Мэтч"
+    title = f"{school['name']}: отзывы, цены и оценка онлайн-школы ЕГЭ — ЕГЭ Мэтч"
     crumbs = [("Главная", f"{SITE}/"), ("Рейтинг школ", f"{SITE}/ratings"), (school["name"], url)]
     return make_head(title, description, url, crumbs)
 
@@ -497,7 +497,7 @@ def build_teacher_page(person, school, colleagues, header, footer):
     same_subject = [c for c in colleagues if set(c["subjects"]) & set(person["subjects"])]
     others = (same_subject + [c for c in colleagues if c not in same_subject])[:16]
     other_links = "".join(f'<a href="/teachers/{c["slug"]}">{escape(c["name"])}</a>' for c in others)
-    title = f"{person['name']} — {subjects}, {school['name']} | ЕГЭ Мэтч"
+    title = f"{person['name']}, {subjects} ({school['name']}): оценка и отзывы — ЕГЭ Мэтч"
     description = f"{person['name']}, преподаватель {school['name']}: {subjects}. Описание, оценки учеников и как оставить отзыв."
     crumbs = [
         ("Главная", f"{SITE}/"),
