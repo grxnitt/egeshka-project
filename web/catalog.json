@@ -3581,6 +3581,22 @@
     {
       "id": 156,
       "school": "Инсперия",
+      "name": "Полина Медведева",
+      "subject": "Русский язык",
+      "subjects": [
+        "Русский язык"
+      ],
+      "description": "Старший эксперт ЕГЭ. Готовит к экзаменам 8+ лет, сама сдала ЕГЭ по русскому на 100 баллов; бакалавр филологии ВятГУ с отличием. Школа указывает, что каждый второй её ученик пишет сочинение на 21–22 балла.",
+      "studentScore": null,
+      "verifiedReviewCount": 0,
+      "isPreliminary": true,
+      "criteria": {},
+      "url": "https://insperia.ru/courses/russkii-yazik/10-klass",
+      "slug": "insperia-polina-medvedeva"
+    },
+    {
+      "id": 157,
+      "school": "Инсперия",
       "name": "Максим Профмат",
       "subject": "Математика профильная",
       "subjects": [
@@ -3595,7 +3611,7 @@
       "slug": "insperia-maksim-profmat"
     },
     {
-      "id": 157,
+      "id": 158,
       "school": "Инсперия",
       "name": "Алина Агуреева",
       "subject": "Математика профильная",
@@ -3611,7 +3627,7 @@
       "slug": "insperia-alina-agureeva"
     },
     {
-      "id": 158,
+      "id": 159,
       "school": "Инсперия",
       "name": "Юлия Сюрсина",
       "subject": "Обществознание",
@@ -3627,7 +3643,7 @@
       "slug": "insperia-yuliya-syursina"
     },
     {
-      "id": 159,
+      "id": 160,
       "school": "Инсперия",
       "name": "Натали Солдаева",
       "subject": "Информатика",
@@ -3643,7 +3659,7 @@
       "slug": "insperia-natali-soldaeva"
     },
     {
-      "id": 160,
+      "id": 161,
       "school": "ЕГЭХАБ",
       "name": "Артур Вайнберг",
       "subject": "Биология",
@@ -3659,7 +3675,7 @@
       "slug": "egehub-artur-vaynberg"
     },
     {
-      "id": 161,
+      "id": 162,
       "school": "ЕГЭХАБ",
       "name": "Лиза Вавилова",
       "subject": "Биология",
@@ -3675,7 +3691,7 @@
       "slug": "egehub-liza-vavilova"
     },
     {
-      "id": 162,
+      "id": 163,
       "school": "ЕГЭХАБ",
       "name": "Юлия Вюрц",
       "subject": "Химия",
@@ -3691,7 +3707,7 @@
       "slug": "egehub-yuliya-vyurts"
     },
     {
-      "id": 163,
+      "id": 164,
       "school": "ЕГЭХАБ",
       "name": "Дмитрий Даль",
       "subject": "Русский язык",
@@ -3707,7 +3723,7 @@
       "slug": "egehub-dmitriy-dal"
     },
     {
-      "id": 164,
+      "id": 165,
       "school": "ЕГЭХАБ",
       "name": "Лиза Греф",
       "subject": "Обществознание",
@@ -3723,7 +3739,7 @@
       "slug": "egehub-liza-gref"
     },
     {
-      "id": 165,
+      "id": 166,
       "school": "ЕГЭХАБ",
       "name": "Евгения Рене",
       "subject": "История",
@@ -3739,7 +3755,7 @@
       "slug": "egehub-evgeniya-rene"
     },
     {
-      "id": 166,
+      "id": 167,
       "school": "ЕГЭХАБ",
       "name": "Максим Васильевич",
       "subject": "Математика профильная",
@@ -3755,7 +3771,7 @@
       "slug": "egehub-maksim-vasilevich"
     },
     {
-      "id": 167,
+      "id": 168,
       "school": "ЕГЭХАБ",
       "name": "Антон Многочлен",
       "subject": "Математика профильная",
@@ -3771,7 +3787,7 @@
       "slug": "egehub-anton-mnogochlen"
     },
     {
-      "id": 168,
+      "id": 169,
       "school": "ЕГЭХАБ",
       "name": "Макс Физик",
       "subject": "Физика",
@@ -3787,7 +3803,7 @@
       "slug": "egehub-maks-fizik"
     },
     {
-      "id": 169,
+      "id": 170,
       "school": "ЕГЭХАБ",
       "name": "Владимир Андреевич",
       "subject": "Информатика",
@@ -3803,7 +3819,7 @@
       "slug": "egehub-vladimir-andreevich"
     },
     {
-      "id": 170,
+      "id": 171,
       "school": "ЕГЭХАБ",
       "name": "Тамерлан Харди",
       "subject": "Биология",
@@ -3819,7 +3835,7 @@
       "slug": "egehub-tamerlan-khardi"
     },
     {
-      "id": 171,
+      "id": 172,
       "school": "ЕГЭХАБ",
       "name": "Кирилл Ващенко",
       "subject": "Математика профильная",
@@ -3835,7 +3851,7 @@
       "slug": "egehub-kirill-vashchenko"
     },
     {
-      "id": 172,
+      "id": 173,
       "school": "ЕГЭХАБ",
       "name": "Рамис Загиров",
       "subject": "Биология",
@@ -3851,7 +3867,7 @@
       "slug": "egehub-ramis-zagirov"
     },
     {
-      "id": 173,
+      "id": 174,
       "school": "Школа Пифагора",
       "name": "Евгений Пифагор",
       "subject": "Математика профильная",
@@ -3867,7 +3883,7 @@
       "slug": "shkolapifagora-evgeniy-pifagor"
     },
     {
-      "id": 174,
+      "id": 175,
       "school": "НОО",
       "name": "Татьяна Бумстади",
       "subject": "Химия",
@@ -3883,7 +3899,7 @@
       "slug": "noo-tatyana-bumstadi"
     },
     {
-      "id": 175,
+      "id": 176,
       "school": "НОО",
       "name": "Зумруд Омарова",
       "subject": "Химия",
@@ -3899,7 +3915,7 @@
       "slug": "noo-zumrud-omarova"
     },
     {
-      "id": 176,
+      "id": 177,
       "school": "НОО",
       "name": "Дмитрий Петров",
       "subject": "Химия",
@@ -3915,7 +3931,7 @@
       "slug": "noo-dmitriy-petrov"
     },
     {
-      "id": 177,
+      "id": 178,
       "school": "Годограф",
       "name": "Мария Егошина",
       "subject": "Обществознание",
@@ -3931,7 +3947,7 @@
       "slug": "godograf-mariya-egoshina"
     },
     {
-      "id": 178,
+      "id": 179,
       "school": "Годограф",
       "name": "Елизавета Новикова",
       "subject": "История",
@@ -3947,7 +3963,7 @@
       "slug": "godograf-elizaveta-novikova"
     },
     {
-      "id": 179,
+      "id": 180,
       "school": "Годограф",
       "name": "Ирина Журавель",
       "subject": "Литература",
@@ -3963,7 +3979,7 @@
       "slug": "godograf-irina-zhuravel"
     },
     {
-      "id": 180,
+      "id": 181,
       "school": "Лектариум",
       "name": "Дмитрий Надежный",
       "subject": "Математика профильная",
@@ -3979,7 +3995,7 @@
       "slug": "lectarium-dmitriy-nadezhnyy"
     },
     {
-      "id": 181,
+      "id": 182,
       "school": "Лектариум",
       "name": "Мария Рачкевич",
       "subject": "Информатика",
@@ -3995,7 +4011,7 @@
       "slug": "lectarium-mariya-rachkevich"
     },
     {
-      "id": 182,
+      "id": 183,
       "school": "Элита",
       "name": "Егорик Историк",
       "subject": "История",
@@ -4011,7 +4027,7 @@
       "slug": "elita-egorik-istorik"
     },
     {
-      "id": 183,
+      "id": 184,
       "school": "Элита",
       "name": "Гирей Боссович",
       "subject": "Русский язык",
@@ -4027,7 +4043,7 @@
       "slug": "elita-girey-bossovich"
     },
     {
-      "id": 184,
+      "id": 185,
       "school": "Элита",
       "name": "Ваня Элита",
       "subject": "Обществознание",
@@ -4043,7 +4059,7 @@
       "slug": "elita-vanya-elita"
     },
     {
-      "id": 185,
+      "id": 186,
       "school": "Элита",
       "name": "Никита Наумный",
       "subject": "Математика профильная",
@@ -4059,7 +4075,7 @@
       "slug": "elita-nikita-naumnyy"
     },
     {
-      "id": 186,
+      "id": 187,
       "school": "Элита",
       "name": "Саша ДНКаша",
       "subject": "Биология",
@@ -4075,7 +4091,7 @@
       "slug": "elita-sasha-dnkasha"
     },
     {
-      "id": 187,
+      "id": 188,
       "school": "Элита",
       "name": "Эльвис Химсли",
       "subject": "Химия",
@@ -4091,7 +4107,7 @@
       "slug": "elita-elvis-khimsli"
     },
     {
-      "id": 188,
+      "id": 189,
       "school": "Талантум",
       "name": "Никита Маскаев",
       "subject": "Математика профильная",
@@ -4107,7 +4123,7 @@
       "slug": "talantum-nikita-maskaev"
     },
     {
-      "id": 189,
+      "id": 190,
       "school": "Талантум",
       "name": "Надежда Щербахо",
       "subject": "Русский язык",
@@ -4123,7 +4139,7 @@
       "slug": "talantum-nadezhda-shcherbakho"
     },
     {
-      "id": 190,
+      "id": 191,
       "school": "Талантум",
       "name": "Надежда Щербахо",
       "subject": "Литература",
@@ -4139,7 +4155,7 @@
       "slug": "talantum-nadezhda-shcherbakho"
     },
     {
-      "id": 191,
+      "id": 192,
       "school": "Талантум",
       "name": "Евгения Яковлева",
       "subject": "Русский язык",
@@ -4155,7 +4171,7 @@
       "slug": "talantum-evgeniya-yakovleva"
     },
     {
-      "id": 192,
+      "id": 193,
       "school": "Талантум",
       "name": "Ульяна Дьячкова",
       "subject": "Физика",
@@ -4171,7 +4187,7 @@
       "slug": "talantum-ulyana-dyachkova"
     },
     {
-      "id": 193,
+      "id": 194,
       "school": "Талантум",
       "name": "Ульяна Дьячкова",
       "subject": "Химия",
@@ -4187,7 +4203,7 @@
       "slug": "talantum-ulyana-dyachkova"
     },
     {
-      "id": 194,
+      "id": 195,
       "school": "Талантум",
       "name": "Алексей Тосканов",
       "subject": "Химия",
@@ -4203,7 +4219,7 @@
       "slug": "talantum-aleksey-toskanov"
     },
     {
-      "id": 195,
+      "id": 196,
       "school": "Талантум",
       "name": "Анна Егорова",
       "subject": "Биология",
@@ -4219,7 +4235,7 @@
       "slug": "talantum-anna-egorova"
     },
     {
-      "id": 196,
+      "id": 197,
       "school": "Талантум",
       "name": "Ксения Конова",
       "subject": "Обществознание",
@@ -4235,7 +4251,7 @@
       "slug": "talantum-kseniya-konova"
     },
     {
-      "id": 197,
+      "id": 198,
       "school": "Талантум",
       "name": "Иван Васильев",
       "subject": "Информатика",
@@ -4251,7 +4267,7 @@
       "slug": "talantum-ivan-vasilev"
     },
     {
-      "id": 198,
+      "id": 199,
       "school": "Талантум",
       "name": "Екатерина Лановая",
       "subject": "История",
@@ -4267,7 +4283,7 @@
       "slug": "talantum-ekaterina-lanovaya"
     },
     {
-      "id": 199,
+      "id": 200,
       "school": "Талантум",
       "name": "Екатерина Воскресенская",
       "subject": "Английский язык",
@@ -4283,7 +4299,7 @@
       "slug": "talantum-ekaterina-voskresenskaya"
     },
     {
-      "id": 200,
+      "id": 201,
       "school": "Стобалльник",
       "name": "Екатерина Головина",
       "subject": "Математика профильная",
@@ -4299,7 +4315,7 @@
       "slug": "stoballnik-ekaterina-golovina"
     },
     {
-      "id": 201,
+      "id": 202,
       "school": "Стобалльник",
       "name": "София Демина",
       "subject": "Математика профильная",
@@ -4315,7 +4331,7 @@
       "slug": "stoballnik-sofiya-demina"
     },
     {
-      "id": 202,
+      "id": 203,
       "school": "Стобалльник",
       "name": "София Демина",
       "subject": "Физика",
@@ -4331,7 +4347,7 @@
       "slug": "stoballnik-sofiya-demina"
     },
     {
-      "id": 203,
+      "id": 204,
       "school": "Стобалльник",
       "name": "Анна Богацкая",
       "subject": "Русский язык",
@@ -4347,7 +4363,7 @@
       "slug": "stoballnik-anna-bogatskaya"
     },
     {
-      "id": 204,
+      "id": 205,
       "school": "Стобалльник",
       "name": "Ксения Щербакова",
       "subject": "Русский язык",
@@ -4363,7 +4379,7 @@
       "slug": "stoballnik-kseniya-shcherbakova"
     },
     {
-      "id": 205,
+      "id": 206,
       "school": "Стобалльник",
       "name": "Ксения Щербакова",
       "subject": "Литература",
@@ -4379,7 +4395,7 @@
       "slug": "stoballnik-kseniya-shcherbakova"
     },
     {
-      "id": 206,
+      "id": 207,
       "school": "Стобалльник",
       "name": "Михаил Болкунов",
       "subject": "Физика",
@@ -4395,7 +4411,7 @@
       "slug": "stoballnik-mikhail-bolkunov"
     },
     {
-      "id": 207,
+      "id": 208,
       "school": "Стобалльник",
       "name": "Ольга Сорокина",
       "subject": "Информатика",
@@ -4411,7 +4427,7 @@
       "slug": "stoballnik-olga-sorokina"
     },
     {
-      "id": 208,
+      "id": 209,
       "school": "Стобалльник",
       "name": "Александр Жарких",
       "subject": "Английский язык",
@@ -4427,7 +4443,7 @@
       "slug": "stoballnik-aleksandr-zharkikh"
     },
     {
-      "id": 209,
+      "id": 210,
       "school": "Стобалльник",
       "name": "Влада Морозова",
       "subject": "Биология",
@@ -4443,7 +4459,7 @@
       "slug": "stoballnik-vlada-morozova"
     },
     {
-      "id": 210,
+      "id": 211,
       "school": "Стобалльник",
       "name": "Александр Соколов",
       "subject": "Обществознание",
@@ -4459,7 +4475,7 @@
       "slug": "stoballnik-aleksandr-sokolov"
     },
     {
-      "id": 211,
+      "id": 212,
       "school": "Стобалльник",
       "name": "Иван Соломатов",
       "subject": "Химия",
@@ -4475,7 +4491,7 @@
       "slug": "stoballnik-ivan-solomatov"
     },
     {
-      "id": 212,
+      "id": 213,
       "school": "Стобалльник",
       "name": "Герман Бароян",
       "subject": "История",
@@ -4491,7 +4507,7 @@
       "slug": "stoballnik-german-baroyan"
     },
     {
-      "id": 213,
+      "id": 214,
       "school": "Стобалльник",
       "name": "Марина Зарубина",
       "subject": "География",
