@@ -89,7 +89,7 @@ export function chooseSchoolUrl(school){
 const LOGOS_ALLOWED = false;
 const SCHOOL_LOGO_FILES = {'Умскул':'assets/schools/umskul.svg','100балльный репетитор':'assets/schools/100points.svg','Сотка':'assets/schools/sotka.webp','Фоксфорд':'assets/schools/foxford.ico','Вебиум':'assets/schools/webium.ico','99 Баллов':'assets/schools/99ballov.ico','Турбо ЕГЭ':'assets/schools/turbo-avatar.png','ЕГЭLand':'assets/schools/egeland.png','СМИТАП':'assets/schools/smitup.svg','PARTA':'assets/schools/parta.svg','Skysmart':'assets/schools/skysmart.svg','Школково':'assets/schools/shkolkovo.ico','ЕГЭ Налегке':'assets/schools/egenalegke.png','StudyCats':'assets/schools/studycats.png','NeoFamily':'assets/schools/neofamily.ico','Морозилка':'assets/schools/morozilka.png','Инсперия':'assets/schools/insperia.svg','ЕГЭХАБ':'assets/schools/egehub.svg','Школа Пифагора':'assets/schools/shkolapifagora.jpg','НОО':'assets/schools/noo.png','Тетрика':'assets/schools/tetrika.ico','MAXIMUM Education':'assets/schools/maximum.svg','Годограф':'assets/schools/godograf.svg','Коалиция':'assets/schools/koalicia.png','EXAMMY':'assets/schools/exammy.ico','Лектариум':'assets/schools/lectarium.ico','Lomonosov School':'assets/schools/lomonosov.png'};
 // Logos only for schools that agreed in writing (content/logo_consents.json); the rest get the letter mark.
-const LOGO_CONSENTS = new Set(['Турбо ЕГЭ', 'Годограф']);
+const LOGO_CONSENTS = new Set(['Турбо ЕГЭ', 'Годограф', 'Инсперия']);
 export const schoolLogos = LOGOS_ALLOWED ? SCHOOL_LOGO_FILES
   : Object.fromEntries(Object.entries(SCHOOL_LOGO_FILES).filter(([name]) => LOGO_CONSENTS.has(name)));
 // Stand-in for a logo: first letter of the first word of the name (a leading number stays whole: "100"), on blue or pink.

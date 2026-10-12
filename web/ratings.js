@@ -1,4 +1,4 @@
-import { chooseSchoolUrl, decisionFields, priceContext, schoolContent, schoolFilters, schoolInitial, schoolLogos, schoolTone } from './school-content.js?v=49';
+import { chooseSchoolUrl, decisionFields, priceContext, schoolContent, schoolFilters, schoolInitial, schoolLogos, schoolTone } from './school-content.js?v=50';
 import { applyLiveRatings, ratingBreakdown, ratingMark, teacherRatingLabel } from './supabase-client.js?v=9';
 const $ = selector => document.querySelector(selector);
 // Phones open the rating in portions of 6 instead of the whole list at once.
