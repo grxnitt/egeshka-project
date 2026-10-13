@@ -30,8 +30,10 @@ def test_every_page_footer_links_to_both_legal_pages():
 
 def test_privacy_policy_names_every_third_party_the_browser_talks_to():
     policy = read("privacy.html")
-    for processor in ("Telegram", "Яндекс.Метрика", "Vercel", "РЕГ.РУ"):
+    for processor in ("Telegram", "Яндекс.Метрика", "РЕГ.РУ"):
         assert processor in policy
+    # since 2026-10-13 the site is served from our Moscow server, so Vercel no longer touches visitors' requests
+    assert "Vercel" not in policy
     # the browser no longer talks to the foreign Supabase project: everything it reads comes from our server in Moscow
     assert "supabase.co" not in read("supabase-config.js") and "supabase.co" not in read("vercel.json")
     assert "data.egematch.ru" in read("supabase-config.js") and "https://data.egematch.ru" in read("vercel.json")

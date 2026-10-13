@@ -8,7 +8,7 @@
 2. Выбери обложку в поле `cover` (`exam`, `market`, `ai`, `scores`, `admission`, `safety`, `teacher`, `errors`) или нарисуй новую в `scripts/make_article_covers.py` и запусти этот скрипт.
 3. Собери сайт: `python3 scripts/build_school_pages.py` (или только `python3 scripts/build_articles.py`).
 4. Готовый пост для Telegram лежит в `content/telegram/<slug>.txt`: скопируй его в канал.
-5. Проверь страницу локально и запушь изменения, Vercel выложит сайт сам.
+5. Проверь страницу локально и запушь изменения и выложи сайт на сервер: `./scripts/deploy_web.sh` (см. docs/server.md). Git push обновляет только резервную копию на Vercel.
 
 ## Формат файла
 
