@@ -483,6 +483,12 @@ def build_page(school, people, others, header, footer, teacher_slugs):
     <div class="hero-copy"><h1>{escape(school["name"])}</h1><p class="lead">{escape(school["description"])}</p><div class="sp-score"><small>Оценка ЕГЭ Мэтча</small><strong id="sp-score-value">{num(school["score"])}</strong><span id="sp-score-note">из 10</span></div></div>
   </section>
   <section class="sp-section"><h2 class="t-h3">Оценка по критериям</h2>{badges_block}<ul class="sp-criteria" id="sp-criteria" data-school-id="{school["id"]}">{criteria_rows}</ul>{missing_note}<a class="button blue sp-hero-cta" href="{lead_url}" target="_blank" rel="noopener" data-choose-school="{escape(school["name"])}" data-source="school_page_criteria">Выбрать школу <span>↗</span></a></section>
+  {facts_block(school)}
+  <section class="sp-section"><h2 class="t-h3">Предметы ({len(school["subjects"])})</h2><ul class="sp-chips">{subjects}</ul></section>
+  <section class="sp-facts"><article><h2 class="t-title">Стоимость</h2><p>{escape(school["price"])}</p><p class="sp-inline-link"><a href="{escape(school["url"])}" target="_blank" rel="noopener">Проверить актуальные цены на сайте школы ↗</a></p></article><article><h2 class="t-title">Формат обучения</h2><p>{escape(school["format"])}</p></article><article><h2 class="t-title">Почему выбирают</h2><p>{escape(school["strengths"])}</p></article><article><h2 class="t-title">Что проверить перед покупкой</h2><p>{escape(school["weaknesses"])}</p></article></section>
+  {teachers_block}
+  <div class="sp-actions"><a class="button blue" href="{lead_url}" target="_blank" rel="noopener" data-choose-school="{escape(school["name"])}" data-source="school_page">Выбрать школу <span>↗</span></a><a class="button dark" href="{review_url}" data-source="school_page_review">Оставить отзыв <span>→</span></a><a class="button outline" href="{compare_url}">Сравнить с другой школой <span>→</span></a></div>
+  <p class="sp-site-link">В боте: тарифы и преподаватели. Условия и цены школа публикует на <a href="{escape(school["url"])}" target="_blank" rel="noopener">официальном сайте ↗</a></p>
   <section class="sp-section sp-reviews" id="reviews" data-school-id="{school["id"]}" data-school-slug="{slug}">
     <h2 class="t-h3">Отзывы учеников о школе {escape(school["name"])}</h2>
     <p class="sp-hint" id="sp-reviews-summary">Отзывы публикуются после проверки модератором. В оценку школы входят подтверждённые отзывы, начиная с трёх.</p>
@@ -494,12 +500,6 @@ def build_page(school, people, others, header, footer, teacher_slugs):
     <div class="sp-review-list" id="sp-review-list" aria-live="polite"></div>
     <p class="sp-more-all" id="sp-reviews-all" hidden><a href="/reviews?school={slug}">Все отзывы о школе →</a></p>
   </section>
-  {facts_block(school)}
-  <section class="sp-section"><h2 class="t-h3">Предметы ({len(school["subjects"])})</h2><ul class="sp-chips">{subjects}</ul></section>
-  <section class="sp-facts"><article><h2 class="t-title">Стоимость</h2><p>{escape(school["price"])}</p><p class="sp-inline-link"><a href="{escape(school["url"])}" target="_blank" rel="noopener">Проверить актуальные цены на сайте школы ↗</a></p></article><article><h2 class="t-title">Формат обучения</h2><p>{escape(school["format"])}</p></article><article><h2 class="t-title">Почему выбирают</h2><p>{escape(school["strengths"])}</p></article><article><h2 class="t-title">Что проверить перед покупкой</h2><p>{escape(school["weaknesses"])}</p></article></section>
-  {teachers_block}
-  <div class="sp-actions"><a class="button blue" href="{lead_url}" target="_blank" rel="noopener" data-choose-school="{escape(school["name"])}" data-source="school_page">Выбрать школу <span>↗</span></a><a class="button dark" href="{review_url}" data-source="school_page_review">Оставить отзыв <span>→</span></a><a class="button outline" href="{compare_url}">Сравнить с другой школой <span>→</span></a></div>
-  <p class="sp-site-link">В боте: тарифы и преподаватели. Условия и цены школа публикует на <a href="{escape(school["url"])}" target="_blank" rel="noopener">официальном сайте ↗</a></p>
   {faq_block(school)}
   <section class="sp-section"><h2 class="t-h3">Другие школы</h2><nav class="sp-more" aria-label="Другие школы">{other_links}</nav><p class="sp-more-all"><a href="/ratings">Весь рейтинг →</a></p></section>
   {legal_block(school)}
