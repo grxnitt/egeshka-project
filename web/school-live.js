@@ -88,7 +88,7 @@ if (reviewBox) {
     meta.append(who);
     const score = document.createElement('span');
     score.className = 'review-score';
-    score.textContent = String(Number(review.score));
+    score.textContent = String(Number(review.score)).replace('.', ',');
     const of = document.createElement('small');
     of.textContent = '/10';
     score.append(of);

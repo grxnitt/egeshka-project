@@ -60,7 +60,7 @@ function card(review) {
     }}, 'Удалить'));
   }
   return el('article', {class: 'review'},
-    el('header', {}, el('h2', {}, target), el('span', {class: 'score'}, `${review.score}/10`)),
+    el('header', {}, el('h2', {}, target), el('span', {class: 'score'}, `${String(review.score).replace('.', ',')}/10`)),
     el('p', {class: 'meta'}, `${review.created.replace('T', ' ')} · учился: ${PERIODS[review.period] || '—'}`,
       review.verified ? ' · подтверждён' : ''),
     flags, scores,

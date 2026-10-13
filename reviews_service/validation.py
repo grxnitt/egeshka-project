@@ -2,6 +2,7 @@
 import json
 import re
 import unicodedata
+from decimal import ROUND_HALF_UP, Decimal
 from typing import Optional
 
 CONSENT_VERSION = "reviews-2026-10-11"
@@ -117,8 +118,9 @@ def clean_review(data, school, teacher) -> dict:
     period = data.get("period")
     if period not in STUDY_PERIODS:
         raise ReviewError("Укажи, когда ты учился.")
-    overall = round(sum(clean.values()) / len(clean))
-    return {"scores": clean, "score": max(1, min(10, overall)), "positive": positive, "negative": negative,
+    # the overall score keeps one decimal (8.1): rounding to a whole number lost information and skewed the school rating
+    overall = float((Decimal(sum(clean.values())) / Decimal(len(clean))).quantize(Decimal("0.1"), rounding=ROUND_HALF_UP))
+    return {"scores": clean, "score": max(1.0, min(10.0, overall)), "positive": positive, "negative": negative,
             "period": period}
 
 

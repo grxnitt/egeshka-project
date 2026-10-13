@@ -507,7 +507,7 @@ def build_page(school, people, others, header, footer, teacher_slugs):
 {footer}
 <script>window.TEACHER_SLUGS={slug_map};</script>
 <script src="/supabase-config.js?v=2"></script>
-<script type="module" src="/school-live.js?v=4"></script>
+<script type="module" src="/school-live.js?v=5"></script>
 <script src="/analytics-config.js?v=2"></script>
 <script src="/analytics.js?v=30"></script>
 {NAV_SCRIPT}

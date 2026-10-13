@@ -69,9 +69,10 @@ def school_scores(**extra):
 def test_review_asks_only_what_the_school_offers():
     data = {"scores": school_scores(), "positive": GOOD_TEXT, "negative": "", "period": "2025/26"}
     clean = validation.clean_review(data, FakeSchool, None)
-    assert clean["score"] == 8 and "curator_score" not in clean["scores"]
+    assert clean["score"] == 8.2 and "curator_score" not in clean["scores"]   # (9+8+8+7+9) / 5, one decimal
     clean = validation.clean_review({**data, "scores": school_scores(curator_score=6)}, FakeSchool, None)
     assert clean["scores"]["curator_score"] == 6               # a 'tier' criterion may be rated
+    assert clean["score"] == 7.8                               # 47 / 6 = 7.83
     for broken in (school_scores(platform_score=9),            # 'none' criterion: not asked, so refused
                    {"teachers_score": 9},                      # missing required scores
                    school_scores(teachers_score=11), school_scores(teachers_score=True),
