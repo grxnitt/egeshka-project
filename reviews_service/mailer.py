@@ -2,6 +2,7 @@
 import asyncio
 import smtplib
 import ssl
+import time
 from email.message import EmailMessage
 from email.utils import formataddr, make_msgid
 
@@ -10,7 +11,27 @@ class MailError(RuntimeError):
     pass
 
 
+# The Reg.ru mail server now and then drops a connection at login even though the password is right. Dropped
+# connections and timeouts are tried again (a wrong password or a refused recipient is not: that never gets better).
+TRANSIENT = (smtplib.SMTPServerDisconnected, smtplib.SMTPConnectError, TimeoutError, ConnectionError, ssl.SSLError)
+ATTEMPTS = 3
+
+
+def _retrying(action):
+    for attempt in range(ATTEMPTS):
+        try:
+            return action()
+        except TRANSIENT:
+            if attempt == ATTEMPTS - 1:
+                raise
+            time.sleep(1.5 * (attempt + 1))
+
+
 def _send(settings, to: str, subject: str, body: str) -> None:
+    _retrying(lambda: _send_once(settings, to, subject, body))
+
+
+def _send_once(settings, to: str, subject: str, body: str) -> None:
     message = EmailMessage()
     message["From"] = formataddr(("ЕГЭ Мэтч", settings.smtp_from or settings.smtp_user))
     message["To"] = to
@@ -33,6 +54,10 @@ def check_login(settings) -> None:
     """Raises if the mailbox cannot be logged in to (used by the console health check; nothing is sent)."""
     if not settings.smtp_host or not settings.smtp_user:
         raise MailError("SMTP is not configured")
+    _retrying(lambda: _check_login_once(settings))
+
+
+def _check_login_once(settings) -> None:
     context = ssl.create_default_context()
     if settings.smtp_port == 465:
         with smtplib.SMTP_SSL(settings.smtp_host, settings.smtp_port, timeout=12, context=context) as smtp:

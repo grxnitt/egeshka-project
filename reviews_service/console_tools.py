@@ -138,7 +138,8 @@ def register(app: web.Application, settings, session_factory):
             return {"name": name, "ok": False, "detail": f"не отвечает ({type(exc).__name__})"}
 
     async def check_mail():
-        if time.time() - mail_cache["at"] < 600 and mail_cache["ok"] is not None:
+        # a good result is kept for 10 minutes, a failure for one, so a one-off hiccup does not sit on the dashboard
+        if time.time() - mail_cache["at"] < (600 if mail_cache["ok"] else 60) and mail_cache["ok"] is not None:
             return {"name": "Почта info@egematch.ru (коды и заявки)", "ok": mail_cache["ok"], "detail": mail_cache["detail"]}
         try:
             await asyncio.wait_for(asyncio.to_thread(mailer.check_login, settings), timeout=15)
