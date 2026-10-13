@@ -5,11 +5,13 @@ export async function applyLiveRatings(catalog) {
     school.editorialScore = Number(school.score);
     school.verifiedUserScore = null;
     school.verifiedReviewCount = 0;
+    school.unverifiedReviewCount = 0;
     school.isPreliminary = true;
   });
   catalog.teachers.forEach(teacher => {
     teacher.studentScore = null;
     teacher.verifiedReviewCount = 0;
+    teacher.unverifiedReviewCount = 0;
     teacher.isPreliminary = true;
     teacher.criteria = {};
   });
@@ -19,8 +21,8 @@ export async function applyLiveRatings(catalog) {
     const timeout = setTimeout(() => controller.abort(), 3500);
     const headers = {apikey: config.publishableKey};
     const [response, teacherResponse] = await Promise.all([
-      fetch(`${config.url}/rest/v1/rating_snapshots?select=school_id,editorial_score,verified_user_score,verified_review_count,final_score,is_preliminary,calculated_at`, {headers, signal: controller.signal}),
-      fetch(`${config.url}/rest/v1/teacher_rating_snapshots?select=teacher_id,verified_review_count,student_score,is_preliminary,explanation_score,practice_score,atmosphere_score,structure_score,exam_value_score,calculated_at`, {headers, signal: controller.signal}),
+      fetch(`${config.url}/rest/v1/rating_snapshots?select=school_id,editorial_score,verified_user_score,verified_review_count,unverified_review_count,final_score,is_preliminary,calculated_at`, {headers, signal: controller.signal}),
+      fetch(`${config.url}/rest/v1/teacher_rating_snapshots?select=teacher_id,verified_review_count,unverified_review_count,student_score,is_preliminary,explanation_score,practice_score,atmosphere_score,structure_score,exam_value_score,calculated_at`, {headers, signal: controller.signal}),
     ]);
     clearTimeout(timeout);
     if (!response.ok) throw new Error(`rating snapshots: ${response.status}`);
@@ -46,6 +48,7 @@ export async function applyLiveRatings(catalog) {
       school.editorialScore = Number(snapshot.editorial_score);
       school.verifiedUserScore = snapshot.verified_user_score == null ? null : Number(snapshot.verified_user_score);
       school.verifiedReviewCount = Number(snapshot.verified_review_count || 0);
+      school.unverifiedReviewCount = Number(snapshot.unverified_review_count || 0);
       school.isPreliminary = Boolean(snapshot.is_preliminary);
       school.ratingCalculatedAt = snapshot.calculated_at;
     });
@@ -55,6 +58,7 @@ export async function applyLiveRatings(catalog) {
       if (!snapshot) return;
       teacher.studentScore = snapshot.student_score == null ? null : Number(snapshot.student_score);
       teacher.verifiedReviewCount = Number(snapshot.verified_review_count || 0);
+      teacher.unverifiedReviewCount = Number(snapshot.unverified_review_count || 0);
       teacher.isPreliminary = Boolean(snapshot.is_preliminary);
       teacher.criteria = {
         explanation: snapshot.explanation_score == null ? null : Number(snapshot.explanation_score),
@@ -159,5 +163,5 @@ export function ratingBreakdown(school) {
   }
   const editorial = Number(school.editorialScore).toFixed(1).replace('.', ',');
   const users = Number(school.verifiedUserScore).toFixed(1).replace('.', ',');
-  return `<p class="rating-breakdown"><b>Из чего сложился балл</b><span>Редакция: ${editorial}/10 · Ученики: ${users}/10 · ${Number(school.verifiedReviewCount)} подтверждённых</span></p>`;
+  return `<p class="rating-breakdown"><b>Из чего сложился балл</b><span>Редакция: ${editorial}/10 · Ученики: ${users}/10 · ${Number(school.verifiedReviewCount)} подтверждённых${school.unverifiedReviewCount ? ` и ${Number(school.unverifiedReviewCount)} без подтверждения (вес 0,2)` : ''}</span></p>`;
 }

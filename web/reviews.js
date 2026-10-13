@@ -1,4 +1,4 @@
-import { applyLiveRatings, fetchPublicReviews } from './supabase-client.js?v=9';
+import { applyLiveRatings, fetchPublicReviews } from './supabase-client.js?v=10';
 import { wireReviewExpand } from './review-expand.js?v=1';
 import { schoolInitial, schoolLogos, schoolTone } from './school-content.js?v=51';
 

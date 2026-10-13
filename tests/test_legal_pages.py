@@ -82,10 +82,10 @@ def test_monthly_review_of_the_editorial_part_is_stated_everywhere_it_matters():
 
 
 def test_site_texts_match_how_reviews_work_now():
-    """Reviews are left on the site; only verified reviews count; the bot stores nothing. No page may say otherwise."""
+    """Reviews are left on the site; unverified ones count with a small weight (0.2); the bot stores nothing. No page may say otherwise."""
     import re
-    stale = re.compile(r"через Telegram-бота|Открой Telegram-бота|весит меньше|весят больше|меньшим весом|около 40%|"
-                       r"примерно 40%|вес трёх|веса десяти|отзывы в боте|вход через Telegram|отправь боту команду", re.I)
+    stale = re.compile(r"через Telegram-бота|Открой Telegram-бота|около 40%|"
+                       r"примерно 40%|отзывы в боте|вход через Telegram|отправь боту команду|на оценку не влия|в оценку не входят|только подтверждённые отзывы", re.I)
     pages = list(WEB.glob("*.html")) + list(WEB.glob("*.js")) + list((WEB / "articles").glob("*.html")) \
         + list((WEB / "schools").glob("*.html"))[:3] + list((WEB / "teachers").glob("*.html"))[:3]
     for path in pages:

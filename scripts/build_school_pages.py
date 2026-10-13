@@ -179,7 +179,7 @@ def faq_items(school):
         (f"Какие предметы ЕГЭ есть в {name}?", f"Школа готовит по предметам: {subjects}."),
         (f"Какая оценка у {name} в ЕГЭ Мэтче?",
          f"{num(school['score'])} из 10 по семи критериям: преподаватели, практика, проверка работ, кураторы, платформа, нагрузка и организация. "
-         "Это редакционная оценка, к ней добавляются подтверждённые отзывы учеников, начиная с трёх. Она не заменяет выбор по своим целям."),
+         "Это редакционная оценка, к ней добавляются отзывы учеников (подтверждённые полностью, без подтверждения с меньшим весом), начиная с веса трёх подтверждённых. Она не заменяет выбор по своим целям."),
         (f"Как оставить отзыв о школе {name}?",
          "Откройте форму отзыва, поставьте оценки по критериям, расскажите о плюсах и минусах и подтвердите почту кодом. "
          "Отзыв публикуется анонимно после проверки модератором, скриншот договора необязателен."),
@@ -491,7 +491,7 @@ def build_page(school, people, others, header, footer, teacher_slugs):
   <p class="sp-site-link">В боте: тарифы и преподаватели. Условия и цены школа публикует на <a href="{escape(school["url"])}" target="_blank" rel="noopener">официальном сайте ↗</a></p>
   <section class="sp-section sp-reviews" id="reviews" data-school-id="{school["id"]}" data-school-slug="{slug}">
     <h2 class="t-h3">Отзывы учеников о школе {escape(school["name"])}</h2>
-    <p class="sp-hint" id="sp-reviews-summary">Отзывы публикуются после проверки модератором. В оценку школы входят подтверждённые отзывы, начиная с трёх.</p>
+    <p class="sp-hint" id="sp-reviews-summary">Отзывы публикуются после проверки модератором. В оценку школы входят все отзывы: подтверждённые полностью, без подтверждения с меньшим весом.</p>
     <div class="sp-ask">
       <p class="sp-ask-title">Вы учились в школе {escape(school["name"])}?</p>
       <p>Расскажите за пару минут: оценки по семи критериям и несколько предложений о плюсах и минусах. Анонимно, почту не публикуем.</p>
@@ -539,7 +539,7 @@ def build_teacher_page(person, school, colleagues, header, footer):
     reviews_hint = (
         f'{person.get("verifiedReviewCount", 0)} подтверждённых отзывов'
         if has_criteria
-        else "Появятся, когда наберётся три подтверждённых отзыва."
+        else "Появятся, когда наберётся вес трёх отзывов."
     )
     review_url = f"/review?teacher={person['slug']}"
     lead_url = choose_school_url(school)
@@ -548,7 +548,7 @@ def build_teacher_page(person, school, colleagues, header, footer):
     else:
         reviews_intro = (
             '<div class="sp-empty-card"><p class="sp-empty-title">Станьте первым, кто оставит отзыв</p>'
-            "<p>Оценка появится, когда наберётся три подтверждённых отзыва.</p>"
+            "<p>Оценка появится, когда наберётся вес трёх отзывов (подтверждённый считается за 1, без подтверждения за 0,2).</p>"
             f'<a class="button dark" href="{review_url}" data-source="teacher_empty">Оставить отзыв <span>→</span></a></div>'
         )
     same_subject = [c for c in colleagues if set(c["subjects"]) & set(person["subjects"])]

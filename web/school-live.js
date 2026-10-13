@@ -1,5 +1,5 @@
 // A school page is built as a static file, so its numbers can be older than the console: this puts the current ones on it.
-import { applyLiveRatings, fetchPublicReviews, ratingMark } from './supabase-client.js?v=9';
+import { applyLiveRatings, fetchPublicReviews, ratingMark } from './supabase-client.js?v=10';
 import { wireReviewExpand } from './review-expand.js?v=1';
 
 const list = document.getElementById('sp-criteria');
@@ -128,6 +128,6 @@ if (reviewBox) {
     const all = document.getElementById('sp-reviews-all');
     if (all && reviews.length > 3) all.hidden = false;
   } else if (summary) {
-    summary.textContent = 'Отзывов о школе пока нет. Станьте первым: оценка школы появится, когда наберётся три подтверждённых отзыва.';
+    summary.textContent = 'Отзывов о школе пока нет. Станьте первым: отзывы войдут в оценку школы, когда наберётся вес трёх подтверждённых.';
   }
 }

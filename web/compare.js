@@ -1,6 +1,6 @@
 import { chooseSchoolUrl, priceContext } from './school-content.js?v=51';
 import { priceDetails, relativeStrengths } from './comparison.js?v=34';
-import { applyLiveRatings, teacherRatingLabel } from './supabase-client.js?v=9';
+import { applyLiveRatings, teacherRatingLabel } from './supabase-client.js?v=10';
 import { teacherSubjects } from './subjects.js?v=1';
 const $ = selector => document.querySelector(selector);
 const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -71,7 +71,7 @@ function render(changed) {
       return meter(school.criteria[key]) + (status === 'tier' ? '<span class="tier-note">зависит от тарифа</span>' : '');
     };
     table += Object.entries(criteria).map(([key, label]) => row(label, cell(left, key), cell(right, key))).join('');
-    if (catalog.schools.some(school => school.isPreliminary)) table += '<p class="fine">* Предварительно: подтверждённых отзывов пока недостаточно.</p>';
+    if (catalog.schools.some(school => school.isPreliminary)) table += '<p class="fine">* Предварительно: отзывов пока недостаточно.</p>';
     const priceCard = school => {
       const price = priceDetails[school.name];
       if (!price) return `<article class="compare-price-card"><h4>${escape(school.name)}</h4><p>${escape(school.price)}</p>${priceContext(school)}</article>`;
@@ -89,7 +89,7 @@ function render(changed) {
     table += row('Школа', escape(left.school), escape(right.school));
     table += '<div class="criteria-title"><strong>По оценкам учеников</strong><span>Отдельные критерии, шкала 1–10</span></div>';
     table += Object.entries(teacherCriteria).map(([key, label]) => row(label, teacherMeter(left.criteria?.[key]), teacherMeter(right.criteria?.[key]), 'teacher-metric')).join('');
-    table += '<p class="fine">Оценка появляется после трёх подтверждённых отзывов (отзывы без подтверждения в неё не входят) и считается как среднее пяти критериев.</p>';
+    table += '<p class="fine">Оценка появляется, когда набирается вес трёх отзывов (подтверждённый считается за 1, без подтверждения за 0,2) и считается как среднее пяти критериев.</p>';
     const teacherCard = t => `<article class="teacher-compare-card"><div><span>${escape(t.school)}</span><strong>${escape(teacherRatingLabel(t))}</strong></div><h3>${escape(t.name)}</h3><p>${escape(t.description)}</p><a href="${escape(t.url)}" target="_blank" rel="noopener">Открыть профиль <b>↗</b></a></article>`;
     after = `<details class="teacher-details"><summary class="comparison-summary">Подробнее о преподавателях</summary><div class="teacher-compare-cards">${teacherCard(left)}${teacherCard(right)}</div></details>`;
   }
