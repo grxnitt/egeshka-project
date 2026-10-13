@@ -1,5 +1,5 @@
 // A school page is built as a static file, so its numbers can be older than the console: this puts the current ones on it.
-import { applyLiveRatings, ratingMark } from './supabase-client.js?v=9';
+import { applyLiveRatings, fetchPublicReviews, ratingMark } from './supabase-client.js?v=9';
 
 const list = document.getElementById('sp-criteria');
 if (list) {
@@ -53,5 +53,60 @@ if (list) {
     }
   } catch (error) {
     console.warn('Показаны оценки из файла страницы:', error);
+  }
+}
+
+// Approved reviews of this school, newest first. Text goes in as text only: nothing from a review is ever read as HTML.
+const reviewBox = document.getElementById('sp-review-list');
+if (reviewBox) {
+  const section = reviewBox.closest('.sp-reviews');
+  const PERIODS = {'2026/27': 'учился в 2026/27', '2025/26': 'учился в 2025/26', '2024/25': 'учился в 2024/25', earlier: 'учился раньше 2024 года'};
+  const part = (title, text, cls) => {
+    const block = document.createElement('div');
+    block.className = `review-text ${cls}`;
+    const head = document.createElement('h4');
+    head.textContent = title;
+    const body = document.createElement('p');
+    body.textContent = text;
+    block.append(head, body);
+    return block;
+  };
+  const card = review => {
+    const article = document.createElement('article');
+    article.className = 'review-card sp-review';
+    const head = document.createElement('header');
+    head.className = 'review-card-head';
+    const meta = document.createElement('div');
+    meta.className = 'review-title';
+    const who = document.createElement('small');
+    who.textContent = [
+      review.verified ? '✓ подтверждён' : 'без подтверждения',
+      review.created_at ? new Date(review.created_at).toLocaleDateString('ru-RU', {day: 'numeric', month: 'long', year: 'numeric'}) : '',
+      PERIODS[review.study_period] || '',
+    ].filter(Boolean).join(' · ');
+    meta.append(who);
+    const score = document.createElement('span');
+    score.className = 'review-score';
+    score.textContent = String(Number(review.score));
+    const of = document.createElement('small');
+    of.textContent = '/10';
+    score.append(of);
+    head.append(meta, score);
+    article.append(head);
+    if (review.text_positive) article.append(part('Понравилось', review.text_positive, 'is-plus'));
+    if (review.text_negative) article.append(part('Не понравилось', review.text_negative, 'is-minus'));
+    return article;
+  };
+  const reviews = (await fetchPublicReviews()).filter(r => !r.teacher_id && Number(r.school_id) === Number(section.dataset.schoolId));
+  const summary = document.getElementById('sp-reviews-summary');
+  if (reviews.length) {
+    const verified = reviews.filter(r => r.verified).length;
+    const plural = (n, one, few, many) => { const m = n % 100, d = n % 10; return m > 10 && m < 20 ? many : d === 1 ? one : d > 1 && d < 5 ? few : many; };
+    if (summary) summary.textContent = `${reviews.length} ${plural(reviews.length, 'отзыв', 'отзыва', 'отзывов')} учеников, из них подтверждённых: ${verified}. Каждый отзыв проверяет модератор.`;
+    reviewBox.replaceChildren(...reviews.slice(0, 3).map(card));
+    const all = document.getElementById('sp-reviews-all');
+    if (all && reviews.length > 3) all.hidden = false;
+  } else if (summary) {
+    summary.textContent = 'Отзывов о школе пока нет. Станьте первым: оценка школы появится, когда наберётся три подтверждённых отзыва.';
   }
 }

@@ -16,7 +16,7 @@ CSS_VERSIONS = {
     "styles.css": "37",
     "refinements.css": "46",
     "typography.css": "31",
-    "composition.css": "260",
+    "composition.css": "261",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -170,15 +170,59 @@ def make_head(title, description, url, crumbs, noindex=False, og_type="website",
 </head>"""
 
 
+def faq_items(school):
+    """Questions people really type about a school, answered only from facts we already publish."""
+    name = school["name"]
+    subjects = ", ".join(subject_label(x).lower() for x in school["subjects"])
+    items = [
+        (f"Сколько стоит {name}?", f"{school['price']} Актуальные цены и условия школа публикует на официальном сайте."),
+        (f"Какие предметы ЕГЭ есть в {name}?", f"Школа готовит по предметам: {subjects}."),
+        (f"Какая оценка у {name} в ЕГЭ Мэтче?",
+         f"{num(school['score'])} из 10 по семи критериям: преподаватели, практика, проверка работ, кураторы, платформа, нагрузка и организация. "
+         "Это редакционная оценка, к ней добавляются подтверждённые отзывы учеников, начиная с трёх. Она не заменяет выбор по своим целям."),
+        (f"Как оставить отзыв о школе {name}?",
+         "Откройте форму отзыва, поставьте оценки по критериям, расскажите о плюсах и минусах и подтвердите почту кодом. "
+         "Отзыв публикуется анонимно после проверки модератором, скриншот договора необязателен."),
+    ]
+    return items
+
+
+def faq_block(school):
+    rows = "".join(
+        f'<details class="sp-faq-item"><summary>{escape(q)}</summary><p>{escape(a)}</p></details>' for q, a in faq_items(school)
+    )
+    return f'<section class="sp-section sp-faq" id="faq"><h2 class="t-h3">Частые вопросы о школе {escape(school["name"])}</h2>{rows}</section>'
+
+
+def school_ld(school, url):
+    org = {
+        "@context": "https://schema.org",
+        "@type": "EducationalOrganization",
+        "name": school["name"],
+        "url": school["url"],
+        "description": first_sentence(school["description"]),
+        "mainEntityOfPage": url,
+    }
+    faq = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq_items(school)
+        ],
+    }
+    return "".join(
+        f'\n  <script type="application/ld+json">{json.dumps(item, ensure_ascii=False)}</script>' for item in (org, faq)
+    )
+
+
 def page_head(school, url):
     description = (
-        f"{first_sentence(school['description'])} "
-        f"Оценка {num(school['score'])} из 10 по семи критериям, цены, {len(school['subjects'])} предметов, "
-        f"преподаватели и отзывы учеников."
+        f"Отзывы учеников о школе {school['name']}, оценка {num(school['score'])} из 10 по семи критериям, цены, "
+        f"{len(school['subjects'])} предметов ЕГЭ и преподаватели. {first_sentence(school['description'])}"
     )
-    title = f"{school['name']}: отзывы, цены и оценка онлайн-школы ЕГЭ — ЕГЭ Мэтч"
+    title = f"{school['name']}: отзывы учеников, цены и оценка школы ЕГЭ 2027 — ЕГЭ Мэтч"
     crumbs = [("Главная", f"{SITE}/"), ("Рейтинг школ", f"{SITE}/ratings"), (school["name"], url)]
-    return make_head(title, description, url, crumbs)
+    return make_head(title, description, url, crumbs, extra=school_ld(school, url))
 
 
 def subject_label(subject):
@@ -426,6 +470,7 @@ def build_page(school, people, others, header, footer, teacher_slugs):
     )
     compare_url = "/compare?compareLeft=" + re.sub(r"\s", "+", school["name"])
     review_url = f'/review?school={slug}'
+    review_ask_url = f'/review?school={slug}&ref=school_card'
     lead_url = choose_school_url(school)
     slug_map = json.dumps({p["name"]: p["slug"] for p in people}, ensure_ascii=False)
     body = f"""<body class="school-page-body">
@@ -438,19 +483,31 @@ def build_page(school, people, others, header, footer, teacher_slugs):
     <div class="hero-copy"><h1>{escape(school["name"])}</h1><p class="lead">{escape(school["description"])}</p><div class="sp-score"><small>Оценка ЕГЭ Мэтча</small><strong id="sp-score-value">{num(school["score"])}</strong><span id="sp-score-note">из 10</span></div></div>
   </section>
   <section class="sp-section"><h2 class="t-h3">Оценка по критериям</h2>{badges_block}<ul class="sp-criteria" id="sp-criteria" data-school-id="{school["id"]}">{criteria_rows}</ul>{missing_note}<a class="button blue sp-hero-cta" href="{lead_url}" target="_blank" rel="noopener" data-choose-school="{escape(school["name"])}" data-source="school_page_criteria">Выбрать школу <span>↗</span></a></section>
+  <section class="sp-section sp-reviews" id="reviews" data-school-id="{school["id"]}" data-school-slug="{slug}">
+    <h2 class="t-h3">Отзывы учеников о школе {escape(school["name"])}</h2>
+    <p class="sp-hint" id="sp-reviews-summary">Отзывы публикуются после проверки модератором. В оценку школы входят подтверждённые отзывы, начиная с трёх.</p>
+    <div class="sp-ask">
+      <p class="sp-ask-title">Вы учились в школе {escape(school["name"])}?</p>
+      <p>Расскажите за пару минут: оценки по семи критериям и несколько предложений о плюсах и минусах. Анонимно, почту не публикуем.</p>
+      <a class="button dark" href="{review_ask_url}" data-source="school_page_ask">Оставить отзыв <span>→</span></a>
+    </div>
+    <div class="sp-review-list" id="sp-review-list" aria-live="polite"></div>
+    <p class="sp-more-all" id="sp-reviews-all" hidden><a href="/reviews?school={slug}">Все отзывы о школе →</a></p>
+  </section>
   {facts_block(school)}
   <section class="sp-section"><h2 class="t-h3">Предметы ({len(school["subjects"])})</h2><ul class="sp-chips">{subjects}</ul></section>
   <section class="sp-facts"><article><h2 class="t-title">Стоимость</h2><p>{escape(school["price"])}</p><p class="sp-inline-link"><a href="{escape(school["url"])}" target="_blank" rel="noopener">Проверить актуальные цены на сайте школы ↗</a></p></article><article><h2 class="t-title">Формат обучения</h2><p>{escape(school["format"])}</p></article><article><h2 class="t-title">Почему выбирают</h2><p>{escape(school["strengths"])}</p></article><article><h2 class="t-title">Что проверить перед покупкой</h2><p>{escape(school["weaknesses"])}</p></article></section>
   {teachers_block}
   <div class="sp-actions"><a class="button blue" href="{lead_url}" target="_blank" rel="noopener" data-choose-school="{escape(school["name"])}" data-source="school_page">Выбрать школу <span>↗</span></a><a class="button dark" href="{review_url}" data-source="school_page_review">Оставить отзыв <span>→</span></a><a class="button outline" href="{compare_url}">Сравнить с другой школой <span>→</span></a></div>
   <p class="sp-site-link">В боте: тарифы и преподаватели. Условия и цены школа публикует на <a href="{escape(school["url"])}" target="_blank" rel="noopener">официальном сайте ↗</a></p>
+  {faq_block(school)}
   <section class="sp-section"><h2 class="t-h3">Другие школы</h2><nav class="sp-more" aria-label="Другие школы">{other_links}</nav><p class="sp-more-all"><a href="/ratings">Весь рейтинг →</a></p></section>
   {legal_block(school)}
 </main>
 {footer}
 <script>window.TEACHER_SLUGS={slug_map};</script>
 <script src="/supabase-config.js?v=2"></script>
-<script type="module" src="/school-live.js?v=1"></script>
+<script type="module" src="/school-live.js?v=2"></script>
 <script src="/analytics-config.js?v=2"></script>
 <script src="/analytics.js?v=30"></script>
 {NAV_SCRIPT}

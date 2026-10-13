@@ -378,6 +378,10 @@ async function start() {
   renderPeriods();
   renderFiles();
   $('#rf-root').removeAttribute('aria-busy');
+  // Coming from a school page's "Вы учились здесь?" card: the school is already chosen, so start at the scores.
+  if (new URLSearchParams(location.search).get('ref') === 'school_card' && state.schoolId) {
+    setTimeout(() => $('#rf-h2')?.scrollIntoView({block: 'start', behavior: 'smooth'}), 150);
+  }
   loadFormToken().catch(() => {
     alertBox(CONNECTION_HINT);
     const retry = document.createElement('button');
