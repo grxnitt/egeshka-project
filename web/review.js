@@ -140,7 +140,7 @@ function validate() {
     missing.forEach(item => document.querySelector(`.rf-score[data-key="${item.key}"]`)?.classList.add('rf-invalid'));
     if (missing.length) mark('rf-scores', `Поставь оценку: ${missing.map(item => item.label[0].toLowerCase() + item.label.slice(1)).join(', ')}.`, document.querySelector('.rf-invalid'));
   }
-  if (!state.period) mark('rf-period', 'Укажи, когда ты учился.');
+  if (!state.period) mark('rf-period', 'Укажи, когда ты учился(ась).');
   const positive = $('#rf-positive').value.trim(), negative = $('#rf-negative').value.trim();
   if (positive.length > MAX_TEXT || negative.length > MAX_TEXT) mark('rf-text', `Каждое поле — не длиннее ${MAX_TEXT} символов.`, $('#rf-positive'));
   else if (positive.length + negative.length < MIN_TEXT_TOTAL) mark('rf-text', 'Расскажи чуть подробнее: хотя бы пару предложений о плюсах или минусах.', $('#rf-positive'));

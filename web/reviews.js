@@ -6,7 +6,7 @@ const $ = selector => document.querySelector(selector);
 const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = n => Number(n).toFixed(1).replace('.', ',');
 const grade = n => Number.isInteger(Number(n)) ? String(Number(n)) : number(n);   // review scores are whole numbers 1-10
-const PERIODS = {'2026/27': 'учился в 2026/27', '2025/26': 'учился в 2025/26', '2024/25': 'учился в 2024/25', earlier: 'учился раньше 2024 года'};
+const PERIODS = {'2026/27': 'учился(ась) в 2026/27', '2025/26': 'учился(ась) в 2025/26', '2024/25': 'учился(ась) в 2024/25', earlier: 'учился(ась) раньше 2024 года'};
 
 const SCHOOL_CRITERIA = {teachers_score:'Преподаватели',practice_score:'Практика и ДЗ',feedback_score:'Проверка работ',curator_score:'Кураторы',platform_score:'Платформа',workload_score:'Нагрузка и темп',organization_score:'Организация обучения'};
 const TEACHER_CRITERIA = {explanation:'Объяснение материала',practice:'Практика и разбор ошибок',atmosphere:'Атмосфера и вовлечённость',structure:'Структура и темп занятий',exam_value:'Польза для экзамена'};

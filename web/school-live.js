@@ -61,7 +61,7 @@ if (list) {
 const reviewBox = document.getElementById('sp-review-list');
 if (reviewBox) {
   const section = reviewBox.closest('.sp-reviews');
-  const PERIODS = {'2026/27': 'учился в 2026/27', '2025/26': 'учился в 2025/26', '2024/25': 'учился в 2024/25', earlier: 'учился раньше 2024 года'};
+  const PERIODS = {'2026/27': 'учился(ась) в 2026/27', '2025/26': 'учился(ась) в 2025/26', '2024/25': 'учился(ась) в 2024/25', earlier: 'учился(ась) раньше 2024 года'};
   const part = (title, text, cls) => {
     const block = document.createElement('div');
     block.className = `review-text ${cls}${text ? '' : ' is-blank'}`;

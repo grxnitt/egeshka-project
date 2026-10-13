@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 WEB = ROOT / "web"
 CSS = {"styles.css": "37", "refinements.css": "46", "typography.css": "31", "composition.css": "262", "review-form.css": "5"}
-JS_VERSION = "7"
+JS_VERSION = "8"
 CONSENT_VERSION = "reviews-2026-10-11"   # keep equal to reviews_service.validation.CONSENT_VERSION
 
 
@@ -75,7 +75,7 @@ REVIEW_MAIN = """<main class="rf-page">
           <p class="rf-error" id="rf-scores-error" aria-live="polite"></p>
         </section>
         <section class="rf-step" aria-labelledby="rf-h3">
-          <h2 id="rf-h3"><span class="rf-num">3</span>Когда ты учился</h2>
+          <h2 id="rf-h3"><span class="rf-num">3</span>Когда ты учился(ась)</h2>
           <div class="rf-chips" id="rf-periods" role="radiogroup" aria-labelledby="rf-h3"></div>
           <p class="rf-error" id="rf-period-error" aria-live="polite"></p>
         </section>
@@ -87,7 +87,7 @@ REVIEW_MAIN = """<main class="rf-page">
           <p class="rf-error" id="rf-text-error" aria-live="polite"></p>
         </section>
         <section class="rf-step" aria-labelledby="rf-h5">
-          <h2 id="rf-h5"><span class="rf-num">5</span>Подтверди, что учился <em>необязательно</em></h2>
+          <h2 id="rf-h5"><span class="rf-num">5</span>Подтверди, что учился(ась) <em>необязательно</em></h2>
           <p class="rf-hint">Скриншот договора, чека или личного кабинета школы. Подтверждённые отзывы входят в оценку школы и преподавателя. Без подтверждения отзыв публикуется, но на оценку не влияет.</p>
           <div class="rf-files" id="rf-files"></div>
           <label class="rf-drop" id="rf-drop"><input type="file" id="rf-file-input" accept="image/jpeg,image/png,image/webp" multiple><b>Добавить скриншот</b><small>JPG, PNG или WebP · до 10 МБ · не больше трёх</small></label>
