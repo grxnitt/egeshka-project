@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="styles.css?v=37">
   <link rel="stylesheet" href="refinements.css?v=46">
   <link rel="stylesheet" href="typography.css?v=31">
-  <link rel="stylesheet" href="composition.css?v=262">
+  <link rel="stylesheet" href="composition.css?v=263">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ЕГЭ Мэтч","item":"https://egematch.ru/"},{"@type":"ListItem","position":2,"name":"Отзывы","item":"https://egematch.ru/reviews"}]}</script>
 </head>
 <body class="reviews-page">
@@ -34,6 +34,9 @@
     <div class="comparison-box reviews-box">
       <div class="reviews-controls">
         <div class="tabs" role="group" aria-label="Что смотрим"><button class="active" data-mode="schools" aria-pressed="true">Школы<span class="tab-count" id="count-schools"></span></button><button data-mode="teachers" aria-pressed="false">Преподаватели<span class="tab-count" id="count-teachers"></span></button></div>
+        <a class="button blue review-top-cta" id="review-top-cta" href="/review" data-source="reviews_page_top">Оставить отзыв <span>→</span></a>
+      </div>
+      <div class="reviews-count-row"><p id="review-count" class="reviews-count" aria-live="polite">Загружаем отзывы…</p>
         <div class="reviews-filter-label"><span id="review-filter-label">Фильтр</span>
           <div class="review-combo" id="review-combo">
             <input type="text" id="review-filter" class="review-combo-input" autocomplete="off" role="combobox" aria-labelledby="review-filter-label" aria-expanded="false" aria-autocomplete="list" aria-controls="review-filter-list">
@@ -42,7 +45,6 @@
           </div>
         </div>
       </div>
-      <div class="reviews-count-row"><p id="review-count" class="reviews-count" aria-live="polite">Загружаем отзывы…</p><a class="button dark review-top-cta" id="review-top-cta" href="/review" data-source="reviews_page_top">Оставить отзыв <span>→</span></a></div>
       <div id="review-list" class="review-list"></div>
       <button class="button outline more" id="review-more" hidden type="button">Показать ещё <span>↓</span></button>
     </div>
@@ -54,6 +56,6 @@
 <script src="analytics-config.js?v=2"></script>
 <script src="analytics.js?v=30"></script>
 <script src="supabase-config.js?v=2"></script>
-<script type="module" src="reviews.js?v=13"></script>
+<script type="module" src="reviews.js?v=14"></script>
 
 </body></html>

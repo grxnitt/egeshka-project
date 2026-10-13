@@ -2256,3 +2256,5 @@ body{background:#eef1fc}
 .review-card.is-open .review-text p{display:block;min-height:0;-webkit-line-clamp:unset}
 .review-card.is-open .review-text.is-blank{display:none}
 @media(max-width:700px){.review-top-cta{width:100%}.review-card.is-open{grid-column:auto}}
+/* Reviews page: the action sits with the tabs, the filter with the count. */
+@media(max-width:700px){.reviews-count-row{flex-direction:column;align-items:stretch;gap:10px}.reviews-count-row .reviews-filter-label{width:100%}}
