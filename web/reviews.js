@@ -1,4 +1,5 @@
 import { applyLiveRatings, fetchPublicReviews } from './supabase-client.js?v=9';
+import { wireReviewExpand } from './review-expand.js?v=1';
 import { schoolInitial, schoolLogos, schoolTone } from './school-content.js?v=51';
 
 const $ = selector => document.querySelector(selector);
@@ -10,7 +11,8 @@ const PERIODS = {'2026/27': 'учился в 2026/27', '2025/26': 'учился 
 const SCHOOL_CRITERIA = {teachers_score:'Преподаватели',practice_score:'Практика и ДЗ',feedback_score:'Проверка работ',curator_score:'Кураторы',platform_score:'Платформа',workload_score:'Нагрузка и темп',organization_score:'Организация обучения'};
 const TEACHER_CRITERIA = {explanation:'Объяснение материала',practice:'Практика и разбор ошибок',atmosphere:'Атмосфера и вовлечённость',structure:'Структура и темп занятий',exam_value:'Польза для экзамена'};
 
-let catalog, reviews = [], mode = 'schools', expanded = false;
+const PAGE = 6;   // reviews shown at first and added by each "Показать ещё"
+let catalog, reviews = [], mode = 'schools', limit = PAGE;
 const params = new URLSearchParams(location.search);
 let filterSchool = params.get('school') || '';
 let filterTeacher = params.get('teacher') || '';
@@ -49,10 +51,10 @@ function reviewCard(review) {
     date ? `<span>${escape(date)}</span>` : '',
     PERIODS[review.study_period] ? `<span>${PERIODS[review.study_period]}</span>` : '',
   ].join('');
-  const texts = [
-    review.text_positive ? `<div class="review-text is-plus"><h4>Понравилось</h4><p>${escape(review.text_positive)}</p></div>` : '',
-    review.text_negative ? `<div class="review-text is-minus"><h4>Не понравилось</h4><p>${escape(review.text_negative)}</p></div>` : '',
-  ].join('');
+  const block = (title, text, cls) => `<div class="review-text ${cls}${text ? '' : ' is-blank'}"><h4>${title}</h4><p>${text ? escape(text) : 'Не указано'}</p></div>`;
+  const texts = review.text_positive || review.text_negative
+    ? block('Понравилось', review.text_positive, 'is-plus') + block('Не понравилось', review.text_negative, 'is-minus')
+    : '<div class="review-text is-none"><p class="review-empty">Без комментария — только оценки.</p></div>';
   return `<article class="review-card">
     <header class="review-card-head">
       ${mark(school)}
@@ -61,7 +63,8 @@ function reviewCard(review) {
     </header>
     <div class="review-card-meta">${meta}</div>
     ${criteriaRows(review)}
-    ${texts || '<p class="review-empty">Без комментария — только оценки.</p>'}
+    <div class="review-body">${texts}</div>
+    <button type="button" class="review-toggle" aria-expanded="false" hidden>Читать полностью</button>
   </article>`;
 }
 
@@ -123,7 +126,7 @@ function selectCombo(option) {
   $('#review-filter').value = option.label + (option.sub ? ` · ${option.sub}` : '');
   $('#review-filter-clear').hidden = false;
   closeCombo();
-  expanded = false;
+  limit = PAGE;
   render();
 }
 
@@ -132,7 +135,7 @@ function clearCombo() {
   $('#review-filter').value = '';
   $('#review-filter-clear').hidden = true;
   closeCombo();
-  expanded = false;
+  limit = PAGE;
   render();
   $('#review-filter').focus();
 }
@@ -155,22 +158,48 @@ function renderCounters() {
   $('#count-teachers').textContent = reviews.length - schools ? ` ${reviews.length - schools}` : '';
 }
 
+const measureCards = wireReviewExpand($('#review-list'));
+
+function topCtaHref() {
+  const teacher = filterTeacher ? teacherById(filterTeacher) : null;
+  if (teacher?.slug) return `/review?teacher=${encodeURIComponent(teacher.slug)}`;
+  return filterSchool ? `/review?school=${encodeURIComponent(filterSchool)}` : '/review';
+}
+
 function render() {
   const rows = filteredReviews();
   $('#review-count').textContent = rows.length ? `${rows.length} ${rows.length === 1 ? 'отзыв' : rows.length < 5 ? 'отзыва' : 'отзывов'}` : 'Пока нет отзывов по этому фильтру';
-  const shown = rows.slice(0, expanded ? rows.length : 12);
+  $('#review-top-cta').href = topCtaHref();
+  const shown = rows.slice(0, limit);
   $('#review-list').innerHTML = shown.length ? shown.map(reviewCard).join('') : '<p class="review-empty-state">Здесь пока пусто — <a href="/review">оставь первый отзыв</a>.</p>';
-  $('#review-more').hidden = expanded || rows.length <= shown.length;
+  updateMore(rows, shown.length);
+  measureCards();
+}
+
+function updateMore(rows, shownCount) {
+  const more = $('#review-more');
+  more.hidden = rows.length <= shownCount;
+  more.firstChild.nodeValue = `Показать ещё ${Math.min(PAGE, rows.length - shownCount)} `;
+}
+
+// "Показать ещё": the next cards are added under the ones already on the page, so opened cards stay open.
+function showMore() {
+  const rows = filteredReviews();
+  const from = Math.min(limit, rows.length);
+  limit += PAGE;
+  $('#review-list').insertAdjacentHTML('beforeend', rows.slice(from, limit).map(reviewCard).join(''));
+  updateMore(rows, Math.min(limit, rows.length));
+  measureCards();
 }
 
 document.querySelectorAll('[data-mode]').forEach(button => button.onclick = () => {
   mode = button.dataset.mode;
-  filterSchool = ''; filterTeacher = ''; expanded = false;
+  filterSchool = ''; filterTeacher = ''; limit = PAGE;
   document.querySelectorAll('[data-mode]').forEach(b => { b.classList.toggle('active', b === button); b.setAttribute('aria-pressed', String(b === button)); });
   syncCombo();
   render();
 });
-$('#review-more').onclick = () => { expanded = true; render(); };
+$('#review-more').onclick = showMore;
 
 const comboInput = $('#review-filter');
 comboInput.addEventListener('input', () => renderCombo(comboInput.value));

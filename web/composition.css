@@ -1478,7 +1478,7 @@ body.compare-page{overflow-x:clip}
 .review-combo-list .review-combo-empty{color:var(--muted);cursor:default}
 @media(hover:hover){.review-combo-list .review-combo-empty:hover{background:none}}
 .reviews-count{margin:0;font-size:13px;color:var(--muted)}
-.review-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.review-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-flow:row dense;gap:16px;align-items:stretch}
 .review-card{background:#fff;border:1px solid var(--surface-line);border-radius:var(--r-lg);padding:22px;display:flex;flex-direction:column;gap:14px;transition:box-shadow .25s var(--ease-out),border-color .25s var(--ease-out)}
 @media(hover:hover){.review-card:hover{border-color:#d3d8f3;box-shadow:0 14px 30px -18px rgb(52 75 216/.35)}}
 .review-card-head{display:flex;align-items:center;gap:12px}
@@ -2239,3 +2239,20 @@ body{background:#eef1fc}
 .sp-faq-item{max-width:760px;border-bottom:1px solid var(--surface-line);padding:14px 0}
 .sp-faq-item summary{cursor:pointer;font:600 16px/1.4 var(--font-ui);color:var(--ink)}
 .sp-faq-item p{margin:10px 0 0;color:#4d5364;font-size:15px;line-height:1.6}
+
+/* Reviews: every card has the same text zone (3 + 2 lines), the rest opens with "Читать полностью" and spans the whole row. */
+.reviews-count-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+.review-top-cta{min-height:44px;padding:10px 18px;font-size:13px}
+.review-body{display:grid;gap:12px;align-content:start;flex:1}
+.review-text p{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
+.review-text.is-plus p{-webkit-line-clamp:3;min-height:calc(1.55em*3)}
+.review-text.is-minus p{-webkit-line-clamp:2;min-height:calc(1.55em*2)}
+.review-text.is-blank p{color:var(--muted);font-style:italic}
+.review-text.is-none{min-height:calc(1.55em*5 + 52px)}
+.review-toggle{align-self:flex-start;margin:0;padding:6px 0;border:0;background:none;color:var(--blue);font:600 13px/1.3 var(--font-ui);cursor:pointer}
+.review-toggle[hidden]{display:none}
+@media(hover:hover){.review-toggle:hover{text-decoration:underline}}
+.review-card.is-open{grid-column:1/-1}
+.review-card.is-open .review-text p{display:block;min-height:0;-webkit-line-clamp:unset}
+.review-card.is-open .review-text.is-blank{display:none}
+@media(max-width:700px){.review-top-cta{width:100%}.review-card.is-open{grid-column:auto}}

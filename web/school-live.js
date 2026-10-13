@@ -1,5 +1,6 @@
 // A school page is built as a static file, so its numbers can be older than the console: this puts the current ones on it.
 import { applyLiveRatings, fetchPublicReviews, ratingMark } from './supabase-client.js?v=9';
+import { wireReviewExpand } from './review-expand.js?v=1';
 
 const list = document.getElementById('sp-criteria');
 if (list) {
@@ -63,11 +64,11 @@ if (reviewBox) {
   const PERIODS = {'2026/27': 'учился в 2026/27', '2025/26': 'учился в 2025/26', '2024/25': 'учился в 2024/25', earlier: 'учился раньше 2024 года'};
   const part = (title, text, cls) => {
     const block = document.createElement('div');
-    block.className = `review-text ${cls}`;
+    block.className = `review-text ${cls}${text ? '' : ' is-blank'}`;
     const head = document.createElement('h4');
     head.textContent = title;
     const body = document.createElement('p');
-    body.textContent = text;
+    body.textContent = text || 'Не указано';
     block.append(head, body);
     return block;
   };
@@ -93,8 +94,26 @@ if (reviewBox) {
     score.append(of);
     head.append(meta, score);
     article.append(head);
-    if (review.text_positive) article.append(part('Понравилось', review.text_positive, 'is-plus'));
-    if (review.text_negative) article.append(part('Не понравилось', review.text_negative, 'is-minus'));
+    const body = document.createElement('div');
+    body.className = 'review-body';
+    if (review.text_positive || review.text_negative) {
+      body.append(part('Понравилось', review.text_positive, 'is-plus'), part('Не понравилось', review.text_negative, 'is-minus'));
+    } else {
+      const none = document.createElement('div');
+      none.className = 'review-text is-none';
+      const note = document.createElement('p');
+      note.className = 'review-empty';
+      note.textContent = 'Без комментария — только оценки.';
+      none.append(note);
+      body.append(none);
+    }
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'review-toggle';
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.hidden = true;
+    toggle.textContent = 'Читать полностью';
+    article.append(body, toggle);
     return article;
   };
   const reviews = (await fetchPublicReviews()).filter(r => !r.teacher_id && Number(r.school_id) === Number(section.dataset.schoolId));
@@ -103,7 +122,9 @@ if (reviewBox) {
     const verified = reviews.filter(r => r.verified).length;
     const plural = (n, one, few, many) => { const m = n % 100, d = n % 10; return m > 10 && m < 20 ? many : d === 1 ? one : d > 1 && d < 5 ? few : many; };
     if (summary) summary.textContent = `${reviews.length} ${plural(reviews.length, 'отзыв', 'отзыва', 'отзывов')} учеников, из них подтверждённых: ${verified}. Каждый отзыв проверяет модератор.`;
+    const measure = wireReviewExpand(reviewBox);
     reviewBox.replaceChildren(...reviews.slice(0, 3).map(card));
+    measure();
     const all = document.getElementById('sp-reviews-all');
     if (all && reviews.length > 3) all.hidden = false;
   } else if (summary) {

@@ -16,7 +16,7 @@ CSS_VERSIONS = {
     "styles.css": "37",
     "refinements.css": "46",
     "typography.css": "31",
-    "composition.css": "261",
+    "composition.css": "262",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -507,7 +507,7 @@ def build_page(school, people, others, header, footer, teacher_slugs):
 {footer}
 <script>window.TEACHER_SLUGS={slug_map};</script>
 <script src="/supabase-config.js?v=2"></script>
-<script type="module" src="/school-live.js?v=2"></script>
+<script type="module" src="/school-live.js?v=3"></script>
 <script src="/analytics-config.js?v=2"></script>
 <script src="/analytics.js?v=30"></script>
 {NAV_SCRIPT}
