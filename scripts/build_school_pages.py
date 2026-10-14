@@ -18,9 +18,9 @@ CSS_VERSIONS = {
     "typography.css": "31",
     "composition.css": "267",
 }
-# Schools whose teachers we list only in part (the school has dozens). The note about it is shown only for these:
-# for the others the list is complete as far as the school publishes it.
-INCOMPLETE_TEACHER_LISTS = {"Умскул", "100балльный репетитор", "Фоксфорд", "Сотка", "Школково", "НОО", "Турбо ЕГЭ"}
+# Schools whose teachers we list only in part (a tutoring service with a catalogue of hundreds). The note about it is shown only
+# for the names in this set. Empty now: every school with named teachers is listed completely (OGE teachers are left out on purpose).
+INCOMPLETE_TEACHER_LISTS = set()
 CRITERIA = {
     "teachers_score": "Преподаватели",
     "practice_score": "Практика и ДЗ",
