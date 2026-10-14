@@ -60,3 +60,22 @@ def test_the_health_check_retries_too():
     FakeSMTP.drops = 1
     mailer.check_login(SETTINGS)
     assert FakeSMTP.calls == 2
+
+
+def test_the_code_letter_is_short_machine_marked_and_has_a_text_and_html_part():
+    import email
+    sent = {}
+
+    class Catch(FakeSMTP):
+        def send_message(self, message): sent["m"] = message
+
+    mailer.smtplib.SMTP_SSL = Catch
+    subject, body = mailer.review_code_letter("654321")
+    mailer._send(SETTINGS, "to@x.ru", subject, body)
+    message = sent["m"]
+    assert "654321" in message["Subject"] and len(message["Subject"]) < 50
+    assert message["Auto-Submitted"] == "auto-generated" and message["Date"] and message["Reply-To"] == "a@b.ru"
+    kinds = [part.get_content_type() for part in message.walk() if not part.is_multipart()]
+    assert kinds == ["text/plain", "text/html"]
+    html = message.get_body(("html",)).get_content()
+    assert "<a " not in html and "654321" in html

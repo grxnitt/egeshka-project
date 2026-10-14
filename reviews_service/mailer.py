@@ -4,7 +4,8 @@ import smtplib
 import ssl
 import time
 from email.message import EmailMessage
-from email.utils import formataddr, make_msgid
+from email.utils import formataddr, formatdate, make_msgid
+from html import escape
 
 
 class MailError(RuntimeError):
@@ -37,7 +38,13 @@ def _send_once(settings, to: str, subject: str, body: str) -> None:
     message["To"] = to
     message["Subject"] = subject
     message["Message-ID"] = make_msgid(domain="egematch.ru")
+    message["Date"] = formatdate(localtime=True)
+    message["Reply-To"] = settings.smtp_from or settings.smtp_user
+    # a machine-sent one-off letter: tells autoresponders to stay quiet, and spam filters that nobody is being mailed in bulk
+    message["Auto-Submitted"] = "auto-generated"
+    message["X-Auto-Response-Suppress"] = "All"
     message.set_content(body)
+    message.add_alternative(_html(body), subtype="html")      # text and HTML versions, as the big senders do
     context = ssl.create_default_context()
     if settings.smtp_port == 465:
         with smtplib.SMTP_SSL(settings.smtp_host, settings.smtp_port, timeout=20, context=context) as smtp:
@@ -48,6 +55,12 @@ def _send_once(settings, to: str, subject: str, body: str) -> None:
             smtp.starttls(context=context)
             smtp.login(settings.smtp_user, settings.smtp_password)
             smtp.send_message(message)
+
+
+def _html(body: str) -> str:
+    """The same text as a plain HTML letter: no images, no links, no scripts."""
+    paragraphs = "".join(f"<p>{escape(part).replace(chr(10), '<br>')}</p>" for part in body.strip().split("\n\n"))
+    return f'<html><body style="font-family:Arial,sans-serif;font-size:15px;line-height:1.5;color:#222">{paragraphs}</body></html>'
 
 
 def check_login(settings) -> None:
@@ -78,19 +91,19 @@ async def send(settings, to: str, subject: str, body: str) -> None:
 
 
 def review_code_letter(code: str) -> tuple:
-    return ("Код подтверждения отзыва — ЕГЭ Мэтч",
+    return (f"Код подтверждения: {code} — ЕГЭ Мэтч",
             f"Код для подтверждения отзыва на egematch.ru: {code}\n\n"
             "Он действует 15 минут. Введи его на странице отзыва.\n\n"
             "Если ты не оставлял отзыв, просто проигнорируй это письмо: без кода отзыв не будет сохранён.\n\n"
-            "ЕГЭ Мэтч\n")
+            "ЕГЭ Мэтч, egematch.ru\n")
 
 
 def deletion_code_letter(code: str) -> tuple:
-    return ("Код для удаления данных — ЕГЭ Мэтч",
+    return (f"Код удаления данных: {code} — ЕГЭ Мэтч",
             f"Код для удаления твоих данных с egematch.ru: {code}\n\n"
             "Он действует 15 минут. После ввода кода мы удалим все отзывы, оставленные с этой почты, и связанные с ними данные.\n\n"
             "Если ты не запрашивал удаление, проигнорируй письмо: без кода ничего не произойдёт.\n\n"
-            "ЕГЭ Мэтч\n")
+            "ЕГЭ Мэтч, egematch.ru\n")
 
 
 def moderation_letter(count: int) -> tuple:
