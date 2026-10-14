@@ -2275,3 +2275,4 @@ body{background:#eef1fc}
 .article-body .about-actions a.button{text-decoration:none}
 .article-body .about-actions a.button.blue{color:#fff}
 .article-body .about-actions a.button.outline{color:var(--ink)}
+.sp-teachers-note{max-width:760px;margin:16px 0 0}

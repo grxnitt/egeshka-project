@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 WEB = ROOT / "web"
-CSS = {"styles.css": "37", "refinements.css": "46", "typography.css": "31", "composition.css": "266", "review-form.css": "5"}
+CSS = {"styles.css": "37", "refinements.css": "46", "typography.css": "31", "composition.css": "267", "review-form.css": "5"}
 JS_VERSION = "10"
 CONSENT_VERSION = "reviews-2026-10-14"   # keep equal to reviews_service.validation.CONSENT_VERSION
 

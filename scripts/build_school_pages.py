@@ -16,7 +16,7 @@ CSS_VERSIONS = {
     "styles.css": "37",
     "refinements.css": "46",
     "typography.css": "31",
-    "composition.css": "266",
+    "composition.css": "267",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -457,6 +457,8 @@ def build_page(school, people, others, header, footer, teacher_slugs):
         teachers_block = (
             f'<section class="sp-section" id="teachers"><h2 class="t-h3">Преподаватели ({len(people)})</h2>'
             f'{filter_html}<ul class="sp-teachers">{"".join(teacher_card(p, n) for n, p in enumerate(people))}</ul>'
+            f'<p class="sp-hint sp-teachers-note">Здесь не весь преподавательский состав: у школ их много, и мы занесли не всех, поэтому отзывов есть не о каждом. '
+            f'Полный список преподавателей — <a href="{escape(school["url"])}" target="_blank" rel="noopener">на сайте школы ↗</a>.</p>'
             '</section>'
         )
     else:
