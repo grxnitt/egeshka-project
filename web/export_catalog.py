@@ -18,7 +18,10 @@ async def public_catalog_ids():
     """Use database IDs for rating snapshots; retain deterministic IDs offline."""
     url = os.environ.get('DATABASE_URL')
     if not url:
-        return {}, {}
+        # Offline: the ids of the live database, saved in content/db_ids.json (scripts/refresh_db_ids.py). Never renumber
+        # by list position: a teacher added in the middle of the list would shift every id after it.
+        saved = json.loads((Path(__file__).resolve().parents[1] / 'content' / 'db_ids.json').read_text(encoding='utf-8'))
+        return saved['schools'], {(school, name, subject): ident for school, name, subject, ident in saved['teachers']}
     engine, sessions = await init_db(url, manage_schema=False)
     try:
         async with sessions() as session:
@@ -53,8 +56,17 @@ for fallback_school_id, row in enumerate(SEED, start=1):
         'criteriaStatus': criteria_status(row),
         'score': round(editorial_score(row), 1),
     })
+def teacher_id_for(row, fallback):
+    key = (row[0], row[1], row[2])
+    if key in teacher_ids:
+        return teacher_ids[key]
+    if os.environ.get('DATABASE_URL'):
+        return fallback
+    raise SystemExit(f"{row[0]} / {row[1]}: not in content/db_ids.json. Add the teacher to the database first, then run scripts/refresh_db_ids.py")
+
+
 catalog = {'schools': schools, 'teachers': [
-    {'id': teacher_ids.get((t[0], t[1], t[2]), fallback_teacher_id), 'school': t[0], 'name': t[1], 'subject': t[2], 'subjects': t[2].split(' / '), 'description': teacher_description(t[3]), 'studentScore': None, 'verifiedReviewCount': 0, 'isPreliminary': True, 'criteria': {}, 'url': t[6]}
+    {'id': teacher_id_for(t, fallback_teacher_id), 'school': t[0], 'name': t[1], 'subject': t[2], 'subjects': t[2].split(' / '), 'description': teacher_description(t[3]), 'studentScore': None, 'verifiedReviewCount': 0, 'isPreliminary': True, 'criteria': {}, 'url': t[6]}
     for fallback_teacher_id, t in enumerate(TEACHERS, start=1)
 ]}
 Path(__file__).with_name('catalog.json').write_text(json.dumps(catalog, ensure_ascii=False, indent=2) + '\n')
