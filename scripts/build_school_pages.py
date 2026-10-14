@@ -464,8 +464,8 @@ def build_page(school, people, others, header, footer, teacher_slugs):
     else:
         teachers_block = (
             '<section class="sp-section" id="teachers"><h2 class="t-h3">Преподаватели</h2>'
-            "<p>Школа работает по модели репетиторского сервиса: конкретного преподавателя "
-            "выбирают на сайте школы.</p></section>"
+            f'<p>Преподавателей этой школы мы пока не вносили: их список и выбор преподавателя — '
+            f'<a href="{escape(school["url"])}" target="_blank" rel="noopener">на сайте школы ↗</a>.</p></section>'
         )
     other_links = "".join(
         f'<a href="/schools/{o["reviewSlug"]}">{escape(o["name"])}</a>' for o in others
