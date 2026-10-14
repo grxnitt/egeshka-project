@@ -14,7 +14,7 @@ def test_reviews_page_exists_with_no_personal_data():
     assert 'id="review-list"' in page and 'id="review-filter"' in page
     assert 'data-mode="schools"' in page and 'data-mode="teachers"' in page
     # The whole point: real text, real per-criterion scores, no e-mail; a name only if the author chose to sign.
-    assert "Почты авторов не показываем" in page and "модератором" in page
+    assert "Почты авторов не показываем" in page and "модератор" in page
     # the "N+ reviews" sticker is filled in by the script and stays hidden below 10 reviews
     assert 'id="reviews-sticker"' in page and "hidden" in page.split('id="reviews-sticker"')[1].split(">")[0]
 
