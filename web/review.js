@@ -79,7 +79,7 @@ function renderAuthor() {
   });
   $('#rf-name-wrap').hidden = state.author !== 'named';
   $('#rf-author-hint').textContent = state.author === 'named'
-    ? 'Достаточно имени или ника, не ФИО. Например: «Маша» или «ege_ivan». Без фамилии, ссылок и телефонов: такие отзывы не публикуем.'
+    ? 'Одно слово: имя или ник, например «Маша» или «ege_ivan». Можно добавить первую букву фамилии: «Иван К.». Фамилии, ссылки и телефоны не публикуем.'
     : 'Имя автора не покажем. Отзывы с именем вызывают больше доверия, но это ваш выбор.';
 }
 
@@ -149,7 +149,7 @@ function validate() {
   if (state.author === 'named') {
     const name = $('#rf-name').value.trim();
     if (name.length < NAME_MIN || name.length > NAME_MAX) mark('rf-name', `Имя или ник: от ${NAME_MIN} до ${NAME_MAX} символов. Или выбери «Анонимно».`, $('#rf-name'));
-    else if (name.split(/\s+/).length > 2) mark('rf-name', 'Достаточно имени или ника, без фамилии и отчества.', $('#rf-name'));
+    else if (name.split(/\s+/).length > 2 || (name.split(/\s+/).length === 2 && name.split(/\s+/)[1].replace(/\.$/, '').length !== 1)) mark('rf-name', 'Достаточно имени или ника, без фамилии. Можно добавить только первую букву: «Иван К.».', $('#rf-name'));
     else if (LINK.test(name) || name.includes('@') || (name.match(/\d/g) || []).length > 4) mark('rf-name', 'В имени не должно быть ссылок, почты и телефонов.', $('#rf-name'));
   }
   if (!state.schoolId) mark('rf-target', 'Выбери школу.', $('#rf-school'));

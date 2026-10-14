@@ -12,14 +12,14 @@ def test_no_name_means_anonymous():
     assert clean_display_name(None) is None and clean_display_name("") is None and clean_display_name("   ") is None
 
 
-@pytest.mark.parametrize("name", ["Маша", "ege_ivan", "Иван К.", "Anna-Maria", "  Саша   "])
+@pytest.mark.parametrize("name", ["Маша", "ege_ivan", "Иван К.", "Иван К", "Anna-Maria", "  Саша   "])
 def test_first_names_and_nicknames_are_accepted(name):
     assert clean_display_name(name) == " ".join(name.split())
 
 
 @pytest.mark.parametrize("name", [
     "А", "x" * 31,                         # too short, too long
-    "Иванов Иван Иванович",                # a full name
+    "Иванов Иван Иванович", "Александр Попов", "Иван Петров",   # a full name or a name with a surname
     "ivan.petrov@mail.ru", "vk.com/ivan", "https://t.me/x",   # contact details and links
     "+7 999 123 45 67", "89991234567",     # phone numbers
     "ЕГЭ Мэтч", "Администрация", "модератор", "Поддержка",    # impersonation

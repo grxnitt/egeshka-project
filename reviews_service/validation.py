@@ -98,8 +98,10 @@ def clean_display_name(value) -> Optional[str]:
     name = " ".join(unicodedata.normalize("NFKC", str(value)).split())
     if not NAME_MIN <= len(name) <= NAME_MAX:
         raise ReviewError(f"Имя или ник: от {NAME_MIN} до {NAME_MAX} символов. Или выбери «Анонимно».")
-    if len(name.split()) > 2:
-        raise ReviewError("Достаточно имени или ника, без фамилии и отчества.")
+    words = name.split()
+    # one word (a first name or a nickname), or a name and the first letter of the surname: "Иван К."
+    if len(words) > 2 or (len(words) == 2 and len(words[1].rstrip(".")) != 1):
+        raise ReviewError("Достаточно имени или ника, без фамилии. Можно добавить только первую букву: «Иван К.».")
     if LINK_RE.search(name) or "@" in name or sum(ch.isdigit() for ch in name) > 4:
         raise ReviewError("В имени не должно быть ссылок, почты и телефонов.")
     if not NAME_CHARS.match(name):
