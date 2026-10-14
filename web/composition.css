@@ -2271,3 +2271,7 @@ body{background:#eef1fc}
 .about-actions{display:flex;flex-wrap:wrap;gap:10px;margin:28px 0 0}
 .about-actions .button{margin:0}
 @media(max-width:700px){.about-actions .button{width:100%}}
+/* Buttons inside a text page must not take the article link style (blue, underlined). */
+.article-body .about-actions a.button{text-decoration:none}
+.article-body .about-actions a.button.blue{color:#fff}
+.article-body .about-actions a.button.outline{color:var(--ink)}
