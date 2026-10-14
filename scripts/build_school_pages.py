@@ -16,7 +16,7 @@ CSS_VERSIONS = {
     "styles.css": "37",
     "refinements.css": "46",
     "typography.css": "31",
-    "composition.css": "267",
+    "composition.css": "268",
 }
 # Schools whose teachers we list only in part (a tutoring service with a catalogue of hundreds). The note about it is shown only
 # for the names in this set. Empty now: every school with named teachers is listed completely (OGE teachers are left out on purpose).
@@ -171,6 +171,32 @@ def make_head(title, description, url, crumbs, noindex=False, og_type="website",
 {css}
   <script type="application/ld+json">{json.dumps(breadcrumb, ensure_ascii=False)}</script>{extra}
 </head>"""
+
+
+SENTENCE_BREAK = re.compile(r"(?<=[.!?])\s+(?=[«\"(A-ZА-ЯЁ0-9])")
+ABBREVIATIONS = {"руб", "мес", "тыс", "т.д", "т. д", "т.п", "т. п", "напр", "г", "гг", "стр", "ул", "см", "др", "пр", "млн", "р", "ч", "мин", "чел"}
+
+
+def sentences(text):
+    """Sentences of a long text; a full stop after an abbreviation or an initial does not end one."""
+    out = []
+    for part in SENTENCE_BREAK.split(str(text).strip()):
+        if out:
+            match = re.search(r"(\S+)\.$", out[-1])
+            last = match.group(1).lower() if match else ""
+            if last in ABBREVIATIONS or len(last) == 1:
+                out[-1] += " " + part
+                continue
+        out.append(part)
+    return out
+
+
+def points(text):
+    """One sentence stays a paragraph; several become a list, so different thoughts are not run together."""
+    items = sentences(text)
+    if len(items) < 2:
+        return f"<p>{escape(text)}</p>"
+    return '<ul class="sp-points">' + "".join(f"<li>{escape(item)}</li>" for item in items) + "</ul>"
 
 
 def faq_items(school):
@@ -491,7 +517,7 @@ def build_page(school, people, others, header, footer, teacher_slugs):
   <section class="sp-section"><h2 class="t-h3">Оценка по критериям</h2>{badges_block}<ul class="sp-criteria" id="sp-criteria" data-school-id="{school["id"]}">{criteria_rows}</ul>{missing_note}<a class="button blue sp-hero-cta" href="{lead_url}" target="_blank" rel="noopener" data-choose-school="{escape(school["name"])}" data-source="school_page_criteria">Выбрать школу <span>↗</span></a></section>
   {facts_block(school)}
   <section class="sp-section"><h2 class="t-h3">Предметы ({len(school["subjects"])})</h2><ul class="sp-chips">{subjects}</ul></section>
-  <section class="sp-facts"><article><h2 class="t-title">Стоимость</h2><p>{escape(school["price"])}</p><p class="sp-inline-link"><a href="{escape(school["url"])}" target="_blank" rel="noopener">Проверить актуальные цены на сайте школы ↗</a></p></article><article><h2 class="t-title">Формат обучения</h2><p>{escape(school["format"])}</p></article><article><h2 class="t-title">Почему выбирают</h2><p>{escape(school["strengths"])}</p></article><article><h2 class="t-title">Что проверить перед покупкой</h2><p>{escape(school["weaknesses"])}</p></article></section>
+  <section class="sp-facts"><article><h2 class="t-title">Стоимость</h2>{points(school["price"])}<p class="sp-inline-link"><a href="{escape(school["url"])}" target="_blank" rel="noopener">Проверить актуальные цены на сайте школы ↗</a></p></article><article><h2 class="t-title">Формат обучения</h2>{points(school["format"])}</article><article><h2 class="t-title">Почему выбирают</h2>{points(school["strengths"])}</article><article><h2 class="t-title">Что проверить перед покупкой</h2>{points(school["weaknesses"])}</article></section>
   {teachers_block}
   <div class="sp-actions"><a class="button blue" href="{lead_url}" target="_blank" rel="noopener" data-choose-school="{escape(school["name"])}" data-source="school_page">Выбрать школу <span>↗</span></a><a class="button dark" href="{review_url}" data-source="school_page_review">Оставить отзыв <span>→</span></a><a class="button outline" href="{compare_url}">Сравнить с другой школой <span>→</span></a></div>
   <p class="sp-site-link">В боте: тарифы и преподаватели. Условия и цены школа публикует на <a href="{escape(school["url"])}" target="_blank" rel="noopener">официальном сайте ↗</a></p>
