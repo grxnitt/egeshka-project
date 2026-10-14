@@ -18,6 +18,9 @@ CSS_VERSIONS = {
     "typography.css": "31",
     "composition.css": "267",
 }
+# Schools whose teachers we list only in part (the school has dozens). The note about it is shown only for these:
+# for the others the list is complete as far as the school publishes it.
+INCOMPLETE_TEACHER_LISTS = {"Умскул", "100балльный репетитор", "Фоксфорд", "Сотка", "Школково", "НОО", "Турбо ЕГЭ"}
 CRITERIA = {
     "teachers_score": "Преподаватели",
     "practice_score": "Практика и ДЗ",
@@ -457,9 +460,10 @@ def build_page(school, people, others, header, footer, teacher_slugs):
         teachers_block = (
             f'<section class="sp-section" id="teachers"><h2 class="t-h3">Преподаватели ({len(people)})</h2>'
             f'{filter_html}<ul class="sp-teachers">{"".join(teacher_card(p, n) for n, p in enumerate(people))}</ul>'
-            f'<p class="sp-hint sp-teachers-note">Здесь не весь преподавательский состав: у школ их много, и мы занесли не всех, поэтому отзывов есть не о каждом. '
-            f'Полный список преподавателей — <a href="{escape(school["url"])}" target="_blank" rel="noopener">на сайте школы ↗</a>.</p>'
-            '</section>'
+            + (f'<p class="sp-hint sp-teachers-note">Здесь не весь преподавательский состав: у школы их много, и мы занесли не всех, поэтому отзывов есть не о каждом. '
+               f'Полный список преподавателей — <a href="{escape(school["url"])}" target="_blank" rel="noopener">на сайте школы ↗</a>.</p>'
+               if school["name"] in INCOMPLETE_TEACHER_LISTS else "")
+            + '</section>'
         )
     else:
         teachers_block = (
