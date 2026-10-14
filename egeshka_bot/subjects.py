@@ -3,6 +3,7 @@ SUBJECTS = ["Русский", "Математика профильная", "Об
 MATH_BOTH = "Математика профильная / Математика базовая"
 BASE_SCHOOL_SOURCES = {
     "Умскул": "https://umschool.net/courses/",
+    "Годограф": "https://godege.ru/onlayn-ege/matematika.html",
     "100балльный репетитор": "https://100points.ru/course/basic-math-ege-baza-otdyha-s-matemanei/",
     "Сотка": "https://sotkaonline.ru/ege/10class/matematika/baza",
     "Фоксфорд": "https://foxford.ru/courses/17242/landing",

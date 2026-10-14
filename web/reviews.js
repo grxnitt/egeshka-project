@@ -1,6 +1,6 @@
 import { applyLiveRatings, fetchPublicReviews } from './supabase-client.js?v=11';
 import { wireReviewExpand } from './review-expand.js?v=1';
-import { schoolInitial, schoolLogos, schoolTone } from './school-content.js?v=51';
+import { schoolInitial, schoolLogos, schoolTone } from './school-content.js?v=52';
 
 const $ = selector => document.querySelector(selector);
 const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
