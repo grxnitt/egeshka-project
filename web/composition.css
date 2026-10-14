@@ -2268,3 +2268,6 @@ body{background:#eef1fc}
 .sp-reviews-links{margin:18px 0 0}
 .sp-reviews-links .button{margin:0}
 @media(max-width:700px){.sp-ask-actions .button{width:100%}}
+.about-actions{display:flex;flex-wrap:wrap;gap:10px;margin:28px 0 0}
+.about-actions .button{margin:0}
+@media(max-width:700px){.about-actions .button{width:100%}}

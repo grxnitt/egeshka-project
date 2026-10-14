@@ -16,7 +16,7 @@ CSS_VERSIONS = {
     "styles.css": "37",
     "refinements.css": "46",
     "typography.css": "31",
-    "composition.css": "264",
+    "composition.css": "265",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -613,7 +613,7 @@ def article_index():
 
 
 def write_sitemap(schools):
-    static = [("/", "1.0", "weekly"), ("/ratings", "0.9", "weekly"), ("/compare", "0.8", "weekly"), ("/reviews", "0.7", "daily"), ("/review", "0.6", "monthly"), ("/methodology", "0.6", "monthly"), ("/privacy", "0.3", "yearly"), ("/terms", "0.3", "yearly")]
+    static = [("/", "1.0", "weekly"), ("/ratings", "0.9", "weekly"), ("/compare", "0.8", "weekly"), ("/reviews", "0.7", "daily"), ("/review", "0.6", "monthly"), ("/methodology", "0.6", "monthly"), ("/about", "0.5", "monthly"), ("/privacy", "0.3", "yearly"), ("/terms", "0.3", "yearly")]
     articles = article_index()
     if articles:
         static.append(("/articles", "0.7", "weekly"))
