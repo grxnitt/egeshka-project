@@ -95,7 +95,7 @@ def create_app(settings, session_factory) -> web.Application:
                 "id": r.id, "school": schools.get(r.school_id, "?"), "teacher": teachers.get(r.teacher_id),
                 "scores": json.loads(r.criteria_json or "{}"), "score": r.score, "positive": r.text_positive,
                 "negative": r.text_negative, "period": r.study_period, "status": r.moderation_status,
-                "verified": r.verified, "created": moscow(r.created_at),
+                "verified": r.verified, "created": moscow(r.created_at), "author": r.display_name,
                 "proofs": proofs.get(r.id, []), "samePerson": same_person, "sameNetwork": same_ip,
             })
         return result

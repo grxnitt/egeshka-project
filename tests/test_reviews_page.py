@@ -13,17 +13,19 @@ def test_reviews_page_exists_with_no_personal_data():
     assert '<link rel="canonical" href="https://egematch.ru/reviews">' in page
     assert 'id="review-list"' in page and 'id="review-filter"' in page
     assert 'data-mode="schools"' in page and 'data-mode="teachers"' in page
-    # The whole point: real text, real per-criterion scores, but no author identity.
-    assert "Без имён и почт" in page and "модератором" in page
+    # The whole point: real text, real per-criterion scores, no e-mail; a name only if the author chose to sign.
+    assert "Почты авторов не показываем" in page and "модератором" in page
     # the "N+ reviews" sticker is filled in by the script and stays hidden below 10 reviews
     assert 'id="reviews-sticker"' in page and "hidden" in page.split('id="reviews-sticker"')[1].split(">")[0]
 
 
-def test_reviews_js_never_renders_a_reviewer_name():
+def test_reviews_js_only_renders_the_signature_the_author_chose():
     script = read("reviews.js")
     assert "fetchPublicReviews" in script
-    # It must read school/teacher identity to link the card, never a user/author field.
-    assert "user_id" not in script and "author" not in script and "username" not in script
+    # It must read school/teacher identity to link the card, never a user id or account name.
+    assert "user_id" not in script and "username" not in script
+    # The only person-related field is the signature the author chose (a first name or nickname), always escaped.
+    assert "escape(review.display_name)" in script
 
 
 def test_public_reviews_view_excludes_personal_columns():

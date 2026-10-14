@@ -86,7 +86,8 @@ async def confirm_draft(session, draft: ReviewDraft, now=None):
                     criteria_json=json.dumps(payload["scores"], ensure_ascii=False), score=float(payload["score"]),
                     text_positive=payload["positive"], text_negative=payload["negative"], moderation_status="pending",
                     verified=False, created_at=now, source="site", study_period=payload["period"],
-                    ip_hash=draft.ip_hash or None, consent_version=CONSENT_VERSION)
+                    ip_hash=draft.ip_hash or None, consent_version=CONSENT_VERSION,
+                    display_name=payload.get("display_name") or None)
     session.add(review)
     await session.flush()
     for key, value in payload["scores"].items():

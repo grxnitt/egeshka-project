@@ -2258,3 +2258,13 @@ body{background:#eef1fc}
 @media(max-width:700px){.review-top-cta{width:100%}.review-card.is-open{grid-column:auto}}
 /* Reviews page: the action sits with the tabs, the filter with the count. */
 @media(max-width:700px){.reviews-count-row{flex-direction:column;align-items:stretch;gap:10px}.reviews-count-row .reviews-filter-label{width:100%}}
+
+/* A review is signed with a name or a nickname, or shown as anonymous. */
+.review-author{font-weight:700;color:var(--ink)}
+.review-author.is-anon{font-weight:600;color:var(--muted);font-style:italic}
+
+.sp-ask-actions{display:flex;flex-wrap:wrap;gap:10px}
+.sp-ask-actions .button{margin:0}
+.sp-reviews-links{margin:18px 0 0}
+.sp-reviews-links .button{margin:0}
+@media(max-width:700px){.sp-ask-actions .button{width:100%}}

@@ -1,4 +1,4 @@
-import { applyLiveRatings, fetchPublicReviews } from './supabase-client.js?v=10';
+import { applyLiveRatings, fetchPublicReviews } from './supabase-client.js?v=11';
 import { wireReviewExpand } from './review-expand.js?v=1';
 import { schoolInitial, schoolLogos, schoolTone } from './school-content.js?v=51';
 
@@ -47,6 +47,7 @@ function reviewCard(review) {
   const subtitle = teacher ? `${escape((teacher.subjects || [teacher.subject]).join(', '))} · ${escape(school.name)}` : 'школа целиком';
   const date = review.created_at ? new Date(review.created_at).toLocaleDateString('ru-RU', {day: 'numeric', month: 'long', year: 'numeric'}) : '';
   const meta = [
+    review.display_name ? `<span class="review-author">${escape(review.display_name)}</span>` : '<span class="review-author is-anon">Аноним</span>',
     review.verified ? '<span class="review-badge is-verified">✓ подтверждён</span>' : '<span class="review-badge">без подтверждения</span>',
     date ? `<span>${escape(date)}</span>` : '',
     PERIODS[review.study_period] ? `<span>${PERIODS[review.study_period]}</span>` : '',

@@ -1,4 +1,4 @@
-import { applyLiveRatings } from './supabase-client.js?v=10';
+import { applyLiveRatings } from './supabase-client.js?v=11';
 import { chooseSchoolUrl, schoolContent, schoolFilters, schoolInitial, schoolLogos, schoolTone } from './school-content.js?v=51';
 const $ = (selector) => document.querySelector(selector);
 const escape = (value) => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

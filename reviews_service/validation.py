@@ -5,7 +5,7 @@ import unicodedata
 from decimal import ROUND_HALF_UP, Decimal
 from typing import Optional
 
-CONSENT_VERSION = "reviews-2026-10-11"
+CONSENT_VERSION = "reviews-2026-10-14"
 
 SCHOOL_CRITERIA = ("teachers_score", "practice_score", "feedback_score", "curator_score",
                    "platform_score", "workload_score", "organization_score")
@@ -86,6 +86,29 @@ def _score(value, key) -> int:
     return value
 
 
+NAME_MIN, NAME_MAX = 2, 30
+NAME_CHARS = re.compile(r"^[^\W_][\w .\-]*$", re.UNICODE)
+NAME_IMPERSONATION = re.compile(r"егэ\s*мэтч|egematch|администрац|модератор|редакци|поддержк|официальн", re.I)
+
+
+def clean_display_name(value) -> Optional[str]:
+    """An optional signature: a first name or a nickname, not a full name. None means 'anonymous'."""
+    if value is None or not str(value).strip():
+        return None
+    name = " ".join(unicodedata.normalize("NFKC", str(value)).split())
+    if not NAME_MIN <= len(name) <= NAME_MAX:
+        raise ReviewError(f"Имя или ник: от {NAME_MIN} до {NAME_MAX} символов. Или выбери «Анонимно».")
+    if len(name.split()) > 2:
+        raise ReviewError("Достаточно имени или ника, без фамилии и отчества.")
+    if LINK_RE.search(name) or "@" in name or sum(ch.isdigit() for ch in name) > 4:
+        raise ReviewError("В имени не должно быть ссылок, почты и телефонов.")
+    if not NAME_CHARS.match(name):
+        raise ReviewError("В имени можно использовать буквы, цифры, пробел, точку и дефис.")
+    if NAME_IMPERSONATION.search(name):
+        raise ReviewError("Это имя нельзя использовать: выбери другое или «Анонимно».")
+    return name
+
+
 def clean_review(data, school, teacher) -> dict:
     """Validated review fields for a school (teacher is None) or for one of its teachers."""
     if not isinstance(data, dict):
@@ -121,7 +144,7 @@ def clean_review(data, school, teacher) -> dict:
     # the overall score keeps one decimal (8.1): rounding to a whole number lost information and skewed the school rating
     overall = float((Decimal(sum(clean.values())) / Decimal(len(clean))).quantize(Decimal("0.1"), rounding=ROUND_HALF_UP))
     return {"scores": clean, "score": max(1.0, min(10.0, overall)), "positive": positive, "negative": negative,
-            "period": period}
+            "period": period, "display_name": clean_display_name(data.get("display_name"))}
 
 
 def clean_target(data) -> tuple:

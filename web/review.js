@@ -28,7 +28,8 @@ const TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const LINK = /(https?:\/\/|www\.|\b[a-z0-9-]+\.(?:ru|com|net|org|рф|io|me|online|site|pro)\b\/?)/i;
 
 let catalog, form = null;
-const state = {kind: 'school', schoolId: null, teacherId: null, scores: {}, period: null, files: [], draftToken: null, email: ''};
+const state = {kind: 'school', schoolId: null, teacherId: null, scores: {}, period: null, files: [], draftToken: null, email: '', author: 'anon'};
+const NAME_MIN = 2, NAME_MAX = 30;
 
 function school() { return catalog.schools.find(item => item.id === state.schoolId) || null; }
 function teachersOf(id) { return catalog.teachers.filter(t => t.school === catalog.schools.find(s => s.id === id)?.name).sort((a, b) => a.name.localeCompare(b.name, 'ru')); }
@@ -68,6 +69,18 @@ function renderTarget() {
     $('#rf-teacher').innerHTML = `<option value="">${state.schoolId ? (list.length ? 'Выбери преподавателя' : 'У школы пока нет преподавателей в каталоге') : 'Сначала выбери школу'}</option>`
       + list.map(t => `<option value="${t.id}"${t.id === state.teacherId ? ' selected' : ''}>${escape(t.name)} — ${escape((t.subjects || [t.subject]).join(', '))}</option>`).join('');
   }
+}
+
+function renderAuthor() {
+  document.querySelectorAll('[data-author]').forEach(button => {
+    const active = button.dataset.author === state.author;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+  $('#rf-name-wrap').hidden = state.author !== 'named';
+  $('#rf-author-hint').textContent = state.author === 'named'
+    ? 'Достаточно имени или ника, не ФИО. Например: «Маша» или «ege_ivan». Без фамилии, ссылок и телефонов: такие отзывы не публикуем.'
+    : 'Имя автора не покажем. Отзывы с именем вызывают больше доверия, но это ваш выбор.';
 }
 
 function renderScores() {
@@ -133,6 +146,12 @@ function validate() {
   clearErrors();
   let first = null;
   const mark = (id, message, node) => { fieldError(id, message); if (!first) first = node || document.getElementById(id); };
+  if (state.author === 'named') {
+    const name = $('#rf-name').value.trim();
+    if (name.length < NAME_MIN || name.length > NAME_MAX) mark('rf-name', `Имя или ник: от ${NAME_MIN} до ${NAME_MAX} символов. Или выбери «Анонимно».`, $('#rf-name'));
+    else if (name.split(/\s+/).length > 2) mark('rf-name', 'Достаточно имени или ника, без фамилии и отчества.', $('#rf-name'));
+    else if (LINK.test(name) || name.includes('@') || (name.match(/\d/g) || []).length > 4) mark('rf-name', 'В имени не должно быть ссылок, почты и телефонов.', $('#rf-name'));
+  }
   if (!state.schoolId) mark('rf-target', 'Выбери школу.', $('#rf-school'));
   else if (state.kind === 'teacher' && !state.teacherId) mark('rf-target', 'Выбери преподавателя.', $('#rf-teacher'));
   else {
@@ -204,6 +223,7 @@ async function submit(event) {
       school_id: state.schoolId, teacher_id: state.kind === 'teacher' ? state.teacherId : null,
       scores: Object.fromEntries(Object.entries(state.scores).filter(([, value]) => value !== null)),
       positive: $('#rf-positive').value, negative: $('#rf-negative').value, period: state.period,
+      display_name: state.author === 'named' ? $('#rf-name').value.trim() : null,
       email: state.email, consent: $('#rf-consent').checked, consent_version: form.consentVersion,
       formToken: form.formToken, website: $('#rf-website').value,
     };
@@ -314,6 +334,12 @@ function backToForm() {
 }
 
 function bind() {
+  document.querySelectorAll('[data-author]').forEach(button => button.addEventListener('click', () => {
+    state.author = button.dataset.author;
+    fieldError('rf-name', '');
+    renderAuthor();
+    if (state.author === 'named') $('#rf-name').focus();
+  }));
   document.querySelectorAll('[data-kind]').forEach(button => button.addEventListener('click', () => {
     state.kind = button.dataset.kind;
     state.teacherId = null;
@@ -373,6 +399,7 @@ async function start() {
   prefill();
   try { const saved = sessionStorage.getItem('rf-email'); if (saved) $('#rf-email').value = saved; } catch {}
   bind();
+  renderAuthor();
   renderTarget();
   renderScores();
   renderPeriods();
@@ -380,7 +407,7 @@ async function start() {
   $('#rf-root').removeAttribute('aria-busy');
   // Coming from a school page's "Вы учились здесь?" card: the school is already chosen, so start at the scores.
   if (new URLSearchParams(location.search).get('ref') === 'school_card' && state.schoolId) {
-    setTimeout(() => $('#rf-h2')?.scrollIntoView({block: 'start', behavior: 'smooth'}), 150);
+    setTimeout(() => $('#rf-h0')?.scrollIntoView({block: 'start', behavior: 'smooth'}), 150);
   }
   loadFormToken().catch(() => {
     alertBox(CONNECTION_HINT);

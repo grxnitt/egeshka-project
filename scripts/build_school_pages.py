@@ -16,7 +16,7 @@ CSS_VERSIONS = {
     "styles.css": "37",
     "refinements.css": "46",
     "typography.css": "31",
-    "composition.css": "263",
+    "composition.css": "264",
 }
 CRITERIA = {
     "teachers_score": "Преподаватели",
@@ -494,11 +494,9 @@ def build_page(school, people, others, header, footer, teacher_slugs):
     <p class="sp-hint" id="sp-reviews-summary">Отзывы публикуются после проверки модератором. В оценку школы входят все отзывы: подтверждённые полностью, без подтверждения с меньшим весом.</p>
     <div class="sp-ask">
       <p class="sp-ask-title">Вы учились в школе {escape(school["name"])}?</p>
-      <p>Расскажите за пару минут: оценки по семи критериям и несколько предложений о плюсах и минусах. Анонимно, почту не публикуем.</p>
-      <a class="button dark" href="{review_ask_url}" data-source="school_page_ask">Оставить отзыв <span>→</span></a>
+      <p>Расскажите за пару минут: оценки по семи критериям и несколько предложений о плюсах и минусах. Можно анонимно или с именем, почту не публикуем.</p>
+      <div class="sp-ask-actions"><a class="button dark" href="{review_ask_url}" data-source="school_page_ask">Оставить отзыв <span>→</span></a><a class="button outline" id="sp-read-reviews" href="/reviews?school={slug}" data-source="school_page_read">Читать отзывы о школе <span>→</span></a></div>
     </div>
-    <div class="sp-review-list" id="sp-review-list" aria-live="polite"></div>
-    <p class="sp-more-all" id="sp-reviews-all" hidden><a href="/reviews?school={slug}">Все отзывы о школе →</a></p>
   </section>
   {faq_block(school)}
   <section class="sp-section"><h2 class="t-h3">Другие школы</h2><nav class="sp-more" aria-label="Другие школы">{other_links}</nav><p class="sp-more-all"><a href="/ratings">Весь рейтинг →</a></p></section>
@@ -507,7 +505,7 @@ def build_page(school, people, others, header, footer, teacher_slugs):
 {footer}
 <script>window.TEACHER_SLUGS={slug_map};</script>
 <script src="/supabase-config.js?v=2"></script>
-<script type="module" src="/school-live.js?v=5"></script>
+<script type="module" src="/school-live.js?v=6"></script>
 <script src="/analytics-config.js?v=2"></script>
 <script src="/analytics.js?v=30"></script>
 {NAV_SCRIPT}
@@ -572,7 +570,7 @@ def build_teacher_page(person, school, colleagues, header, footer):
     <div class="hero-copy"><p class="teacher-kicker"><a href="{school_url}">{escape(school["name"])}</a></p><h1>{escape(person["name"])}</h1><p class="lead">{escape(subjects)}</p><div class="sp-score"><small>Оценка учеников</small><strong>{score_text}</strong><span>{score_note}</span></div></div>
   </section>
   <section class="sp-section"><h2 class="t-h3">О преподавателе</h2><p class="sp-body">{escape(person.get("description") or "")}</p></section>
-  <section class="sp-section"><h2 class="t-h3">Оценки учеников</h2>{reviews_intro}<ul class="sp-criteria">{rows}</ul></section>
+  <section class="sp-section"><h2 class="t-h3">Оценки учеников</h2>{reviews_intro}<ul class="sp-criteria">{rows}</ul><p class="sp-reviews-links"><a class="button outline" href="/reviews?teacher={person["id"]}" data-source="teacher_page_read">Читать отзывы о преподавателе <span>→</span></a></p></section>
   <div class="sp-actions"><a class="button blue" href="{lead_url}" target="_blank" rel="noopener" data-choose-school="{escape(school["name"])}" data-source="teacher_page">Выбрать школу <span>↗</span></a><a class="button dark" href="{review_url}" data-source="teacher_page_review">Оставить отзыв <span>→</span></a><a class="button outline" href="{school_url}">О школе <span>→</span></a></div>
   <p class="sp-site-link">Профиль на сайте школы: <a href="{escape(person["url"])}" target="_blank" rel="noopener">{escape(person["name"])} ↗</a></p>
   <section class="sp-section"><h2 class="t-h3">Другие преподаватели школы</h2><nav class="sp-more" aria-label="Другие преподаватели школы">{other_links}</nav><p class="sp-more-all"><a href="{school_url}#teachers">Все преподаватели школы →</a></p></section>

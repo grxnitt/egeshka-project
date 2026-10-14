@@ -71,6 +71,7 @@ class Review(Base):
     ip_hash: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
     moderated_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
     consent_version: Mapped[Optional[str]] = mapped_column(String(40), nullable=True)
+    display_name: Mapped[Optional[str]] = mapped_column(String(40), nullable=True)
 
 
 class ReviewCriterionScore(Base):

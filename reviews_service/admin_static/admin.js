@@ -62,7 +62,7 @@ function card(review) {
   return el('article', {class: 'review'},
     el('header', {}, el('h2', {}, target), el('span', {class: 'score'}, `${String(review.score).replace('.', ',')}/10`)),
     el('p', {class: 'meta'}, `${review.created.replace('T', ' ')} · учился: ${PERIODS[review.period] || '—'}`,
-      review.verified ? ' · подтверждён' : ''),
+      review.verified ? ' · подтверждён' : '', ` · подпись: ${review.author || 'аноним'}`),
     flags, scores,
     review.positive ? el('div', {class: 'text'}, el('h3', {}, 'Плюсы'), el('p', {}, review.positive)) : null,
     review.negative ? el('div', {class: 'text'}, el('h3', {}, 'Минусы'), el('p', {}, review.negative)) : null,

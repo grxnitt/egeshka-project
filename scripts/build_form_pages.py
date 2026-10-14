@@ -7,9 +7,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 WEB = ROOT / "web"
-CSS = {"styles.css": "37", "refinements.css": "46", "typography.css": "31", "composition.css": "263", "review-form.css": "5"}
-JS_VERSION = "8"
-CONSENT_VERSION = "reviews-2026-10-11"   # keep equal to reviews_service.validation.CONSENT_VERSION
+CSS = {"styles.css": "37", "refinements.css": "46", "typography.css": "31", "composition.css": "264", "review-form.css": "5"}
+JS_VERSION = "9"
+CONSENT_VERSION = "reviews-2026-10-14"   # keep equal to reviews_service.validation.CONSENT_VERSION
 
 
 def chrome():
@@ -55,14 +55,21 @@ def page(slug, title, description, body_class, main, script=None, index=True):
 REVIEW_MAIN = """<main class="rf-page">
   <section class="hero hero-centered rating-centered wrap privacy-hero rf-hero">
     <div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div class="hero-glow hero-glow-pink" aria-hidden="true"></div>
-    <div class="hero-copy"><h1><span class="hero-title-line">Оставить</span> <span class="hero-title-line brand-dot">отзыв</span></h1><p class="lead">Отзыв выходит анонимно и после модерации. Займёт пару минут: оценки, пара предложений и почта для кода.</p></div>
+    <div class="hero-copy"><h1><span class="hero-title-line">Оставить</span> <span class="hero-title-line brand-dot">отзыв</span></h1><p class="lead">Отзыв выходит после модерации, анонимно или с вашим именем. Займёт пару минут: оценки, пара предложений и почта для кода.</p></div>
   </section>
   <div class="wrap rf-layout">
     <div id="rf-root" class="rf-card" aria-busy="true">
       <p id="rf-alert" class="rf-alert" role="alert" hidden></p>
       <form id="rf-form" novalidate>
+        <section class="rf-step" aria-labelledby="rf-h0">
+          <h2 id="rf-h0"><span class="rf-num">1</span>Как подписать отзыв</h2>
+          <div class="tabs rf-tabs" role="group" aria-label="Как подписать отзыв"><button type="button" data-author="anon" class="active" aria-pressed="true">Анонимно</button><button type="button" data-author="named" aria-pressed="false">С именем или ником</button></div>
+          <p class="rf-hint" id="rf-author-hint">Имя автора не покажем. Отзывы с именем вызывают больше доверия, но это ваш выбор.</p>
+          <label class="rf-field" id="rf-name-wrap" hidden><span>Имя или ник</span><input type="text" id="rf-name" maxlength="30" autocomplete="nickname" placeholder="Например: Маша или ege_ivan"></label>
+          <p class="rf-error" id="rf-name-error" aria-live="polite"></p>
+        </section>
         <section class="rf-step" aria-labelledby="rf-h1">
-          <h2 id="rf-h1"><span class="rf-num">1</span>О ком отзыв</h2>
+          <h2 id="rf-h1"><span class="rf-num">2</span>О ком отзыв</h2>
           <div class="tabs rf-tabs" role="group" aria-label="О ком отзыв"><button type="button" data-kind="school" class="active" aria-pressed="true">О школе</button><button type="button" data-kind="teacher" aria-pressed="false">О преподавателе</button></div>
           <p class="rf-hint rf-kind-hint" id="rf-kind-hint"></p>
           <label class="rf-field"><span>Школа</span><select id="rf-school"></select></label>
@@ -70,24 +77,24 @@ REVIEW_MAIN = """<main class="rf-page">
           <p class="rf-error" id="rf-target-error" aria-live="polite"></p>
         </section>
         <section class="rf-step" aria-labelledby="rf-h2">
-          <h2 id="rf-h2"><span class="rf-num">2</span>Оценки</h2>
+          <h2 id="rf-h2"><span class="rf-num">3</span>Оценки</h2>
           <div id="rf-scores"></div>
           <p class="rf-error" id="rf-scores-error" aria-live="polite"></p>
         </section>
         <section class="rf-step" aria-labelledby="rf-h3">
-          <h2 id="rf-h3"><span class="rf-num">3</span>Когда ты учился(ась)</h2>
+          <h2 id="rf-h3"><span class="rf-num">4</span>Когда ты учился(ась)</h2>
           <div class="rf-chips" id="rf-periods" role="radiogroup" aria-labelledby="rf-h3"></div>
           <p class="rf-error" id="rf-period-error" aria-live="polite"></p>
         </section>
         <section class="rf-step" aria-labelledby="rf-h4">
-          <h2 id="rf-h4"><span class="rf-num">4</span>Расскажи подробнее</h2>
+          <h2 id="rf-h4"><span class="rf-num">5</span>Расскажи подробнее</h2>
           <label class="rf-field"><span>Что понравилось</span><textarea id="rf-positive" rows="4" maxlength="2200" placeholder="Например: понятно объясняют вторую часть, быстро проверяют домашки"></textarea><small class="rf-count" id="rf-positive-count"></small></label>
           <label class="rf-field"><span>Что не понравилось</span><textarea id="rf-negative" rows="4" maxlength="2200" placeholder="Например: много записей вместо живых занятий, куратор отвечал через день"></textarea><small class="rf-count" id="rf-negative-count"></small></label>
           <p class="rf-hint">Пиши о школе и занятиях. Отзывы с именами других учеников, телефонами, ссылками или оскорблениями не публикуем.</p>
           <p class="rf-error" id="rf-text-error" aria-live="polite"></p>
         </section>
         <section class="rf-step" aria-labelledby="rf-h5">
-          <h2 id="rf-h5"><span class="rf-num">5</span>Подтверди, что учился(ась) <em>необязательно</em></h2>
+          <h2 id="rf-h5"><span class="rf-num">6</span>Подтверди, что учился(ась) <em>необязательно</em></h2>
           <p class="rf-hint">Скриншот договора, чека или личного кабинета школы. Подтверждённый отзыв входит в оценку школы и преподавателя полностью. Без подтверждения он тоже публикуется и учитывается, но с весом в пять раз меньше.</p>
           <div class="rf-files" id="rf-files"></div>
           <label class="rf-drop" id="rf-drop"><input type="file" id="rf-file-input" accept="image/jpeg,image/png,image/webp" multiple><b>Добавить скриншот</b><small>JPG, PNG или WebP · до 10 МБ · не больше трёх</small></label>
@@ -95,7 +102,7 @@ REVIEW_MAIN = """<main class="rf-page">
           <p class="rf-error" id="rf-files-error" aria-live="polite"></p>
         </section>
         <section class="rf-step" aria-labelledby="rf-h6">
-          <h2 id="rf-h6"><span class="rf-num">6</span>Почта для кода</h2>
+          <h2 id="rf-h6"><span class="rf-num">7</span>Почта для кода</h2>
           <label class="rf-field"><span>Электронная почта</span><input type="email" id="rf-email" autocomplete="email" inputmode="email" maxlength="254" placeholder="you@example.ru"></label>
           <p class="rf-hint">Пришлём шестизначный код. Почту не публикуем и не храним: в базе остаётся только её необратимый отпечаток, чтобы один человек оставлял один отзыв о школе или преподавателе.</p>
           <p class="rf-error" id="rf-email-error" aria-live="polite"></p>
@@ -104,7 +111,7 @@ REVIEW_MAIN = """<main class="rf-page">
           <div class="rf-hp" aria-hidden="true"><label>Это поле заполнять не нужно<input type="text" id="rf-website" tabindex="-1" autocomplete="off"></label></div>
         </section>
         <button type="submit" class="button blue rf-submit" id="rf-submit"><span class="rf-label">Получить код на почту</span><span aria-hidden="true">→</span></button>
-        <p class="rf-fine">Отзыв публикуется анонимно после модерации. Удалить его можно в любой момент на странице <a href="/delete-data">«Удалить данные»</a>.</p>
+        <p class="rf-fine">Отзыв публикуется после модерации — анонимно или с выбранным вами именем. Удалить его можно в любой момент на странице <a href="/delete-data">«Удалить данные»</a>.</p>
       </form>
       <section id="rf-code-step" class="rf-code" hidden>
         <h2>Проверь почту</h2>
@@ -134,7 +141,7 @@ REVIEW_MAIN = """<main class="rf-page">
       <ul>
         <li><b>Без накруток.</b> Каждый отзыв подтверждается кодом из письма, один человек — один отзыв о школе или преподавателе.</li>
         <li><b>Модерация.</b> Каждый отзыв читает человек. Школы не могут удалить или купить отзыв.</li>
-        <li><b>Анонимно.</b> На сайте не видно ни имени, ни почты автора.</li>
+        <li><b>Имя — на ваш выбор.</b> Можно подписаться именем или ником, можно остаться анонимным. Почту автора мы никогда не показываем.</li>
         <li><b>Данные в России.</b> Отзывы хранятся на нашем сервере в Москве.</li>
       </ul>
     </aside>
@@ -184,20 +191,21 @@ CONSENT_MAIN = f"""<main class="article-page wrap">
     <div class="hero-copy"><h1><span class="hero-title-line">Согласие</span> <span class="hero-title-line brand-dot">на обработку данных</span></h1><p class="lead">Для отзывов на сайте egematch.ru.</p></div>
   </section>
   <div class="article-body">
-  <p><strong>Версия {CONSENT_VERSION}. Действует с 11 октября 2026 г.</strong></p>
+  <p><strong>Версия {CONSENT_VERSION}. Действует с 14 октября 2026 г.</strong></p>
   <p>Отмечая поле «Я даю согласие на обработку персональных данных» в форме отзыва на сайте egematch.ru, я свободно, своей волей и в своём интересе даю согласие Стародубцеву Александру Дмитриевичу, ИНН 482623207383, физическому лицу, применяющему специальный налоговый режим «Налог на профессиональный доход» (далее — Оператор), на обработку моих персональных данных на следующих условиях.</p>
   <h2>1. Какие данные</h2>
   <ul>
     <li>адрес электронной почты — используется только для отправки кода подтверждения; в базе данных хранится не адрес, а его необратимый контрольный отпечаток (хеш с секретным ключом);</li>
     <li>текст и оценки отзыва, учебный год, к которому относится отзыв;</li>
+    <li>имя или ник — только если я сам указал его в форме; без него отзыв публикуется анонимно;</li>
     <li>скриншоты, подтверждающие обучение, если я их прикладываю, — в пересохранённом виде без метаданных;</li>
     <li>контрольный отпечаток IP-адреса — до решения модерации, для защиты от массовых и поддельных отзывов;</li>
     <li>дата и время отзыва и версия этого согласия.</li>
   </ul>
   <h2>2. Зачем</h2>
-  <p>Чтобы проверить, что отзыв оставил реальный человек и один раз; провести модерацию и проверить подтверждение обучения; опубликовать отзыв на сайте анонимно — без почты и иных сведений, позволяющих установить мою личность; учесть оценки в рейтинге школ и преподавателей; выполнить мой запрос на удаление данных.</p>
+  <p>Чтобы проверить, что отзыв оставил реальный человек и один раз; провести модерацию и проверить подтверждение обучения; опубликовать отзыв на сайте анонимно или с указанным мной именем или ником — без почты и иных сведений, позволяющих установить мою личность; учесть оценки в рейтинге школ и преподавателей; выполнить мой запрос на удаление данных.</p>
   <h2>3. Что с ними делают</h2>
-  <p>Сбор, запись, систематизация, накопление, хранение, уточнение, извлечение, использование, обезличивание, блокирование, удаление и уничтожение — с использованием средств автоматизации и без них. Публикуется только текст и оценки отзыва, без почты и иных идентификаторов. Данные не передаются третьим лицам, кроме случаев, прямо предусмотренных законом. Письмо с кодом отправляется через почтовый сервис ООО «Регистратор доменных имён РЕГ.РУ».</p>
+  <p>Сбор, запись, систематизация, накопление, хранение, уточнение, извлечение, использование, обезличивание, блокирование, удаление и уничтожение — с использованием средств автоматизации и без них. Публикуются только текст и оценки отзыва и, если я указал, имя или ник; почта и иные идентификаторы не публикуются. Данные не передаются третьим лицам, кроме случаев, прямо предусмотренных законом. Письмо с кодом отправляется через почтовый сервис ООО «Регистратор доменных имён РЕГ.РУ».</p>
   <h2>4. Где и сколько</h2>
   <p>Данные хранятся в базе данных на сервере, расположенном в Российской Федерации (Москва). Неподтверждённый черновик отзыва удаляется через час. Скриншоты удаляются сразу после решения модерации и в любом случае не позднее 30 дней. Отпечаток IP-адреса удаляется при модерации. Отзыв и отпечаток почты хранятся до отзыва согласия или удаления отзыва.</p>
   <h2>5. Срок и отзыв согласия</h2>
@@ -212,7 +220,7 @@ CONSENT_MAIN = f"""<main class="article-page wrap">
 def main():
     pages = {
         "review.html": page("review", "Оставить отзыв — ЕГЭ Мэтч",
-                            "Оставь анонимный отзыв об онлайн-школе или преподавателе ЕГЭ: оценки по критериям, плюсы и минусы. Отзывы проходят модерацию.",
+                            "Оставь отзыв об онлайн-школе или преподавателе ЕГЭ: оценки по критериям, плюсы и минусы. Отзывы проходят модерацию.",
                             "review-form-page", REVIEW_MAIN, "review.js"),
         "delete-data.html": page("delete-data", "Удалить мои данные — ЕГЭ Мэтч",
                                  "Удаление отзывов и данных, оставленных на сайте ЕГЭ Мэтч, по коду из письма.",
