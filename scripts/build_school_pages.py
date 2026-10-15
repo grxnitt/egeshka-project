@@ -16,7 +16,7 @@ CSS_VERSIONS = {
     "styles.css": "37",
     "refinements.css": "46",
     "typography.css": "31",
-    "composition.css": "269",
+    "composition.css": "270",
 }
 # Schools whose teachers we list only in part (a tutoring service with a catalogue of hundreds). The note about it is shown only
 # for the names in this set. Empty now: every school with named teachers is listed completely (OGE teachers are left out on purpose).
@@ -253,13 +253,35 @@ def logo_files():
     return {item["school"]: item["file"].removeprefix("web/") for item in data.values() if isinstance(item, dict) and item.get("file")}
 
 
+def logo_aspect(path):
+    """Width / height of a logo file (SVG viewBox or size attributes, otherwise the raster size)."""
+    if path.suffix.lower() == ".svg":
+        text = path.read_text(encoding="utf-8", errors="ignore")[:4000]
+        box = re.search(r'viewBox="[\d.\-]+[ ,]+[\d.\-]+[ ,]+([\d.]+)[ ,]+([\d.]+)"', text)
+        if box:
+            return float(box.group(1)) / float(box.group(2))
+        w, h = re.search(r'width="([\d.]+)', text), re.search(r'height="([\d.]+)', text)
+        if w and h:
+            return float(w.group(1)) / float(h.group(1))
+        return 1.0
+    from PIL import Image
+    with Image.open(path) as image:
+        return image.width / image.height
+
+
 def logo_block(school):
-    """The school's logo above its name on its page, shown only with consent."""
+    """The school's logo above its name on its page, shown only with consent. Tile shape follows the picture:
+    a wide wordmark gets a wide tile, a square mark or an avatar a square one."""
     file = logo_files().get(school["name"])
     if not file:
         return ""
-    avatar = " is-avatar" if "-avatar" in file else ""
-    return (f'<span class="sp-logo{avatar}"><img src="/{escape(file)}" alt="Логотип школы {escape(school["name"], quote=True)}" '
+    kinds = []
+    if "-avatar" in file:
+        kinds.append("is-avatar")
+    elif logo_aspect(WEB.parent / "web" / file.removeprefix("web/")) > 1.45:
+        kinds.append("is-wide")
+    cls = " ".join(["sp-logo", *kinds])
+    return (f'<span class="{cls}"><img src="/{escape(file)}" alt="Логотип школы {escape(school["name"], quote=True)}" '
             f'decoding="async"></span>')
 
 
