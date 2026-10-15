@@ -16,7 +16,7 @@ CSS_VERSIONS = {
     "styles.css": "37",
     "refinements.css": "46",
     "typography.css": "31",
-    "composition.css": "270",
+    "composition.css": "271",
 }
 # Schools whose teachers we list only in part (a tutoring service with a catalogue of hundreds). The note about it is shown only
 # for the names in this set. Empty now: every school with named teachers is listed completely (OGE teachers are left out on purpose).
