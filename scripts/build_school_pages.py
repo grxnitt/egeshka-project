@@ -16,7 +16,7 @@ CSS_VERSIONS = {
     "styles.css": "37",
     "refinements.css": "46",
     "typography.css": "31",
-    "composition.css": "268",
+    "composition.css": "269",
 }
 # Schools whose teachers we list only in part (a tutoring service with a catalogue of hundreds). The note about it is shown only
 # for the names in this set. Empty now: every school with named teachers is listed completely (OGE teachers are left out on purpose).
@@ -242,6 +242,25 @@ def school_ld(school, url):
     return "".join(
         f'\n  <script type="application/ld+json">{json.dumps(item, ensure_ascii=False)}</script>' for item in (org, faq)
     )
+
+
+def logo_files():
+    """School name -> logo file, only for schools that gave written consent (content/logo_consents.json)."""
+    path = ROOT / "content" / "logo_consents.json"
+    if not path.exists():
+        return {}
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return {item["school"]: item["file"].removeprefix("web/") for item in data.values() if isinstance(item, dict) and item.get("file")}
+
+
+def logo_block(school):
+    """The school's logo above its name on its page, shown only with consent."""
+    file = logo_files().get(school["name"])
+    if not file:
+        return ""
+    avatar = " is-avatar" if "-avatar" in file else ""
+    return (f'<span class="sp-logo{avatar}"><img src="/{escape(file)}" alt="Логотип школы {escape(school["name"], quote=True)}" '
+            f'decoding="async"></span>')
 
 
 def page_head(school, url):
@@ -512,7 +531,7 @@ def build_page(school, people, others, header, footer, teacher_slugs):
   <p class="back-row"><a class="back-link" href="/ratings" data-back="/ratings">← К рейтингу</a></p>
   <section class="hero hero-centered school-hero">
     <div class="hero-glow hero-glow-blue" aria-hidden="true"></div><div class="hero-glow hero-glow-pink" aria-hidden="true"></div>
-    <div class="hero-copy"><h1>{escape(school["name"])}</h1><p class="lead">{escape(school["description"])}</p><div class="sp-score"><small>Оценка ЕГЭ Мэтча</small><strong id="sp-score-value">{num(school["score"])}</strong><span id="sp-score-note">из 10</span></div></div>
+    <div class="hero-copy">{logo_block(school)}<h1>{escape(school["name"])}</h1><p class="lead">{escape(school["description"])}</p><div class="sp-score"><small>Оценка ЕГЭ Мэтча</small><strong id="sp-score-value">{num(school["score"])}</strong><span id="sp-score-note">из 10</span></div></div>
   </section>
   <section class="sp-section"><h2 class="t-h3">Оценка по критериям</h2>{badges_block}<ul class="sp-criteria" id="sp-criteria" data-school-id="{school["id"]}">{criteria_rows}</ul>{missing_note}<a class="button blue sp-hero-cta" href="{lead_url}" target="_blank" rel="noopener" data-choose-school="{escape(school["name"])}" data-source="school_page_criteria">Выбрать школу <span>↗</span></a></section>
   {facts_block(school)}

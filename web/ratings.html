@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="styles.css?v=37">
   <link rel="stylesheet" href="refinements.css?v=46">
   <link rel="stylesheet" href="typography.css?v=31">
-  <link rel="stylesheet" href="composition.css?v=268">
+  <link rel="stylesheet" href="composition.css?v=269">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ЕГЭ Мэтч","item":"https://egematch.ru/"},{"@type":"ListItem","position":2,"name":"Рейтинг онлайн-школ","item":"https://egematch.ru/ratings"}]}</script>
 </head>
 <body class="ratings-page">
@@ -45,7 +45,7 @@
       <p class="filter-note">Цена сравнивается по значению «от» в карточке: за месяц, урок или стартовый блок. Возможности могут зависеть от тарифа.</p>
       </details>
       <div class="catalog-toolbar"><div class="catalog-toolbar-main"><p id="catalog-label" aria-live="polite">Все предметы</p><button id="reset-filters" type="button" hidden>Сбросить фильтры</button></div><label><span>Сортировка</span><select id="sort"><option value="rating">По оценке</option><option value="name">По названию</option></select></label></div>
-      <p class="rating-scope-note"><span id="scope-note">Показаны все школы. Баллы — общая оценка школы, а не отдельного курса.</span> <a href="/methodology">Как считаем →</a></p>
+      <p class="rating-scope-note" id="scope-wrap" hidden><span id="scope-note"></span></p>
       <div class="school-grid" id="school-list" aria-busy="true"><div class="school-card sk-card" aria-hidden="true"><span class="sk sk-logo"></span><span class="sk sk-title"></span><span class="sk sk-line"></span><span class="sk sk-line"></span><span class="sk sk-line short"></span><span class="sk sk-line"></span><span class="sk sk-line short"></span><span class="sk sk-btn"></span><span class="sk sk-btn"></span></div><div class="school-card sk-card" aria-hidden="true"><span class="sk sk-logo"></span><span class="sk sk-title"></span><span class="sk sk-line"></span><span class="sk sk-line"></span><span class="sk sk-line short"></span><span class="sk sk-line"></span><span class="sk sk-line short"></span><span class="sk sk-btn"></span><span class="sk sk-btn"></span></div><div class="school-card sk-card" aria-hidden="true"><span class="sk sk-logo"></span><span class="sk sk-title"></span><span class="sk sk-line"></span><span class="sk sk-line"></span><span class="sk sk-line short"></span><span class="sk sk-line"></span><span class="sk sk-line short"></span><span class="sk sk-btn"></span><span class="sk sk-btn"></span></div></div>
       <button class="button outline more" id="show-more" hidden>Показать все школы <span>↓</span></button>
       <p class="fine rating-fine">* Звёздочкой отмечены оценки, для которых пока мало отзывов. Условия обучения уточняй в карточке школы.</p>
@@ -61,6 +61,6 @@
 <script src="analytics-config.js?v=2"></script>
 <script src="analytics.js?v=30"></script>
 <script src="supabase-config.js?v=2"></script>
-<script type="module" src="ratings.js?v=102"></script>
+<script type="module" src="ratings.js?v=103"></script>
 
 </body></html>
