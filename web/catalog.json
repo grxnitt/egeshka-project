@@ -171,9 +171,7 @@
         "биология",
         "информатика",
         "английский",
-        "история",
-        "литература",
-        "география"
+        "история"
       ],
       "price": "Текущая карточка курса ЕГЭ-2027 «Основа Комфорт» показывает цену от 3 912 ₽/мес при покупке всех месяцев сразу. Там же указан вариант Сплита: 1 223 ₽ × 4; итоговые условия зависят от предмета и срока оплаты.",
       "monthlyPriceFrom": 3912,
@@ -2426,22 +2424,6 @@
       "criteria": {},
       "url": "https://webium.ru/teachers/ira-godunova-ifil-sakharov/",
       "slug": "webium-fil-sakharov"
-    },
-    {
-      "id": 84,
-      "school": "Вебиум",
-      "name": "Даня Грэм",
-      "subject": "Математика профильная",
-      "subjects": [
-        "Математика профильная"
-      ],
-      "description": "Преподаватель профильной математики ЕГЭ и ОГЭ в Вебиуме.",
-      "studentScore": null,
-      "verifiedReviewCount": 0,
-      "isPreliminary": true,
-      "criteria": {},
-      "url": "https://webium.ru/teachers/matematika/",
-      "slug": "webium-danya-grem"
     },
     {
       "id": 85,
